@@ -1,0 +1,558 @@
+# -*- coding: utf-8 -*-
+'''
+    Mango accounts handlers
+'''
+# This file is part of mango.
+#
+# Distributed under the terms of the last AGPL License. The full
+# license is in the file LICENCE, distributed as part of this
+# software.
+
+__author__ = 'Jean Chassoul'
+
+
+import motor
+
+from tornado import gen
+from tornado import web
+
+from mango.system import accounts
+from mango.system import records
+from mango.system import campaigns
+
+from mango.handlers import base
+
+from mango.tools import content_type_validation
+from mango.tools import errors
+from mango.tools import check_json
+
+
+@content_type_validation
+class UsersHandler(accounts.MangoAccounts, base.MangoBaseHandler):
+    '''
+        Mango users handler
+
+        Users accounts resource handlers
+    '''
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def get(self, account=None, page_num=0):
+        '''
+            Mango get users handler
+        
+            Get users accounts
+        '''
+        account_type = 'user'
+        if not account:
+            users = yield motor.Op(self.get_accounts, account_type, page_num)
+
+            print 'get accounts on handler', users
+
+            self.finish({'users':users})
+        else:
+            account = account.rstrip('/')
+            
+            result = yield motor.Op(self.get_account, account, account_type)
+            if result:
+                self.finish(result)
+                return
+            else:
+                self.set_status(400)
+                self.finish({'missing':account})
+                return
+
+    @web.asynchronous
+    @gen.engine
+    def post(self):
+        '''
+            Mango port users handler
+        
+            Create users accounts
+        '''
+        struct = yield motor.Op(check_json, self.request.body)
+        struct['account_type'] = 'user'
+        
+        format_pass = (True if struct else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+
+        stuff = yield gen.Task(self.new_account, struct)
+        result, error = stuff.args
+
+        # momoko insert sip account
+
+        # sip = yield (self.new_sip_account, sip_struct)
+
+        print(stuff)
+
+        print('guatemala')
+
+        if not result:
+            print 'some errors'
+            self.set_status(400)
+            self.finish({'errors':struct})
+            return
+            
+        self.set_status(201)
+        self.finish({'id':result})
+    
+    #@web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def delete(self, account):
+        '''
+            Mango delete users handler
+
+            Delete a user account
+        '''
+        account = account.rstrip('/')
+        result = yield motor.Op(self.remove_account, account)
+        
+        if not result['n']:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('user', account)
+            self.finish(error)
+            return
+            
+        self.set_status(204)
+        self.finish()
+
+
+
+@content_type_validation
+class OrgsHandler(accounts.Orgs, base.MangoBaseHandler):
+    '''
+        Mango organizations handler
+
+        Organization account resource handlers
+    '''
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def get(self, account=None, page_num=0):
+        '''
+            Mango organization accounts get handler
+            
+            Get organization accounts
+        '''
+        account_type = 'org'
+        if not account:
+            orgs = yield motor.Op(self.get_accounts, account_type, page_num) 
+            self.finish({'orgs':orgs})
+        else:
+            account = account.rstrip('/')
+            
+            result = yield motor.Op(self.get_account, account, account_type)
+            if result:
+                self.finish(result)
+                return
+            else:
+                self.set_status(400)
+                self.finish({'missing':account})
+                return
+
+    #@web.authenticated
+    # Error: @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def post(self):
+        '''
+            Mango organization accounts post handler
+        
+            Create organization accounts
+        '''
+        current_user = self.get_current_user()
+        
+        if not current_user:
+            current_user = 'capnkooc'
+        
+        struct = yield motor.Op(check_json, self.request.body)
+        struct['account_type'] = 'org'
+
+        org = struct['account']
+        
+        format_pass = (True if struct else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+        
+        org_id = yield motor.Op(self.new_account, struct)
+                
+        team = {
+            'name': 'owners',
+            'permission': 'super',
+            'members': [current_user]
+        }
+        
+        print org, team
+        
+        check_member = yield motor.Op(self.new_member, org, current_user)
+        check_team = yield motor.Op(self.new_team, org, team)
+
+        print 'team', check_team
+        print 'member', check_member        
+        print 'org_id', org_id
+
+        if not org_id:
+            print 'some errors'
+            self.set_status(400)
+            self.finish({'errors':struct})
+            return
+            
+        self.set_status(201)
+        self.finish({'id':org_id})
+    
+    #@web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def delete(self, account):
+        '''
+            Mango organization accounts delete handler
+        
+            Delete a organization account
+        '''
+        org = account.rstrip('/')
+        # get members
+        # each member in members remove member
+        members = yield motor.Op(self.get_members, org)
+        members = (members['members'] if members['members'] else False)
+        
+        # clean this hack
+        
+        for user in members:
+            rmx = yield motor.Op(self.remove_member, org, user)
+            
+        #check_member = yield motor.Op(self.remove_member, org_id, current_user)
+        
+        result = yield motor.Op(self.remove_account, org)
+        
+        if not result['n']:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('org', org)
+            self.finish(error)
+            return
+            
+        self.set_status(204)
+        self.finish()
+
+
+@content_type_validation
+class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
+    '''
+        Account Records Resource Handler
+    '''
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def get(self, account, page_num=0):
+        '''
+            Retrieve records from accounts
+        '''
+        # TODO: test the check_type account with organizations
+        #account_type = yield motor.Op(self.check_type, account, 'user')
+        
+        orgs = yield motor.Op(self.get_orgs, account)
+        
+        print(orgs, 'organizations')
+        
+        #elif 
+        
+        #if not account_type:
+        #    system_error = errors.Error('invalid')
+        #    self.set_status(400)
+        #    error = system_error.invalid('user', account)
+        #    self.finish(error)
+        #    return
+
+        print(account, page_num)
+
+        result = yield motor.Op(self.get_detail_records, 
+                                account=account, 
+                                page_num=page_num,
+                                lapse=None,
+                                start=None,
+                                stop=None)
+
+        self.finish(result)
+        
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def post(self, account):
+        '''
+            Create a new record for the current logged account.
+        '''
+        result = yield gen.Task(check_json, self.request.body)
+        struct, error = result.args
+        if error:
+            self.set_status(400)
+            self.finish(error)
+            return
+        
+        # WARNING: access patterns testing
+        if account == self.get_current_user():
+            struct['account'] = account
+        # TODO: elif check if organization member following the access pattern?
+        else:
+            self.set_status(404)
+            # TODO: expand error message.
+            self.finish({'WARNING':'Access patterns research and testing.'})
+            return
+        
+        
+        result = yield gen.Task(self.new_cdr, struct)
+        record, error = result.args
+        
+        if record:            
+            struct = {'account':account,
+                      'resource': 'records',
+                      'id': record}
+            
+            res_args = yield gen.Task(self.new_resource, struct)
+            
+            update, res_error = res_args.args
+            
+            if res_error:
+                print(res_error, 'catch this error on new_resource system record')
+        
+        # TODO: LOL REFACTOR RE-FORMAT error handlers
+        if error:
+            error = str(error)
+            system_error = errors.Error(error)
+            self.set_status(400)
+        
+        if error and 'Model' in error:
+            error = system_error.model('Records')
+            self.finish(error)
+            return
+        elif error and 'duplicate' in error:
+            error = system_error.duplicate('Record', 'uniqueid', struct['uniqueid'])
+            self.finish(error)
+            return
+        elif error:
+            self.finish(error)
+            return
+        
+        self.set_status(201)
+        self.finish({'id':record})
+    
+    @web.authenticated
+    @web.asynchronous
+    def delete(self, account, campaign=None, page_num=0):
+        '''
+            delete
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    def put(self, account, campaign=None, page_num=0):
+        '''
+            put
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    def patch(self, account, campaign=None, page_num=0):
+        '''
+            patch
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    def head(self, account, campaign=None, page_num=0):
+        '''
+            head
+        '''
+        pass
+
+
+@content_type_validation
+class RoutesHandler(accounts.Accounts, base.MangoBaseHandler):
+    '''
+        Account Routes Resource Handler
+    '''
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def get(self, account):
+        # get account the record billing routes from the database
+        routes = yield motor.Op(self.get_routes, account)
+        self.finish(routes)
+        
+        
+    #@web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def post(self, account):
+        '''
+            Creates a new record billing route
+        '''
+        
+        result = yield gen.Task(check_json, self.request.body)
+        struct, error = result.args
+        if error:
+            self.set_status(400)
+            self.finish(error)
+            return
+        
+        struct['account'] = account
+        
+        print struct
+        
+        result = yield motor.Op(self.new_route, struct)
+
+        self.finish()
+
+
+@content_type_validation
+class CampaignsHandler(accounts.Accounts, campaigns.Campaigns, base.MangoBaseHandler):
+    '''
+        Account Campaigns Resource Handler
+    '''
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def get(self, account, campaign_name=None, page_num=0):
+        '''Retrieve campaign's from accounts'''
+        campaigns_type = self.get_argument('type', 'all')
+        account_type = yield motor.Op(self.check_type, account, 'user')
+        if not account_type:
+            system_error = errors.Error('invalid')
+            self.set_status(400)
+            error = system_error.invalid('user', account)
+            self.finish(error)
+            return
+        
+        if not campaign_name:
+            result = yield motor.Op(self.get_account_campaigns,
+                                    account,
+                                    campaigns_type,
+                                    page_num)
+        
+            self.finish({'campaigns':result})
+        else:
+            campaign_name = campaign_name.rstrip('/')
+            campaign = yield motor.Op(self.get_account_campaign,
+                                   account,
+                                   campaign_name,
+                                   campaigns_type)
+            if not campaign:
+                # 400/401 or 404?
+                # invalid/missing or not found?
+                self.set_status(404)
+                system_error = errors.Error('invalid')
+                error = system_error.invalid('campaign', campaign_name)
+                self.finish(error)
+                return
+            
+            self.finish(campaign)            
+            
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def post(self, account):
+        '''
+            Create a new campaign for the current logged account.
+        '''
+        result = yield gen.Task(check_json, self.request.body)
+        struct, error = result.args
+        if error:
+            self.set_status(400)
+            self.finish(error)
+            return
+        
+        # WARNING: access patterns testing
+        if account == self.get_current_user():
+            struct['owner'] = account
+        # elif check if organization member following the access pattern?
+        else:
+            self.set_status(404)
+            self.finish({'WARNING':'Access patterns research and testing.'})
+            return
+         
+        result = yield gen.Task(self.new_campaign, struct)
+        campaign, error = result.args
+        
+        if campaign:            
+            struct = {'account':account,
+                      'resource': 'campaigns',
+                      'id': campaign}
+            
+            res_args = yield gen.Task(self.new_resource, struct)
+            
+            update, res_error = res_args.args
+            
+            if res_error:
+                print(res_error, 'catch this error on new_resource system record')
+        
+        # TODO: reformat error handlers
+        # Error handling 409?
+        if error:
+            error = str(error)
+            system_error = errors.Error(error)
+            self.set_status(400)
+        
+        if error and 'Model' in error:
+            error = system_error.model('Campaigns')
+            self.finish(error)
+            return
+        elif error and 'duplicate' in error:
+            error = system_error.duplicate('Campaign', 'name', struct['name'])
+            self.finish(error)
+            return
+        elif error:
+            self.finish(error)
+            return
+        
+        self.set_status(201)
+        self.finish({'id':campaign})
+            
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def delete(self, account, campaign=None, page_num=0):
+        '''
+            delete
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def put(self, account, campaign=None, page_num=0):
+        '''
+            put
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def patch(self, account, campaign=None, page_num=0):
+        '''
+            patch
+        '''
+        pass
+    
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def head(self, account, campaign=None, page_num=0):
+        '''
+            head
+        '''
+        pass

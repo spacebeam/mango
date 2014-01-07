@@ -1,0 +1,80 @@
+# -*- coding: utf-8 -*-
+'''
+    Mango campaigns data models
+'''
+# This file is part of mango.
+#
+# Distributed under the terms of the last AGPL License. The full
+# license is in the file LICENCE, distributed as part of this
+# software.
+
+__author__ = 'Jean Chassoul'
+
+
+import uuid
+
+from schematics import models
+from schematics import types
+from schematics.types import compound
+
+from schematics.contrib import mongo
+
+
+class Campaign(models.Model):
+    '''
+        Campaign model
+    '''
+    
+    id = mongo.ObjectIdType(required=False)
+
+    uuid = types.UUIDType(default=uuid.uuid4)
+
+    owner = types.StringType(required=True)
+    
+    name = types.StringType(required=True)
+    service_level = types.IntType()
+    strategy = types.StringType()
+    join_empty = types.BooleanType()
+    ring_in_use = types.BooleanType()
+    leave_when_empty = types.BooleanType()
+    
+    event_member_status = types.BooleanType()
+    event_when_called = types.BooleanType()
+    
+    music_on_hold = types.StringType()
+    
+    timeout = types.IntType()
+    monitor_join = types.BooleanType()
+    monitor_format = types.StringType() 
+    
+
+    queue_you_are_next = types.StringType()
+    
+    there_are = types.StringType()
+    calls_waiting = types.StringType()
+    holdtime = types.StringType()
+    minutes = types.StringType()
+    seconds = types.StringType()
+    less_than = types.StringType()
+    thank_you = types.StringType()
+    report_hold = types.StringType()
+    
+
+    announce = types.StringType()
+    
+    announce_frequency = types.IntType()
+    announce_round_seconds = types.IntType()
+    announce_holdtime = types.StringType()
+    
+
+    periodic_announce = types.StringType()
+    periodic_announce_frequency = types.IntType()
+    
+    retry = types.IntType()
+    wrap_up_time = types.IntType()
+    maxlen = types.IntType()
+    
+    report_holdtime = types.BooleanType()
+    member_delay = types.IntType()
+    timeout_restart = types.BooleanType()
+    set_interface_var = types.BooleanType()
