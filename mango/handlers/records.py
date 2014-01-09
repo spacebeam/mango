@@ -29,11 +29,11 @@ from mango.tools import errors
 from mango.tools import check_json
 from mango.tools import check_timestamp
 
-from mango.handlers import base
+from mango.handlers import BaseHandler
 
 
 @content_type_validation
-class Handler(records.Records, accounts.Accounts, base.MangoBaseHandler):
+class Handler(records.Records, accounts.Accounts, BaseHandler):
     '''       
         Records resource handler
     '''
@@ -211,7 +211,7 @@ class Handler(records.Records, accounts.Accounts, base.MangoBaseHandler):
         pass
     
 @content_type_validation
-class PublicHandler(records.Records, base.MangoBaseHandler):
+class PublicHandler(records.Records, BaseHandler):
     '''
         Mango public records handler
         
@@ -238,7 +238,7 @@ class PublicHandler(records.Records, base.MangoBaseHandler):
         self.finish({'results': result})
 
 @content_type_validation
-class UnassignedHandler(records.Records, base.MangoBaseHandler):
+class UnassignedHandler(records.Records, BaseHandler):
     '''
         Mango records unassigned handler
 
@@ -262,7 +262,7 @@ class UnassignedHandler(records.Records, base.MangoBaseHandler):
 
 
 @content_type_validation
-class SummaryHandler(records.Records, accounts.Accounts, base.MangoBaseHandler):
+class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Mango records summary handler
 
@@ -370,7 +370,7 @@ class SummaryHandler(records.Records, accounts.Accounts, base.MangoBaseHandler):
 
 
 @content_type_validation
-class SummariesHandler(records.Records, accounts.Accounts, base.MangoBaseHandler):
+class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Mango records summaries handler
 

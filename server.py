@@ -41,7 +41,7 @@ from tornado import web
 
 # from tornado import websocket
 
-from mango.handlers import base
+from mango.handlers import HomeHandler, LoginHandler, LogoutHandler
 from mango.handlers import accounts
 from mango.handlers import billings
 from mango.handlers import records
@@ -62,7 +62,6 @@ import pytz
 import motor
 
 import psycopg2
-
 import momoko
 
 
@@ -151,14 +150,14 @@ if __name__ == '__main__':
         [
             (r'/', IndexHandler),
 
-            (r'/jc/?', base.HomeHandler),
+            (r'/jc/?', HomeHandler),
 
             # Tornado static file handler 
             (r'/static/(.*)', web.StaticFileHandler, {'path': './static'},),
 
             # Mango basic-auth session
-            (r'/login/?', base.MangoLoginHandler),
-            (r'/logout/?', base.MangoLogoutHandler),
+            (r'/login/?', LoginHandler),
+            (r'/logout/?', LogoutHandler),
 
             # Mango users records 
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),

@@ -19,15 +19,23 @@ from tornado import web
 from mango.system import accounts
 from mango.system import records
 
-from mango.handlers import base
+from mango.handlers import BaseHandler
 
 from mango.tools import content_type_validation
+
+# errors are crazy stuff, so please take your time 
+# read about context stacks,
+# think about the context of things.
+
 from mango.tools import errors
+
+# then, rewrite the hell out of the errors module.
+
 from mango.tools import check_json
 
 
 @content_type_validation
-class UsersHandler(accounts.MangoAccounts, base.MangoBaseHandler):
+class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
         Mango users handler
 
@@ -46,13 +54,10 @@ class UsersHandler(accounts.MangoAccounts, base.MangoBaseHandler):
         account_type = 'user'
         if not account:
             users = yield motor.Op(self.get_accounts, account_type, page_num)
-
-            print 'get accounts on handler', users
-
+            print('get accounts on handler', users)
             self.finish({'users':users})
         else:
             account = account.rstrip('/')
-            
             result = yield motor.Op(self.get_account, account, account_type)
             if result:
                 self.finish(result)
@@ -87,8 +92,7 @@ class UsersHandler(accounts.MangoAccounts, base.MangoBaseHandler):
         # sip = yield (self.new_sip_account, sip_struct)
 
         print(stuff)
-
-        print('guatemala')
+        print('Guatemala')
 
         if not result:
             print 'some errors'
@@ -124,7 +128,7 @@ class UsersHandler(accounts.MangoAccounts, base.MangoBaseHandler):
 
 
 @content_type_validation
-class OrgsHandler(accounts.Orgs, base.MangoBaseHandler):
+class OrgsHandler(accounts.Orgs, BaseHandler):
     '''
         Mango organizations handler
 
@@ -243,7 +247,7 @@ class OrgsHandler(accounts.Orgs, base.MangoBaseHandler):
 
 
 @content_type_validation
-class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
+class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     '''
         Account Records Resource Handler
     '''
@@ -322,7 +326,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
             if res_error:
                 print(res_error, 'catch this error on new_resource system record')
         
-        # TODO: LOL REFACTOR RE-FORMAT error handlers
+        # TODO: LOL REFACTOR RE-FORMAT error stuff
         if error:
             error = str(error)
             system_error = errors.Error(error)
@@ -377,7 +381,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
 
 
 @content_type_validation
-class RoutesHandler(accounts.Accounts, base.MangoBaseHandler):
+class RoutesHandler(accounts.Accounts, BaseHandler):
     '''
         Account Routes Resource Handler
     '''

@@ -22,15 +22,14 @@ from mango.system import accounts
 from mango.system import billings
 from mango.system import records
 
-from mango.handlers import base
-
+from mango.handlers import BaseHandler
 from mango.tools import content_type_validation
 from mango.tools import errors
 from mango.tools import check_json
 
 
 @content_type_validation
-class BillingsHandler(base.MangoBaseHandler):
+class BillingsHandler(BaseHandler):
     '''
         Mango billings handler
     '''
@@ -38,7 +37,7 @@ class BillingsHandler(base.MangoBaseHandler):
 
 
 @content_type_validation
-class RecordsHandler(billings.Billings, accounts.Accounts, base.MangoBaseHandler):
+class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
     '''
         Mango records billings handler 
 
