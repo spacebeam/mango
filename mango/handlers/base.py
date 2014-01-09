@@ -19,7 +19,6 @@ import motor
 from tornado import gen
 from tornado import web
 
-from mango.tools import quotes
 from mango.tools import errors
 
 from mango.system import basic_authentication

@@ -18,7 +18,6 @@ from tornado import web
 
 from mango.system import accounts
 from mango.system import records
-from mango.system import campaigns
 
 from mango.handlers import base
 
@@ -346,7 +345,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
     
     @web.authenticated
     @web.asynchronous
-    def delete(self, account, campaign=None, page_num=0):
+    def delete(self, account, record=None, page_num=0):
         '''
             delete
         '''
@@ -354,7 +353,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
     
     @web.authenticated
     @web.asynchronous
-    def put(self, account, campaign=None, page_num=0):
+    def put(self, account, record=None, page_num=0):
         '''
             put
         '''
@@ -362,7 +361,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
     
     @web.authenticated
     @web.asynchronous
-    def patch(self, account, campaign=None, page_num=0):
+    def patch(self, account, record=None, page_num=0):
         '''
             patch
         '''
@@ -370,7 +369,7 @@ class RecordsHandler(accounts.Accounts, records.Records, base.MangoBaseHandler):
     
     @web.authenticated
     @web.asynchronous
-    def head(self, account, campaign=None, page_num=0):
+    def head(self, account, record=None, page_num=0):
         '''
             head
         '''
@@ -414,145 +413,3 @@ class RoutesHandler(accounts.Accounts, base.MangoBaseHandler):
         result = yield motor.Op(self.new_route, struct)
 
         self.finish()
-
-
-@content_type_validation
-class CampaignsHandler(accounts.Accounts, campaigns.Campaigns, base.MangoBaseHandler):
-    '''
-        Account Campaigns Resource Handler
-    '''
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def get(self, account, campaign_name=None, page_num=0):
-        '''Retrieve campaign's from accounts'''
-        campaigns_type = self.get_argument('type', 'all')
-        account_type = yield motor.Op(self.check_type, account, 'user')
-        if not account_type:
-            system_error = errors.Error('invalid')
-            self.set_status(400)
-            error = system_error.invalid('user', account)
-            self.finish(error)
-            return
-        
-        if not campaign_name:
-            result = yield motor.Op(self.get_account_campaigns,
-                                    account,
-                                    campaigns_type,
-                                    page_num)
-        
-            self.finish({'campaigns':result})
-        else:
-            campaign_name = campaign_name.rstrip('/')
-            campaign = yield motor.Op(self.get_account_campaign,
-                                   account,
-                                   campaign_name,
-                                   campaigns_type)
-            if not campaign:
-                # 400/401 or 404?
-                # invalid/missing or not found?
-                self.set_status(404)
-                system_error = errors.Error('invalid')
-                error = system_error.invalid('campaign', campaign_name)
-                self.finish(error)
-                return
-            
-            self.finish(campaign)            
-            
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def post(self, account):
-        '''
-            Create a new campaign for the current logged account.
-        '''
-        result = yield gen.Task(check_json, self.request.body)
-        struct, error = result.args
-        if error:
-            self.set_status(400)
-            self.finish(error)
-            return
-        
-        # WARNING: access patterns testing
-        if account == self.get_current_user():
-            struct['owner'] = account
-        # elif check if organization member following the access pattern?
-        else:
-            self.set_status(404)
-            self.finish({'WARNING':'Access patterns research and testing.'})
-            return
-         
-        result = yield gen.Task(self.new_campaign, struct)
-        campaign, error = result.args
-        
-        if campaign:            
-            struct = {'account':account,
-                      'resource': 'campaigns',
-                      'id': campaign}
-            
-            res_args = yield gen.Task(self.new_resource, struct)
-            
-            update, res_error = res_args.args
-            
-            if res_error:
-                print(res_error, 'catch this error on new_resource system record')
-        
-        # TODO: reformat error handlers
-        # Error handling 409?
-        if error:
-            error = str(error)
-            system_error = errors.Error(error)
-            self.set_status(400)
-        
-        if error and 'Model' in error:
-            error = system_error.model('Campaigns')
-            self.finish(error)
-            return
-        elif error and 'duplicate' in error:
-            error = system_error.duplicate('Campaign', 'name', struct['name'])
-            self.finish(error)
-            return
-        elif error:
-            self.finish(error)
-            return
-        
-        self.set_status(201)
-        self.finish({'id':campaign})
-            
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def delete(self, account, campaign=None, page_num=0):
-        '''
-            delete
-        '''
-        pass
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def put(self, account, campaign=None, page_num=0):
-        '''
-            put
-        '''
-        pass
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def patch(self, account, campaign=None, page_num=0):
-        '''
-            patch
-        '''
-        pass
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def head(self, account, campaign=None, page_num=0):
-        '''
-            head
-        '''
-        pass
