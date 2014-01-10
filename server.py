@@ -21,13 +21,16 @@
 # More about what we mean with Organizations of Restricted Generality.
 # http://www.exso.com/courses/cs101c/agents19/node3.html
 
-# More on actor theory
+# The actor theory of computation by master Carl Hewitt.
+# http://arxiv.org/abs/1008.1459
+
 # http://web.media.mit.edu/~lieber/Lieberary/OOP/Act-1/Concurrent-OOP-in-Act-1.html
 
 # The maximum possible speed-up of a program as a result of parallelization is known as Amdahl's law. 
 # - Wikipedia (I have to put a wikipedia quote here to make it funny.)
 
-# The follow paper explains the foundations of our cloud system (or at least what we're trying to achieve).
+# The follow paper explains some foundations of our system
+# http://arxiv.org/pdf/1008.1459.pdf
 # http://arxiv.org/pdf/0903.0694.pdf
 
 
@@ -114,13 +117,23 @@ def periodic_records_callbacks(stuff='bananas'):
     assigned_false = yield motor.Op(periodic.process_assigned_false, db)
     asterisk_record = yield motor.Op(periodic.process_asterisk_cdr, db)
 
-    for c in assigned_false:
-      flag = yield motor.Op(periodic.assign_call, db, c['account'], c['id'])
-      resource = yield motor.Op(periodic.new_resource_context, db, c)
+    for record in assigned_false:
+        flag = yield motor.Op(
+            periodic.assign_call,
+            db,
+            record['account'],
+            record['id']
+        )
+        resource = yield motor.Op(periodic.new_resource_context, db, record)
 
-    for c in asterisk_record:
-      flag = yield motor.Op(periodic.assign_call, db, c['account'], c['id'])
-      resource = yield motor.Op(periodic.new_resource_context, db, c)
+    for record in asterisk_record:
+        flag = yield motor.Op(
+            periodic.assign_call,
+            db,
+            record['account'],
+            record['id']
+        )
+        resource = yield motor.Op(periodic.new_resource_context, db, record)
 
 
 
@@ -133,9 +146,18 @@ if __name__ == '__main__':
     # Mango periodic functions
     periodic_records = opts.periodic_records
     
-    # Set database back-end
-    db = motor.MotorClient().open_sync().mango
-    
+    # Set document database
+    document = motor.MotorClient().open_sync().mango
+
+    # Set relational database
+    sql = momoko.Pool(
+        dsn='dbname=asterisk user=postgres',
+        size=1
+    )
+
+    # Set default database
+    db = document
+
     if opts.ensure_indexes:
         logging.info('Ensuring indexes...')
         indexes.ensure_indexes(db)
@@ -155,52 +177,52 @@ if __name__ == '__main__':
             # Tornado static file handler 
             (r'/static/(.*)', web.StaticFileHandler, {'path': './static'},),
 
-            # Mango basic-auth session
+            # basic-auth session
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
-            # Mango users records 
+            # users records 
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # Mango users billing routes
+            # users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
 
-            # Mango users
+            # users
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
 
-            # Mango ORG's records
+            # ORG's records
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # Mango ORG's teams
+            # ORG's teams
             # (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/(?P<team_id>.+)/?', accounts.TeamsHandler),
 
-            # Mango ORG's
+            # ORG's
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
-            # Mango records
+            # records
             (r'/records/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.Handler),
             (r'/records/start/(?P<start>.*)/?', records.Handler),
             (r'/records/stop/(?P<stop>.*)/?', records.Handler),
             (r'/records/page/(?P<page_num>\d+)/?', records.Handler),
 
-            # Mango public records 
+            # public records 
             (r'/records/public/?', records.PublicHandler),
             (r'/records/public/page/(?P<page_num>\d+)/?', records.PublicHandler),
 
-            # Mango unassigned records
+            # unassigned records
             (r'/records/unassigned/?', records.UnassignedHandler),
             (r'/records/unassigned/page/(?P<page_num>\d+)/?', records.UnassignedHandler),
 
-            # Mango records summary
+            # records summary
             # (r'/records/summary/<lapse>/<value>/?', records.SummaryHandler),
 
             # Return last (n) of lapse
@@ -209,7 +231,7 @@ if __name__ == '__main__':
             # Statistical projection based on the previous data.
             # (r'/records/summary/<lapse>/nexts/(?P<int>\d+)/?', records.SummaryHandler),
 
-            # Mango records summary
+            # records summary
             (r'/records/summary/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
             (r'/records/summary/start/(?P<start>.*)/?', records.SummaryHandler),
             (r'/records/summary/stopt/(?P<stop>.*)/?', records.SummaryHandler),
@@ -224,7 +246,7 @@ if __name__ == '__main__':
             (r'/records/summary/(?P<lapse>.*)/?', records.SummaryHandler),
             (r'/records/summary/?', records.SummaryHandler),
 
-            # Mango records summaries
+            # records summaries
             (r'/records/summaries/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummariesHandler),
             (r'/records/summaries/start/(?P<start>.*)/?', records.SummariesHandler),
             (r'/records/summaries/stop/(?P<stop>.*)/?', records.SummariesHandler),
@@ -239,9 +261,8 @@ if __name__ == '__main__':
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
-            # Campaigns ?
-
             # This is a ugly hack: billings.RecordsHandler, the correct stuff: billings.Handler.
+            # hmm, really?
 
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
             (r'/billings/?', billings.RecordsHandler),
@@ -253,8 +274,12 @@ if __name__ == '__main__':
 
         ],
         
-        # Mango api configuration
+        # system data configuration
         db=db,
+
+        sql=sql,
+
+        document=document,
         
         # periodic records
         periodic_records=periodic_records,
@@ -272,15 +297,11 @@ if __name__ == '__main__':
         # on production environment the static stuff is served with nginx.
 
         static_path=os.path.join(os.path.dirname(__file__), "static"),
+
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         
-        # API login url
+        # login url
         login_url='/login'
-    )
-    
-    application.sql = momoko.Pool(
-        dsn='dbname=asterisk user=postgres host=127.0.0.1 password=',
-        size=1
     )
 
     # Tornado periodic callbacks
