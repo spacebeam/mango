@@ -88,17 +88,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         result, error = new_account.args
 
         # momoko insert sip account
-        sip_struct = {}
-        sip_account = yield gen.Task(self.new_sip_account, sip_struct)
-        sip_result, sip_error = sip_account.args
-
-        if not sip_result:
-            print sip_error
-
-        print sip_result
-
-        if not result:
-            print 'some errors'
+        if result:
+            sip_account = yield gen.Task(self.new_sip_account, struct)
+            sip_result, sip_error = sip_account.args
+        else:
             self.set_status(400)
             self.finish({'errors':struct})
             return

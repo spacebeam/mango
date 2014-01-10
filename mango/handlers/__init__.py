@@ -12,6 +12,7 @@ __author__ = 'Jean Chassoul'
 
 
 # Remember Gabo Naum.
+# http://www.youtube.com/watch?v=2k-JGuhyqKE
 
 
 import motor
@@ -23,6 +24,8 @@ from mango.tools import errors
 
 from mango.system import basic_authentication
 from mango.tools import check_account_authorization
+
+# TODO: Change username to the more general account variable name.
 
 
 class BaseHandler(web.RequestHandler):
@@ -88,7 +91,13 @@ class BaseHandler(web.RequestHandler):
         '''
             Return the username from a secure cookie
         '''
-        return self.get_secure_cookie('username')   
+        return self.get_secure_cookie('username')
+
+    def get_current_account(self):
+        '''
+            Return the account from a secure cookie
+        '''
+        return self.get_secure_cookie('account')
     
 
 class HomeHandler(BaseHandler):
@@ -127,7 +136,7 @@ class LoginHandler(BaseHandler):
                                  self.password)
 
         if not account:
-            # 401?
+            # 401? 
             self.set_status(403)
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()

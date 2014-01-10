@@ -274,12 +274,40 @@ class MangoAccounts(Accounts):
             New sip account
         '''
         try:
-            cursor = yield momoko.Op(self.sql.execute, 'SELECT 1;')
+            query = '''
+                insert into sip (
+                    name,
+                    defaultuser,
+                    fromuser,
+                    fromdomain,
+                    host,
+                    sippasswd,
+                    allow,
+                    context,
+                    avpf,
+                    encryption
+                ) values (
+                    '%s',
+                    '%s',
+                    '%s',
+                    'sip.ph3nix.com',
+                    'dynamic',
+                    '%s',
+                    'g729,gsm,alaw,ulaw',
+                    'fun-accounts',
+                    'no',
+                    'no'
+                );
+            ''' % (struct['account'], 
+                   struct['account'],
+                   struct['account'],
+                   struct['password'])
+            cursor = yield momoko.Op(self.sql.execute, query)
         except (psycopg2.Warning, psycopg2.Error) as error:
             callback(None, str(error))
             return
         else:
-            result = cursor.fetchall()
+            result = True
 
         callback(result, None)
 
