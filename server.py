@@ -33,6 +33,7 @@
 # http://arxiv.org/pdf/1008.1459.pdf
 # http://arxiv.org/pdf/0903.0694.pdf
 
+# Veni, vidi, vici
 
 __author__ = 'Jean Chassoul'
 
@@ -139,7 +140,9 @@ def periodic_records_callbacks(stuff='bananas'):
 
 if __name__ == '__main__':
     '''
-        Manage Asynchronous Number Granular/Going ORGS
+        Manage Asynchronous Number Granular/Going ORGs
+
+        Organizations of restricted generality
     '''
     opts = options.options()
     
@@ -160,7 +163,7 @@ if __name__ == '__main__':
     # base url
     base_url = opts.base_url
     
-    # mango application system daemon
+    # mango application daemon
     application = web.Application(
 
         [
@@ -186,19 +189,19 @@ if __name__ == '__main__':
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
 
-            # ORG's records
+            # ORGs records
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # ORG's teams
+            # ORGs teams
             # (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/(?P<team_id>.+)/?', accounts.TeamsHandler),
 
-            # ORG's
+            # ORGs
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
