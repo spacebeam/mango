@@ -35,28 +35,28 @@ class BaseHandler(web.RequestHandler):
         '''
             SQL database
         '''
-        return self.database.sql
+        return self.application.sql
 
     @property
     def document(self):
         '''
             document database
         '''
-        return self.database.document
+        return self.application.document
 
     @property
     def kvalue(self):
         '''
             key-value database
         '''
-        return self.database.kvalue
+        return self.application.kvalue
 
     @property
     def graph(self):
         '''
             graph database
         '''
-        return self.database.graph
+        return self.application.graph
     
     def initialize(self, **kwargs):
         ''' 
@@ -66,9 +66,7 @@ class BaseHandler(web.RequestHandler):
 
         self.etag = None
         
-        self.database = None
-        
-        # Mongodb database
+        # system database
         self.db = self.settings['db']
 
         # ZeroMQ streams

@@ -17,6 +17,9 @@ import arrow
 import motor
 import uuid
 
+import psycopg2
+import momoko
+
 from tornado import gen
 from bson import objectid
 from mango.models import accounts
@@ -263,6 +266,23 @@ class MangoAccounts(Accounts):
             return
 
         callback(account['uuid'], None)
+
+
+    @gen.engine
+    def new_sip_account(self, struct, callback):
+        '''
+            New sip account
+        '''
+        try:
+            cursor = yield momoko.Op(self.sql.execute, 'SELECT 1;')
+        except (psycopg2.Warning, psycopg2.Error) as error:
+            callback(None, str(error))
+            return
+        else:
+            result = cursor.fetchall()
+
+        callback(result, None)
+
 
     @gen.engine
     def remove_account(self, account, callback):

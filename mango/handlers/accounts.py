@@ -84,15 +84,18 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.finish({'JSON':format_pass})
             return
 
-        stuff = yield gen.Task(self.new_account, struct)
-        result, error = stuff.args
+        new_account = yield gen.Task(self.new_account, struct)
+        result, error = new_account.args
 
         # momoko insert sip account
+        sip_struct = {}
+        sip_account = yield gen.Task(self.new_sip_account, sip_struct)
+        sip_result, sip_error = sip_account.args
 
-        # sip = yield (self.new_sip_account, sip_struct)
+        if not sip_result:
+            print sip_error
 
-        print(stuff)
-        print('Guatemala')
+        print sip_result
 
         if not result:
             print 'some errors'
@@ -103,7 +106,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.set_status(201)
         self.finish({'id':result})
     
-    #@web.authenticated
+    @web.authenticated
     @web.asynchronous
     @gen.engine
     def delete(self, account):
@@ -159,8 +162,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 self.finish({'missing':account})
                 return
 
-    #@web.authenticated
-    # Error: @web.authenticated
     @web.asynchronous
     @gen.engine
     def post(self):
@@ -211,7 +212,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         self.set_status(201)
         self.finish({'id':org_id})
     
-    #@web.authenticated
+    @web.authenticated
     @web.asynchronous
     @gen.engine
     def delete(self, account):
@@ -400,7 +401,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
     @gen.engine
     def post(self, account):
         '''
-            Creates a new record billing route
+            Create new record billing route
         '''
         
         result = yield gen.Task(check_json, self.request.body)

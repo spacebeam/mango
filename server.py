@@ -149,12 +149,6 @@ if __name__ == '__main__':
     # Set document database
     document = motor.MotorClient().open_sync().mango
 
-    # Set relational database
-    sql = momoko.Pool(
-        dsn='dbname=asterisk user=postgres',
-        size=1
-    )
-
     # Set default database
     db = document
 
@@ -274,13 +268,9 @@ if __name__ == '__main__':
 
         ],
         
-        # system data configuration
+        # system database
         db=db,
 
-        sql=sql,
-
-        document=document,
-        
         # periodic records
         periodic_records=periodic_records,
 
@@ -302,6 +292,12 @@ if __name__ == '__main__':
         
         # login url
         login_url='/login'
+    )
+
+    # Set relational database
+    application.sql = momoko.Pool(
+        dsn='dbname=asterisk user=postgres',
+        size=1
     )
 
     # Tornado periodic callbacks
