@@ -12,6 +12,8 @@
 # license is in the file LICENCE, distributed as part of this
 # software.
 
+# An ORG is a fundamental unit used to build larger more complex organizations. 
+# Mango manage, measure and gives new informational meaning to ORG's data records.
 
 # BAD WOLF
 # --------
@@ -19,9 +21,6 @@
 # real-time is all about kinetic movement
 # this is all about Gabriel Naum
 # listen to the realistic manifesto.
-
-# More about what we mean with Organizations of Restricted Generality.
-# http://www.exso.com/courses/cs101c/agents19/node3.html
 
 # The actor theory of computation by master Carl Hewitt.
 # http://arxiv.org/abs/1008.1459
@@ -68,6 +67,7 @@ import pytz
 import motor
 
 import psycopg2
+
 import momoko
 
 
@@ -191,19 +191,19 @@ if __name__ == '__main__':
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
 
-            # ORGs records
+            # orgs records
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # ORGs teams
+            # orgs teams
             # (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/(?P<team_id>.+)/?', accounts.TeamsHandler),
 
-            # ORGs
+            # organizations of restricted generality
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
@@ -224,10 +224,10 @@ if __name__ == '__main__':
             # records summary
             # (r'/records/summary/<lapse>/<value>/?', records.SummaryHandler),
 
-            # Return last (n) of lapse
+            # return last (n) of lapse
             # (r'/records/summary/<lapse>/lasts/(?P<int>\d+)/?', records.SummaryHandler),
 
-            # Statistical projection based on the previous data.
+            # statistical projection based on the previous data.
             # (r'/records/summary/<lapse>/nexts/(?P<int>\d+)/?', records.SummaryHandler),
 
             # records summary
@@ -239,7 +239,7 @@ if __name__ == '__main__':
             (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummaryHandler),
             (r'/records/summary/(?P<lapse>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
 
-            # Return last (n) of lapse
+            # return last (n) of lapse
             # (r'/records/summary/(?P<lapse>.*)/lasts/(?P<int>\d+)/?', records.SummaryHandler),
 
             (r'/records/summary/(?P<lapse>.*)/?', records.SummaryHandler),
