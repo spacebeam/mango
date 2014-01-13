@@ -22,7 +22,7 @@ import momoko
 
 from tornado import gen
 from bson import objectid
-from mango.models import accounts
+from mango.messages import accounts
 
 from mango.tools import clean_structure, clean_results
 

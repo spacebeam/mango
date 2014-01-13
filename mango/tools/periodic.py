@@ -4,7 +4,7 @@
 '''
 from contextlib import contextmanager
 from tornado import gen
-from mango.models import accounts
+from mango.messages import accounts
 from bson import objectid
 import motor
 

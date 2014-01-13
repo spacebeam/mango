@@ -13,7 +13,7 @@ __author__ = 'Jean Chassoul'
 
 from tornado import gen
 
-from mango.models import reports
+from mango.messages import reports
 
 class Reports(object):
     '''

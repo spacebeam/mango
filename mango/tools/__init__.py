@@ -19,7 +19,7 @@ from datetime import datetime as dt
 
 from tornado import gen
 from mango.tools.errors import Error
-from mango.models import reports
+from mango.messages import reports
 
 
 @gen.engine

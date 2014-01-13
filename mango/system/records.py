@@ -20,8 +20,8 @@ import motor
 
 from tornado import gen
 
-from mango.models import records
-from mango.models import reports
+from mango.messages import records
+from mango.messages import reports
 
 from mango.tools import clean_structure, clean_results
 
