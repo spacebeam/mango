@@ -12,11 +12,14 @@
 # license is in the file LICENCE, distributed as part of this
 # software.
 
-# An ORG is a fundamental unit used to build larger more complex organizations. 
+# An ORG is a fundamental unit used to build larger more complex computing systems. 
 # Mango manage, measure and gives new informational meaning to ORG's data records.
 
+# A Business intelligence platform for manage,
+# measure and give meaning to organizations and team records.
+
 # BAD WOLF
-# --------
+
 # This is all about Wittgenstein
 # real-time is all about kinetic movement
 # this is all about Gabriel Naum
@@ -81,6 +84,7 @@ import momoko
 # [ Store ]
 #
 # POST /records/record/keys
+
 # PUT /records/record/keys/key
 
 

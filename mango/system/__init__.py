@@ -63,5 +63,4 @@ def basic_authentication(handler_class):
 
     handler_class._execute = wrap_execute(handler_class._execute)
     
-    
     return handler_class
