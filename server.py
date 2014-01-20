@@ -8,36 +8,14 @@
 
 # This file is part of mango.
 #
-# Distributed under the terms of the last AGPL License. The full
-# license is in the file LICENCE, distributed as part of this
-# software.
+# Distributed under the terms of the last AGPL License. 
+# The full license is in the file LICENCE, distributed as part of this software.
 
-# An ORG is a fundamental unit used to build larger more complex computing systems. 
-# Mango manage, measure and gives new informational meaning to ORG's data records.
+# Mango manage, measure and gives new meaning to ORGs data records.
 
-# A Business intelligence platform for manage,
-# measure and give meaning to organizations and team records.
+# Organizations of restricted generality (ORGs) provide foundations 
+# for the development of scalable, robust, and private applications.
 
-# BAD WOLF
-
-# This is all about Wittgenstein
-# real-time is all about kinetic movement
-# this is all about Gabriel Naum
-# listen to the realistic manifesto.
-
-# The actor theory of computation by master Carl Hewitt.
-# http://arxiv.org/abs/1008.1459
-
-# http://web.media.mit.edu/~lieber/Lieberary/OOP/Act-1/Concurrent-OOP-in-Act-1.html
-
-# The maximum possible speed-up of a program as a result of parallelization is known as Amdahl's law. 
-# - Wikipedia (I have to put a wikipedia quote here to make it funny.)
-
-# The follow paper explains some foundations of our system
-# http://arxiv.org/pdf/1008.1459.pdf
-# http://arxiv.org/pdf/0903.0694.pdf
-
-# Veni, vidi, vici
 
 __author__ = 'Jean Chassoul'
 
@@ -59,9 +37,6 @@ from mango.tools import indexes
 from mango.tools import periodic
 
 import logging
-
-# cebus is the one who controls the goals it have a execute model build up on salt.
-# for more on salt (https://medium.com/fun-technology/2a53b67b6903)
 
 import arrow
 
