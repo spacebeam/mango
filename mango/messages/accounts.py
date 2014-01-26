@@ -17,18 +17,15 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 
-#from schematics.contrib import mongo
 
 
 class SimpleResource(models.Model):
     '''
         Mango simple resource
     '''
-    total = types.IntType()
-    #ids = compound.ListType(mongo.ObjectIdType())
-
-    # uuid 's
     contains = compound.ListType(types.UUIDType())
+
+    total = types.IntType()
 
 
 class Resource(models.Model):
@@ -49,11 +46,14 @@ class Route(models.Model):
 
         Route model used by the record
     '''
+    destination = types.StringType(default='*') 
     dst = types.StringType(default='*') # default '*' means all destinations
     
     channel = types.StringType(required=True)
     dstchannel = types.StringType(required=True)
-    cost = types.FloatType(required=True) 
+    destination_channel = types.StringType(required=True)
+
+    cost = types.FloatType(required=True)
 
 
 class Team(models.Model):
@@ -72,8 +72,6 @@ class Team(models.Model):
 
 class AccountResource(models.Model):
     '''
-        Mango account resource
-
         Account resource
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
@@ -93,7 +91,8 @@ class BaseAccount(models.Model):
     email = types.EmailType(required=True)
     url = types.URLType()
     
-    # TODO: Account Geo localization options
+    # TODO: Geolocation stuff
+
     # location = StringType(required=True)
     # timezone = StringType(required=True)
     
@@ -115,9 +114,9 @@ class User(BaseAccount):
     
 class Org(BaseAccount):
     '''
-        Mango org
+        Mango (ORG) Organization of Restricted Generality.
     '''
     account_type = types.StringType(default='org')
-    # TODO: check members, teams
+    # TODO: check members, teams D: 
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))

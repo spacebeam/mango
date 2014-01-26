@@ -86,6 +86,7 @@ class Accounts(object):
             Create a new account resource
         '''
         try:
+            print struct
             res = accounts.AccountResource(struct)
             res.validate()
             res = res.to_primitive()
