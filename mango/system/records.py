@@ -2,20 +2,27 @@
 '''
     Mango records
 '''
+
 # This file is part of mango.
-#
-# Distributed under the terms of the last AGPL License. The full
-# license is in the file LICENCE, distributed as part of this
-# software.
+
+# Distributed under the terms of the last AGPL License.
+# The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
 
 import arrow
 
+# import numpy as np
 import pandas as pd
 
+'''
+    A universally unique identifier (UUID) is an identifier standard 
+    for software construction
+'''
+
 import uuid
+
 import motor
 
 from tornado import gen
@@ -23,58 +30,15 @@ from tornado import gen
 from mango.messages import records
 from mango.messages import reports
 
-from mango.tools import clean_structure, clean_results
-
-
-# functions vs class records?
+from mango.tools import clean_structure
+from mango.tools import clean_results
 
 
 class Records(object):
     '''
         Records resources
     '''
-    
-    @gen.engine
-    def new_detail_record(self, struct, callback):
-        '''
-            Create a new record entry
-        '''
-        try:
-            record = records.Record(struct)
-            record.validate()
-        except Exception, e:
-            callback(None, e)
-            return
 
-        record = clean_structure(record)
-
-        result = yield gen.Task(self.db.records.insert, record)
-        result, error = result.args
-
-        if error:
-            callback(None, error)
-            return
-        
-        callback(record.get('uuid'), None)
-
-
-    @gen.engine
-    def modify_record(self, struct, callback):
-        '''
-            Modify a existent record entry
-        '''
-        # patch implementation
-        pass
-
-    @gen.engine
-    def replace_record(self, struct, callback):
-        '''
-            Replace a existent record entry
-        '''
-        # put implementation
-        pass
-
-    
     @gen.engine
     def get_detail_record(self, account, record_uuid, callback):
         '''
@@ -82,12 +46,14 @@ class Records(object):
         '''
         try:
             if not account:
-                record = yield motor.Op(self.db.records.find_one,
-                                      {'uuid':record_uuid})
+                record = yield motor.Op(
+                    self.db.records.find_one, {'uuid':record_uuid}
+                )
             else:
-                record = yield motor.Op(self.db.records.find_one,
-                                      {'uuid':record_uuid,
-                                       'accountcode':account})
+                record = yield motor.Op(
+                    self.db.records.find_one, {'uuid':record_uuid,
+                                               'accountcode':account}
+                )
             if record:
                 record = records.Record(record)
                 record.validate()
@@ -96,8 +62,8 @@ class Records(object):
             return
         
         callback(record, None)
-    
-    
+
+
     @gen.engine
     def get_detail_records(self, account, start, stop, page_num, lapse, callback):
         '''
@@ -143,9 +109,12 @@ class Records(object):
         page_size = self.settings['page_size']
         result = []
         
-        query = self.db.records.find({'assigned':False}) # or $exist = false ?
+        # or $exist = false ?
+
+        query = self.db.records.find({'assigned':False})
 
         # _id is from bson and mongodb engine
+        #
         # for a more independent implementation sort by uuid
 
         query = query.sort([('_id', -1)]).skip(page_num * page_size).limit(page_size)
@@ -167,27 +136,6 @@ class Records(object):
         callback(results, None)
 
     @gen.engine
-    def set_assigned_flag(self, account, record_uuid, callback):
-        '''
-            Set the assigned record flag
-
-            This method set the assigned flag of a record record
-        '''
-        # bad stuff
-        # print('account %s set assigned flag on %s' % account, record_id)
-
-        try:
-            result = yield motor.Op(self.db.records.update,
-                                    {'uuid':record_uuid, 
-                                     'accountcode':account}, 
-                                    {'$set': {'assigned': True}})
-        except Exception, e:
-            callback(None, e)
-            return
-        
-        callback(result, None)
-
-    @gen.engine
     def get_summaries(self, account, start, stop, page_num, lapse, callback):
         '''
             Get stuff summaries
@@ -207,9 +155,7 @@ class Records(object):
         '''
             Get stuff summary
         '''
-        # to avoid pain please learn how to use pytz
-        # to be more awesome replace all datetime and pytz with the new arrow
-
+        
         if not start:
             start = arrow.utcnow()
         if not stop:
@@ -218,12 +164,8 @@ class Records(object):
         start = start.timestamp
         stop = stop.timestamp
 
-        
-        print(start, stop, 'get summary')
-        
-        
         if lapse:
-            print 'given lapse:', lapse
+            print('given lapse:', lapse)
 
         # MongoDB aggregation match operator
         if type(account) is list:
@@ -294,15 +236,19 @@ class Records(object):
                 'minute': '$minute',
                 'second': '$second',
             },
+
             'records': {
                 '$sum':1
             },
+
             'average': {
                 '$avg':'$billsec'
             },
+
             'duration': {
                 '$sum':'$duration'
             },
+
             'billing': {
                 '$sum':'$billsec'
             }
@@ -324,7 +270,58 @@ class Records(object):
 
         callback(result['result'], None)
 
-    
+    @gen.engine
+    def new_detail_record(self, struct, callback):
+        '''
+            Create a new record entry
+        '''
+        try:
+            record = records.Record(struct)
+            record.validate()
+        except Exception, e:
+            callback(None, e)
+            return
+
+        record = clean_structure(record)
+
+        result = yield gen.Task(self.db.records.insert, record)
+        result, error = result.args
+
+        if error:
+            callback(None, error)
+            return
+        
+        callback(record.get('uuid'), None)
+
+    @gen.engine
+    def set_assigned_flag(self, account, record_uuid, callback):
+        '''
+            Set the assigned record flag
+
+            This method set the assigned flag of a record record
+        '''
+        # bad stuff
+        # print('account %s set assigned flag on %s' % account, record_id)
+
+        try:
+            result = yield motor.Op(self.db.records.update,
+                                    {'uuid':record_uuid, 
+                                     'accountcode':account}, 
+                                    {'$set': {'assigned': True}})
+        except Exception, e:
+            callback(None, e)
+            return
+        
+        callback(result, None)
+
+    @gen.engine
+    def replace_record(self, struct, callback):
+        '''
+            Replace a existent record entry
+        '''
+        # put implementation
+        pass
+
     @gen.engine
     def remove_record(self, record_uuid, callback):
         '''
@@ -338,3 +335,20 @@ class Records(object):
             return
 
         callback(result, None)
+
+    @gen.engine
+    def resource_options(self, callback):
+        '''
+            Return resource options
+        '''
+        pass
+
+        callback(result, None)
+
+    @gen.engine
+    def modify_record(self, struct, callback):
+        '''
+            Modify a existent record entry
+        '''
+        # patch implementation
+        pass

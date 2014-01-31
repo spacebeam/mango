@@ -251,7 +251,7 @@ if __name__ == '__main__':
             (r'/billings/records/?', billings.RecordsHandler)
 
         ],
-        
+
         # system database
         db=db,
 
@@ -263,7 +263,7 @@ if __name__ == '__main__':
 
         # pagination page size
         page_size=opts.page_size,
-        
+
         # cookie settings
         cookie_secret=opts.cookie_secret,
 
@@ -273,7 +273,7 @@ if __name__ == '__main__':
         static_path=os.path.join(os.path.dirname(__file__), "static"),
 
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
-        
+
         # login url
         login_url='/login'
     )

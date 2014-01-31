@@ -11,9 +11,28 @@
 __author__ = 'Jean Chassoul'
 
 
+# Fucking record logic for HTTP muther fucking methods.
+
+'''
+    You see the muther fucking (five) stuff rule?
+    ---------------------------------------------
+
+    HTTP status code is primarily divided into five groups for better 
+    explanation of request and responses between client and server as named:
+
+    Informational 1XX,
+    Successful 2XX,
+    Redirection 3XX,
+    
+    Client Error 4XX
+        and
+            Server Error 5XX.
+'''
+
 import time
 import motor
 
+# import numpy as np
 import pandas as pd
 
 from bson import json_util
@@ -25,11 +44,92 @@ from mango.system import accounts
 from mango.system import records
 
 from mango.tools import content_type_validation
-from mango.tools import errors
 from mango.tools import check_json
 from mango.tools import check_timestamp
+from mango.tools import errors
 
 from mango.handlers import BaseHandler
+
+
+'''
+    Request methods
+    ---------------
+
+    HTTP defines methods (sometimes referred to as fucking verbs) 
+    to indicate the desired action to be performed on the Universal Unique 
+    Identified (Resource) node, cluster, cohort, cloud.
+
+    What this resource represents, whether pre-existing data or data that
+    is generated dynamically, depends on the implementation of the server.
+
+    Often, the resource corresponds to a file or the output of an executable
+    residing on the server.
+
+    The HTTP/1.0 specification:
+        section 8 defined the GET, POST and HEAD methods
+
+    HTTP/1.1 specification:
+        section 9 added 5 new methods: OPTIONS, PUT, DELETE, TRACE and CONNECT.
+
+    By being specified in these documents their semantics are well known 
+    and can be depended upon.
+
+    Any client can use any method and the server can be configured to support 
+    any combination of methods.
+
+    If a method is unknown to an intermediate it will be treated as an unsafe 
+    and non-idempotent method.
+
+    There is no limit to the number of methods that can be defined and this allows 
+    for future methods to be specified without breaking existing infrastructure. 
+
+    RFC5789 specified the PATCH method.
+
+
+    so... after all that stuff, we're coding on:
+
+    [GET]
+        Requests a representation of the specified resource.
+
+        Requests using GET should only retrieve data and should have no other effect. 
+
+        (This is also true of some other HTTP methods.)
+
+    [HEAD]
+        Asks for the response identical to the one that would correspond to a GET request, 
+        but without the response body. 
+
+        This is useful for retrieving meta-information written in response headers, 
+        without having to transport the entire content.
+
+    POST
+        Requests that the server accept the entity enclosed in the request as a new subordinate
+        of the web resource identified by the URI.
+
+        The data POSTed might be, as examples, an annotation for existing resources; 
+        a message for a bulletin board, newsgroup, mailing list, or comment thread; 
+        a block of data that is the result of submitting a web form to a data-handling process; 
+        or an item to add to a database.
+
+    PUT
+        Requests that the enclosed entity be stored under the supplied URI. 
+
+        If the URI refers to an already existing resource, it is modified; if the URI does 
+        not point to an existing resource, then the server can create the resource with that URI.
+
+    DELETE
+        Deletes the specified resource.
+
+    [OPTIONS]
+        Returns the HTTP methods that the server supports for the specified URL. 
+
+        This can be used to check the functionality of a web server by requesting '*' 
+        instead of a specific resource.
+
+    PATCH
+        Is used to apply partial modifications to a resource.
+
+'''
 
 
 @content_type_validation
@@ -37,40 +137,40 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
     '''       
         Records resource handler
     '''
-    
+
     @web.asynchronous
     @gen.engine
     def get(self, record_uuid=None, start=None, stop=None, page_num=0, lapse='hours'):
         '''
             Mango records get handler
 
-            Get Record Objects
+            Get record objects
         '''
         if record_uuid:
             record_uuid = record_uuid.rstrip('/')
-            
+
             if self.current_user:
                 user = self.current_user
                 record = yield motor.Op(self.get_detail_record, user, record_uuid)
             else:
                 record = yield motor.Op(self.get_detail_record, None, record_uuid)
-            
+
             if not record:
                 self.set_status(400)
                 system_error = errors.Error('missing')
                 error = system_error.missing('record', record_uuid)
                 self.finish(error)
                 return
-            
+
             self.finish(record)
             return
-        
+
         if self.current_user:
             user = self.current_user
             orgs = yield motor.Op(self.get_orgs, user)
 
             mango_accounts = (orgs['orgs'] if orgs else False)
-            
+
             print(user, orgs, ' on get record objects.')
 
             if not mango_accounts:
@@ -96,8 +196,17 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                    stop=stop,
                                    page_num=page_num)
         
-        self.finish(json_util.dumps(result))        
-    
+        self.finish(json_util.dumps(result))
+
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def head(self):
+        '''
+            Mango records head handler
+        '''
+        pass
+
     @web.asynchronous
     @gen.engine
     def post(self):
@@ -118,10 +227,11 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         result = yield motor.Op(self.new_detail_record, struct)
  
         # WARNING: The complete error stuff is going to be re-written
-        # cuz it sucks
+        
+        # cuz it sucks right now!
         
         if error:
-            print 'error 2'
+            print('error 2')
             error = str(error)
             system_error = errors.Error(error)
             # Error handling 409?
@@ -136,7 +246,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.finish(error)
             return
         elif error:
-            print 'error 3'
+            print('error 3')
             self.finish(error)
             return
         
@@ -160,7 +270,16 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         self.set_status(201)
         self.finish({'id':result})
-    
+
+    @web.authenticated
+    @web.asynchronous
+    @gen.engine
+    def put(self):
+        '''
+            Mango records put handler
+        '''
+        pass
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
@@ -186,12 +305,12 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
     @web.authenticated
     @web.asynchronous
     @gen.engine
-    def put(self):
+    def options(self):
         '''
-            Mango records put handler
+            Mango records options handler
         '''
         pass
-    
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
@@ -200,16 +319,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             Mango records patch handler
         '''
         pass
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def head(self):
-        '''
-            Mango records head handler
-        '''
-        pass
-    
+
+
 @content_type_validation
 class PublicHandler(records.Records, BaseHandler):
     '''
