@@ -4,8 +4,6 @@
     
     Organizations of restricted generality (ORGs)
 '''
-
-
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License. 
@@ -16,8 +14,8 @@
 # Organizations of restricted generality (ORGs) provide foundations 
 # for the development of scalable, robust, and private applications.
 
-
 __author__ = 'Jean Chassoul'
+
 
 import os
 

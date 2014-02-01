@@ -3,10 +3,9 @@
     Mango records data models
 '''
 # This file is part of mango.
-#
-# Distributed under the terms of the last AGPL License. The full
-# license is in the file LICENCE, distributed as part of this
-# software.
+
+# Distributed under the terms of the last AGPL License.
+# The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
@@ -41,7 +40,6 @@ class Record(models.Model):
         Record Object Data Structure
     '''
     _id = mongo.ObjectIdType(required=False)
-
     uuid = types.UUIDType(default=uuid.uuid4)
 
     accountcode = types.StringType()
@@ -56,13 +54,11 @@ class Record(models.Model):
     # and can be seen be every user account
     public = types.BooleanType(default=False)
 
-
     source = types.StringType()
     destination = types.StringType()
 
     source_channel = types.StringType()
     destination_channel = types.StringType()
-
 
     src = types.StringType()
     dst = types.StringType()

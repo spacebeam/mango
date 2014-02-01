@@ -3,10 +3,9 @@
     Mango accounts
 '''
 # This file is part of mango.
-#
-# Distributed under the terms of the last AGPL License. The full
-# license is in the file LICENCE, distributed as part of this
-# software.
+
+# Distributed under the terms of the last AGPL License. 
+# The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
@@ -73,7 +72,7 @@ class Accounts(object):
             check_type = yield motor.Op(self.db.accounts.find_one,
                                         {'account': account,
                                          'account_type': account_type},
-                                        {'type':1, '_id':0})
+                                        {'type':1,'_id':0})
             check_type = (True if check_type else False)
         except Exception, e:
             callback(None, e)
@@ -86,7 +85,6 @@ class Accounts(object):
             Create a new account resource
         '''
         try:
-            print struct
             res = accounts.AccountResource(struct)
             res.validate()
             res = res.to_primitive()
@@ -94,10 +92,8 @@ class Accounts(object):
             callback(None, e)
             return
 
-        resource = ''.join(('resources.', res['resource']))       
+        resource = ''.join(('resources.', res['resource']))
 
-
-        
         # add the account key with the current user
         if res.has_key('account') is False:
             res['account'] = self.get_current_user()
@@ -114,9 +110,8 @@ class Accounts(object):
         except Exception, e:
             callback(None, e)
             return
-                
-        callback(result, None)
 
+        callback(result, None)
 
     @gen.engine
     def new_route(self, struct, callback):
@@ -125,7 +120,6 @@ class Accounts(object):
         '''
         account = struct['account']
         try:
-            #route = accounts.Route(**struct).validate()
             route = accounts.Route(struct)
             route.validate()
             route = route.to_primitive()
@@ -140,34 +134,36 @@ class Accounts(object):
         except Exception, e:
             callback(None, e)
             return
-        
+
         callback(result, None)
-    
+
     @gen.engine
     def get_routes(self, account, callback):
         '''
             Get account billing routes
         '''
-        
+
         # Support for multiple routes missing !!!
+
+        # TBD by a funhead.
 
         try:
             result = yield motor.Op(self.db.accounts.find_one,
                                     {'account': account},
-                                    {'routes':1, '_id':0})            
+                                    {'routes':1, '_id':0})   
         except Exception, e:
             callback(None, e)
             return
-        
+
         print(result, 'get in out with the stuff')
         callback(result, None)
-    
+
     @gen.engine
     def get_orgs(self, account, callback):
         '''
             Get account orgs
         '''
-        print('da fuqking geting org')
+
         try:
             result = yield motor.Op(self.db.accounts.find_one,
                                     {'account': account},
@@ -299,11 +295,13 @@ class MangoAccounts(Accounts):
                     'no',
                     'no'
                 );
-            ''' % (struct['account'], 
+            ''' % (struct['account'],
                    struct['account'],
                    struct['account'],
                    struct['password'])
+
             cursor = yield momoko.Op(self.sql.execute, query)
+
         except (psycopg2.Warning, psycopg2.Error) as error:
             callback(None, str(error))
             return
@@ -346,6 +344,19 @@ class Orgs(MangoAccounts):
             callback(None, e)
         
         callback(account_id, None)
+
+    @gen.engine
+    def get_uuid(self, account, callback):
+        '''
+            Get uuid
+        '''
+        try:
+            account_uuid = yield motor.Op(self.db.accounts.find_one,
+                                        {'account':account}, {'uuid':1})
+        except Exception, e:
+            callback(None, e)
+        
+        callback(account_uuid, None)
     
     @gen.engine
     def new_member(self, org, user, callback):

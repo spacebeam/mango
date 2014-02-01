@@ -82,7 +82,7 @@ class Records(object):
             query = self.db.records.find({'accountcode':account,
                                         'assigned':True})
         
-        query = query.sort([('_id', -1)]).skip(page_num * page_size).limit(page_size)
+        query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
             for record in (yield motor.Op(query.to_list)):
@@ -117,7 +117,7 @@ class Records(object):
         #
         # for a more independent implementation sort by uuid
 
-        query = query.sort([('_id', -1)]).skip(page_num * page_size).limit(page_size)
+        query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
             for record in (yield motor.Op(query.to_list)):

@@ -3,10 +3,9 @@
     Mango accounts models
 '''
 # This file is part of mango.
-#
-# Distributed under the terms of the last AGPL License. The full
-# license is in the file LICENCE, distributed as part of this
-# software.
+
+# Distributed under the terms of the last AGPL License.
+# The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
@@ -76,13 +75,14 @@ class AccountResource(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType(required=False)
+    
     resource  = types.StringType(required=True)
     
 
 class BaseAccount(models.Model):
     '''
         Mango base account
-    '''  
+    '''
     uuid = types.UUIDType(default=uuid.uuid4)
 
     active = types.BooleanType(default=True)

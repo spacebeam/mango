@@ -11,7 +11,6 @@
 __author__ = 'Jean Chassoul'
 
 
-
 import time
 import motor
 
@@ -78,26 +77,26 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             if not mango_accounts:
                 result = yield motor.Op(self.get_detail_records,
-                                       account=user, 
-                                       lapse=lapse,
-                                       start=start,
-                                       stop=stop,
-                                       page_num=page_num)
+                                        account=user, 
+                                        lapse=lapse,
+                                        start=start,
+                                        stop=stop,
+                                        page_num=page_num)
             else:
                 mango_accounts.append(user)
                 result = yield motor.Op(self.get_detail_records,
-                                       account=mango_accounts,
-                                       lapse=lapse,
-                                       start=start,
-                                       stop=stop,
-                                       page_num=page_num)
+                                        account=mango_accounts,
+                                        lapse=lapse,
+                                        start=start,
+                                        stop=stop,
+                                        page_num=page_num)
         else:
             result = yield motor.Op(self.get_detail_records,
-                                   account=None,
-                                   lapse=lapse,
-                                   start=start,
-                                   stop=stop,
-                                   page_num=page_num)
+                                    account=None,
+                                    lapse=lapse,
+                                    start=start,
+                                    stop=stop,
+                                    page_num=page_num)
         
         self.finish(json_util.dumps(result))
 
@@ -129,7 +128,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         result = yield motor.Op(self.new_detail_record, struct)
  
-        # WARNING: The complete error stuff is going to be re-written
+        # the error code hurt my eyes.
         
         # cuz it sucks right now!
         
@@ -137,7 +136,9 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             print('error 2')
             error = str(error)
             system_error = errors.Error(error)
+
             # Error handling 409?
+            
             self.set_status(400)
         
         if error and 'Model' in error:
