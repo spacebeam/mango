@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-    Mango errors
+    Mango system errors.
 '''
 
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango records data models
+    Mango records models and messages.
 '''
+
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango base handlers
+    Mango HTTP base handlers
 '''
-# This file is part of cebus.
+
+# This file is part of mango.
 
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
@@ -14,8 +15,8 @@ __author__ = 'Jean Chassoul'
 # http://www.youtube.com/watch?v=2k-JGuhyqKE
 
 '''
-    Follow the black chucho
-    -----------------------
+    Follow eve the black chuchawa
+    -----------------------------
 
     HTTP status code is primarily divided into five groups for better 
     explanation of request and responses between client and server as named:
@@ -23,7 +24,7 @@ __author__ = 'Jean Chassoul'
     Informational 1XX,
     Successful 2XX,
     Redirection 3XX,
-    
+
     Client Error 4XX
         and
             Server Error 5XX.
@@ -34,11 +35,10 @@ import motor
 from tornado import gen
 from tornado import web
 
-from mango.tools import errors
-
 from mango.system import basic_authentication
 
 from mango.tools import check_account_authorization
+from mango.tools import errors
 
 # TODO: Change username to the more general account variable name.
 
@@ -139,24 +139,24 @@ class BaseHandler(web.RequestHandler):
     @property
     def document(self):
         '''
-            document database
+            Document database
         '''
         return self.application.document
 
     @property
     def kvalue(self):
         '''
-            key-value database
+            Key-value database
         '''
         return self.application.kvalue
 
     @property
     def graph(self):
         '''
-            graph database
+            Graph database
         '''
         return self.application.graph
-    
+
     def initialize(self, **kwargs):
         ''' 
             Initialize the Base Handler
@@ -164,11 +164,17 @@ class BaseHandler(web.RequestHandler):
         super(BaseHandler, self).initialize(**kwargs)
 
         self.etag = None
-        
+
         # system database
         self.db = self.settings['db']
 
         # ZeroMQ streams
+
+        # what the fuck is zeromq?
+        # oh my fucking messages!!!
+        # its fucking great dont yopu think? have you see master [] kicking assses?
+        # take this links fuckers [].
+
         # self.cdr_stream = self.settings['cdr_stream']
 
         # Tornado CDR periodic callbacks
@@ -182,7 +188,7 @@ class BaseHandler(web.RequestHandler):
             Mango default headers
         '''
         self.set_header("Access-Control-Allow-Origin", "ph3nix.com")
-    
+
     def get_current_user(self):
         '''
             Return the username from a secure cookie
@@ -216,7 +222,7 @@ class LoginHandler(BaseHandler):
     '''
         BasicAuth login
     ''' 
-    
+
     @web.asynchronous
     @gen.engine
     def get(self):
@@ -239,7 +245,7 @@ class LoginHandler(BaseHandler):
         else:
             self.set_secure_cookie('username', self.username)
             self.username, self.password = (None, None)
-            
+
             # redirect where and why?
             # self.redirect(next_url)
 
@@ -251,13 +257,13 @@ class LogoutHandler(BaseHandler):
     '''
         BasicAuth logout
     '''
-    
+
     @web.asynchronous
     def get(self):
         '''
             Clear secure cookie
         '''
         self.clear_cookie('username')
-        
+
         self.set_status(200)
         self.finish()

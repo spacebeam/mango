@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango accounts
+    Mango accounts system logic.
 '''
+
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License. 

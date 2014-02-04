@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango records
+    Mango records system logic.
 '''
 
 # This file is part of mango.

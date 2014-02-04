@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango tools
+    Mango system tools.
 '''
 # This file is part of mango.
 
