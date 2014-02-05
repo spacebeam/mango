@@ -19,19 +19,17 @@ from tornado import web
 from mango.system import accounts
 from mango.system import records
 
-from mango.handlers import BaseHandler
-
 from mango.tools import content_type_validation
+from mango.tools import check_json
 
-# errors are crazy stuff, so please take your time 
+# Errors are crazy stuff, so please take your time 
 # read about context stacks,
 # think about the context of things.
 
+# then, rewrite the hell out of the errors module.
 from mango.tools import errors
 
-# then, rewrite the hell out of the errors module.
-
-from mango.tools import check_json
+from mango.handlers import BaseHandler
 
 
 @content_type_validation
@@ -406,7 +404,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         
         struct['account'] = account
         
-        print struct
+        print(struct)
         
         result = yield motor.Op(self.new_route, struct)
 

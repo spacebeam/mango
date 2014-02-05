@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 '''
     Manage Asynchronous Number of Granular/Going ORGs
-    
+
     Organizations of restricted generality (ORGs)
 '''
+
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 # Mango manage, measure and gives new meaning to ORGs data records.
 
-# Organizations of restricted generality (ORGs) provide foundations 
+# Organizations of restricted generality (ORGs) provide foundations
 # for the development of scalable, robust, and private applications.
 
 __author__ = 'Jean Chassoul'
@@ -35,23 +36,88 @@ from mango.tools import indexes
 from mango.tools import periodic
 
 import logging
-
 import arrow
-
-import pytz
-
 import motor
-
 import psycopg2
-
 import momoko
 
+'''
+    Mango HTTP Requests
+    -------------------
 
+    GET
+
+    POST
+
+    PUT
+
+    PATCH
+
+    DELETE
+
+    HEAD
+
+    OPTIONS
+'''
+
+'''
+    Mango SIP Requests
+    ------------------
+
+    SIP requests are the codes used by Session Initiation Protocol for communication. 
+    To complement them there are SIP responses, which generally indicate whether this 
+    request succeeded or failed, and in the latter case, why it failed.
+
+    INVITE
+        Indicates a client is being invited to participate in a call session.
+
+    ACK 
+        Confirms that the client has received a final response to an INVITE request.
+
+    BYE 
+        Terminates a call and can be sent by either the caller or the callee.
+
+    CANCEL
+        Cancels any pending request.
+
+    OPTIONS
+        Queries the capabilities of servers.
+
+    REGISTER
+        Registers the address listed in the To header field with a SIP server.
+
+    PRACK
+        Provisional acknowledgement.
+
+    SUBSCRIBE
+        Subscribes for an Event of Notification from the Notifier.
+
+    NOTIFY
+        Notify the subscriber of a new Event.
+
+    PUBLISH 
+        Publishes an event to the Server.
+
+    INFO
+        Sends mid-session information that does not modify the session state.
+
+    REFER
+        Asks recipient to issue SIP request (call transfer.)
+
+    MESSAGE
+        Transports instant messages using SIP.
+
+    UPDATE
+        Modifies the state of a session without changing the state of the dialog.
+
+
+
+'''
 # Mango HTTP Requests
 
 # [ Get ]
 #
-# GET /records/record/keys/key 
+# GET /records/record/keys/key
 
 
 # [ Store ]
@@ -82,10 +148,12 @@ iofun = []
 # e_tag
 e_tag = False
 
+
 class IndexHandler(web.RequestHandler):
     '''
         HTML5 Index
     '''
+
     def get(self):
         self.render('index.html', test="Hello, world!")
 
@@ -124,10 +192,10 @@ if __name__ == '__main__':
         Organizations of restricted generality
     '''
     opts = options.options()
-    
+
     # Mango periodic functions
     periodic_records = opts.periodic_records
-    
+
     # Set document database
     document = motor.MotorClient().open_sync().mango
 
@@ -138,10 +206,10 @@ if __name__ == '__main__':
         logging.info('Ensuring indexes...')
         indexes.ensure_indexes(db)
         logging.info('DONE.')
-    
+
     # base url
     base_url = opts.base_url
-    
+
     # mango application daemon
     application = web.Application(
 
@@ -257,7 +325,7 @@ if __name__ == '__main__':
         periodic_records=periodic_records,
 
         # application timezone
-        tz=pytz.timezone(opts.timezone),
+        tz=arrow.now(opts.timezone),
 
         # pagination page size
         page_size=opts.page_size,

@@ -1,6 +1,7 @@
 tornado==2.4.1
 motor==0.1
-nose
 schematics
+psycopg2
+momoko
 pandas
-pyzmq
+arrow

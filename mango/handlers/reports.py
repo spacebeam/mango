@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango HTTP reports handlers
+    Mango HTTP reports handlers.
 '''
 
 # This file is part of mango.

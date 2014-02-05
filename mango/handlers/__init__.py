@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango HTTP base handlers
+    Mango HTTP base handlers.
 '''
 
 # This file is part of mango.
@@ -30,6 +30,37 @@ __author__ = 'Jean Chassoul'
             Server Error 5XX.
 '''
 
+# Wake the fuck up.
+
+'''
+    Call misha the gentle beast
+    ---------------------------
+
+    The Session Initiation Protocol (SIP) is a signalling protocol used for 
+    controlling communication sessions such as Voice over IP telephone calls. 
+
+    SIP is based around request/response transactions, in a similar manner to 
+    the Hypertext Transfer Protocol (HTTP). 
+
+    Each transaction consists of a SIP request (which will be one of several
+    request methods), and at least one response.
+
+    SIP responses specify a three-digit integer response code, which is one 
+    of a number of defined codes that detail the status of the request.
+
+    These codes are grouped according to their first digit as "provisional",
+    "success", "redirection", "client error", "server error" or "global failure"
+    codes, corresponding to a first digit of 1–6; 
+
+    these are expressed as, for example, 
+
+    "1xx" for provisional responses with a code of 100–199.
+
+    The SIP response codes are an extension to the HTTP response codes, 
+    although not all HTTP response codes are valid in SIP.
+
+'''
+
 import motor
 
 from tornado import gen
@@ -44,8 +75,8 @@ from mango.tools import errors
 
 
 '''
-    Request methods
-    ---------------
+    HTTP request methods
+    --------------------
 
     HTTP defines methods (sometimes referred to as fucking verbs) 
     to indicate the desired action to be performed on the Universal Unique 
@@ -120,9 +151,72 @@ from mango.tools import errors
 
     PATCH
         Is used to apply partial modifications to a resource.
-
 '''
 
+# 7, 11 nightmares at 3 am.
+
+'''
+    SIP request methods
+    -------------------
+
+    The Session Initiation Protocol (SIP) is a signalling protocol 
+    used for controlling communication sessions such as Voice over IP 
+    telephone calls. 
+
+    SIP is based around request/response transactions, in a similar manner
+    to the Hypertext Transfer Protocol (HTTP). 
+
+    Each transaction consists of a SIP request (which will be one of several request methods),
+    and at least one response.
+
+    SIP requests are the codes used by Session Initiation Protocol 
+    for communication.
+
+    To complement them there are SIP responses, which generally indicate
+    whether this request succeeded or failed, and in the latter case, why it failed.
+
+    INVITE  
+        Indicates a client is being invited to participate in a call session.
+
+    ACK
+        Confirms that the client has received a final response to an INVITE request.
+
+    BYE
+        Terminates a call and can be sent by either the caller or the callee.
+
+    CANCEL
+        Cancels any pending request.
+
+    OPTIONS
+        Queries the capabilities of servers.
+
+    REGISTER
+        Registers the address listed in the To header field with a SIP server.
+
+    PRACK
+        Provisional acknowledgement.
+
+    SUBSCRIBE
+        Subscribes for an Event of Notification from the Notifier.
+
+    NOTIFY
+        Notify the subscriber of a new Event.
+
+    PUBLISH
+        Publishes an event to the Server.
+
+    INFO
+        Sends mid-session information that does not modify the session state.
+
+    REFER
+        Asks recipient to issue SIP request (call transfer.)
+
+    MESSAGE
+        Transports instant messages using SIP.
+
+    UPDATE
+        Modifies the state of a session without changing the state of the dialog.
+'''
 
 class BaseHandler(web.RequestHandler):
     '''
@@ -168,12 +262,7 @@ class BaseHandler(web.RequestHandler):
         # system database
         self.db = self.settings['db']
 
-        # ZeroMQ streams
-
-        # what the fuck is zeromq?
-        # oh my fucking messages!!!
-        # its fucking great dont yopu think? have you see master [] kicking assses?
-        # take this links fuckers [].
+        # zeromq greatness stuff
 
         # self.cdr_stream = self.settings['cdr_stream']
 

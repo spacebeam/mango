@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango HTTP billings handlers
+    Mango HTTP billings handlers.
 '''
 
 # This file is part of mango.
@@ -13,6 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import motor
 
+# import numpy as np
 import pandas as pd
 
 from tornado import gen
@@ -22,10 +23,11 @@ from mango.system import accounts
 from mango.system import billings
 from mango.system import records
 
-from mango.handlers import BaseHandler
 from mango.tools import content_type_validation
-from mango.tools import errors
 from mango.tools import check_json
+from mango.tools import errors
+
+from mango.handlers import BaseHandler
 
 
 @content_type_validation
