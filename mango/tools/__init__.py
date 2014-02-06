@@ -2,6 +2,7 @@
 '''
     Mango system tools.
 '''
+
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License. 
@@ -12,12 +13,10 @@ __author__ = 'Jean Chassoul'
 import json
 import motor
 
-import arrow
-
 from datetime import datetime as dt
 
 from tornado import gen
-from mango.tools.errors import Error
+from mango.tools import errors
 from mango.messages import reports
 
 
@@ -36,7 +35,7 @@ def check_json(struct, callback):
     try:
         struct = json.loads(struct)
     except Exception, e:
-        api_error = Error(e)
+        api_error = errors.Error(e)
         error = api_error.json()
         callback(None, error)
         return
@@ -120,7 +119,6 @@ def check_timestamp(start, stop, callback):
         Return datetime if gets a unix timestamp
     '''
     try:
-
         start = (dt.fromtimestamp(float(start)) if start else None)
         stop = (dt.fromtimestamp(float(stop)) if stop else None)
     except Exception, e:

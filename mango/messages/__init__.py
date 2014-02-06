@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system models and messages
+    Mango system models and messages.
 '''
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
 
 '''
-	Text models are incredibly powerful. 
+	Text models are incredibly powerful.
 
 	Maxwell's equations describe classical electrodynamic in four textual equations.
 
@@ -20,4 +20,8 @@ __author__ = 'Jean Chassoul'
 	motions of the planets. No one descriptive method is best.
 
 	/Joe
-''' 
+'''
+
+'''
+	expand on unix pipelines, there is a cool old video on your youtube history.
+'''

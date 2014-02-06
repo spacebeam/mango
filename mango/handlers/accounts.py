@@ -13,6 +13,9 @@ __author__ = 'Jean Chassoul'
 
 import motor
 
+# import numpy as np
+# import pandas as pd
+
 from tornado import gen
 from tornado import web
 
@@ -22,7 +25,7 @@ from mango.system import records
 from mango.tools import content_type_validation
 from mango.tools import check_json
 
-# Errors are crazy stuff, so please take your time 
+# Errors are crazy stuff, so please take your time
 # read about context stacks,
 # think about the context of things.
 
@@ -185,17 +188,17 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             'members': [current_user]
         }
         
-        print org, team
+        print(org, team) 
         
         check_member = yield motor.Op(self.new_member, org, current_user)
         check_team = yield motor.Op(self.new_team, org, team)
 
-        print 'team', check_team
-        print 'member', check_member        
-        print 'org_id', org_id
+        print('team', check_team)
+        print('member', check_member)
+        print('org_id', org_id)
 
         if not org_id:
-            print 'some errors'
+            print('some errors')
             self.set_status(400)
             self.finish({'errors':struct})
             return

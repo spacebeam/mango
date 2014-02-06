@@ -5,7 +5,7 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
@@ -15,10 +15,43 @@ __author__ = 'Jean Chassoul'
 # http://www.youtube.com/watch?v=2k-JGuhyqKE
 
 '''
+
+    System primitives and basic building blocks 
+    -------------------------------------------
+
+    Recursively construction of computing stuff.
+
+    Mango handlers for records of stuff giving reports and billing information if needed.
+'''
+
+'''
+    System primitives
+    -----------------
+    
+    accounts, records, reports, billings.
+
+    Account primitives:
+        - users
+        - orgs(ORGs) are composed by teams of users with different goals and strategies for achivements.
+
+    Resource primitives:
+        - records
+        - reports
+        - billing (if needed)
+
+'''
+
+# accounts: {users or/and orgs}
+
+# teams: {users members of orgs teams}
+
+# mango resources: {records, reports, billing}
+
+'''
     Follow eve the black chuchawa
     -----------------------------
 
-    HTTP status code is primarily divided into five groups for better 
+    HTTP status code is primarily divided into five groups for better
     explanation of request and responses between client and server as named:
 
     Informational 1XX,
@@ -36,27 +69,33 @@ __author__ = 'Jean Chassoul'
     Call misha the gentle beast
     ---------------------------
 
-    The Session Initiation Protocol (SIP) is a signalling protocol used for 
-    controlling communication sessions such as Voice over IP telephone calls. 
+    The Session Initiation Protocol (SIP) is a signalling protocol used for
+    controlling communication sessions such as Voice over IP telephone calls.
 
-    SIP is based around request/response transactions, in a similar manner to 
-    the Hypertext Transfer Protocol (HTTP). 
+    SIP is based around request/response transactions, in a similar manner to
+    the Hypertext Transfer Protocol (HTTP).
 
     Each transaction consists of a SIP request (which will be one of several
     request methods), and at least one response.
 
-    SIP responses specify a three-digit integer response code, which is one 
+    SIP responses specify a three-digit integer response code, which is one
     of a number of defined codes that detail the status of the request.
 
-    These codes are grouped according to their first digit as "provisional",
-    "success", "redirection", "client error", "server error" or "global failure"
-    codes, corresponding to a first digit of 1–6; 
+    These codes are grouped according to their first digit as
+    
+    Provisional 1XX,
+    Success 2XX,
+    Redirection 3XX,
+    Client error 4XX,
+        
+    Server error 5XX
+        and
+            Global failure 6XX.
+    
+       
+    For example; "1xx" for provisional responses with a code of 100–199.
 
-    these are expressed as, for example, 
-
-    "1xx" for provisional responses with a code of 100–199.
-
-    The SIP response codes are an extension to the HTTP response codes, 
+    The SIP response codes are an extension to the HTTP response codes,
     although not all HTTP response codes are valid in SIP.
 
 '''
@@ -78,8 +117,8 @@ from mango.tools import errors
     HTTP request methods
     --------------------
 
-    HTTP defines methods (sometimes referred to as fucking verbs) 
-    to indicate the desired action to be performed on the Universal Unique 
+    HTTP defines methods (sometimes referred to as fucking verbs)
+    to indicate the desired action to be performed on the Universal Unique
     Identified (Resource) node, cluster, cohort, cloud.
 
     What this resource represents, whether pre-existing data or data that
@@ -94,17 +133,17 @@ from mango.tools import errors
     HTTP/1.1 specification:
         section 9 added 5 new methods: OPTIONS, PUT, DELETE, TRACE and CONNECT.
 
-    By being specified in these documents their semantics are well known 
+    By being specified in these documents their semantics are well known
     and can be depended upon.
 
-    Any client can use any method and the server can be configured to support 
+    Any client can use any method and the server can be configured to support
     any combination of methods.
 
-    If a method is unknown to an intermediate it will be treated as an unsafe 
+    If a method is unknown to an intermediate it will be treated as an unsafe
     and non-idempotent method.
 
-    There is no limit to the number of methods that can be defined and this allows 
-    for future methods to be specified without breaking existing infrastructure. 
+    There is no limit to the number of methods that can be defined and this allows
+    for future methods to be specified without breaking existing infrastructure.
 
     RFC5789 specified the PATCH method.
 
@@ -114,39 +153,39 @@ from mango.tools import errors
     [GET]
         Requests a representation of the specified resource.
 
-        Requests using GET should only retrieve data and should have no other effect. 
+        Requests using GET should only retrieve data and should have no other effect.
 
         (This is also true of some other HTTP methods.)
 
     [HEAD]
-        Asks for the response identical to the one that would correspond to a GET request, 
-        but without the response body. 
+        Asks for the response identical to the one that would correspond to a GET request,
+        but without the response body.
 
-        This is useful for retrieving meta-information written in response headers, 
+        This is useful for retrieving meta-information written in response headers,
         without having to transport the entire content.
 
     POST
         Requests that the server accept the entity enclosed in the request as a new subordinate
         of the web resource identified by the URI.
 
-        The data POSTed might be, as examples, an annotation for existing resources; 
-        a message for a bulletin board, newsgroup, mailing list, or comment thread; 
-        a block of data that is the result of submitting a web form to a data-handling process; 
+        The data POSTed might be, as examples, an annotation for existing resources;
+        a message for a bulletin board, newsgroup, mailing list, or comment thread;
+        a block of data that is the result of submitting a web form to a data-handling process;
         or an item to add to a database.
 
     PUT
-        Requests that the enclosed entity be stored under the supplied URI. 
+        Requests that the enclosed entity be stored under the supplied URI.
 
-        If the URI refers to an already existing resource, it is modified; if the URI does 
+        If the URI refers to an already existing resource, it is modified; if the URI does
         not point to an existing resource, then the server can create the resource with that URI.
 
     DELETE
         Deletes the specified resource.
 
     [OPTIONS]
-        Returns the HTTP methods that the server supports for the specified URL. 
+        Returns the HTTP methods that the server supports for the specified URL.
 
-        This can be used to check the functionality of a web server by requesting '*' 
+        This can be used to check the functionality of a web server by requesting '*'
         instead of a specific resource.
 
     PATCH
@@ -159,23 +198,23 @@ from mango.tools import errors
     SIP request methods
     -------------------
 
-    The Session Initiation Protocol (SIP) is a signalling protocol 
-    used for controlling communication sessions such as Voice over IP 
-    telephone calls. 
+    The Session Initiation Protocol (SIP) is a signalling protocol
+    used for controlling communication sessions such as Voice over IP
+    telephone calls.
 
     SIP is based around request/response transactions, in a similar manner
-    to the Hypertext Transfer Protocol (HTTP). 
+    to the Hypertext Transfer Protocol (HTTP).
 
     Each transaction consists of a SIP request (which will be one of several request methods),
     and at least one response.
 
-    SIP requests are the codes used by Session Initiation Protocol 
+    SIP requests are the codes used by Session Initiation Protocol
     for communication.
 
     To complement them there are SIP responses, which generally indicate
     whether this request succeeded or failed, and in the latter case, why it failed.
 
-    INVITE  
+    INVITE
         Indicates a client is being invited to participate in a call session.
 
     ACK

@@ -11,15 +11,12 @@
 __author__ = 'Jean Chassoul'
 
 
-from datetime import time
-from datetime import datetime
-
 import arrow
+import motor
 
 # import numpy as np
 import pandas as pd
 
-import motor
 
 from tornado import gen
 
@@ -29,16 +26,19 @@ class Billings(object):
     '''
         Billings resources
     '''
-    
+   
     @gen.engine 
-    def get_cost_summary(self, account, routes, elapse, callback):
+    def get_cost_summary(self, account, routes, lapse, start, stop, callback):
         '''
             get_cost_summary
         '''
-        utc = datetime.utcnow()
 
-        start = datetime.combine(utc.date(), time())
-        stop = start + pd.DateOffset(days=1)
+        if not start:
+            start = arrow.utcnow()
+        if not stop:
+            stop = start.replace(days=+1)
+
+        start = start.timestamp
 
         # TODO: multiple routes
         single_route = routes

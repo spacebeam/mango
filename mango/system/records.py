@@ -12,18 +12,16 @@ __author__ = 'Jean Chassoul'
 
 
 import arrow
-
-# import numpy as np
-import pandas as pd
+import motor
 
 '''
     A universally unique identifier (UUID) is an identifier standard 
-    for software construction
+    for software construction.
 '''
-
 import uuid
 
-import motor
+# import numpy as np
+import pandas as pd
 
 from tornado import gen
 
@@ -221,7 +219,7 @@ class Records(object):
 
         # MongoDB aggregation group operator
 
-        # R&D on group by accountcode
+        # R&D on group by accountcode, account, uuid, or something else ...
 
         group = {
             '_id': {
@@ -342,8 +340,6 @@ class Records(object):
             Return resource options
         '''
         pass
-
-        callback(result, None)
 
     @gen.engine
     def modify_record(self, struct, callback):

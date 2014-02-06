@@ -14,7 +14,7 @@ __author__ = 'Jean Chassoul'
 import motor
 
 # import numpy as np
-import pandas as pd
+# import pandas as pd
 
 from tornado import gen
 from tornado import web

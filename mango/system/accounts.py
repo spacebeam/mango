@@ -11,8 +11,6 @@
 __author__ = 'Jean Chassoul'
 
 
-import datetime
-
 import arrow
 import motor
 import uuid

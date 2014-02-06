@@ -1,12 +1,21 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
-    Mango daemon configuration options
+    Mango daemon configuration options.
 '''
+
+# This file is part of mango.
+
+# Distributed under the terms of the last AGPL License. 
+# The full license is in the file LICENCE, distributed as part of this software.
+
+__author__ = 'Jean Chassoul'
+
+import os
 import base64
 import uuid
-import os
 
 import tornado.options
+
 
 secret = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
 config_path = 'mango.conf'

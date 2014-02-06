@@ -19,6 +19,11 @@ __author__ = 'Jean Chassoul'
 
 
 import os
+import logging
+import arrow
+import motor
+import psycopg2
+import momoko
 
 from tornado import ioloop
 from tornado import gen
@@ -26,7 +31,6 @@ from tornado import web
 
 # from tornado import websocket
 
-from mango.handlers import HomeHandler, LoginHandler, LogoutHandler
 from mango.handlers import accounts
 from mango.handlers import billings
 from mango.handlers import records
@@ -35,11 +39,9 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
-import logging
-import arrow
-import motor
-import psycopg2
-import momoko
+from mango.handlers import HomeHandler, LoginHandler, LogoutHandler
+
+
 
 '''
     Mango HTTP Requests
@@ -109,36 +111,33 @@ import momoko
 
     UPDATE
         Modifies the state of a session without changing the state of the dialog.
-
-
-
 '''
+
 # Mango HTTP Requests
 
 # [ Get ]
-#
+
 # GET /records/record/keys/key
 
 
 # [ Store ]
-#
-# POST /records/record/keys
 
+# POST /records/record/keys
 # PUT /records/record/keys/key
 
 
 # [ Update ]
-#
+
 # PATCH /records/record/keys/key
 
 
 # [ Delete ]
-#
+
 # DELETE /records/record/keys/key
 
 
 # [ Describe ]
-#
+
 # HEAD/INFO?
 
 
@@ -156,6 +155,7 @@ class IndexHandler(web.RequestHandler):
 
     def get(self):
         self.render('index.html', test="Hello, world!")
+
 
 @gen.engine
 def periodic_records_callbacks(stuff='bananas'):
@@ -216,66 +216,73 @@ if __name__ == '__main__':
         [
             (r'/', IndexHandler),
 
+
+            # I'm thinking on put again the quotes, I discover the buitty 
+            # of perilism, also there's always magic on worlds.
+
+            # Ask witchestein about it.
+
+
             (r'/jc/?', HomeHandler),
 
             # Tornado static file handler 
             (r'/static/(.*)', web.StaticFileHandler, {'path': './static'},),
 
-            # basic-auth session
+            # Basic-Auth session
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
-            # users records 
+            # Users records 
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # users billing routes
+            # Users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
 
-            # users
+            # Users
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
 
-            # orgs records
+            # ORGs records
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # orgs teams
+            # ORGs teams
             # (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             # (r'/orgs/(?P<account>.+)/teams/(?P<team_id>.+)/?', accounts.TeamsHandler),
 
-            # organizations of restricted generality
+            # Organizations of Restricted Generality
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
-            # records
+            # Records
             (r'/records/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.Handler),
             (r'/records/start/(?P<start>.*)/?', records.Handler),
             (r'/records/stop/(?P<stop>.*)/?', records.Handler),
             (r'/records/page/(?P<page_num>\d+)/?', records.Handler),
 
-            # public records 
+            # Public records 
             (r'/records/public/?', records.PublicHandler),
             (r'/records/public/page/(?P<page_num>\d+)/?', records.PublicHandler),
 
-            # unassigned records
+            # Unassigned records
             (r'/records/unassigned/?', records.UnassignedHandler),
             (r'/records/unassigned/page/(?P<page_num>\d+)/?', records.UnassignedHandler),
 
-            # records summary
+            # Records summary
             # (r'/records/summary/<lapse>/<value>/?', records.SummaryHandler),
 
-            # return last (n) of lapse
+            # Return last (n) of lapse
             # (r'/records/summary/<lapse>/lasts/(?P<int>\d+)/?', records.SummaryHandler),
 
-            # statistical projection based on the previous data.
+            # Statistical projection based on the previous data.
             # (r'/records/summary/<lapse>/nexts/(?P<int>\d+)/?', records.SummaryHandler),
 
-            # records summary
+            # Records summary
             (r'/records/summary/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
             (r'/records/summary/start/(?P<start>.*)/?', records.SummaryHandler),
             (r'/records/summary/stopt/(?P<stop>.*)/?', records.SummaryHandler),
@@ -284,13 +291,13 @@ if __name__ == '__main__':
             (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummaryHandler),
             (r'/records/summary/(?P<lapse>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
 
-            # return last (n) of lapse
+            # Return last (n) of lapse
             # (r'/records/summary/(?P<lapse>.*)/lasts/(?P<int>\d+)/?', records.SummaryHandler),
 
             (r'/records/summary/(?P<lapse>.*)/?', records.SummaryHandler),
             (r'/records/summary/?', records.SummaryHandler),
 
-            # records summaries
+            # Records summaries
             (r'/records/summaries/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummariesHandler),
             (r'/records/summaries/start/(?P<start>.*)/?', records.SummariesHandler),
             (r'/records/summaries/stop/(?P<stop>.*)/?', records.SummariesHandler),
@@ -302,15 +309,15 @@ if __name__ == '__main__':
             (r'/records/summaries/(?P<lapse>.*)/?', records.SummariesHandler),
             (r'/records/summaries/?', records.SummariesHandler),
 
+            # Records
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
-            # This is a ugly hack: billings.RecordsHandler, the correct stuff: billings.Handler.
-            # hmm, really?
-
+            # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
             (r'/billings/?', billings.RecordsHandler),
 
+            # Billings records
             (r'/billings/records/start/(?P<start>.*)/stop/(?P<stop>.*)/?', billings.RecordsHandler),
             (r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
             (r'/billings/records/stop/(?P<stop>.*)/?', billings.RecordsHandler),

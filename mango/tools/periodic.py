@@ -1,12 +1,21 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
-    Mango periodic tools
+    Mango periodic tools.
 '''
+
+# This file is part of mango.
+
+# Distributed under the terms of the last AGPL License. 
+# The full license is in the file LICENCE, distributed as part of this software.
+
+__author__ = 'Jean Chassoul'
+
+import motor
+
 from contextlib import contextmanager
 from tornado import gen
 from mango.messages import accounts
 from bson import objectid
-import motor
 
 
 @gen.engine
@@ -26,7 +35,6 @@ def get_usernames(db, callback):
         callback(None, e)
     
     callback(usernames, None)
-
 
 @gen.engine
 def new_resource_context(db, struct, callback):
@@ -58,7 +66,6 @@ def new_resource_context(db, struct, callback):
         return
             
     callback(result, None)
-
 
 @gen.engine
 def get_unassigned_cdr(db, callback):
@@ -127,7 +134,6 @@ def process_assigned_false(db, callback):
     except Exception, e:
         callback(None, e)
 
-
 @gen.engine
 def process_asterisk_cdr(db, callback):
     '''
@@ -178,7 +184,6 @@ def process_asterisk_cdr(db, callback):
         }).limit(1000).each(_got_call)
     except Exception, e:
         callback(None, e)
-
 
 @gen.engine
 def assign_call(db, account, callid, callback):

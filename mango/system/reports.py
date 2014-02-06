@@ -15,11 +15,11 @@ from tornado import gen
 
 from mango.messages import reports
 
+
 class Reports(object):
     '''
         Reports resources
     '''
-    
     
     # TODO: research this stuff
     @gen.engine
@@ -40,4 +40,3 @@ class Reports(object):
         result = aggregation
         # TODO: test this method in action
         callback(result, None)
-        
