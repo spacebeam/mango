@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango authentication system logic.
+    Mango primitives system logic.
 '''
 
 # This file is part of mango.
@@ -10,6 +10,13 @@
 
 __author__ = 'Jean Chassoul'
 
+'''
+    Research
+    --------
+
+    sha512
+
+'''
 
 import base64
 
@@ -17,9 +24,10 @@ import base64
 def basic_authentication(handler_class):
     '''
         basic authentication
+        --------------------
 
         HTTP Basic Authentication Decorator
-        
+
         @basic_authentication
     '''
 
@@ -31,7 +39,7 @@ def basic_authentication(handler_class):
         '''
 
         def basic_auth(handler, kwargs):
-            ''' 
+            '''
                 Basic AUTH implementation
             '''
             auth_header = handler.request.headers.get('Authorization')

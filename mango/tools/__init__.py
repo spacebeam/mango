@@ -8,6 +8,18 @@
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
+'''
+    The P in Python means Powerful magics
+    -------------------------------------
+    Python's development practices have also been emulated by other languages.
+    The practice of requiring a document describing the rationale for, and
+    issues surrounding, a change to the language (in Python's case, a PEP)
+    is also used in Erlang because of Python's influence.
+
+    Note: I lost the source from that wild quote, I need to find the PEP 
+    analogy on Erlang.
+'''
+
 __author__ = 'Jean Chassoul'
 
 import json
@@ -23,14 +35,10 @@ from mango.messages import reports
 @gen.engine
 def check_json(struct, callback):
     '''
-        Mango check json
-    
+        check json
+
         Check for malformed JSON Object
         < kind of iterator/function >
-        
-        # TODO: check_json()
-        
-        example: TBD
     '''
     try:
         struct = json.loads(struct)
@@ -39,53 +47,49 @@ def check_json(struct, callback):
         error = api_error.json()
         callback(None, error)
         return
-            
+
     callback(struct, None)
 
 @gen.engine
 def check_account_type(db, account, account_type, callback):
     '''
-        Mango check account type
-
         check account type
     '''
     try:
         check_type = yield motor.Op(db.accounts.find_one,
-                                    {'account': account, 
+                                    {'account': account,
                                      'type':account_type},
                                     {'type':1, '_id':0})
-        # TODO: clean this TRUE TRUE
         if check_type:
             check_type = True
         else:
             check_type = False
+
     except Exception, e:
         callback(None, e)
-    
+
     callback(check_type, None)
-        
+
 @gen.engine
 def check_account_authorization(db, account, password, callback):
     '''
-        Mango check account authorization
-
         Check account authorization
     '''
     try:
         account = yield motor.Op(db.accounts.find_one,
                                  {'account': account,
                                   'password': password})
-        
+
     except Exception, e:
         callback(None, e)
         return
-    
+
     callback(account, None)
 
 @gen.engine
 def check_aggregation_pipeline(struct, callback):
     '''
-        Mango check aggregation pipeline
+        Check aggregation pipeline
 
         Return mongodb aggregation report
     '''
@@ -100,23 +104,9 @@ def check_aggregation_pipeline(struct, callback):
     callback(result, None)
 
 @gen.engine
-def convert_timestamp(start, stop, callback):
-    '''
-        Mango convert timestamp
-
-        Kind of better name for check_timestamp
-    
-        This function gets two unix timestamps and returns a dict
-        with a start and stiop datetime objects
-    '''
-    pass
-
-@gen.engine
 def check_timestamp(start, stop, callback):
     '''
-        Mango check timestamp
-
-        Return datetime if gets a unix timestamp
+        Check timestamp
     '''
     try:
         start = (dt.fromtimestamp(float(start)) if start else None)
@@ -129,7 +119,7 @@ def check_timestamp(start, stop, callback):
 
 def clean_structure(struct):
     '''
-        Mango clean structure
+        clean structure
     '''
     struct = struct.to_primitive()
 
@@ -143,10 +133,11 @@ def clean_structure(struct):
 
 def clean_results(results):
     '''
-        Mango clean results
+        clean results
     '''
     results = results.to_primitive()
 
+    # results.get('results')
     results = results['results']
 
     results = [
@@ -161,11 +152,11 @@ def clean_results(results):
 
 def content_type_validation(handler_class):
     '''
-        Mango content-type validation
+        Content type validation
 
         @content_type_validation decorator
     '''
-    
+
     def wrap_execute(handler_execute):
         '''
             Content-Type checker
@@ -176,7 +167,7 @@ def content_type_validation(handler_class):
             '''
                 Content-Type checker implementation
             '''
-            content_type = handler.request.headers.get("Content-Type", "")         
+            content_type = handler.request.headers.get("Content-Type", "")
             if content_type is None or not content_type.startswith('application/json'):
                 handler.set_status(406)
                 handler._transforms = []

@@ -15,22 +15,23 @@ from tornado import gen
 
 from mango.messages import reports
 
+'''
+    This is nonsense.
+'''
 
 class Reports(object):
     '''
         Reports resources
     '''
     
-    # TODO: research this stuff
+    # it's all about pipes.
     @gen.engine
     def new_aggregation_pipeline(self, struct, callback):
         '''
-            Return mongodb aggregation report
+            Return mongodb aggregation result
         '''
         try:
-            # change: reports.Aggregate(**struct) to (**struct).validate()
             aggregation = reports.Aggregate(**struct).validate()
-            # aggregation.validate(True)
         except Exception, e:
             callback(None, e)
             return

@@ -25,3 +25,25 @@ __author__ = 'Jean Chassoul'
 '''
 	expand on unix pipelines, there is a cool old video on your youtube history.
 '''
+
+
+
+class SimpleResource(models.Model):
+    '''
+        Mango simple resource
+    '''
+    contains = compound.ListType(types.UUIDType())
+
+    total = types.IntType()
+
+
+class Resource(models.Model):
+    ''' 
+        Mango resource
+    '''
+    apps = compound.ModelType(SimpleResource)
+    calls = compound.ModelType(SimpleResource)
+    queues = compound.ModelType(SimpleResource)
+    records = compound.ModelType(SimpleResource)
+
+    total = types.IntType()

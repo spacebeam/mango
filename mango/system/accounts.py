@@ -5,7 +5,7 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
@@ -37,12 +37,12 @@ class Accounts(object):
         accounts = []
         try:
             query = self.db.accounts.find({},{'account':1, '_id':0})
-            
+
             for a in (yield motor.Op(query.to_list)):
                 accounts.append(a)
         except Exception, e:
             callback(None, e)
-        
+
         callback(accounts, None)
 
     @gen.engine
@@ -52,16 +52,15 @@ class Accounts(object):
         '''
         try:
             exist = yield motor.Op(self.db.accounts.find_one,
-                                   {'account': account}, 
+                                   {'account': account},
                                    {'account':1, '_id':0})
             exist = (True if exist else False)
 
-            
         except Exception, e:
             callback(None, e)
-        
+
         callback(exist, None)
-    
+
     @gen.engine
     def check_type(self, account, account_type, callback):
         '''
@@ -75,7 +74,7 @@ class Accounts(object):
             check_type = (True if check_type else False)
         except Exception, e:
             callback(None, e)
-    
+
         callback(check_type, None)
 
     @gen.engine
@@ -149,7 +148,7 @@ class Accounts(object):
         try:
             result = yield motor.Op(self.db.accounts.find_one,
                                     {'account': account},
-                                    {'routes':1, '_id':0})   
+                                    {'routes':1, '_id':0})
         except Exception, e:
             callback(None, e)
             return
@@ -170,22 +169,22 @@ class Accounts(object):
         except Exception, e:
             callback(None, e)
             return
-        
+
         callback(result, None)
 
 class MangoAccounts(Accounts):
     '''
         Mango accounts
     '''
-    
+
     @gen.engine
     def get_accounts(self, account_type, page_num, callback):
         '''
-        
+
             Get the mango accounts
-        
+
         '''
-        # Research query each and remove to_list better iteration stuff 
+        # Research query each and remove to_list better iteration stuff
         account_type = account_type
         page_num = int(page_num)
         page_size = self.settings['page_size']
@@ -193,7 +192,7 @@ class MangoAccounts(Accounts):
         try:
             query = self.db.accounts.find({'account_type':account_type}).sort(
                 [('_id', -1)]).skip(page_num * page_size).limit(page_size)
-            
+
             for account in (yield motor.Op(query.to_list)):
                 if 'user' in account_type:
                     result.append(accounts.User(**account).validate())
@@ -202,16 +201,16 @@ class MangoAccounts(Accounts):
                 else:
                     callback(None, account_type)
         except Exception, e:
-            callback(None, e) 
-        
+            callback(None, e)
+
         callback(result, None)
-    
+
     @gen.engine
     def get_account(self, account, account_type, callback):
         '''
-        
+
             Get a mango account
-        
+
         '''
         account = account
         account_type = account_type
@@ -228,7 +227,7 @@ class MangoAccounts(Accounts):
                     callback(None, account_type)
         except Exception, e:
             callback(None, e)
-        
+
         callback(account, None)
 
 
@@ -238,7 +237,7 @@ class MangoAccounts(Accounts):
             New mango account
         '''
         account_type = struct['account_type']
-        
+
         try:
             if 'user' in account_type:
                 account = accounts.User(struct)
@@ -254,7 +253,7 @@ class MangoAccounts(Accounts):
         except Exception, e:
             callback(None, e)
             return
-        
+
         try:
             result = yield motor.Op(self.db.accounts.insert, account)
         except Exception, e:
@@ -322,7 +321,7 @@ class MangoAccounts(Accounts):
         except Exception, e:
             callback(None, e)
             return
-        
+
         callback(result, None)
 
 
@@ -330,7 +329,7 @@ class Orgs(MangoAccounts):
     '''
         Mango orgs accounts
     '''
-    
+
     @gen.engine
     def get_id(self, account, callback):
         '''
@@ -341,7 +340,7 @@ class Orgs(MangoAccounts):
                                         {'account':account}, {'_id':1})
         except Exception, e:
             callback(None, e)
-        
+
         callback(account_id, None)
 
     @gen.engine
@@ -354,9 +353,9 @@ class Orgs(MangoAccounts):
                                         {'account':account}, {'uuid':1})
         except Exception, e:
             callback(None, e)
-        
+
         callback(account_uuid, None)
-    
+
     @gen.engine
     def new_member(self, org, user, callback):
         '''
@@ -364,8 +363,8 @@ class Orgs(MangoAccounts):
         '''
         try:
             result = yield [
-                motor.Op(self.db.accounts.update, 
-                         {'account':user}, 
+                motor.Op(self.db.accounts.update,
+                         {'account':user},
                          {'$addToSet':{'orgs':org}}),
                 motor.Op(self.db.accounts.update,
                          {'account':org},
@@ -373,7 +372,7 @@ class Orgs(MangoAccounts):
             ]
         except Exception, e:
             callback(None, e)
-        
+
         callback(result, None)
 
     @gen.engine
@@ -410,7 +409,7 @@ class Orgs(MangoAccounts):
         try:
             result = yield [
                 motor.Op(self.db.accounts.update, 
-                         {'account':user}, 
+                         {'account':user},
                          {'$pull':{'orgs': org}}),
                 motor.Op(self.db.accounts.update,
                          {'account': org},
@@ -418,13 +417,13 @@ class Orgs(MangoAccounts):
             ]
         except Exception, e:
             callback(None, e)
-        
+
         #result = (result if result else False)
         print('remove_member', result)
-        
+
         callback(result, None)
-    
-    
+
+
     @gen.engine
     def new_team(self, org, team, callback):
         '''
@@ -434,27 +433,27 @@ class Orgs(MangoAccounts):
             team = accounts.Team(**team).validate()
         except Exception, e:
             callback(None, e)
-        
+
         result = yield motor.Op(self.db.accounts.update,
                                 {'account':org},
                                 {'$addToSet': {'teams':team}})
-        
+
         callback(result, None)
-    
+
     @gen.engine
     def get_team(self, callback):
         '''
             Get team
         '''
         pass
-    
+
     @gen.engine
     def get_teams(self, callback):
         '''
             Get teams
         '''
         pass
-    
+
     @gen.engine
     def remove_team(self, callback):
         '''

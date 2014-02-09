@@ -16,18 +16,51 @@ __author__ = 'Jean Chassoul'
 
 '''
 
+    Protocols are contracts that describe the rights and obligations of each party.
+
+    State machine protocol engine?
+
+    Learn state machines!
+    Code generation
+    router sockets
+
+    ping, pong if we're not talking.
+
+    Python and erlang <3
+
+'''
+
+'''
+    
+    Focus is a matter of deciding what things you're not going to do.
+
+    When it's done.
+
+    Good design uses symmetry, symmetry is one way to achive simplicity, but it's important enough to be mentioned on its own.
+
+    Nature uses it a lot, which is a good sign.
+
+    There are two kinds of symmetry, repetition and recursion.
+
+    recursion means repetition in subelements, like the pattern of veins in a leaf.
+
+
+
+
     System primitives and basic building blocks 
     -------------------------------------------
 
     Recursively construction of computing stuff.
 
     Mango handlers for records of stuff giving reports and billing information if needed.
+
+
 '''
 
 '''
     System primitives
     -----------------
-    
+
     accounts, records, reports, billings.
 
     Account primitives:
@@ -45,7 +78,7 @@ __author__ = 'Jean Chassoul'
 
 # teams: {users members of orgs teams}
 
-# mango resources: {records, reports, billing}
+# resources: {records, reports, billing}
 
 '''
     Follow eve the black chuchawa
@@ -111,7 +144,6 @@ from mango.tools import check_account_authorization
 from mango.tools import errors
 
 # TODO: Change username to the more general account variable name.
-
 
 '''
     HTTP request methods

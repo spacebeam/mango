@@ -17,27 +17,17 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 
+from mango.messages import Resource
 
 
-class SimpleResource(models.Model):
+
+class AccountResource(models.Model):
     '''
-        Mango simple resource
+        Account resource
     '''
-    contains = compound.ListType(types.UUIDType())
-
-    total = types.IntType()
-
-
-class Resource(models.Model):
-    ''' 
-        Mango resource
-    '''
-    apps = compound.ModelType(SimpleResource)
-    calls = compound.ModelType(SimpleResource)
-    queues = compound.ModelType(SimpleResource)
-    records = compound.ModelType(SimpleResource)
-
-    total = types.IntType()
+    account = types.StringType(required=False)
+    uuid = types.UUIDType(default=uuid.uuid4)
+    resource  = types.StringType(required=True)
 
 
 class Route(models.Model):
@@ -46,8 +36,9 @@ class Route(models.Model):
 
         Route model used by the record
     '''
+    # default '*' means all destinations
     destination = types.StringType(default='*') 
-    dst = types.StringType(default='*') # default '*' means all destinations
+    dst = types.StringType(default='*')
     
     channel = types.StringType(required=True)
     dstchannel = types.StringType(required=True)
@@ -55,30 +46,6 @@ class Route(models.Model):
 
     cost = types.FloatType(required=True)
 
-
-class Team(models.Model):
-    '''
-        Mango team
-
-        iOrganizations team model
-    '''
-    name = types.StringType(required=True)
-    members = compound.ListType(types.StringType())
-    permission = types.StringType(choices=['read',
-                                           'write',
-                                           'super'], required=True)
-    resources = compound.ModelType(Resource)
-
-
-class AccountResource(models.Model):
-    '''
-        Account resource
-    '''
-    uuid = types.UUIDType(default=uuid.uuid4)
-    account = types.StringType(required=False)
-    
-    resource  = types.StringType(required=True)
-    
 
 class BaseAccount(models.Model):
     '''
@@ -111,6 +78,20 @@ class User(BaseAccount):
     
     # move company to baseAccount class?
     company = types.StringType()
+
+
+class Team(models.Model):
+    '''
+        Mango team
+
+        iOrganizations team model
+    '''
+    name = types.StringType(required=True)
+    members = compound.ListType(types.StringType())
+    permission = types.StringType(choices=['read',
+                                           'write',
+                                           'super'], required=True)
+    resources = compound.ModelType(Resource)
   
     
 class Org(BaseAccount):
@@ -118,6 +99,7 @@ class Org(BaseAccount):
         Mango (ORG) Organization of Restricted Generality.
     '''
     account_type = types.StringType(default='org')
-    # TODO: check members, teams D: 
+    
+    # tests for members and teams.
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))

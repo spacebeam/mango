@@ -29,6 +29,9 @@ from mango.tools import check_json
 # read about context stacks,
 # think about the context of things.
 
+# then the context match a state if you model your stuff as a state machines, or something like that i think...
+# still don't know if this make sense.
+
 # then, rewrite the hell out of the errors module.
 from mango.tools import errors
 
@@ -38,18 +41,14 @@ from mango.handlers import BaseHandler
 @content_type_validation
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
-        Mango users handler
-
-        Users accounts resource handlers
+        Users account resource handlers
     '''
-    
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
     def get(self, account=None, page_num=0):
         '''
-            Mango get users handler
-        
             Get users accounts
         '''
         account_type = 'user'
@@ -72,13 +71,11 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
     @gen.engine
     def post(self):
         '''
-            Mango port users handler
-        
             Create users accounts
         '''
         struct = yield motor.Op(check_json, self.request.body)
         struct['account_type'] = 'user'
-        
+
         format_pass = (True if struct else False)
         if not format_pass:
             self.set_status(400)
@@ -96,41 +93,37 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.set_status(400)
             self.finish({'errors':struct})
             return
-            
+
         self.set_status(201)
         self.finish({'id':result})
-    
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
     def delete(self, account):
         '''
-            Mango delete users handler
-
             Delete a user account
         '''
         account = account.rstrip('/')
         result = yield motor.Op(self.remove_account, account)
-        
+
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('user', account)
             self.finish(error)
             return
-            
+
         self.set_status(204)
         self.finish()
-
 
 
 @content_type_validation
 class OrgsHandler(accounts.Orgs, BaseHandler):
     '''
-        Mango organizations handler
-
         Organization account resource handlers
     '''
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
@@ -146,7 +139,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             self.finish({'orgs':orgs})
         else:
             account = account.rstrip('/')
-            
+
             result = yield motor.Op(self.get_account, account, account_type)
             if result:
                 self.finish(result)
@@ -160,8 +153,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
     @gen.engine
     def post(self):
         '''
-            Mango organization accounts post handler
-        
             Create organization accounts
         '''
         current_user = self.get_current_user()
@@ -179,7 +170,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-        
+
         org_id = yield motor.Op(self.new_account, struct)
                 
         team = {
@@ -205,7 +196,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             
         self.set_status(201)
         self.finish({'id':org_id})
-    
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
@@ -244,7 +235,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
 @content_type_validation
 class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     '''
-        Account Records Resource Handler
+        Records resource handlers
     '''
     
     @web.authenticated
@@ -378,7 +369,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 @content_type_validation
 class RoutesHandler(accounts.Accounts, BaseHandler):
     '''
-        Account Routes Resource Handler
+        Routes resource handlers
     '''
     
     @web.authenticated

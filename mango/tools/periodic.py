@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango periodic tools.
+    Mango system periodic tools.
 '''
 
 # This file is part of mango.
@@ -48,9 +48,9 @@ def new_resource_context(db, struct, callback):
     except Exception, e:
         callback(None, e)
         return
-    
+
     resource = ''.join(('resources.', res['resource']))
-    
+
     try:
         result = yield motor.Op(
         
@@ -104,11 +104,11 @@ def process_assigned_false(db, callback):
         '''
         if message:
             channel = (message['channel'] if 'channel' in message else False)
-            
+
             if channel:
                 account = [a for a in _accounts 
                            if ''.join(('/', a['account'], '-')) in channel]
-                
+
                 account = (account[0] if account else False)
 
                 if account:
@@ -151,12 +151,12 @@ def process_asterisk_cdr(db, callback):
         if error:
             callback(None, error)
             return
-            
+
         elif message:
             channel = (True if 'channel' in message else False)
             # get channel the value
             channel = (message['channel'] if channel else channel)
-            
+
             if channel:
                 account = [a for a in _accounts 
                            if ''.join(('/', a['account'], '-')) in channel]
@@ -174,7 +174,7 @@ def process_asterisk_cdr(db, callback):
             # Iteration complete
             callback(result, None)
             return
-    
+
     try:
         # Get mango account list
         _accounts = yield motor.Op(get_usernames, db)
@@ -199,9 +199,9 @@ def assign_call(db, account, callid, callback):
             {'$set': {'assigned': True,
                       'accountcode':account}}
         )
-        
+
     except Exception, e:
         callback(None, e)
         return
-    
+
     callback(result, None)
