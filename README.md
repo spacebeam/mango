@@ -8,5 +8,5 @@ for the development of scalable, robust, and private cloud-native
 applications.
 
 IO FUN develops an implementation of Carl Hewitt actor technologies 
-and organizational computing paradigms. Our computing tropical 
+and organizational computing paradigms, our computing tropical 
 cloud forest runs with these open-source software.
