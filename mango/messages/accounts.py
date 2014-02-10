@@ -33,8 +33,6 @@ class AccountResource(models.Model):
 class Route(models.Model):
     '''
         Mango route
-
-        Route model used by the record
     '''
     # default '*' means all destinations
     destination = types.StringType(default='*') 
@@ -82,9 +80,7 @@ class User(BaseAccount):
 
 class Team(models.Model):
     '''
-        Mango team
-
-        iOrganizations team model
+        ORGs team
     '''
     name = types.StringType(required=True)
     members = compound.ListType(types.StringType())

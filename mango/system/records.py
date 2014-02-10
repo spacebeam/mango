@@ -14,10 +14,6 @@ __author__ = 'Jean Chassoul'
 import arrow
 import motor
 
-'''
-    A universally unique identifier (UUID) is an identifier standard 
-    for software construction.
-'''
 import uuid
 
 # import numpy as np

@@ -26,7 +26,7 @@ from mango.tools import content_type_validation
 from mango.tools import check_json
 
 # Errors are crazy stuff, so please take your time
-# read about context stacks,
+# read about context stacks, state machines, automatas and the only one main goal of erlang whitch is be faul-tolerant.
 # think about the context of things.
 
 # then the context match a state if you model your stuff as a state machines, or something like that i think...

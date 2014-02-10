@@ -42,105 +42,6 @@ from mango.tools import periodic
 from mango.handlers import HomeHandler, LoginHandler, LogoutHandler
 
 
-
-'''
-    Mango HTTP Requests
-    -------------------
-
-    GET
-
-    POST
-
-    PUT
-
-    PATCH
-
-    DELETE
-
-    HEAD
-
-    OPTIONS
-'''
-
-'''
-    Mango SIP Requests
-    ------------------
-
-    SIP requests are the codes used by Session Initiation Protocol for communication. 
-    To complement them there are SIP responses, which generally indicate whether this 
-    request succeeded or failed, and in the latter case, why it failed.
-
-    INVITE
-        Indicates a client is being invited to participate in a call session.
-
-    ACK 
-        Confirms that the client has received a final response to an INVITE request.
-
-    BYE 
-        Terminates a call and can be sent by either the caller or the callee.
-
-    CANCEL
-        Cancels any pending request.
-
-    OPTIONS
-        Queries the capabilities of servers.
-
-    REGISTER
-        Registers the address listed in the To header field with a SIP server.
-
-    PRACK
-        Provisional acknowledgement.
-
-    SUBSCRIBE
-        Subscribes for an Event of Notification from the Notifier.
-
-    NOTIFY
-        Notify the subscriber of a new Event.
-
-    PUBLISH 
-        Publishes an event to the Server.
-
-    INFO
-        Sends mid-session information that does not modify the session state.
-
-    REFER
-        Asks recipient to issue SIP request (call transfer.)
-
-    MESSAGE
-        Transports instant messages using SIP.
-
-    UPDATE
-        Modifies the state of a session without changing the state of the dialog.
-'''
-
-# Mango HTTP Requests
-
-# [ Get ]
-
-# GET /records/record/keys/key
-
-
-# [ Store ]
-
-# POST /records/record/keys
-# PUT /records/record/keys/key
-
-
-# [ Update ]
-
-# PATCH /records/record/keys/key
-
-
-# [ Delete ]
-
-# DELETE /records/record/keys/key
-
-
-# [ Describe ]
-
-# HEAD/INFO?
-
-
 # iofun testing box
 iofun = []
 
@@ -162,6 +63,7 @@ def periodic_records_callbacks(stuff='bananas'):
     '''
         Mango periodic records
     '''
+
     assigned_false = yield motor.Op(periodic.process_assigned_false, db)
     asterisk_record = yield motor.Op(periodic.process_asterisk_cdr, db)
 
@@ -216,13 +118,7 @@ if __name__ == '__main__':
         [
             (r'/', IndexHandler),
 
-
-            # I'm thinking on put again the quotes, I discover the buitty 
-            # of perilism, also there's always magic on worlds.
-
-            # Ask witchestein about it.
-
-
+            # jc stuff (quotes).
             (r'/jc/?', HomeHandler),
 
             # Tornado static file handler 

@@ -15,6 +15,8 @@ __author__ = 'Jean Chassoul'
 # http://www.youtube.com/watch?v=2k-JGuhyqKE
 
 '''
+    Contracts
+    ---------
 
     Protocols are contracts that describe the rights and obligations of each party.
 
@@ -28,49 +30,9 @@ __author__ = 'Jean Chassoul'
 
     Python and erlang <3
 
-'''
+    An inner process stands in need of outward criteria.
 
-'''
     
-    Focus is a matter of deciding what things you're not going to do.
-
-    When it's done.
-
-    Good design uses symmetry, symmetry is one way to achive simplicity, but it's important enough to be mentioned on its own.
-
-    Nature uses it a lot, which is a good sign.
-
-    There are two kinds of symmetry, repetition and recursion.
-
-    recursion means repetition in subelements, like the pattern of veins in a leaf.
-
-
-
-
-    System primitives and basic building blocks 
-    -------------------------------------------
-
-    Recursively construction of computing stuff.
-
-    Mango handlers for records of stuff giving reports and billing information if needed.
-
-
-'''
-
-'''
-    System primitives
-    -----------------
-
-    accounts, records, reports, billings.
-
-    Account primitives:
-        - users
-        - orgs(ORGs) are composed by teams of users with different goals and strategies for achivements.
-
-    Resource primitives:
-        - records
-        - reports
-        - billing (if needed)
 
 '''
 
@@ -143,7 +105,6 @@ from mango.system import basic_authentication
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
-# TODO: Change username to the more general account variable name.
 
 '''
     HTTP request methods
@@ -289,6 +250,7 @@ from mango.tools import errors
         Modifies the state of a session without changing the state of the dialog.
 '''
 
+
 class BaseHandler(web.RequestHandler):
     '''
         Mango Base Handler
@@ -360,13 +322,13 @@ class BaseHandler(web.RequestHandler):
             Return the account from a secure cookie
         '''
         return self.get_secure_cookie('account')
-    
+
 
 class HomeHandler(BaseHandler):
     '''
         Mango HomeHandler Quote experiment
     '''
-    
+
     @web.asynchronous
     def get(self):
         '''

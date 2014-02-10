@@ -14,6 +14,7 @@ __author__ = 'Jean Chassoul'
 from schematics import models
 from schematics import types
 
+
 class Route(models.Model):
     '''
     	Mango route
