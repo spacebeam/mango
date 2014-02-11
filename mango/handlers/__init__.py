@@ -279,6 +279,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Graph database
         '''
+        # Neo4j
         return self.application.graph
 
     def initialize(self, **kwargs):

@@ -112,13 +112,13 @@ if __name__ == '__main__':
     # base url
     base_url = opts.base_url
 
-    # mango application daemon
+    # mango web application daemon
     application = web.Application(
 
         [
             (r'/', IndexHandler),
 
-            # system knowledge (quotes).
+            # Mango system knowledge (quotes).
             (r'/system/?', MangoHandler),
 
             # Tornado static file handler 
@@ -261,3 +261,17 @@ if __name__ == '__main__':
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()
+
+    '''
+        Erlang adventure
+        ----------------
+        
+        Here is when erlang story start at the end of the python adventure.
+
+        Erlang is a phreakers tool, Python is creazy powerful computing hacking tool.
+    
+        Both are balance.
+
+        HTML5 eats the monkey and laughs.
+
+    '''
