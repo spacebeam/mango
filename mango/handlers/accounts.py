@@ -26,7 +26,7 @@ from mango.tools import content_type_validation
 from mango.tools import check_json
 
 # Errors are crazy stuff, so please take your time
-# read about context stacks, state machines, automatas and the only one main goal of erlang whitch is be faul-tolerant.
+# read about context stacks, state machines, automatas and one of the main goals of erlang which is be faul-tolerant.
 # think about the context of things.
 
 # then the context match a state if you model your stuff as a state machines, or something like that i think...
@@ -36,6 +36,7 @@ from mango.tools import check_json
 from mango.tools import errors
 
 from mango.handlers import BaseHandler
+
 
 
 @content_type_validation
@@ -217,7 +218,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         for user in members:
             rmx = yield motor.Op(self.remove_member, org, user)
             
-        #check_member = yield motor.Op(self.remove_member, org_id, current_user)
+        # check_member = yield motor.Op(self.remove_member, org_id, current_user)
         
         result = yield motor.Op(self.remove_account, org)
         

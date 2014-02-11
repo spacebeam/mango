@@ -30,10 +30,6 @@ __author__ = 'Jean Chassoul'
 
     Python and erlang <3
 
-    An inner process stands in need of outward criteria.
-
-    
-
 '''
 
 # accounts: {users or/and orgs}
@@ -94,6 +90,7 @@ __author__ = 'Jean Chassoul'
     although not all HTTP response codes are valid in SIP.
 
 '''
+
 
 import motor
 

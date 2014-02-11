@@ -11,7 +11,6 @@
 __author__ = 'Jean Chassoul'
 
 
-
 '''
     System logic
     ------------
@@ -19,6 +18,10 @@ __author__ = 'Jean Chassoul'
     Logic takes care of itself; all we have to do is to look and see how it does it.
 
     - Ludwig Wittgenstein
+
+
+    In more theoretical terms, you'll learn how to design programs around 
+    message-passing and recursion, creating process-oriented programs.
 '''
 
 '''
@@ -175,6 +178,7 @@ __author__ = 'Jean Chassoul'
         - billing (if needed)
 
 '''
+
 
 import base64
 

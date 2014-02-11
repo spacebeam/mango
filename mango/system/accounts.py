@@ -48,7 +48,7 @@ class Accounts(object):
     @gen.engine
     def check_exist(self, account, callback):
         '''
-            Check if a given account code exist
+            Check if a given account exist
         '''
         try:
             exist = yield motor.Op(self.db.accounts.find_one,
@@ -208,9 +208,7 @@ class MangoAccounts(Accounts):
     @gen.engine
     def get_account(self, account, account_type, callback):
         '''
-
-            Get a mango account
-
+            Get mango account
         '''
         account = account
         account_type = account_type
