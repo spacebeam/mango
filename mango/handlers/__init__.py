@@ -321,21 +321,6 @@ class BaseHandler(web.RequestHandler):
         return self.get_secure_cookie('account')
 
 
-class HomeHandler(BaseHandler):
-    '''
-        Mango HomeHandler Quote experiment
-    '''
-
-    @web.asynchronous
-    def get(self):
-        '''
-            Get some quotes
-        '''
-        hackers = quotes.Quotes()
-        self.write({'quote': hackers.get()})
-        self.finish()
-
-
 @basic_authentication
 class LoginHandler(BaseHandler):
     '''
@@ -385,4 +370,19 @@ class LogoutHandler(BaseHandler):
         self.clear_cookie('username')
 
         self.set_status(200)
+        self.finish()
+
+
+class MangoHandler(BaseHandler):
+    '''
+        Mango Handler Quote experiment
+    '''
+
+    @web.asynchronous
+    def get(self):
+        '''
+            Get some quotes
+        '''
+        hackers = quotes.Quotes()
+        self.write({'quote': hackers.get()})
         self.finish()

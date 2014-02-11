@@ -39,7 +39,7 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
-from mango.handlers import HomeHandler, LoginHandler, LogoutHandler
+from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 
 # iofun testing box
@@ -118,8 +118,8 @@ if __name__ == '__main__':
         [
             (r'/', IndexHandler),
 
-            # jc stuff (quotes).
-            (r'/jc/?', HomeHandler),
+            # system knowledge (quotes).
+            (r'/system/?', MangoHandler),
 
             # Tornado static file handler 
             (r'/static/(.*)', web.StaticFileHandler, {'path': './static'},),
