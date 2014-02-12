@@ -90,4 +90,3 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         self.finish({
             'billing': '%.2f' % billing
         })
-        
