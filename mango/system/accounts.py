@@ -29,6 +29,7 @@ class Accounts(object):
     '''
         Accounts main class
     '''
+
     @gen.engine
     def get_usernames(self, callback):
         '''
@@ -161,7 +162,6 @@ class Accounts(object):
         '''
             Get account orgs
         '''
-
         try:
             result = yield motor.Op(self.db.accounts.find_one,
                                     {'account': account},
@@ -180,11 +180,9 @@ class MangoAccounts(Accounts):
     @gen.engine
     def get_accounts(self, account_type, page_num, callback):
         '''
-
             Get the mango accounts
-
         '''
-        # Research query each and remove to_list better iteration stuff
+        # Query each and remove to_list better iteration stuff.
         account_type = account_type
         page_num = int(page_num)
         page_size = self.settings['page_size']
@@ -228,7 +226,6 @@ class MangoAccounts(Accounts):
 
         callback(account, None)
 
-
     @gen.engine
     def new_account(self, struct, callback):
         '''
@@ -259,7 +256,6 @@ class MangoAccounts(Accounts):
             return
 
         callback(account['uuid'], None)
-
 
     @gen.engine
     def new_sip_account(self, struct, callback):
@@ -305,7 +301,6 @@ class MangoAccounts(Accounts):
             result = True
 
         callback(result, None)
-
 
     @gen.engine
     def remove_account(self, account, callback):
@@ -381,7 +376,7 @@ class Orgs(MangoAccounts):
             Check member exist
         '''
         pass
-    
+
     @gen.engine
     def get_members(self, org, callback):
         '''
@@ -394,7 +389,7 @@ class Orgs(MangoAccounts):
             callback(None, e)
 
         callback(result, None)
-    
+
     @gen.engine
     def remove_member(self, org, user, callback):
         '''
@@ -420,7 +415,6 @@ class Orgs(MangoAccounts):
         print('remove_member', result)
 
         callback(result, None)
-
 
     @gen.engine
     def new_team(self, org, team, callback):

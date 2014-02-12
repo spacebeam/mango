@@ -18,18 +18,23 @@ __author__ = 'Jean Chassoul'
     Contracts
     ---------
 
+    What the fuck.
+
     Protocols are contracts that describe the rights and obligations of each party.
 
-    State machine protocol engine?
+    State machine protocol engine?.
 
     Learn state machines!
-    Code generation
-    router sockets
 
-    ping, pong if we're not talking.
+    Code generation.
 
-    Python and erlang <3
+    Router sockets.
 
+    What the fuck Joe means with that thing that you're thinking.
+
+    Ping, pong if we're not talking.
+
+    Python and erlang <3.
 '''
 
 # accounts: {users or/and orgs}
@@ -73,17 +78,17 @@ __author__ = 'Jean Chassoul'
     of a number of defined codes that detail the status of the request.
 
     These codes are grouped according to their first digit as
-    
+
     Provisional 1XX,
     Success 2XX,
     Redirection 3XX,
     Client error 4XX,
-        
+
     Server error 5XX
         and
             Global failure 6XX.
-    
-       
+
+
     For example; "1xx" for provisional responses with a code of 100–199.
 
     The SIP response codes are an extension to the HTTP response codes,
@@ -102,6 +107,8 @@ from mango.system import basic_authentication
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
+# import da fuq
+
 
 '''
     HTTP request methods
@@ -109,7 +116,7 @@ from mango.tools import errors
 
     HTTP defines methods (sometimes referred to as fucking verbs)
     to indicate the desired action to be performed on the Universal Unique
-    Identified (Resource) node, cluster, cohort, cloud.
+    IDentified (Resource) Unit, Node, Cluster, Cohort, Cloud.
 
     What this resource represents, whether pre-existing data or data that
     is generated dynamically, depends on the implementation of the server.
@@ -188,21 +195,20 @@ from mango.tools import errors
     SIP request methods
     -------------------
 
-    The Session Initiation Protocol (SIP) is a signalling protocol
-    used for controlling communication sessions such as Voice over IP
-    telephone calls.
+    The Session Initiation Protocol (SIP) is a signalling protocol used for
+    controlling communication sessions such as Voice over IP telephone calls.
 
     SIP is based around request/response transactions, in a similar manner
-    to the Hypertext Transfer Protocol (HTTP).
+        to the Hypertext Transfer Protocol (HTTP).
 
-    Each transaction consists of a SIP request (which will be one of several request methods),
-    and at least one response.
+    Each transaction consists of a SIP request (which will be one of several
+        request methods), and at least one response.
 
     SIP requests are the codes used by Session Initiation Protocol
-    for communication.
+        for communication.
 
     To complement them there are SIP responses, which generally indicate
-    whether this request succeeded or failed, and in the latter case, why it failed.
+        whether this request succeeded or failed, and in the latter case, why it failed.
 
     INVITE
         Indicates a client is being invited to participate in a call session.
@@ -283,17 +289,17 @@ class BaseHandler(web.RequestHandler):
         return self.application.graph
 
     def initialize(self, **kwargs):
-        ''' 
+        '''
             Initialize the Base Handler
         '''
         super(BaseHandler, self).initialize(**kwargs)
 
         self.etag = None
 
-        # system database
+        # System database
         self.db = self.settings['db']
 
-        # zeromq greatness stuff
+        # 0MQ Greatness Stuff
 
         # self.cdr_stream = self.settings['cdr_stream']
 
@@ -326,7 +332,7 @@ class BaseHandler(web.RequestHandler):
 class LoginHandler(BaseHandler):
     '''
         BasicAuth login
-    ''' 
+    '''
 
     @web.asynchronous
     @gen.engine
@@ -339,11 +345,11 @@ class LoginHandler(BaseHandler):
 
         account = yield motor.Op(check_account_authorization,
                                  self.db,
-                                 self.username, 
+                                 self.username,
                                  self.password)
 
         if not account:
-            # 401? 
+            # 401?
             self.set_status(403)
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
