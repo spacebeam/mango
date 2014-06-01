@@ -17,16 +17,14 @@ import motor
 # import numpy as np
 import pandas as pd
 
-
 from tornado import gen
-
 
 
 class Billings(object):
     '''
         Billings resources
     '''
-   
+
     @gen.engine 
     def get_cost_summary(self, account, routes, lapse, start, stop, callback):
         '''
@@ -46,15 +44,15 @@ class Billings(object):
         # MongoDB aggregation match operator
         if type(account) is list:
             match = {
-                'assigned':True,
-                'start':{'$gte':start, '$lt':stop},
+                'assigned': True,
+                'start': {'$gte':start, '$lt':stop},
                 'channel': {'$regex': single_route['channel']},
                 'dstchannel': {'$regex': single_route['dstchannel']},
-                '$or':[{'accountcode':a} for a in account]
+                '$or': [{'accountcode':a} for a in account]
             }
         else:
             match = {
-                'accountcode':account, 
+                'accountcode': account, 
                 'assigned': True,
                 'start': {'$gte':start, '$lt': stop},
                 'channel': {'$regex': single_route['channel']},
@@ -70,8 +68,8 @@ class Billings(object):
                "billsec" : 1,
                # record times
                "start" : 1,
-               'answer':1,
-               'end':1,
+               'answer': 1,
+               'end': 1,
         
                "year" : {
                          "$year" : "$start"
@@ -112,7 +110,7 @@ class Billings(object):
                 'second': '$second',
             },
             'records': {
-                '$sum':1
+                '$sum': 1
             },
             'average': {
                 '$avg':'$billsec'

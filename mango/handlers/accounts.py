@@ -25,14 +25,6 @@ from mango.system import records
 from mango.tools import content_type_validation
 from mango.tools import check_json
 
-# Errors are crazy stuff, so please take your time
-# read about context stacks, state machines, automatas and one of the main goals of erlang which is be faul-tolerant.
-# think about the context of things.
-
-# then the context match a state if you model your stuff as a state machines, or something like that i think...
-# still don't know if this make sense.
-
-# then, rewrite the hell out of the errors module.
 from mango.tools import errors
 
 from mango.handlers import BaseHandler
@@ -42,7 +34,7 @@ from mango.handlers import BaseHandler
 @content_type_validation
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
-        Users account resource handlers
+        User accounts HTTP request handlers
     '''
 
     @web.authenticated
@@ -50,7 +42,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
     @gen.engine
     def get(self, account=None, page_num=0):
         '''
-            Get users accounts
+            Get user accounts
         '''
         account_type = 'user'
         if not account:
@@ -72,7 +64,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
     @gen.engine
     def post(self):
         '''
-            Create users accounts
+            Create user account
         '''
         struct = yield motor.Op(check_json, self.request.body)
         struct['account_type'] = 'user'
@@ -107,6 +99,12 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         account = account.rstrip('/')
         result = yield motor.Op(self.remove_account, account)
+
+        # why we're using result['n']?
+
+        import pprint
+        pprint(result)
+        print('''delete check result['n'] on UsersHandler''')
 
         if not result['n']:
             self.set_status(400)
@@ -287,6 +285,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             self.finish(error)
             return
         
+
         # WARNING: access patterns testing
         if account == self.get_current_user():
             struct['account'] = account
@@ -301,7 +300,10 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         result = yield gen.Task(self.new_cdr, struct)
         record, error = result.args
         
-        if record:            
+        if record:
+
+            # handle this out of band.
+
             struct = {'account':account,
                       'resource': 'records',
                       'id': record}
@@ -313,23 +315,39 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             if res_error:
                 print(res_error, 'catch this error on new_resource system record')
         
-        # TODO: LOL REFACTOR RE-FORMAT error stuff
         if error:
-            error = str(error)
-            system_error = errors.Error(error)
             self.set_status(400)
+            model = 'Records'
+            reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
+
+            message = yield motor.Op(
+                self.crash_and_die, 
+                struct, 
+                model, 
+                error,
+                reason
+            )
+
+            self.finish(message)
+            return
         
-        if error and 'Model' in error:
-            error = system_error.model('Records')
-            self.finish(error)
-            return
-        elif error and 'duplicate' in error:
-            error = system_error.duplicate('Record', 'uniqueid', struct['uniqueid'])
-            self.finish(error)
-            return
-        elif error:
-            self.finish(error)
-            return
+        # TODO: LOL REFACTOR RE-FORMAT error stuff
+
+        #if error:
+        #    error = str(error)
+        #    system_error = errors.Error(error)
+        #    self.set_status(400)
+        #if error and 'Model' in error:
+        #    error = system_error.model('Records')
+        #    self.finish(error)
+        #    return
+        #elif error and 'duplicate' in error:
+        #    error = system_error.duplicate('Record', 'uniqueid', struct['uniqueid'])
+        #    self.finish(error)
+        #    return
+        #elif error:
+        #    self.finish(error)
+        #    return
         
         self.set_status(201)
         self.finish({'id':record})
@@ -355,14 +373,6 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     def patch(self, account, record=None, page_num=0):
         '''
             patch
-        '''
-        pass
-    
-    @web.authenticated
-    @web.asynchronous
-    def head(self, account, record=None, page_num=0):
-        '''
-            head
         '''
         pass
 

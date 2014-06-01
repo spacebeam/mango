@@ -14,88 +14,13 @@ __author__ = 'Jean Chassoul'
 # Remember Gabo Naum
 # http://www.youtube.com/watch?v=2k-JGuhyqKE
 
-'''
-    Contracts
-    ---------
-
-    What the fuck.
-
-    Protocols are contracts that describe the rights and obligations of each party.
-
-    State machine protocol engine?.
-
-    Learn state machines!
-
-    Code generation.
-
-    Router sockets.
-
-    What the fuck Joe means with that thing that you're thinking.
-
-    Ping, pong if we're not talking.
-
-    Python and erlang <3.
-'''
-
 # accounts: {users or/and orgs}
 
 # teams: {users members of orgs teams}
 
+# groups: {users members of orgs groups}
+
 # resources: {records, reports, billing}
-
-'''
-    Follow eve the black chuchawa
-    -----------------------------
-
-    HTTP status code is primarily divided into five groups for better
-    explanation of request and responses between client and server as named:
-
-    Informational 1XX,
-    Successful 2XX,
-    Redirection 3XX,
-
-    Client Error 4XX
-        and
-            Server Error 5XX.
-'''
-
-# Wake the fuck up.
-
-'''
-    Call misha the gentle beast
-    ---------------------------
-
-    The Session Initiation Protocol (SIP) is a signalling protocol used for
-    controlling communication sessions such as Voice over IP telephone calls.
-
-    SIP is based around request/response transactions, in a similar manner to
-    the Hypertext Transfer Protocol (HTTP).
-
-    Each transaction consists of a SIP request (which will be one of several
-    request methods), and at least one response.
-
-    SIP responses specify a three-digit integer response code, which is one
-    of a number of defined codes that detail the status of the request.
-
-    These codes are grouped according to their first digit as
-
-    Provisional 1XX,
-    Success 2XX,
-    Redirection 3XX,
-    Client error 4XX,
-
-    Server error 5XX
-        and
-            Global failure 6XX.
-
-
-    For example; "1xx" for provisional responses with a code of 100–199.
-
-    The SIP response codes are an extension to the HTTP response codes,
-    although not all HTTP response codes are valid in SIP.
-
-'''
-
 
 import motor
 
@@ -107,156 +32,12 @@ from mango.system import basic_authentication
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
-# import da fuq
-
-
-'''
-    HTTP request methods
-    --------------------
-
-    HTTP defines methods (sometimes referred to as fucking verbs)
-    to indicate the desired action to be performed on the Universal Unique
-    IDentified (Resource) Unit, Node, Cluster, Cohort, Cloud.
-
-    What this resource represents, whether pre-existing data or data that
-    is generated dynamically, depends on the implementation of the server.
-
-    Often, the resource corresponds to a file or the output of an executable
-    residing on the server.
-
-    The HTTP/1.0 specification:
-        section 8 defined the GET, POST and HEAD methods
-
-    HTTP/1.1 specification:
-        section 9 added 5 new methods: OPTIONS, PUT, DELETE, TRACE and CONNECT.
-
-    By being specified in these documents their semantics are well known
-    and can be depended upon.
-
-    Any client can use any method and the server can be configured to support
-    any combination of methods.
-
-    If a method is unknown to an intermediate it will be treated as an unsafe
-    and non-idempotent method.
-
-    There is no limit to the number of methods that can be defined and this allows
-    for future methods to be specified without breaking existing infrastructure.
-
-    RFC5789 specified the PATCH method.
-
-
-    so... after all that stuff, we're coding on:
-
-    [GET]
-        Requests a representation of the specified resource.
-
-        Requests using GET should only retrieve data and should have no other effect.
-
-        (This is also true of some other HTTP methods.)
-
-    [HEAD]
-        Asks for the response identical to the one that would correspond to a GET request,
-        but without the response body.
-
-        This is useful for retrieving meta-information written in response headers,
-        without having to transport the entire content.
-
-    POST
-        Requests that the server accept the entity enclosed in the request as a new subordinate
-        of the web resource identified by the URI.
-
-        The data POSTed might be, as examples, an annotation for existing resources;
-        a message for a bulletin board, newsgroup, mailing list, or comment thread;
-        a block of data that is the result of submitting a web form to a data-handling process;
-        or an item to add to a database.
-
-    PUT
-        Requests that the enclosed entity be stored under the supplied URI.
-
-        If the URI refers to an already existing resource, it is modified; if the URI does
-        not point to an existing resource, then the server can create the resource with that URI.
-
-    DELETE
-        Deletes the specified resource.
-
-    [OPTIONS]
-        Returns the HTTP methods that the server supports for the specified URL.
-
-        This can be used to check the functionality of a web server by requesting '*'
-        instead of a specific resource.
-
-    PATCH
-        Is used to apply partial modifications to a resource.
-'''
-
-# 7, 11 nightmares at 3 am.
-
-'''
-    SIP request methods
-    -------------------
-
-    The Session Initiation Protocol (SIP) is a signalling protocol used for
-    controlling communication sessions such as Voice over IP telephone calls.
-
-    SIP is based around request/response transactions, in a similar manner
-        to the Hypertext Transfer Protocol (HTTP).
-
-    Each transaction consists of a SIP request (which will be one of several
-        request methods), and at least one response.
-
-    SIP requests are the codes used by Session Initiation Protocol
-        for communication.
-
-    To complement them there are SIP responses, which generally indicate
-        whether this request succeeded or failed, and in the latter case, why it failed.
-
-    INVITE
-        Indicates a client is being invited to participate in a call session.
-
-    ACK
-        Confirms that the client has received a final response to an INVITE request.
-
-    BYE
-        Terminates a call and can be sent by either the caller or the callee.
-
-    CANCEL
-        Cancels any pending request.
-
-    OPTIONS
-        Queries the capabilities of servers.
-
-    REGISTER
-        Registers the address listed in the To header field with a SIP server.
-
-    PRACK
-        Provisional acknowledgement.
-
-    SUBSCRIBE
-        Subscribes for an Event of Notification from the Notifier.
-
-    NOTIFY
-        Notify the subscriber of a new Event.
-
-    PUBLISH
-        Publishes an event to the Server.
-
-    INFO
-        Sends mid-session information that does not modify the session state.
-
-    REFER
-        Asks recipient to issue SIP request (call transfer.)
-
-    MESSAGE
-        Transports instant messages using SIP.
-
-    UPDATE
-        Modifies the state of a session without changing the state of the dialog.
-'''
-
 
 class BaseHandler(web.RequestHandler):
     '''
-        Mango Base Handler
+        System application request handler
+
+        gente d'armi e ganti
     '''
 
     @property
@@ -326,6 +107,55 @@ class BaseHandler(web.RequestHandler):
             Return the account from a secure cookie
         '''
         return self.get_secure_cookie('account')
+
+    @gen.engine
+    def crash_and_die(self, struct, model, error, reason, callback):
+        '''
+            Crash the system
+        '''
+        str_error = str(error)
+        error_handler = errors.Error(error)
+
+        if error and 'Model' in str_error:
+            message = error_handler.model(model)
+
+        elif error and 'duplicate' in str_error:
+
+            messages = []
+
+            for name, value in reason.get('duplicates'):
+
+                message = error_handler.duplicate(
+                    name.title(),
+                    value,
+                    struct.get(value)
+                )
+
+                messages.append(message)
+
+            message = ({'messages':messages} if messages else False)
+
+        elif error and 'value' in str_error:
+            message = error_handler.value()
+
+        elif error is not None:
+
+            print type(error)
+            print error
+            print str_error, 'nonsense inside crash_and_die'
+
+            message = {
+                'error': u'nonsense',
+                'message': u'there is no error'
+            }
+
+        else:
+            message = {
+                'status': 200,
+                'message': u"Take Me Out"
+            }
+
+        callback(message, None)
 
 
 @basic_authentication

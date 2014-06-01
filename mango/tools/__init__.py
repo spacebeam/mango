@@ -8,19 +8,8 @@
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
-'''
-    The P in Python means Powerful magics
-    -------------------------------------
-    Python's development practices have also been emulated by other languages.
-    The practice of requiring a document describing the rationale for, and
-    issues surrounding, a change to the language (in Python's case, a PEP)
-    is also used in Erlang because of Python's influence.
-
-    Note: I lost the source from that wild quote, I need to find the PEP 
-    analogy on Erlang.
-'''
-
 __author__ = 'Jean Chassoul'
+
 
 import json
 import motor

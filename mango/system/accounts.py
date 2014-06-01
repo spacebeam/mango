@@ -94,6 +94,7 @@ class Accounts(object):
         resource = ''.join(('resources.', res['resource']))
 
         # add the account key with the current user
+
         if res.has_key('account') is False:
             res['account'] = self.get_current_user()
         try:
@@ -142,9 +143,7 @@ class Accounts(object):
             Get account billing routes
         '''
 
-        # Support for multiple routes missing !!!
-
-        # TBD by a funhead.
+        # Support for multiple routes missing
 
         try:
             result = yield motor.Op(self.db.accounts.find_one,
@@ -171,6 +170,7 @@ class Accounts(object):
             return
 
         callback(result, None)
+
 
 class MangoAccounts(Accounts):
     '''

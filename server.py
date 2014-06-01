@@ -10,11 +10,6 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-# Mango manage, measure and gives new meaning to ORGs data records.
-
-# Organizations of restricted generality (ORGs) provide foundations
-# for the development of scalable, robust, and private applications.
-
 __author__ = 'Jean Chassoul'
 
 
@@ -75,6 +70,8 @@ def periodic_records_callbacks(stuff='bananas'):
             record['id']
         )
         resource = yield motor.Op(periodic.new_resource_context, db, record)
+
+    # test and or / and statement for assigned_false or asterisk_record.
 
     for record in asterisk_record:
         flag = yield motor.Op(
@@ -261,17 +258,3 @@ if __name__ == '__main__':
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()
-
-    '''
-        Erlang adventure
-        ----------------
-        
-        Here is when erlang story start at the end of the python adventure.
-
-        Erlang is a phreakers tool, Python is creazy powerful computing hacking tool.
-    
-        Both are balance.
-
-        HTML5 eats the monkey and laughs.
-
-    '''

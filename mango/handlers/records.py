@@ -101,15 +101,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         
         self.finish(json_util.dumps(result))
 
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def head(self):
-        '''
-            Mango records head handler
-        '''
-        pass
-
     @web.asynchronous
     @gen.engine
     def post(self):
@@ -196,25 +187,16 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
         record_uuid = record_uuid.rstrip('/')
         result = yield motor.Op(self.remove_cdr, record_uuid)
-        
+
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('record', record_uuid)
             self.finish(error)
             return
-            
+
         self.set_status(204)
         self.finish()
-    
-    @web.authenticated
-    @web.asynchronous
-    @gen.engine
-    def options(self):
-        '''
-            Mango records options handler
-        '''
-        pass
 
     @web.authenticated
     @web.asynchronous
