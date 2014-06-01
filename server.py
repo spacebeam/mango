@@ -17,8 +17,9 @@ import os
 import logging
 import arrow
 import motor
-import psycopg2
-import momoko
+
+#import psycopg2
+#import momoko
 
 from tornado import ioloop
 from tornado import gen
@@ -245,10 +246,10 @@ if __name__ == '__main__':
     )
 
     # Set relational database
-    application.sql = momoko.Pool(
-        dsn='dbname=asterisk user=postgres',
-        size=1
-    )
+    #application.sql = momoko.Pool(
+    #    dsn='dbname=asterisk user=postgres',
+    #    size=1
+    #)
 
     # Tornado periodic callbacks
     periodic_records = ioloop.PeriodicCallback(periodic_records_callbacks, 10000)
