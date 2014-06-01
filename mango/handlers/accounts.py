@@ -78,14 +78,19 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         new_account = yield gen.Task(self.new_account, struct)
         result, error = new_account.args
 
+        # handle SIP accounts out-of-band
+
         # momoko insert sip account
-        if result:
-            sip_account = yield gen.Task(self.new_sip_account, struct)
-            sip_result, sip_error = sip_account.args
-        else:
-            self.set_status(400)
-            self.finish({'errors':struct})
-            return
+        #if result:
+        #    sip_account = yield gen.Task(self.new_sip_account, struct)
+        #    sip_result, sip_error = sip_account.args
+        
+        # missing post error handlers (if any)
+
+        #else:
+        #    self.set_status(400)
+        #    self.finish({'errors':struct})
+        #    return
 
         self.set_status(201)
         self.finish({'id':result})
@@ -302,7 +307,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         
         if record:
 
-            # handle this out of band.
+            # handle this out-of-band.
 
             struct = {'account':account,
                       'resource': 'records',
