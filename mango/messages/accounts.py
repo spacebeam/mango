@@ -20,7 +20,6 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-
 class AccountResource(models.Model):
     '''
         Account resource

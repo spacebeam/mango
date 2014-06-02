@@ -97,7 +97,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Mango default headers
         '''
-        self.set_header("Access-Control-Allow-Origin", "ph3nix.com")
+        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
     def get_current_user(self):
         '''
@@ -182,7 +182,7 @@ class BaseHandler(web.RequestHandler):
                     '%s',
                     '%s',
                     '%s',
-                    'sip.ph3nix.com',
+                    '%s',
                     'dynamic',
                     '%s',
                     'g729,gsm,alaw,ulaw',
@@ -193,6 +193,7 @@ class BaseHandler(web.RequestHandler):
             ''' % (struct['account'],
                    struct['account'],
                    struct['account'],
+                   self.settings['domain'],
                    struct['password'])
 
             cursor = yield momoko.Op(self.sql.execute, query)

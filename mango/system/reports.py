@@ -15,9 +15,11 @@ from tornado import gen
 
 from mango.messages import reports
 
+
 '''
     This is nonsense.
 '''
+
 
 class Reports(object):
     '''

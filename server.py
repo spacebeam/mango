@@ -84,7 +84,6 @@ def periodic_records_callbacks(stuff='bananas'):
         resource = yield motor.Op(periodic.new_resource_context, db, record)
 
 
-
 if __name__ == '__main__':
     '''
         Manage Asynchronous Number Granular/Going ORGs
@@ -224,6 +223,9 @@ if __name__ == '__main__':
 
         # periodic records
         periodic_records=periodic_records,
+
+        # application domain
+        domain=opts.domain,
 
         # application timezone
         tz=arrow.now(opts.timezone),

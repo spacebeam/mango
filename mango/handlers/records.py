@@ -34,7 +34,6 @@ from mango.tools import errors
 from mango.handlers import BaseHandler
 
 
-
 @content_type_validation
 class Handler(records.Records, accounts.Accounts, BaseHandler):
     '''       

@@ -36,6 +36,11 @@ def options():
     # tornado.options.define('logdir', type=str, default='log', help=(
     #     'Location of logging (if debug mode is off)'))
 
+    # Application domain
+    tornado.options.define('domain', default='iofun.io', type=str,
+                            help=('Application domain, e.g. "example.com"')
+    )
+
     # Server settings
     tornado.options.define('host', default='127.0.0.1', type=str,
                            help=('Server hostname'))
@@ -80,7 +85,7 @@ def options():
     result = tornado.options.options
 
     for required in (
-        'host', 'port', 'timezone', 'base_url',
+        'domain', 'host', 'port', 'timezone', 'base_url',
     ):
         if not result[required].value():
             raise Exception('%s required' % required)
