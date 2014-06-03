@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system primitives.
+    Mango system.
 '''
 
 # This file is part of mango.

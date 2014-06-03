@@ -125,6 +125,18 @@ if __name__ == '__main__':
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
+            # accounts, accounts, accounts
+            (r'/accounts/(?P<account>.+)/records/?', accounts.RecordsHandler),
+            (r'/accounts/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
+
+            # Users billing routes
+            (r'/accounts/(?P<account>.+)/routes/?', accounts.RoutesHandler),
+
+            # Users
+            (r'/accounts/?', accounts.Handler),
+            (r'/accounts/(?P<account>.+)/?', accounts.Handler),
+
+
             # Users records 
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),

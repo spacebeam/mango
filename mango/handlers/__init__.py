@@ -35,6 +35,8 @@ from mango.system import basic_authentication
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
+from mango.tools.quotes import HackerQuotes
+
 
 class BaseHandler(web.RequestHandler):
     '''
@@ -269,6 +271,8 @@ class MangoHandler(BaseHandler):
         '''
             Get some quotes
         '''
-        hackers = quotes.Quotes()
-        self.write({'quote': hackers.get()})
-        self.finish()
+        quotes = HackerQuotes()
+
+        self.finish(
+            {'quote': quotes.get()}
+        )
