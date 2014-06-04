@@ -26,15 +26,15 @@ class Billings(object):
     '''
 
     @gen.engine 
-    def get_cost_summary(self, account, routes, lapse, start, stop, callback):
+    def get_cost_summary(self, account, routes, lapse, start, end, callback):
         '''
             get_cost_summary
         '''
 
         if not start:
             start = arrow.utcnow()
-        if not stop:
-            stop = start.replace(days=+1)
+        if not end:
+            end = start.replace(days=+1)
 
         start = start.timestamp
 
@@ -45,7 +45,7 @@ class Billings(object):
         if type(account) is list:
             match = {
                 'assigned': True,
-                'start': {'$gte':start, '$lt':stop},
+                'start': {'$gte':start, '$lt':end},
                 'channel': {'$regex': single_route['channel']},
                 'dstchannel': {'$regex': single_route['dstchannel']},
                 '$or': [{'accountcode':a} for a in account]
@@ -54,7 +54,7 @@ class Billings(object):
             match = {
                 'accountcode': account, 
                 'assigned': True,
-                'start': {'$gte':start, '$lt': stop},
+                'start': {'$gte':start, '$lt': end},
                 'channel': {'$regex': single_route['channel']},
                 'dstchannel': {'$regex': single_route['dstchannel']},
             }

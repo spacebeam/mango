@@ -49,7 +49,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
     @web.authenticated
     @web.asynchronous
     @gen.engine
-    def get(self, start=None, stop=None):
+    def get(self, start=None, end=None):
         '''
             Mango get record billing handler
 
@@ -65,7 +65,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         if mango_accounts:
             mango_accounts.append(account)
 
-        # TODO: fix billing for multiple routes
+        # WARNING: Missing billing for multiple routes.
 
         if routes:
             single = (routes['routes'][0] if routes['routes'] else None)

@@ -145,9 +145,9 @@ class BaseHandler(web.RequestHandler):
 
         elif error is not None:
 
-            print type(error)
-            print error
-            print str_error, 'nonsense inside crash_and_die'
+            print(type(error))
+            print(error)
+            print('WARNING: ', str_error, ' random nonsense.') 
 
             message = {
                 'error': u'nonsense',
@@ -155,9 +155,10 @@ class BaseHandler(web.RequestHandler):
             }
 
         else:
+            quotes = HackerQuotes()
             message = {
                 'status': 200,
-                'message': u"Take Me Out"
+                'message': quotes.get()
             }
 
         callback(message, None)
@@ -201,6 +202,7 @@ class BaseHandler(web.RequestHandler):
             cursor = yield momoko.Op(self.sql.execute, query)
 
         except (psycopg2.Warning, psycopg2.Error) as error:
+            print('WARNING: ', str(error))
             callback(None, str(error))
             return
         else:

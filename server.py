@@ -125,17 +125,21 @@ if __name__ == '__main__':
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
-            # accounts, accounts, accounts
-            (r'/accounts/(?P<account>.+)/records/?', accounts.RecordsHandler),
-            (r'/accounts/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
+            # ORGs records
+            (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
+            (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # Users billing routes
-            (r'/accounts/(?P<account>.+)/routes/?', accounts.RoutesHandler),
+            (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
+            (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # Users
-            (r'/accounts/?', accounts.Handler),
-            (r'/accounts/(?P<account>.+)/?', accounts.Handler),
+            # ORGs teams
+            (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
+            (r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
+            (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
 
+            # Organizations of Restricted Generality
+            (r'/orgs/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
             # Users records 
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
@@ -148,26 +152,10 @@ if __name__ == '__main__':
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
 
-            # ORGs records
-            (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
-            (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
-
-            (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
-            (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
-
-            # ORGs teams
-            # (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
-            # (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
-            # (r'/orgs/(?P<account>.+)/teams/(?P<team_id>.+)/?', accounts.TeamsHandler),
-
-            # Organizations of Restricted Generality
-            (r'/orgs/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
-
             # Records
-            (r'/records/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.Handler),
+            (r'/records/start/(?P<start>.*)/end/(?P<end>.*)/?', records.Handler),
             (r'/records/start/(?P<start>.*)/?', records.Handler),
-            (r'/records/stop/(?P<stop>.*)/?', records.Handler),
+            (r'/records/end/(?P<end>.*)/?', records.Handler),
             (r'/records/page/(?P<page_num>\d+)/?', records.Handler),
 
             # Public records 
@@ -188,13 +176,15 @@ if __name__ == '__main__':
             # (r'/records/summary/<lapse>/nexts/(?P<int>\d+)/?', records.SummaryHandler),
 
             # Records summary
-            (r'/records/summary/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
+            (r'/records/summary/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
+            
             (r'/records/summary/start/(?P<start>.*)/?', records.SummaryHandler),
-            (r'/records/summary/stopt/(?P<stop>.*)/?', records.SummaryHandler),
+            
+            (r'/records/summary/end/(?P<end>.*)/?', records.SummaryHandler),
 
-            (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
+            (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
             (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummaryHandler),
-            (r'/records/summary/(?P<lapse>.*)/stop/(?P<stop>.*)/?', records.SummaryHandler),
+            (r'/records/summary/(?P<lapse>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
 
             # Return last (n) of lapse
             # (r'/records/summary/(?P<lapse>.*)/lasts/(?P<int>\d+)/?', records.SummaryHandler),
@@ -203,13 +193,13 @@ if __name__ == '__main__':
             (r'/records/summary/?', records.SummaryHandler),
 
             # Records summaries
-            (r'/records/summaries/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummariesHandler),
+            (r'/records/summaries/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
             (r'/records/summaries/start/(?P<start>.*)/?', records.SummariesHandler),
-            (r'/records/summaries/stop/(?P<stop>.*)/?', records.SummariesHandler),
+            (r'/records/summaries/end/(?P<end>.*)/?', records.SummariesHandler),
 
-            (r'/records/summaries/(?P<lapse>.*)/start/(?P<start>.*)/stop/(?P<stop>.*)/?', records.SummariesHandler),
+            (r'/records/summaries/(?P<lapse>.*)/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
             (r'/records/summaries/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummariesHandler),
-            (r'/records/summaries/(?P<lapse>.*)/stop/(?P<stop>.*)/?', records.SummariesHandler),
+            (r'/records/summaries/(?P<lapse>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
 
             (r'/records/summaries/(?P<lapse>.*)/?', records.SummariesHandler),
             (r'/records/summaries/?', records.SummariesHandler),
@@ -218,14 +208,18 @@ if __name__ == '__main__':
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
+
+            # Reports
+            
+
             # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
             (r'/billings/?', billings.RecordsHandler),
 
             # Billings records
-            (r'/billings/records/start/(?P<start>.*)/stop/(?P<stop>.*)/?', billings.RecordsHandler),
+            (r'/billings/records/start/(?P<start>.*)/end/(?P<end>.*)/?', billings.RecordsHandler),
             (r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
-            (r'/billings/records/stop/(?P<stop>.*)/?', billings.RecordsHandler),
+            (r'/billings/records/end/(?P<end>.*)/?', billings.RecordsHandler),
             (r'/billings/records/?', billings.RecordsHandler)
 
         ],

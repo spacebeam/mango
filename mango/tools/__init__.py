@@ -93,18 +93,18 @@ def check_aggregation_pipeline(struct, callback):
     callback(result, None)
 
 @gen.engine
-def check_timestamp(start, stop, callback):
+def check_timestamp(start, end, callback):
     '''
         Check timestamp
     '''
     try:
         start = (dt.fromtimestamp(float(start)) if start else None)
-        stop = (dt.fromtimestamp(float(stop)) if stop else None)
+        end = (dt.fromtimestamp(float(end)) if end else None)
     except Exception, e:
         callback(None, e)
         return
-
-    callback({'start':start, 'stop':stop}, None)
+    
+    callback({'start':start, 'end':end}, None)
 
 def clean_structure(struct):
     '''

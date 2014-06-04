@@ -42,7 +42,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
     @web.asynchronous
     @gen.engine
-    def get(self, record_uuid=None, start=None, stop=None, page_num=0, lapse='hours'):
+    def get(self, record_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
         '''
             Mango records get handler
 
@@ -73,14 +73,14 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             mango_accounts = (orgs['orgs'] if orgs else False)
 
-            print(user, orgs, ' on get record objects.')
+            print('WARNING:', user, orgs, ' on get records.')
 
             if not mango_accounts:
                 result = yield motor.Op(self.get_detail_records,
                                         account=user, 
                                         lapse=lapse,
                                         start=start,
-                                        stop=stop,
+                                        end=end,
                                         page_num=page_num)
             else:
                 mango_accounts.append(user)
@@ -88,17 +88,19 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                         account=mango_accounts,
                                         lapse=lapse,
                                         start=start,
-                                        stop=stop,
+                                        end=end,
                                         page_num=page_num)
         else:
             result = yield motor.Op(self.get_detail_records,
                                     account=None,
                                     lapse=lapse,
                                     start=start,
-                                    stop=stop,
+                                    end=end,
                                     page_num=page_num)
         
-        self.finish(json_util.dumps(result))
+            message = json_util.dumps(result)
+
+        self.finish(message)
 
     @web.asynchronous
     @gen.engine
@@ -119,10 +121,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         result = yield motor.Op(self.new_detail_record, struct)
  
-        # the error code hurt my eyes.
-        
-        # cuz it sucks right now!
-        
+        # Warning missing crash_and_die errors handlers.
+
         if error:
             print('error 2')
             error = str(error)
@@ -229,7 +229,7 @@ class PublicHandler(records.Records, BaseHandler):
                                        account=account, 
                                        lapse=None,
                                        start=None,
-                                       stop=None,
+                                       end=None,
                                        page_num=page_num)
         
         self.finish({'results': result})
@@ -253,7 +253,7 @@ class UnassignedHandler(records.Records, BaseHandler):
         result = yield motor.Op(self.get_unassigned_records, 
                                         lapse=None,
                                         start=None,
-                                        stop=None,
+                                        end=None,
                                         page_num=page_num)
         self.finish(result)
 
@@ -261,28 +261,23 @@ class UnassignedHandler(records.Records, BaseHandler):
 @content_type_validation
 class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
-        Mango records summary handler
-
-        Records summary requests handler
+        Summary handler 
     '''
 
     #@web.authenticated
     @web.asynchronous
     @gen.engine
-    def get(self, account=None, start=None, stop=None, page_num=0, lapse='hours'):
+    def get(self, account=None, start=None, end=None, lapse='hours', page=0):
         '''
-            Mango records summary get handler
-
             Get record summary
-            
-            returns record summary 
 
-            arguments: account, start, stop, lapse
+            arguments: account, start, end, lapse, page.
 
             - account or list of accounts
-            - start date kind of from date
-            - stop date kind of to date
-            - time lapse
+            - start timestamp
+            - end timestamp
+            - lapse of time
+            - page number
         '''
         result = 0
         minutes = 0
@@ -292,21 +287,21 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             account = self.current_user
 
         orgs = yield motor.Op(self.get_orgs, account)
-
         mango_accounts = (orgs['orgs'] if orgs else False)
+
         if mango_accounts:
             mango_accounts.append(account)
             summary = yield motor.Op(self.get_summary,
                                      account=mango_accounts,
                                      start=start,
-                                     stop=stop,
+                                     end=end,
                                      lapse=lapse
                                      )
         else:
             summary = yield motor.Op(self.get_summary,
                                      account=account,
                                      start=start,
-                                     stop=stop,
+                                     end=end,
                                      lapse=lapse
                                      )
 
@@ -369,34 +364,29 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 @content_type_validation
 class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
-        Mango records summaries handler
-
-        Records summaries requests handler
+       Summaries requests handler.
     '''
     
     #@web.authenticated
     @web.asynchronous
     @gen.engine
-    def get(self, account=None, start=None, stop=None, page_num=None, lapse=None):
+    def get(self, account=None, start=None, end=None, lapse=None, page=0):
         '''
-            Mango records summaries get handler
+            Get summaries
 
-            Get record summaries
-            
-            returns record summaries 
-
-            arguments: account, start, stop, page_num,  lapse
+            arguments: account, start, end, lapse, page_num.
 
             - account or list of accounts
-            - start date kind of from date
-            - stop date kind of to date
+            - start timestamp
+            - end timestamp
             - time lapse
+            - page number
         '''
         result = 0
         minutes = 0
         record_avg = 0
 
-        times = yield motor.Op(check_timestamp, start, stop)
+        times = yield motor.Op(check_timestamp, start, end)
 
         if not account:
             account = self.current_user
@@ -410,14 +400,16 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                      account=mango_accounts,
                                      lapse=lapse,
                                      start=times['start'],
-                                     stop=times['stop'])
+                                     end=times['end'])
         else:
             summary = yield motor.Op(self.get_summary,
                                      account=account,
                                      lapse=lapse,
                                      start=times['start'],
-                                     stop=times['stop'])
+                                     end=times['end'])
         if summary:
+
+            # WARNING: remove record['_id'] from query.
             
             dates = [record['_id'] for record in summary]
             

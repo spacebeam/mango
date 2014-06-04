@@ -59,11 +59,11 @@ class Records(object):
 
 
     @gen.engine
-    def get_detail_records(self, account, start, stop, page_num, lapse, callback):
+    def get_detail_records(self, account, start, end, lapse, page, callback):
         '''
             Get detail records 
         '''
-        page_num = int(page_num)
+        page_num = int(page)
         page_size = self.settings['page_size']
         result = []
         
@@ -95,11 +95,11 @@ class Records(object):
         
     
     @gen.engine
-    def get_unassigned_records(self, start, stop, page_num, lapse, callback):
+    def get_unassigned_records(self, start, end, lapse, page, callback):
         '''
             Get unassigned record detail records
         '''
-        page_num = int(page_num)
+        page_num = int(page)
         page_size = self.settings['page_size']
         result = []
         
@@ -130,33 +130,33 @@ class Records(object):
         callback(results, None)
 
     @gen.engine
-    def get_summaries(self, account, start, stop, page_num, lapse, callback):
+    def get_summaries(self, account, start, end, lapse, page, callback):
         '''
-            Get stuff summaries
+            Get summaries
         '''
 
         if not start:
             start = arrow.utcnow()
-        if not stop:
-            stop = start.replace(days=+1)
+        if not end:
+            end = start.replace(days=+1)
 
         if lapse:
             print('given lapse:', lapse)
 
 
     @gen.engine 
-    def get_summary(self, account, lapse, start, stop, callback):
+    def get_summary(self, account, start, end, lapse, callback):
         '''
-            Get stuff summary
+            Get summary
         '''
         
         if not start:
             start = arrow.utcnow()
-        if not stop:
-            stop = start.replace(days=+1)
+        if not end:
+            end = start.replace(days=+1)
 
         start = start.timestamp
-        stop = stop.timestamp
+        end = end.timestamp
 
         if lapse:
             print('given lapse:', lapse)
@@ -165,14 +165,14 @@ class Records(object):
         if type(account) is list:
             match = {
                 'assigned':True,
-                'start':{'$gte':start, '$lt':stop},
+                'start':{'$gte':start, '$lt':end},
                 '$or':[{'accountcode':a} for a in account]
             }
         else:
             match = {
                 'accountcode':account, 
                 'assigned': True,
-                'start': {'$gte':start, '$lt': stop}
+                'start': {'$gte':start, '$lt': end}
             }
         
         # MongoDB aggregation project operator

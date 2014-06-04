@@ -348,7 +348,8 @@ class Orgs(MangoAccounts):
             Remove member
         '''
 
-        # TODO: remove/clean this
+        # clean this
+        
         result = None
 
         try:
@@ -363,7 +364,6 @@ class Orgs(MangoAccounts):
         except Exception, e:
             callback(None, e)
 
-        #result = (result if result else False)
         print('remove_member', result)
 
         callback(result, None)

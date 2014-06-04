@@ -249,14 +249,12 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
             Retrieve records from accounts
         '''
-        # TODO: test the check_type account with organizations
+        # check_type account with organizations
         #account_type = yield motor.Op(self.check_type, account, 'user')
         
         orgs = yield motor.Op(self.get_orgs, account)
         
         print(orgs, 'organizations')
-        
-        #elif 
         
         #if not account_type:
         #    system_error = errors.Error('invalid')
@@ -272,7 +270,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
                                 page_num=page_num,
                                 lapse=None,
                                 start=None,
-                                stop=None)
+                                end=None)
 
         self.finish(result)
         
@@ -290,17 +288,15 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             self.finish(error)
             return
         
-
-        # WARNING: access patterns testing
         if account == self.get_current_user():
             struct['account'] = account
-        # TODO: elif check if organization member following the access pattern?
+        
+        # check if orgs follows the access pattern.
+        
         else:
             self.set_status(404)
-            # TODO: expand error message.
-            self.finish({'WARNING':'Access patterns research and testing.'})
+            self.finish({'WARNING':'Pre-Access patterns research'})
             return
-        
         
         result = yield gen.Task(self.new_cdr, struct)
         record, error = result.args
@@ -312,14 +308,14 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             struct = {'account':account,
                       'resource': 'records',
                       'id': record}
-            
+
             res_args = yield gen.Task(self.new_resource, struct)
-            
+
             update, res_error = res_args.args
-            
+
             if res_error:
-                print(res_error, 'catch this error on new_resource system record')
-        
+                print(res_error, 'WARNING: error on new_resource record.')
+
         if error:
             self.set_status(400)
             model = 'Records'
@@ -335,25 +331,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
             self.finish(message)
             return
-        
-        # TODO: LOL REFACTOR RE-FORMAT error stuff
 
-        #if error:
-        #    error = str(error)
-        #    system_error = errors.Error(error)
-        #    self.set_status(400)
-        #if error and 'Model' in error:
-        #    error = system_error.model('Records')
-        #    self.finish(error)
-        #    return
-        #elif error and 'duplicate' in error:
-        #    error = system_error.duplicate('Record', 'uniqueid', struct['uniqueid'])
-        #    self.finish(error)
-        #    return
-        #elif error:
-        #    self.finish(error)
-        #    return
-        
         self.set_status(201)
         self.finish({'id':record})
     
