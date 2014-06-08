@@ -11,10 +11,9 @@
 __author__ = 'Jean Chassoul'
 
 
+import arrow
 import json
 import motor
-
-from datetime import datetime as dt
 
 from tornado import gen
 from mango.tools import errors
@@ -93,18 +92,23 @@ def check_aggregation_pipeline(struct, callback):
     callback(result, None)
 
 @gen.engine
-def check_timestamp(start, end, callback):
+def check_times(start, end, callback):
     '''
-        Check timestamp
+        Check times
     '''
     try:
-        start = (dt.fromtimestamp(float(start)) if start else None)
-        end = (dt.fromtimestamp(float(end)) if end else None)
+        start = (arrow.get(start) if start else arrow.utcnow())
+        end = (arrow.get(end) if end else start.replace(days=+1))
+
+        start = start.timestamp
+        end = end.timestamp
+
     except Exception, e:
         callback(None, e)
         return
-    
-    callback({'start':start, 'end':end}, None)
+
+    message = {'start':start, 'end':end}
+    callback(message, None)
 
 def clean_structure(struct):
     '''

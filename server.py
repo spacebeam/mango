@@ -72,7 +72,7 @@ def periodic_records_callbacks(stuff='bananas'):
         )
         resource = yield motor.Op(periodic.new_resource_context, db, record)
 
-    # test and or / and statement for assigned_false or asterisk_record.
+    # test [ and / or ] statement for assigned_false or asterisk_record.
 
     for record in asterisk_record:
         flag = yield motor.Op(
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     '''
         Manage Asynchronous Number Granular/Going ORGs
 
-        Organizations of restricted generality
+        Organizations of Restricted Generality.
     '''
     opts = options.options()
 
@@ -136,6 +136,11 @@ if __name__ == '__main__':
             (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             (r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             (r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
+
+            # ORGs members
+            (r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
 
             # Organizations of Restricted Generality
             (r'/orgs/?', accounts.OrgsHandler),

@@ -26,7 +26,7 @@ from mango.messages import reports
 
 from mango.tools import clean_structure
 from mango.tools import clean_results
-
+from mango.tools import check_times
 
 class Records(object):
     '''
@@ -34,7 +34,7 @@ class Records(object):
     '''
 
     @gen.engine
-    def get_detail_record(self, account, record_uuid, callback):
+    def get_record(self, account, record_uuid, callback):
         '''
             Get a detail record
         '''
@@ -59,11 +59,11 @@ class Records(object):
 
 
     @gen.engine
-    def get_detail_records(self, account, start, end, lapse, page, callback):
+    def get_record_list(self, account, start, end, lapse, page_num, callback):
         '''
             Get detail records 
         '''
-        page_num = int(page)
+        page_num = int(page_num)
         page_size = self.settings['page_size']
         result = []
         
@@ -95,11 +95,11 @@ class Records(object):
         
     
     @gen.engine
-    def get_unassigned_records(self, start, end, lapse, page, callback):
+    def get_unassigned_records(self, start, end, lapse, page_num, callback):
         '''
             Get unassigned record detail records
         '''
-        page_num = int(page)
+        page_num = int(page_num)
         page_size = self.settings['page_size']
         result = []
         
@@ -130,15 +130,11 @@ class Records(object):
         callback(results, None)
 
     @gen.engine
-    def get_summaries(self, account, start, end, lapse, page, callback):
+    def get_summaries(self, account, start, end, lapse, page_num, callback):
         '''
             Get summaries
         '''
-
-        if not start:
-            start = arrow.utcnow()
-        if not end:
-            end = start.replace(days=+1)
+        times = yield motor.Op(check_times, start, end)
 
         if lapse:
             print('given lapse:', lapse)
@@ -150,13 +146,7 @@ class Records(object):
             Get summary
         '''
         
-        if not start:
-            start = arrow.utcnow()
-        if not end:
-            end = start.replace(days=+1)
-
-        start = start.timestamp
-        end = end.timestamp
+        times = yield motor.Op(check_times, start, end)
 
         if lapse:
             print('given lapse:', lapse)
@@ -165,14 +155,14 @@ class Records(object):
         if type(account) is list:
             match = {
                 'assigned':True,
-                'start':{'$gte':start, '$lt':end},
+                'start':{'$gte':times.get('start'), '$lt':times.get('end')},
                 '$or':[{'accountcode':a} for a in account]
             }
         else:
             match = {
                 'accountcode':account, 
                 'assigned': True,
-                'start': {'$gte':start, '$lt': end}
+                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
         
         # MongoDB aggregation project operator

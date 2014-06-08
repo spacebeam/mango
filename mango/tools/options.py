@@ -76,10 +76,10 @@ def options():
     # Parse config file, then command line, so command line switches take
     # precedence
     if os.path.exists(config_path):
-        print 'Loading', config_path
+        print('Loading', config_path)
         tornado.options.parse_config_file(config_path)
     else:
-        print 'No config file at', config_path
+        print('No config file at', config_path)
 
     tornado.options.parse_command_line()
     result = tornado.options.options

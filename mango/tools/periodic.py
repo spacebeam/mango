@@ -170,7 +170,7 @@ def process_asterisk_cdr(db, callback):
                     }
                     result.append(struct)    
         else:
-            #print 'hmmm'
+            #print('hmmm')
             # Iteration complete
             callback(result, None)
             return

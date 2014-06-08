@@ -237,11 +237,27 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
 
 
 @content_type_validation
+class TeamsHandler(accounts.Orgs, BaseHandler):
+    '''
+        Teams resource handlers
+    '''
+    pass
+
+
+@content_type_validation
+class MembersHandler(accounts.Orgs, BaseHandler):
+    '''
+        Members resource handlers
+    '''
+    pass
+
+
+@content_type_validation
 class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     '''
         Records resource handlers
     '''
-    
+
     @web.authenticated
     @web.asynchronous
     @gen.engine
@@ -252,7 +268,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         # check_type account with organizations
         #account_type = yield motor.Op(self.check_type, account, 'user')
         
-        orgs = yield motor.Op(self.get_orgs, account)
+        orgs = yield motor.Op(self.get_orgs_list, account)
         
         print(orgs, 'organizations')
         
@@ -265,7 +281,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         print(account, page_num)
 
-        result = yield motor.Op(self.get_detail_records, 
+        result = yield motor.Op(self.get_record_list, 
                                 account=account, 
                                 page_num=page_num,
                                 lapse=None,

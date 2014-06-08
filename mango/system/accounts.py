@@ -154,7 +154,7 @@ class Accounts(object):
         callback(result, None)
 
     @gen.engine
-    def get_orgs(self, account, callback):
+    def get_orgs_list(self, account, callback):
         '''
             Get account orgs
         '''

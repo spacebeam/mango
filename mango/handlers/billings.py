@@ -60,7 +60,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         elapse = 'hours'
         billing = 0
         
-        orgs = yield motor.Op(self.get_orgs, account)
+        orgs = yield motor.Op(self.get_orgs_list, account)
         mango_accounts = (orgs['orgs'] if orgs else False)
         if mango_accounts:
             mango_accounts.append(account)

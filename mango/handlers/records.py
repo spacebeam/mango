@@ -28,7 +28,7 @@ from mango.system import records
 
 from mango.tools import content_type_validation
 from mango.tools import check_json
-from mango.tools import check_timestamp
+from mango.tools import check_times
 from mango.tools import errors
 
 from mango.handlers import BaseHandler
@@ -53,9 +53,9 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             if self.current_user:
                 user = self.current_user
-                record = yield motor.Op(self.get_detail_record, user, record_uuid)
+                record = yield motor.Op(self.get_record, user, record_uuid)
             else:
-                record = yield motor.Op(self.get_detail_record, None, record_uuid)
+                record = yield motor.Op(self.get_record, None, record_uuid)
 
             if not record:
                 self.set_status(400)
@@ -69,38 +69,38 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         if self.current_user:
             user = self.current_user
-            orgs = yield motor.Op(self.get_orgs, user)
+            orgs = yield motor.Op(self.get_orgs_list, user)
 
-            mango_accounts = (orgs['orgs'] if orgs else False)
+            accounts = (orgs['orgs'] if orgs else False)
 
-            print('WARNING:', user, orgs, ' on get records.')
+            print('WARNING:', user, orgs, ' on GET records.')
 
-            if not mango_accounts:
-                result = yield motor.Op(self.get_detail_records,
+            if not accounts:
+                result = yield motor.Op(self.get_record_list,
                                         account=user, 
                                         lapse=lapse,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
             else:
-                mango_accounts.append(user)
-                result = yield motor.Op(self.get_detail_records,
-                                        account=mango_accounts,
+                accounts.append(user)
+                result = yield motor.Op(self.get_record_list,
+                                        account=accounts,
                                         lapse=lapse,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
         else:
-            result = yield motor.Op(self.get_detail_records,
+            result = yield motor.Op(self.get_record_list,
                                     account=None,
                                     lapse=lapse,
                                     start=start,
                                     end=end,
                                     page_num=page_num)
         
-            message = json_util.dumps(result)
+            result = json_util.dumps(result)
 
-        self.finish(message)
+        self.finish(result)
 
     @web.asynchronous
     @gen.engine
@@ -223,10 +223,10 @@ class PublicHandler(records.Records, BaseHandler):
 
             Get public record details
         '''
-        # get public details: record get_detail_records without an account
+        # get public details: record get_record_list without an account
         account = None
-        result = yield motor.Op(self.get_detail_records,
-                                       account=account, 
+        result = yield motor.Op(self.get_record_list,
+                                       account=account,
                                        lapse=None,
                                        start=None,
                                        end=None,
@@ -267,7 +267,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     #@web.authenticated
     @web.asynchronous
     @gen.engine
-    def get(self, account=None, start=None, end=None, lapse='hours', page=0):
+    def get(self, account=None, start=None, end=None, lapse='hours', page_num=0):
         '''
             Get record summary
 
@@ -286,13 +286,13 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         if not account:
             account = self.current_user
 
-        orgs = yield motor.Op(self.get_orgs, account)
-        mango_accounts = (orgs['orgs'] if orgs else False)
+        orgs = yield motor.Op(self.get_orgs_list, account)
+        accounts = (orgs['orgs'] if orgs else False)
 
-        if mango_accounts:
-            mango_accounts.append(account)
+        if accounts:
+            accounts.append(account)
             summary = yield motor.Op(self.get_summary,
-                                     account=mango_accounts,
+                                     account=accounts,
                                      start=start,
                                      end=end,
                                      lapse=lapse
@@ -370,7 +370,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     #@web.authenticated
     @web.asynchronous
     @gen.engine
-    def get(self, account=None, start=None, end=None, lapse=None, page=0):
+    def get(self, account=None, start=None, end=None, lapse=None, page_num=0):
         '''
             Get summaries
 
@@ -386,18 +386,18 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         minutes = 0
         record_avg = 0
 
-        times = yield motor.Op(check_timestamp, start, end)
+        times = yield motor.Op(check_times, start, end)
 
         if not account:
             account = self.current_user
 
-        orgs = yield motor.Op(self.get_orgs, account)
-        mango_accounts = (orgs['orgs'] if orgs else False)
+        orgs = yield motor.Op(self.get_orgs_list, account)
+        accounts = (orgs['orgs'] if orgs else False)
 
-        if mango_accounts:
-            mango_accounts.append(account)
+        if accounts:
+            accounts.append(account)
             summary = yield motor.Op(self.get_summary, 
-                                     account=mango_accounts,
+                                     account=accounts,
                                      lapse=lapse,
                                      start=times['start'],
                                      end=times['end'])
@@ -409,7 +409,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                      end=times['end'])
         if summary:
 
-            # WARNING: remove record['_id'] from query.
+            print("WARNING: remove record['_id']: %s from query." % (record['_id'],))
             
             dates = [record['_id'] for record in summary]
             

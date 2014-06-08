@@ -18,8 +18,6 @@ __author__ = 'Jean Chassoul'
 
 # teams: {users members of orgs teams}
 
-# groups: {users members of orgs groups}
-
 # resources: {records, reports, billing}
 
 import motor
@@ -85,14 +83,14 @@ class BaseHandler(web.RequestHandler):
         # System database
         self.db = self.settings['db']
 
-        # 0MQ Greatness Stuff
+        # 0MQ message channels
 
         # self.cdr_stream = self.settings['cdr_stream']
 
         # Tornado CDR periodic callbacks
         # self.cdr_periodic = self.settings['cdr_periodic']
 
-        # Pagination settings
+        # Page settings
         self.page_size = self.settings['page_size']
 
     def set_default_headers(self):
@@ -112,6 +110,13 @@ class BaseHandler(web.RequestHandler):
             Return the account from a secure cookie
         '''
         return self.get_secure_cookie('account')
+
+    @gen.engine
+    def let_it_crash(self, struct, model, error, reason, callback):
+        '''
+            Let it crash.
+        '''
+        pass
 
     @gen.engine
     def crash_and_die(self, struct, model, error, reason, callback):
