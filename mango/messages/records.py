@@ -43,16 +43,17 @@ class Record(models.Model):
     _id = mongo.ObjectIdType(required=False)
     uuid = types.UUIDType(default=uuid.uuid4)
 
-    accountcode = types.StringType()
-    
-    # assigned record flag
-    assigned = types.BooleanType(default=False)
+    clid = types.StringType()
 
-    # TODO: checked flag (future)
+    uniqueid = types.StringType()
+    queue = compound.ModelType(FromQueue)
+
+    accountcode = types.StringType()
+    userfield = types.StringType()
+    
+    assigned = types.BooleanType(default=False)
     checked = types.BooleanType(default=False)
 
-    # the public flag shows if the record record is public
-    # and can be seen be every user account
     public = types.BooleanType(default=False)
 
     source = types.StringType()
@@ -64,22 +65,21 @@ class Record(models.Model):
     src = types.StringType()
     dst = types.StringType()
     dcontext = types.StringType()
-    clid = types.StringType()
+    
     channel = types.StringType()
     dstchannel = types.StringType()
-    lastapp = types.StringType()
-    lastdata = types.StringType()
+    
     start = types.DateTimeType(required=True)
     answer = types.DateTimeType()
     end = types.DateTimeType()
+
     duration = types.IntType()
     billsec = types.IntType()
     disposition = types.StringType()
     amaflags = types.StringType()
-    uniqueid = types.StringType()
-    userfield = types.StringType()
-    
-    queue = compound.ModelType(FromQueue)
+
+    lastapp = types.StringType()
+    lastdata = types.StringType()
     
     # TODO: CEL events
     # events

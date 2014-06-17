@@ -60,28 +60,19 @@ def periodic_records_callbacks(stuff='bananas'):
         Mango periodic records
     '''
 
-    assigned_false = yield motor.Op(periodic.process_assigned_false, db)
-    asterisk_record = yield motor.Op(periodic.process_asterisk_cdr, db)
+    result = yield [
+        motor.Op(periodic.process_assigned_false, db),
+        motor.Op(periodic.process_asterisk_cdr, db)
+    ]
 
-    for record in assigned_false:
+    for record in result:
         flag = yield motor.Op(
             periodic.assign_call,
             db,
             record['account'],
-            record['id']
+            record['id'] # uuid?
         )
-        resource = yield motor.Op(periodic.new_resource_context, db, record)
-
-    # test [ and / or ] statement for assigned_false or asterisk_record.
-
-    for record in asterisk_record:
-        flag = yield motor.Op(
-            periodic.assign_call,
-            db,
-            record['account'],
-            record['id']
-        )
-        resource = yield motor.Op(periodic.new_resource_context, db, record)
+        resource = yield motor.Op(periodic.new_resource, db, record)
 
 
 if __name__ == '__main__':

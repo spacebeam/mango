@@ -16,7 +16,7 @@ import motor
 import uuid
 
 from tornado import gen
-from bson import objectid
+
 from mango.messages import accounts
 
 from mango.tools import clean_structure, clean_results
@@ -91,6 +91,8 @@ class Accounts(object):
         resource = ''.join(('resources.', res['resource']))
 
         # add the account key with the current user
+
+        # test that shit out and remove this shit out.
 
         if res.has_key('account') is False:
             res['account'] = self.get_current_user()
@@ -276,13 +278,15 @@ class Orgs(MangoAccounts):
     '''
 
     @gen.engine
-    def get_id(self, account, callback):
+    def get_bson_objectid(self, account, callback):
         '''
-            Get id
+            Get BSON _id
         '''
         try:
-            account_id = yield motor.Op(self.db.accounts.find_one,
-                                        {'account':account}, {'_id':1})
+            account_id = yield motor.Op(
+                self.db.accounts.find_one,
+                {'account':account}, {'_id':1}
+            )
         except Exception, e:
             callback(None, e)
 
@@ -294,8 +298,10 @@ class Orgs(MangoAccounts):
             Get uuid
         '''
         try:
-            account_uuid = yield motor.Op(self.db.accounts.find_one,
-                                        {'account':account}, {'uuid':1})
+            account_uuid = yield motor.Op(
+                self.db.accounts.find_one,
+                {'account':account}, {'uuid':1}
+            )
         except Exception, e:
             callback(None, e)
 
@@ -321,8 +327,13 @@ class Orgs(MangoAccounts):
         callback(result, None)
 
     @gen.engine
-    # get member
-    # check_member
+    def get_member(self, callback):
+        '''
+            Get member
+        '''
+        pass
+
+    @gen.engine
     def check_member(self, callback):
         '''
             Check member exist
@@ -335,8 +346,11 @@ class Orgs(MangoAccounts):
             Get members
         '''
         try:
-            result = yield motor.Op(self.db.accounts.find_one,
-                                    {'account':org}, {'members':1, '_id':0})
+            result = yield motor.Op(
+                self.db.accounts.find_one,
+                {'account':org},
+                {'members':1, '_id':0}
+            )
         except Exception, e:
             callback(None, e)
 
@@ -378,9 +392,11 @@ class Orgs(MangoAccounts):
         except Exception, e:
             callback(None, e)
 
-        result = yield motor.Op(self.db.accounts.update,
-                                {'account':org},
-                                {'$addToSet': {'teams':team}})
+        result = yield motor.Op(
+            self.db.accounts.update,
+            {'account':org},
+            {'$addToSet': {'teams':team}}
+        )
 
         callback(result, None)
 

@@ -11,15 +11,6 @@
 __author__ = 'Jean Chassoul'
 
 
-# Remember Gabo Naum
-# http://www.youtube.com/watch?v=2k-JGuhyqKE
-
-# accounts: {users or/and orgs}
-
-# teams: {users members of orgs teams}
-
-# resources: {records, reports, billing}
-
 import motor
 
 #import psycopg2
@@ -84,10 +75,12 @@ class BaseHandler(web.RequestHandler):
         self.db = self.settings['db']
 
         # 0MQ message channels
+        # --------------------
 
+        # CDR stream
         # self.cdr_stream = self.settings['cdr_stream']
 
-        # Tornado CDR periodic callbacks
+        # CDR periodic channel
         # self.cdr_periodic = self.settings['cdr_periodic']
 
         # Page settings
@@ -116,23 +109,16 @@ class BaseHandler(web.RequestHandler):
         '''
             Let it crash.
         '''
-        pass
 
-    @gen.engine
-    def crash_and_die(self, struct, model, error, reason, callback):
-        '''
-            Crash the system
-        '''
         str_error = str(error)
         error_handler = errors.Error(error)
+        messages = []
 
         if error and 'Model' in str_error:
             message = error_handler.model(model)
 
         elif error and 'duplicate' in str_error:
-
-            messages = []
-
+            # messages = []
             for name, value in reason.get('duplicates'):
 
                 message = error_handler.duplicate(
@@ -142,14 +128,13 @@ class BaseHandler(web.RequestHandler):
                 )
 
                 messages.append(message)
-
+            
             message = ({'messages':messages} if messages else False)
 
         elif error and 'value' in str_error:
             message = error_handler.value()
 
         elif error is not None:
-
             print(type(error))
             print(error)
             print('WARNING: ', str_error, ' random nonsense.') 
@@ -161,6 +146,7 @@ class BaseHandler(web.RequestHandler):
 
         else:
             quotes = HackerQuotes()
+            
             message = {
                 'status': 200,
                 'message': quotes.get()
@@ -225,7 +211,7 @@ class LoginHandler(BaseHandler):
     @web.asynchronous
     @gen.engine
     def get(self):
-        # redirect this shit out?
+        # redirect next url
         next_url = '/'
         args = self.get_arguments('next')
         if args:
@@ -245,7 +231,6 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie('username', self.username)
             self.username, self.password = (None, None)
 
-            # redirect where and why?
             # self.redirect(next_url)
 
             self.set_status(200)

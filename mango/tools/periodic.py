@@ -14,7 +14,9 @@ import motor
 
 from contextlib import contextmanager
 from tornado import gen
-from mango.messages import accounts
+
+# from mango.messages import accounts
+
 from bson import objectid
 
 
@@ -35,37 +37,6 @@ def get_usernames(db, callback):
         callback(None, e)
     
     callback(usernames, None)
-
-@gen.engine
-def new_resource_context(db, struct, callback):
-    '''
-        Mango new resource context
-
-        Create a new account resource
-    '''
-    try:
-        res = accounts.AccountResource(**struct).validate()
-    except Exception, e:
-        callback(None, e)
-        return
-
-    resource = ''.join(('resources.', res['resource']))
-
-    try:
-        result = yield motor.Op(
-        
-            db.accounts.update,
-            {'account':res['account']},
-            {'$addToSet':{''.join((resource, 
-                                   '.ids')):res['id']},
-             '$inc': {'resources.total':1,
-                      ''.join((resource, '.total')):1}}
-        )
-    except Exception, e:
-        callback(None, e)
-        return
-            
-    callback(result, None)
 
 @gen.engine
 def get_unassigned_cdr(db, callback):

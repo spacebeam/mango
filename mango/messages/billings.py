@@ -25,3 +25,11 @@ class Route(models.Model):
     channel = types.StringType(required=True)
     dchannel = types.StringType(required=True)
     cost = types.IntType(required=True)
+
+class Seat(models.Model):
+	'''
+		Seat
+	'''
+	uuid = ''
+	plan = ''
+	cost = types.IntType(required=True)

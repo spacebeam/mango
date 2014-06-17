@@ -17,6 +17,8 @@ import motor
 
 from tornado import gen
 from mango.tools import errors
+
+from mango.messages import accounts
 from mango.messages import reports
 
 
@@ -162,10 +164,11 @@ def content_type_validation(handler_class):
             '''
             content_type = handler.request.headers.get("Content-Type", "")
             if content_type is None or not content_type.startswith('application/json'):
-                handler.set_status(406)
+                handler.set_status(415)
                 handler._transforms = []
                 handler.finish({
-                    'status': 406,
+                    'status': 415,
+                    'reason': 'Unsupported Media Type',
                     'message': 'Must ACCEPT application/json: '\
                     '[\"%s\"]' % content_type 
                 })
@@ -184,3 +187,43 @@ def content_type_validation(handler_class):
     
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
+
+@gen.engine
+def new_resource(db, struct, callback):
+    '''
+        New resource
+    '''
+
+    try:
+        message = accounts.AccountResource(struct)
+        message.validate()
+        message = message.to_primitive()
+    except Exception, e:
+        callback(None, e)
+        return
+
+    resource = ''.join(('resources.', message['resource']))
+
+    try:
+        message = yield motor.Op(
+            db.accounts.update,
+            {
+                'uuid': message['uuid'],
+                'account': message['account']
+            },
+            {
+                '$addToSet': {
+                    ''.join((resource, '.contains')): message['uuid']
+                },
+                    
+                '$inc': {
+                    'resources.total': 1,
+                    ''.join((resource, '.total')): 1
+                }
+            }
+        )
+    except Exception, e:
+        callback(None, e)
+        return
+
+    callback(message, None)

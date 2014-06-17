@@ -57,7 +57,8 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         '''
         account = self.get_current_user()
         routes = yield motor.Op(self.get_routes, account)
-        elapse = 'hours'
+        lapse = 'hours'
+        
         billing = 0
         
         orgs = yield motor.Op(self.get_orgs_list, account)
@@ -65,7 +66,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         if mango_accounts:
             mango_accounts.append(account)
 
-        # WARNING: Missing billing for multiple routes.
+        # WARNING: Missing billing for multiple route list.
 
         if routes:
             single = (routes['routes'][0] if routes['routes'] else None)
@@ -90,3 +91,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         self.finish({
             'billing': '%.2f' % billing
         })
+
+@content_type_validation
+class SeatsHandler(billings.Billings, accounts.Accounts, BaseHandler):
+    pass

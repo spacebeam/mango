@@ -27,25 +27,28 @@ def basic_authentication(handler_class):
     def wrap_execute(handler_execute):
         '''
             Execute basic authentication
+            ----------------------------
 
-            Wrapper execute function
+            Wrapper execute function.
         '''
 
         def basic_auth(handler, kwargs):
             '''
                 Basic AUTH implementation
             '''
-            auth_header = handler.request.headers.get('Authorization')
+            autho_header = handler.request.headers.get('Authorization')
             if auth_header is None or not auth_header.startswith('Basic '):
                 handler.set_status(403)
                 handler.set_header('WWW-Authenticate', 'Basic '\
-                                   'realm=mango')
+                                   'realm=mango') # get realm for somewhere else.
                 handler._transforms = []
                 handler.finish()
                 return False
 
             auth_decoded = base64.decodestring(auth_header[6:])
             handler.username, handler.password = auth_decoded.split(':', 2)
+
+            # write msg send right channel.
 
             print('A user just enter the dungeon! /api/ @basic_authentication')
             print('username', handler.username, 'password', handler.password)

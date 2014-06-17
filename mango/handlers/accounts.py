@@ -30,7 +30,6 @@ from mango.tools import errors
 from mango.handlers import BaseHandler
 
 
-
 @content_type_validation
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
@@ -46,8 +45,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         account_type = 'user'
         if not account:
-            users = yield motor.Op(self.get_accounts, account_type, page_num)
-            print('get accounts on handler', users)
+            # get list
+            users = yield motor.Op(self.get_account_list, account_type, page_num)
             self.finish({'users':users})
         else:
             account = account.rstrip('/')
@@ -56,6 +55,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 self.finish(result)
                 return
             else:
+                # let it crash
                 self.set_status(400)
                 self.finish({'missing':account})
                 return
@@ -139,7 +139,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         account_type = 'org'
         if not account:
-            orgs = yield motor.Op(self.get_accounts, account_type, page_num) 
+            orgs = yield motor.Op(self.get_account_list, account_type, page_num) 
             self.finish({'orgs':orgs})
         else:
             account = account.rstrip('/')
@@ -338,7 +338,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
 
             message = yield motor.Op(
-                self.crash_and_die, 
+                self.let_it_crash, 
                 struct, 
                 model, 
                 error,

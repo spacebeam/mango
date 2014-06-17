@@ -31,7 +31,7 @@ class AccountResource(models.Model):
 
 class Route(models.Model):
     '''
-        Mango route
+        Route
     '''
     # default '*' means all destinations
     destination = types.StringType(default='*') 
@@ -46,7 +46,7 @@ class Route(models.Model):
 
 class BaseAccount(models.Model):
     '''
-        Mango base account
+        Base account
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
 
@@ -56,7 +56,7 @@ class BaseAccount(models.Model):
     email = types.EmailType(required=True)
     url = types.URLType()
     
-    # TODO: Geolocation stuff
+    # Geolocation stuff
 
     # location = StringType(required=True)
     # timezone = StringType(required=True)
@@ -67,7 +67,7 @@ class BaseAccount(models.Model):
 
 class User(BaseAccount):
     '''
-        Mango user
+        User account
     '''
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
@@ -77,24 +77,24 @@ class User(BaseAccount):
     company = types.StringType()
 
 
-class Team(models.Model):
-    '''
-        ORGs team
-    '''
-    name = types.StringType(required=True)
-    members = compound.ListType(types.StringType())
-    permission = types.StringType(choices=['read',
-                                           'write',
-                                           'super'], required=True)
-    resources = compound.ModelType(Resource)
-  
-    
 class Org(BaseAccount):
     '''
-        Mango (ORG) Organization of Restricted Generality.
+        Org account
     '''
     account_type = types.StringType(default='org')
     
     # tests for members and teams.
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
+
+
+class Team(models.Model):
+    '''
+        Org team
+    '''
+    name = types.StringType(required=True)
+    permission = types.StringType(choices=['read',
+                                           'write',
+                                           'admin'], required=True)
+    members = compound.ListType(types.StringType())
+    resources = compound.ModelType(Resource)
