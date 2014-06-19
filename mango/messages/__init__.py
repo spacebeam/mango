@@ -10,63 +10,81 @@
 
 __author__ = 'Jean Chassoul'
 
+import uuid
 
 from schematics import models
 from schematics import types
 from schematics.types import compound
 
 
-class BaseQueue(models.Model):
+class CampaignQueue(models.Model):
     '''
-        Base queue
+        Campaign queue
     '''
-    name = models.CharField(unique=True, max_length=255)
-    musiconhold = models.CharField(max_length=384, blank=True, default='default')
-    announce = models.CharField(max_length=384, blank=True)
-    context = models.CharField(max_length=384, blank=True)
-    timeout = models.IntegerField(null=True, blank=True, default=15)
-    monitor_join = models.IntegerField(null=True, blank=True, default=1)
-    monitor_format = models.CharField(max_length=384, blank=True, default='wav')
-    queue_youarenext = models.CharField(max_length=384, blank=True, default='queue-youarenext')
-    queue_thereare = models.CharField(max_length=384, blank=True)
-    queue_callswaiting = models.CharField(max_length=384, blank=True)
-    queue_holdtime = models.CharField(max_length=384, blank=True)
-    queue_minutes = models.CharField(max_length=384, blank=True)
-    queue_seconds = models.CharField(max_length=384, blank=True)
-    queue_lessthan = models.CharField(max_length=384, blank=True, default='queue-less-than')
-    queue_thankyou = models.CharField(max_length=384, blank=True, default='queue-thankyou')
-    queue_reporthold = models.CharField(max_length=384, blank=True, default='queue-reporthold')
-    announce_frequency = models.IntegerField(null=True, blank=True, default=0)
-    announce_round_seconds = models.IntegerField(null=True, blank=True, default=10)
-    announce_holdtime = models.CharField(max_length=384, blank=True, default='yes')
-    retry = models.IntegerField(null=True, blank=True, default=5)
-    wrapuptime = models.IntegerField(null=True, blank=True, default=0)
-    maxlen = models.IntegerField(null=True, blank=True, default=0)
-    servicelevel = models.IntegerField(null=True, blank=True)
-    strategy = models.CharField(max_length=384, blank=True, default='rrmemory')
-    joinempty = models.CharField(max_length=384, blank=True, default='yes')
-    leavewhenempty = models.CharField(max_length=384, blank=True)
-    eventmemberstatus = models.IntegerField(null=True, blank=True, default=1)
-    eventwhencalled = models.IntegerField(null=True, blank=True, default=1)
-    reportholdtime = models.IntegerField(null=True, blank=True, default=1)
-    memberdelay = models.IntegerField(null=True, blank=True)
-    weight = models.IntegerField(null=True, blank=True)
-    timeoutrestart = models.IntegerField(null=True, blank=True)
-    periodic_announce = models.CharField(max_length=150, blank=True)
-    periodic_announce_frequency = models.IntegerField(null=True, blank=True)
-    ringinuse = models.IntegerField(null=True, blank=True, default=0)
-    setinterfacevar = models.IntegerField(null=True, blank=True, default=1)
+    uuid = types.UUIDType(default=uuid.uuid4)
+    name = types.StringType(required=True)
+
+    musiconhold = types.StringType(default='default')
+    announce = types.StringType()
+    context = types.StringType()
+    timeout = types.IntType(default=15)
+
+    monitor_join = types.IntType(default=1)
+    monitor_format = types.StringType(default='wav')
+
+    queue_youarenext = types.StringType(default='queue-youarenext')
+    queue_thereare = types.StringType()
+    queue_callswaiting = types.StringType()
+    queue_holdtime = types.StringType()
+    queue_minutes = types.StringType()
+    queue_seconds = types.StringType()
+    queue_lessthan = types.StringType(default='queue-less-than')
+    queue_thankyou = types.StringType(default='queue-thankyou')
+    queue_reporthold = types.StringType(default='queue-reporthold')
+
+    announce_frequency = types.IntType()
+    announce_round_seconds = types.IntType(default=10)
+    announce_holdtime = types.StringType(default='yes')
+
+    retry = types.IntType(default=5)
+    wrapuptime = types.IntType()
+    maxlen = types.IntType()
+    servicelevel = types.IntType()
+    strategy = types.StringType(choices=['ringall',
+                                         'leastrecent',
+                                         'fewestcalls',
+                                         'random',
+                                         'rrmemory',
+                                         'linear',
+                                         'wrandom'],
+                                required=True)
+
+    joinempty = types.StringType(default='yes')
+    leavewhenempty = types.StringType()
+
+    eventmemberstatus = types.IntType(default=1)
+    eventwhencalled = types.IntType(default=1)
+    reportholdtime = types.IntType(default=1)
+    memberdelay = types.IntType()
+    weight = types.IntType()
+    timeoutrestart = types.IntType()
+
+    periodic_announce = types.StringType()
+    periodic_announce_frequency = types.IntType()
+
+    ringinuse = types.IntType(default=0)
+    setinterfacevar = types.IntType(default=1)
 
 
 class QueueMember(models.Model):
     '''
         Queue member
     '''
-    membername = models.CharField(max_length=120)
-    queue_name = models.CharField(max_length=384)
-    interface = models.CharField(max_length=384)
-    penalty = models.IntegerField(null=True, blank=True)
-    paused = models.IntegerField(null=True, blank=True)
+    membername = types.StringType()
+    queue_name = types.StringType()
+    interface = types.StringType()
+    penalty = types.IntType()
+    paused = types.IntType()
 
 
 class SimpleResource(models.Model):

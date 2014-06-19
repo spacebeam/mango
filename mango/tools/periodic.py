@@ -10,6 +10,8 @@
 
 __author__ = 'Jean Chassoul'
 
+# TODO: refactoring periodic execution functions.
+
 import motor
 
 from contextlib import contextmanager
@@ -27,6 +29,9 @@ def get_usernames(db, callback):
         
         Get all the usernames
     '''
+    
+    # limit the size of the find query.
+
     usernames = []
     try:
         query = db.accounts.find({},{'account':1, '_id':0})

@@ -18,6 +18,7 @@ import logging
 import arrow
 import motor
 
+import itertools
 #import psycopg2
 #import momoko
 
@@ -60,10 +61,20 @@ def periodic_records_callbacks(stuff='bananas'):
         Mango periodic records
     '''
 
-    result = yield [
+    
+
+    results = yield [
         motor.Op(periodic.process_assigned_false, db),
         motor.Op(periodic.process_asterisk_cdr, db)
     ]
+
+    # incomprehensible list comprehensions.
+    # result = [item for sublist in results for item in sublist]
+
+    # itertools.chain
+    result = list(itertools.chain.from_iterable(results))
+
+    # print('periodic records: ', result)
 
     for record in result:
         flag = yield motor.Op(
@@ -72,6 +83,8 @@ def periodic_records_callbacks(stuff='bananas'):
             record['account'],
             record['id'] # uuid?
         )
+
+        # check new resource
         resource = yield motor.Op(periodic.new_resource, db, record)
 
 

@@ -36,7 +36,7 @@ def basic_authentication(handler_class):
             '''
                 Basic AUTH implementation
             '''
-            autho_header = handler.request.headers.get('Authorization')
+            auth_header = handler.request.headers.get('Authorization')
             if auth_header is None or not auth_header.startswith('Basic '):
                 handler.set_status(403)
                 handler.set_header('WWW-Authenticate', 'Basic '\

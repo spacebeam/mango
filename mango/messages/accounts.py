@@ -77,17 +77,6 @@ class User(BaseAccount):
     company = types.StringType()
 
 
-class Org(BaseAccount):
-    '''
-        Org account
-    '''
-    account_type = types.StringType(default='org')
-    
-    # tests for members and teams.
-    members = compound.ListType(types.StringType())
-    teams = compound.ListType(compound.ModelType(Team))
-
-
 class Team(models.Model):
     '''
         Org team
@@ -98,3 +87,14 @@ class Team(models.Model):
                                            'admin'], required=True)
     members = compound.ListType(types.StringType())
     resources = compound.ModelType(Resource)
+
+
+class Org(BaseAccount):
+    '''
+        Org account
+    '''
+    account_type = types.StringType(default='org')
+    
+    # tests for members and teams.
+    members = compound.ListType(types.StringType())
+    teams = compound.ListType(compound.ModelType(Team))
