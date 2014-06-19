@@ -36,6 +36,9 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
+# new resource function
+from mango.tools import new_resource
+
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 
@@ -59,10 +62,7 @@ class IndexHandler(web.RequestHandler):
 def periodic_records_callbacks(stuff='bananas'):
     '''
         Mango periodic records
-    '''
-
-    
-
+    '''  
     results = yield [
         motor.Op(periodic.process_assigned_false, db),
         motor.Op(periodic.process_asterisk_cdr, db)
@@ -85,7 +85,7 @@ def periodic_records_callbacks(stuff='bananas'):
         )
 
         # check new resource
-        resource = yield motor.Op(periodic.new_resource, db, record)
+        resource = yield motor.Op(new_resource, db, record)
 
 
 if __name__ == '__main__':
