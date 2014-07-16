@@ -22,9 +22,7 @@ from schematics.contrib import mongo
 
 class FromQueue(models.Model):
     '''
-        Mango from queue
-
-        Call from a ACD Queue configuration class
+        from a ACD Queue
     '''
     queue_name = types.StringType()
     on_queue_duration = types.IntType()
@@ -36,8 +34,6 @@ class FromQueue(models.Model):
 
 class Record(models.Model):
     '''
-        Mango record
-        
         Record Object Data Structure
     '''
     _id = mongo.ObjectIdType(required=False)

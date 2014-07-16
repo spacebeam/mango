@@ -12,9 +12,7 @@ __author__ = 'Jean Chassoul'
 
 
 def ensure_indexes(db):
-    '''
-        Mango ensure indexes
-        
+    '''        
         Ensure indexes function
         
         This function create the indexes on the MongoDB BSON database,
@@ -22,13 +20,10 @@ def ensure_indexes(db):
         
         (BSON)
         (MongoDB)
-        
+
         ensure_indexes(db)
-        
-        Example: TBD on ipython notebook
-        
     '''
-    db.queues.ensure_index([('name', 1)], unique=True)
+    # db.queues.ensure_index([('name', 1)], unique=True)
     db.accounts.ensure_index([('account', 1)], unique=True)
     db.accounts.ensure_index([('email', 1)], unique=True)
     
