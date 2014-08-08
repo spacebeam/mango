@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
     Mango accounts models and messages.
 '''
@@ -53,15 +52,12 @@ class BaseAccount(models.Model):
     active = types.BooleanType(default=True)
     account = types.StringType(required=True)
     name = types.StringType(required=False)
+    timezone = types.StringType()
     email = types.EmailType(required=True)
     url = types.URLType()
-    
-    # Geolocation stuff
 
-    # location = StringType(required=True)
-    # timezone = StringType(required=True)
-    
     resources = compound.ModelType(Resource)
+    
     routes = compound.ListType(compound.ModelType(Route))
 
 

@@ -40,22 +40,19 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         Records resource handler
     '''
 
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, record_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
         '''
-            Mango records get handler
-
-            Get record objects
+            Get records handler
         '''
         if record_uuid:
             record_uuid = record_uuid.rstrip('/')
 
             if self.current_user:
                 user = self.current_user
-                record = yield motor.Op(self.get_record, user, record_uuid)
+                record = yield self.get_record(user, record_uuid)
             else:
-                record = yield motor.Op(self.get_record, None, record_uuid)
+                record = yield self.get_record(None, record_uuid)
 
             if not record:
                 self.set_status(400)
@@ -69,96 +66,76 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         if self.current_user:
             user = self.current_user
-            orgs = yield motor.Op(self.get_orgs_list, user)
+            orgs = yield self.get_orgs_list(user)
 
-            accounts = (orgs['orgs'] if orgs else False)
+            account_list = (orgs['orgs'] if orgs else False)
 
             print('WARNING:', user, orgs, ' on GET records.')
 
-            if not accounts:
-                result = yield motor.Op(self.get_record_list,
+            if not account_list:
+                result = yield self.get_record_list(
                                         account=user, 
                                         lapse=lapse,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
             else:
-                accounts.append(user)
-                result = yield motor.Op(self.get_record_list,
-                                        account=accounts,
+                account_list.append(user)
+                result = yield self.get_record_list(
+                                        account=account_list,
                                         lapse=lapse,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
         else:
-            result = yield motor.Op(self.get_record_list,
+            result = yield self.get_record_list(
                                     account=None,
                                     lapse=lapse,
                                     start=start,
                                     end=end,
                                     page_num=page_num)
         
-            result = json_util.dumps(result)
+        result = json_util.dumps(result)
 
         self.finish(result)
 
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def post(self):
         '''
-            Mango records post handler
-
-            Register a record detail record
+            Post records handler
         '''
-
-        result = yield gen.Task(check_json, self.request.body)
-        struct, error = result.args
+        struct = yield check_json(self.request.body)
         
-        if error:
+        format_pass = (True if struct else False)
+        if not format_pass:
             self.set_status(400)
-            self.finish(error)
+            self.finish({'JSON':format_pass})
             return
 
-        result = yield motor.Op(self.new_detail_record, struct)
+        record = yield self.new_detail_record(struct)
  
-        # Warning missing crash_and_die errors handlers.
+        if not record:
+            model = 'Records'
+            error = {'record':False}
+            reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
 
-        if error:
-            print('error 2')
-            error = str(error)
-            system_error = errors.Error(error)
+            message = yield self.let_it_crash(struct, model, error, reason)
 
-            # Error handling 409?
-            
             self.set_status(400)
-        
-        if error and 'Model' in error:
-            error = system_error.model('Records')
-            self.finish(error)
-            return
-        elif error and 'duplicate' in error:
-            error = system_error.duplicate('Record', 'uniqueid', struct['uniqueid'])
-            self.finish(error)
-            return
-        elif error:
-            print('error 3')
-            self.finish(error)
+            self.finish(message)
             return
         
         if 'accountcode' in struct:
             account = struct['accountcode']
 
-            resource = {'account': account, 'resource':'records', 'uuid':result}
+            resource = {'account': account, 'resource':'records', 'uuid':record}
 
-            exist = yield motor.Op(self.check_exist, account)
+            exist = yield self.check_exist(account)
 
             if exist:
-                
-                update = yield motor.Op(self.new_resource, resource)
+                update = yield self.new_resource(resource)
 
-                flag = yield motor.Op(self.set_assigned_flag,
-                                      account,
-                                      result)
+                flag = yield self.set_assigned_flag(account, record)
 
                 print('after flag')
 
@@ -167,25 +144,21 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.finish({'id':result})
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def put(self):
         '''
-            Mango records put handler
+            Put records handler
         '''
         pass
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def delete(self, record_uuid):
         '''
-            Mango records delete handler
-
-            Remove a record register
+            Delete records handler
         '''
         record_uuid = record_uuid.rstrip('/')
-        result = yield motor.Op(self.remove_cdr, record_uuid)
+        result = yield self.remove_cdr(record_uuid)
 
         if not result['n']:
             self.set_status(400)
@@ -198,11 +171,10 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.finish()
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def patch(self):
         '''
-            Mango records patch handler
+            Patch records handler
         '''
         pass
 
@@ -215,58 +187,47 @@ class PublicHandler(records.Records, BaseHandler):
         Public records handler
     '''
     
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, page_num=0):
         '''
-            Mango public records get handler
-
-            Get public record details
+            Get public handler
         '''
         # get public details: record get_record_list without an account
         account = None
-        result = yield motor.Op(self.get_record_list,
-                                       account=account,
-                                       lapse=None,
-                                       start=None,
-                                       end=None,
-                                       page_num=page_num)
+        result = yield self.get_record_list(account=account,
+                                            lapse=None,
+                                            start=None,
+                                            end=None,
+                                            page_num=page_num)
         
         self.finish({'results': result})
+
 
 @content_type_validation
 class UnassignedHandler(records.Records, BaseHandler):
     '''
-        Mango records unassigned handler
-
-        Records unassigned requests handler
+        Unassigned requests handler
     '''
     
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, page_num=0):
         '''
-            Mango unassigned records get handler
-
-            Get unassigned record details
+            Get unassigned handler
         '''
-        result = yield motor.Op(self.get_unassigned_records, 
-                                        lapse=None,
-                                        start=None,
-                                        end=None,
-                                        page_num=page_num)
+        result = yield self.get_unassigned_records(lapse=None,
+                                                   start=None,
+                                                   end=None,
+                                                   page_num=page_num)
         self.finish(result)
 
 
 @content_type_validation
 class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
-        Summary handler 
+        Summary requests handler 
     '''
-
     #@web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse='hours', page_num=0):
         '''
             Get record summary
@@ -286,27 +247,25 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         if not account:
             account = self.current_user
 
-        orgs = yield motor.Op(self.get_orgs_list, account)
-        accounts = (orgs['orgs'] if orgs else False)
+        orgs = yield self.get_orgs_list(account)
+        account_list = (orgs['orgs'] if orgs else False)
 
-        if accounts:
-            accounts.append(account)
-            summary = yield motor.Op(self.get_summary,
-                                     account=accounts,
-                                     start=start,
-                                     end=end,
-                                     lapse=lapse
-                                     )
+        if account_list:
+            account_list.append(account)
+            summary = yield self.get_summary(account=accounts,
+                                             start=start,
+                                             end=end,
+                                             lapse=lapse)
         else:
-            summary = yield motor.Op(self.get_summary,
-                                     account=account,
-                                     start=start,
-                                     end=end,
-                                     lapse=lapse
-                                     )
+            summary = yield self.get_summary(account=account,
+                                             start=start,
+                                             end=end,
+                                             lapse=lapse)
 
         if summary:
-            
+
+            # remove from query
+
             dates = [record['_id'] for record in summary]
             
             for _x in summary:
@@ -368,46 +327,38 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
     
     #@web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse=None, page_num=0):
         '''
-            Get summaries
-
-            arguments: account, start, end, lapse, page_num.
-
-            - account or list of accounts
-            - start timestamp
-            - end timestamp
-            - time lapse
-            - page number
+            Get summaries handler
         '''
         result = 0
         minutes = 0
         record_avg = 0
 
-        times = yield motor.Op(check_times, start, end)
+        times = yield check_times(start, end)
 
         if not account:
             account = self.current_user
 
-        orgs = yield motor.Op(self.get_orgs_list, account)
-        accounts = (orgs['orgs'] if orgs else False)
+        orgs = yield self.get_orgs_list(account)
+        account_list = (orgs['orgs'] if orgs else False)
 
-        if accounts:
-            accounts.append(account)
-            summary = yield motor.Op(self.get_summary, 
-                                     account=accounts,
-                                     lapse=lapse,
-                                     start=times['start'],
-                                     end=times['end'])
+        if account_list:
+            account_list.append(account)
+            summary = yield self.get_summary(account=account_list,
+                                             lapse=lapse,
+                                             start=times['start'],
+                                             end=times['end'])
         else:
-            summary = yield motor.Op(self.get_summary,
-                                     account=account,
-                                     lapse=lapse,
-                                     start=times['start'],
-                                     end=times['end'])
+            summary = yield self.get_summary(account=account,
+                                             lapse=lapse,
+                                             start=times['start'],
+                                             end=times['end'])
         if summary:
+
+
+            # lol remove from _id from query
 
             print("WARNING: remove record['_id']: %s from query." % (record['_id'],))
             

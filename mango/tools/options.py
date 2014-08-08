@@ -87,7 +87,7 @@ def options():
     for required in (
         'domain', 'host', 'port', 'timezone', 'base_url',
     ):
-        if not result[required].value():
+        if not result[required]:
             raise Exception('%s required' % required)
 
     return result

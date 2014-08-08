@@ -28,38 +28,34 @@ from mango.tools import clean_structure
 from mango.tools import clean_results
 from mango.tools import check_times
 
+
 class Records(object):
     '''
         Records resources
     '''
 
-    @gen.engine
-    def get_record(self, account, record_uuid, callback):
+    @gen.coroutine
+    def get_record(self, account, record_uuid):
         '''
             Get a detail record
         '''
-        try:
-            if not account:
-                record = yield motor.Op(
-                    self.db.records.find_one, {'uuid':record_uuid}
-                )
-            else:
-                record = yield motor.Op(
-                    self.db.records.find_one, {'uuid':record_uuid,
-                                               'accountcode':account}
-                )
-            if record:
-                record = records.Record(record)
-                record.validate()
-        except Exception, e:
-            recordback(None, e)
-            return
+        if not account:
+            record = yield self.db.records.find_one({'uuid':record_uuid})
+        else:
+            record = yield self.db.records.find_one({'uuid':record_uuid,
+                                                     'accountcode':account})
         
-        callback(record, None)
+        try:
+            record = records.Record(record)
+            record.validate()
+        except Exception, e:
+            logging.exception(e)
+            raise e
 
+        raise gen.Return(record)
 
-    @gen.engine
-    def get_record_list(self, account, start, end, lapse, page_num, callback):
+    @gen.coroutine
+    def get_record_list(self, account, start, end, lapse, page_num):
         '''
             Get detail records 
         '''
@@ -79,23 +75,21 @@ class Records(object):
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
-            for record in (yield motor.Op(query.to_list)):
+            for record in (yield query.to_list()):
                 result.append(records.Record(record))
 
             struct = {'results': result}
             results = reports.BaseResult(struct)
             results.validate()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
         results = clean_results(results)
-
-        callback(results, None)
-        
+        raise gen.Return(results)
     
-    @gen.engine
-    def get_unassigned_records(self, start, end, lapse, page_num, callback):
+    @gen.coroutine
+    def get_unassigned_records(self, start, end, lapse, page_num):
         '''
             Get unassigned record detail records
         '''
@@ -106,15 +100,10 @@ class Records(object):
         # or $exist = false ?
 
         query = self.db.records.find({'assigned':False})
-
-        # _id is from bson and mongodb engine
-        #
-        # for a more independent implementation sort by uuid
-
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
-            for record in (yield motor.Op(query.to_list)):
+            for record in (yield query.to_list()):
                 result.append(records.Record(record))
             
             struct = {'results':result}
@@ -122,31 +111,30 @@ class Records(object):
             results = reports.BaseResult(struct)
             results.validate()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
-        results = clean_results(results)
-        
-        callback(results, None)
+        results = clean_results(results)        
+        raise gen.Return(results)
 
-    @gen.engine
-    def get_summaries(self, account, start, end, lapse, page_num, callback):
+
+    @gen.coroutine
+    def get_summaries(self, account, start, end, lapse, page_num):
         '''
             Get summaries
         '''
-        times = yield motor.Op(check_times, start, end)
+        times = yield check_times(start, end)
 
         if lapse:
             print('given lapse:', lapse)
 
-
-    @gen.engine 
-    def get_summary(self, account, start, end, lapse, callback):
+    @gen.coroutine
+    def get_summary(self, account, start, end, lapse):
         '''
             Get summary
         '''
         
-        times = yield motor.Op(check_times, start, end)
+        times = yield check_times(start, end)
 
         if lapse:
             print('given lapse:', lapse)
@@ -245,17 +233,12 @@ class Records(object):
             {'$group':group}
         ]
 
-        try:
-            result = yield motor.Op(self.db.records.aggregate, pipeline)
+        result = yield self.db.records.aggregate(pipeline)
 
-        except Exception, e:
-            callback(None, e)
-            return
+        raise gen.Return(result.get('result'))
 
-        callback(result['result'], None)
-
-    @gen.engine
-    def new_detail_record(self, struct, callback):
+    @gen.coroutine
+    def new_detail_record(self, struct):
         '''
             Create a new record entry
         '''
@@ -263,22 +246,17 @@ class Records(object):
             record = records.Record(struct)
             record.validate()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
         record = clean_structure(record)
 
-        result = yield gen.Task(self.db.records.insert, record)
-        result, error = result.args
+        result = yield self.db.records.insert(record)
 
-        if error:
-            callback(None, error)
-            return
-        
-        callback(record.get('uuid'), None)
+        raise gen.Return(record.get('uuid'))
 
-    @gen.engine
-    def set_assigned_flag(self, account, record_uuid, callback):
+    @gen.coroutine
+    def set_assigned_flag(self, account, record_uuid):
         '''
             Set the assigned record flag
 
@@ -287,48 +265,39 @@ class Records(object):
         # bad stuff
         # print('account %s set assigned flag on %s' % account, record_id)
 
-        try:
-            result = yield motor.Op(self.db.records.update,
-                                    {'uuid':record_uuid, 
-                                     'accountcode':account}, 
-                                    {'$set': {'assigned': True}})
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.records.update(
+                                {'uuid':record_uuid, 
+                                 'accountcode':account}, 
+                                {'$set': {'assigned': True}})
         
-        callback(result, None)
+        raise gen.Return(result)
 
-    @gen.engine
-    def replace_record(self, struct, callback):
+    @gen.coroutine
+    def remove_record(self, record_uuid):
+        '''
+            Remove a record entry
+        '''
+        result = yield self.db.records.remove({'uuid':record_uuid})
+        raise gen.Return(result)
+
+    @gen.coroutine
+    def replace_record(self, struct):
         '''
             Replace a existent record entry
         '''
         # put implementation
         pass
 
-    @gen.engine
-    def remove_record(self, record_uuid, callback):
-        '''
-            Remove a record entry
-        '''
-        try:
-            result = yield motor.Op(self.db.records.remove,
-                                    {'uuid':record_uuid})
-        except Exception, e:
-            callback(None, e)
-            return
-
-        callback(result, None)
-
-    @gen.engine
-    def resource_options(self, callback):
+    @gen.coroutine
+    def resource_options(self):
         '''
             Return resource options
         '''
+        # options implementation
         pass
 
-    @gen.engine
-    def modify_record(self, struct, callback):
+    @gen.coroutine
+    def modify_record(self, struct):
         '''
             Modify a existent record entry
         '''

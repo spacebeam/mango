@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
     Manage Asynchronous Number of Granular/Going ORGs
 
@@ -15,10 +14,11 @@ __author__ = 'Jean Chassoul'
 
 import os
 import logging
-import arrow
+
 import motor
 
 import itertools
+
 #import psycopg2
 #import momoko
 
@@ -58,14 +58,17 @@ class IndexHandler(web.RequestHandler):
         self.render('index.html', test="Hello, world!")
 
 
-@gen.engine
+@gen.coroutine
 def periodic_records_callbacks(stuff='bananas'):
     '''
         Mango periodic records
-    '''  
+    '''
+
+    #print('wut v.03')
+
     results = yield [
-        motor.Op(periodic.process_assigned_false, db),
-        motor.Op(periodic.process_asterisk_cdr, db)
+        periodic.process_assigned_false(db),
+        periodic.process_asterisk_cdr(db)
     ]
 
     # incomprehensible list comprehensions.
@@ -77,15 +80,14 @@ def periodic_records_callbacks(stuff='bananas'):
     # print('periodic records: ', result)
 
     for record in result:
-        flag = yield motor.Op(
-            periodic.assign_call,
+        flag = yield periodic.assign_call(
             db,
             record['account'],
             record['id'] # uuid?
         )
 
         # check new resource
-        resource = yield motor.Op(new_resource, db, record)
+        resource = yield new_resource(db, record)
 
 
 if __name__ == '__main__':
@@ -100,7 +102,13 @@ if __name__ == '__main__':
     periodic_records = opts.periodic_records
 
     # Set document database
-    document = motor.MotorClient().open_sync().mango
+    document = motor.MotorClient().mango
+
+    # Set SQL database
+    #sql = momoko.Pool(
+    #    dsn='dbname=asterisk user=postgres',
+    #    size=1
+    #)
 
     # Set default database
     db = document
@@ -119,7 +127,7 @@ if __name__ == '__main__':
         [
             (r'/', IndexHandler),
 
-            # Mango system knowledge (quotes).
+            # Mango system knowledge (quotes) and realtime events.
             (r'/system/?', MangoHandler),
 
             # Tornado static file handler 
@@ -243,7 +251,7 @@ if __name__ == '__main__':
         domain=opts.domain,
 
         # application timezone
-        tz=arrow.now(opts.timezone),
+        timezone=opts.timezone,
 
         # pagination page size
         page_size=opts.page_size,
@@ -262,17 +270,11 @@ if __name__ == '__main__':
         login_url='/login'
     )
 
-    # Set relational database
-    #application.sql = momoko.Pool(
-    #    dsn='dbname=asterisk user=postgres',
-    #    size=1
-    #)
-
     # Tornado periodic callbacks
     periodic_records = ioloop.PeriodicCallback(periodic_records_callbacks, 10000)
     periodic_records.start()
 
-    # Setting up mango server processor
+    # Setting up mango processor
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()

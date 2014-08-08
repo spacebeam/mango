@@ -25,8 +25,8 @@ class Billings(object):
         Billings resources
     '''
 
-    @gen.engine 
-    def get_cost_summary(self, account, routes, lapse, start, end, callback):
+    @gen.coroutine
+    def get_cost_summary(self, account, routes, lapse, start, end):
         '''
             get_cost_summary
         '''
@@ -130,11 +130,7 @@ class Billings(object):
             {'$group':group}
         ]
         
-        try:
-            result = yield motor.Op(self.db.records.aggregate, pipeline)
-            
-        except Exception, e:
-            callback(None, e)
-            return
-        
-        callback(result['result'], None)
+
+        result = yield self.db.records.aggregate(pipeline)
+
+        raise gen.Return(result.get('result'))

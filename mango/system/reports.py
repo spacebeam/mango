@@ -27,19 +27,21 @@ class Reports(object):
     '''
     
     # it's all about pipes.
-    @gen.engine
-    def new_aggregation_pipeline(self, struct, callback):
+    @gen.coroutine
+    def new_aggregation_pipeline(self, struct):
         '''
             Return mongodb aggregation result
         '''
         try:
             aggregation = reports.Aggregate(**struct).validate()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
         # change: aggregation.to_python() to result = aggregation or remove result
         # return just the aggregation object after validation()
         result = aggregation
-        # TODO: test this method in action
-        callback(result, None)
+        
+        # fix or remove this stuff out.
+
+        raise gen.Return(result)

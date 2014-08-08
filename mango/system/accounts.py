@@ -11,7 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
-import arrow
+import logging
+
 import motor
 import uuid
 
@@ -27,56 +28,40 @@ class Accounts(object):
         Accounts main class
     '''
 
-    @gen.engine
-    def get_usernames(self, callback):
+    @gen.coroutine
+    def get_usernames(self):
         '''
             Get all the usernames
         '''
-        accounts = []
-        try:
-            query = self.db.accounts.find({},{'account':1, '_id':0})
+        accounts = yield self.db.accounts.find({}, {'account':1, '_id':0})
+        
+        raise gen.Return(accounts)
 
-            for a in (yield motor.Op(query.to_list)):
-                accounts.append(a)
-        except Exception, e:
-            callback(None, e)
-
-        callback(accounts, None)
-
-    @gen.engine
-    def check_exist(self, account, callback):
+    @gen.coroutine
+    def check_exist(self, account):
         '''
             Check if a given account exist
         '''
-        try:
-            exist = yield motor.Op(self.db.accounts.find_one,
-                                   {'account': account},
-                                   {'account':1, '_id':0})
-            exist = (True if exist else False)
+        exist = yield self.db.accounts.find_one(
+                                {'account': account},
+                                {'account':1, '_id':0})
+        raise gen.Return(exist)
 
-        except Exception, e:
-            callback(None, e)
-
-        callback(exist, None)
-
-    @gen.engine
-    def check_type(self, account, account_type, callback):
+    @gen.coroutine
+    def check_type(self, account, account_type):
         '''
             Check the type of a given account
         '''
-        try:
-            check_type = yield motor.Op(self.db.accounts.find_one,
+
+        a_type = yield self.db.accounts.find_one(
                                         {'account': account,
                                          'account_type': account_type},
                                         {'type':1,'_id':0})
-            check_type = (True if check_type else False)
-        except Exception, e:
-            callback(None, e)
+        
+        raise gen.Return(a_type)
 
-        callback(check_type, None)
-
-    @gen.engine
-    def new_resource(self, struct, callback):
+    @gen.coroutine
+    def new_resource(self, struct):
         '''
             Create a new account resource
         '''
@@ -85,20 +70,17 @@ class Accounts(object):
             res.validate()
             res = res.to_primitive()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
         resource = ''.join(('resources.', res['resource']))
 
         # add the account key with the current user
 
-        # test that shit out and remove this shit out.
-
         if res.has_key('account') is False:
             res['account'] = self.get_current_user()
-        try:
-            result = yield motor.Op(
-                        self.db.accounts.update,
+        
+        result = yield self.db.accounts.update(
                         {'account':res['account']},
                         {
                          '$addToSet':{''.join((resource, '.contains')):res['uuid']},
@@ -106,14 +88,10 @@ class Accounts(object):
                          ''.join((resource, '.total')):1}
                         })
 
-        except Exception, e:
-            callback(None, e)
-            return
+        raise gen.Return(result)
 
-        callback(result, None)
-
-    @gen.engine
-    def new_route(self, struct, callback):
+    @gen.coroutine
+    def new_route(self, struct):
         '''
             New account billing route
         '''
@@ -123,52 +101,39 @@ class Accounts(object):
             route.validate()
             route = route.to_primitive()
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
-        try:
-            result = yield motor.Op(self.db.accounts.update,
-                                    {'account':account},
-                                    {'$addToSet':{'routes':route}})
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.accounts.update(
+                            {'account':account},
+                            {'$addToSet':{'routes':route}})
 
-        callback(result, None)
+        raise gen.Return(result)
 
-    @gen.engine
-    def get_routes(self, account, callback):
+    @gen.coroutine
+    def get_route_list(self, account):
         '''
             Get account billing routes
         '''
 
         # Support for multiple routes missing
 
-        try:
-            result = yield motor.Op(self.db.accounts.find_one,
-                                    {'account': account},
-                                    {'routes':1, '_id':0})
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.accounts.find_one(
+                            {'account': account},
+                            {'routes':1, '_id':0})
 
-        print(result, 'get in out with the stuff')
-        callback(result, None)
+        raise gen.Return(result)
 
-    @gen.engine
-    def get_orgs_list(self, account, callback):
+    @gen.coroutine
+    def get_orgs_list(self, account):
         '''
             Get account orgs
         '''
-        try:
-            result = yield motor.Op(self.db.accounts.find_one,
-                                    {'account': account},
-                                    {'orgs':1, '_id':0})
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.accounts.find_one(
+                            {'account': account},
+                            {'orgs':1, '_id':0})
 
-        callback(result, None)
+        raise gen.Return(result)
 
 
 class MangoAccounts(Accounts):
@@ -176,57 +141,47 @@ class MangoAccounts(Accounts):
         Mango accounts
     '''
 
-    @gen.engine
-    def get_accounts(self, account_type, page_num, callback):
+    @gen.coroutine
+    def get_accounts(self, account_type, page_num):
         '''
             Get the mango accounts
         '''
         # Query each and remove to_list better iteration stuff.
-        account_type = account_type
-        page_num = int(page_num)
+
         page_size = self.settings['page_size']
         result = []
-        try:
-            query = self.db.accounts.find({'account_type':account_type}).sort(
-                [('_id', -1)]).skip(page_num * page_size).limit(page_size)
 
-            for account in (yield motor.Op(query.to_list)):
-                if 'user' in account_type:
-                    result.append(accounts.User(**account).validate())
-                elif 'org' in account_type:
-                    result.append(accounts.Org(**account).validate())
-                else:
-                    callback(None, account_type)
-        except Exception, e:
-            callback(None, e)
+        query = self.db.accounts.find({'account_type':account_type})
+        query = query.sort([('_id', -1)]).skip(int(page_num) * page_size).limit(page_size)
 
-        callback(result, None)
+        for account in (yield query.to_list()):
+            if 'user' in account_type:
+                result.append(accounts.User(**account).validate())
+            
+            if 'org' in account_type:
+                result.append(accounts.Org(**account).validate())
 
-    @gen.engine
-    def get_account(self, account, account_type, callback):
+        gen.Return(result)
+
+    @gen.coroutine
+    def get_account(self, account, account_type):
         '''
             Get mango account
         '''
-        account = account
-        account_type = account_type
-        try:
-            account = yield motor.Op(self.db.accounts.find_one,
-                                     {'account':account,
-                                      'account_type':account_type})
-            if account:
-                if 'user' in account_type:
-                    account = accounts.User(**account).validate()
-                elif 'org' in account_type:
-                    account = accounts.Org(**account).validate()
-                else:
-                    callback(None, account_type)
-        except Exception, e:
-            callback(None, e)
+        result = yield self.db.accounts.find_one(
+                                {'account':account,
+                                 'account_type':account_type})
+        if result:
+            if 'user' in account_type:
+                message = accounts.User(**result).validate()
 
-        callback(account, None)
+            if 'org' in account_type:
+                message = accounts.Org(**result).validate()
+            
+        raise gen.Return(message)
 
-    @gen.engine
-    def new_account(self, struct, callback):
+    @gen.coroutine
+    def new_account(self, struct):
         '''
             New mango account
         '''
@@ -235,41 +190,29 @@ class MangoAccounts(Accounts):
         try:
             if 'user' in account_type:
                 account = accounts.User(struct)
-            elif 'org' in account_type:
+
+            if 'org' in account_type:
                 account = accounts.Org(struct)
-            else:
-                callback(None, account_type)
-                return
 
             account.validate()
             account = clean_structure(account)
 
         except Exception, e:
-            callback(None, e)
-            return
+            logging.exception(e)
+            raise e
 
-        try:
-            result = yield motor.Op(self.db.accounts.insert, account)
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.accounts.insert(account)
 
-        callback(account['uuid'], None)
+        raise gen.Return(account.get('uuid'))
 
-    @gen.engine
-    def remove_account(self, account, callback):
+    @gen.coroutine
+    def remove_account(self, account):
         '''
             Remove mango account
         '''
-        account = account
-        try:
-            result = yield motor.Op(self.db.accounts.remove,
-                                    {'account':account})
-        except Exception, e:
-            callback(None, e)
-            return
+        result = yield self.db.accounts.remove({'account':account})
 
-        callback(result, None)
+        raise gen.Return(result)
 
 
 class Orgs(MangoAccounts):
@@ -277,145 +220,111 @@ class Orgs(MangoAccounts):
         Mango orgs accounts
     '''
 
-    @gen.engine
-    def get_bson_objectid(self, account, callback):
+    @gen.coroutine
+    def get_bson_objectid(self, account):
         '''
             Get BSON _id
         '''
-        try:
-            account_id = yield motor.Op(
-                self.db.accounts.find_one,
-                {'account':account}, {'_id':1}
-            )
-        except Exception, e:
-            callback(None, e)
+        result = yield self.db.accounts.find_one(
+                    {'account':account}, {'_id':1})
+        raise gen.Return(result)
 
-        callback(account_id, None)
-
-    @gen.engine
-    def get_uuid(self, account, callback):
+    @gen.coroutine
+    def get_uuid(self, account):
         '''
             Get uuid
         '''
-        try:
-            account_uuid = yield motor.Op(
-                self.db.accounts.find_one,
-                {'account':account}, {'uuid':1}
-            )
-        except Exception, e:
-            callback(None, e)
+        account_uuid = yield self.db.accounts.find_one(
+                        {'account':account}, {'uuid':1})
+        raise gen.Return(account_uuid)
 
-        callback(account_uuid, None)
-
-    @gen.engine
-    def new_member(self, org, user, callback):
+    @gen.coroutine
+    def new_member(self, org, user):
         '''
             New member
         '''
-        try:
-            result = yield [
-                motor.Op(self.db.accounts.update,
-                         {'account':user},
-                         {'$addToSet':{'orgs':org}}),
-                motor.Op(self.db.accounts.update,
-                         {'account':org},
-                         {'$addToSet':{'members':user}})
-            ]
-        except Exception, e:
-            callback(None, e)
+        update_user = self.db.accounts.update(
+                            {'account':user},
+                            {'$addToSet':{'orgs':org}})
+        update_org = self.db.accounts.update(
+                            {'account':org},
+                            {'$addToSet':{'members':user}})
 
-        callback(result, None)
+        result = yield [update_user, update_org]
+        raise gen.Return(result)
 
-    @gen.engine
-    def get_member(self, callback):
+    @gen.coroutine
+    def get_member(self):
         '''
             Get member
         '''
         pass
 
-    @gen.engine
-    def check_member(self, callback):
+    @gen.coroutine
+    def check_member(self):
         '''
             Check member exist
         '''
         pass
 
-    @gen.engine
-    def get_members(self, org, callback):
+    @gen.coroutine
+    def get_members_list(self, org):
         '''
             Get members
         '''
-        try:
-            result = yield motor.Op(
-                self.db.accounts.find_one,
-                {'account':org},
-                {'members':1, '_id':0}
-            )
-        except Exception, e:
-            callback(None, e)
+        result = yield self.db.accounts.find_one(
+                    {'account':org},
+                    {'members':1, '_id':0})
 
-        callback(result, None)
+        raise gen.Return(result)
 
-    @gen.engine
-    def remove_member(self, org, user, callback):
+    @gen.coroutine
+    def remove_member(self, org, user):
         '''
             Remove member
         '''
+        update_user = self.db.accounts.update(
+                            {'account':user},
+                            {'$pull':{'orgs':org}})
+        update_org = self.db.accounts.update(
+                            {'account': org},
+                            {'$pull':{'members':user}})
 
-        # clean this
-        
-        result = None
+        result = yield [update_user, update_org]
+        raise gen.Return(result)
 
-        try:
-            result = yield [
-                motor.Op(self.db.accounts.update, 
-                         {'account':user},
-                         {'$pull':{'orgs': org}}),
-                motor.Op(self.db.accounts.update,
-                         {'account': org},
-                         {'$pull':{'members': user}})
-            ]
-        except Exception, e:
-            callback(None, e)
-
-        print('remove_member', result)
-
-        callback(result, None)
-
-    @gen.engine
-    def new_team(self, org, team, callback):
+    @gen.coroutine
+    def new_team(self, org, team):
         '''
             New team
         '''
         try:
             team = accounts.Team(**team).validate()
         except Exception, e:
-            callback(None, e)
+            logging.exception(e)
+            raise e
 
-        result = yield motor.Op(
-            self.db.accounts.update,
-            {'account':org},
-            {'$addToSet': {'teams':team}}
-        )
+        result = yield self.db.accounts.update(
+                        {'account':org},
+                        {'$addToSet':{'teams':team}})
+        raise gen.Return(result)
 
-        callback(result, None)
-
-    @gen.engine
-    def get_team(self, callback):
+    @gen.coroutine
+    def get_team(self):
         '''
             Get team
         '''
         pass
 
-    @gen.engine
-    def get_teams(self, callback):
+    @gen.coroutine
+    def get_teams(self):
         '''
             Get teams
         '''
         pass
 
-    @gen.engine
-    def remove_team(self, callback):
+    @gen.coroutine
+    def remove_team(self):
         '''
             Remove team
         '''

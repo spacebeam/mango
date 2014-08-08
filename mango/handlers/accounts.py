@@ -37,8 +37,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
             Get user accounts
@@ -46,11 +45,12 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         account_type = 'user'
         if not account:
             # get list
-            users = yield motor.Op(self.get_account_list, account_type, page_num)
+            users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
             account = account.rstrip('/')
-            result = yield motor.Op(self.get_account, account, account_type)
+            result = yield self.get_account(account, account_type)
+            
             if result:
                 self.finish(result)
                 return
@@ -60,32 +60,28 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 self.finish({'missing':account})
                 return
 
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def post(self):
         '''
             Create user account
         '''
-        struct = yield motor.Op(check_json, self.request.body)
-        struct['account_type'] = 'user'
-
+        struct = yield check_json(self.request.body)
+        
         format_pass = (True if struct else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
 
-        new_account = yield gen.Task(self.new_account, struct)
-        result, error = new_account.args
+        struct['account_type'] = 'user'
+
+        result = yield self.new_account(struct)
 
         # handle SIP accounts out-of-band
 
         # momoko insert sip account
         #if result:
-        #    sip_account = yield gen.Task(self.new_sip_account, struct)
-        #    sip_result, sip_error = sip_account.args
-        
-        # missing post error handlers (if any)
+        #    sip_account = yield self.new_sip_account(struct)
 
         #else:
         #    self.set_status(400)
@@ -96,14 +92,13 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.finish({'id':result})
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def delete(self, account):
         '''
             Delete a user account
         '''
         account = account.rstrip('/')
-        result = yield motor.Op(self.remove_account, account)
+        result = yield self.remove_account(account)
 
         # why we're using result['n']?
 
@@ -129,8 +124,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
     '''
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
             Mango organization accounts get handler
@@ -139,12 +133,13 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         account_type = 'org'
         if not account:
-            orgs = yield motor.Op(self.get_account_list, account_type, page_num) 
+            orgs = yield self.get_account_list(account_type, page_num) 
             self.finish({'orgs':orgs})
         else:
             account = account.rstrip('/')
 
-            result = yield motor.Op(self.get_account, account, account_type)
+            result = yield self.get_account(account, account_type)
+            
             if result:
                 self.finish(result)
                 return
@@ -153,8 +148,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 self.finish({'missing':account})
                 return
 
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def post(self):
         '''
             Create organization accounts
@@ -164,7 +158,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         if not current_user:
             current_user = 'capnkooc'
         
-        struct = yield motor.Op(check_json, self.request.body)
+        struct = yield check_json(self.request.body)
         struct['account_type'] = 'org'
 
         org = struct['account']
@@ -175,7 +169,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             self.finish({'JSON':format_pass})
             return
 
-        org_id = yield motor.Op(self.new_account, struct)
+        org_id = yield self.new_account(struct)
                 
         team = {
             'name': 'owners',
@@ -185,12 +179,13 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
 
         print(org, team)
 
-        check_member = yield motor.Op(self.new_member, org, current_user)
-        check_team = yield motor.Op(self.new_team, org, team)
+        check_member = yield self.new_member(org, current_user)
+        check_team = yield self.new_team(org, team)
 
-        print('team', check_team)
-        print('member', check_member)
+
         print('org_id', org_id)
+        print('member', check_member)
+        print('team', check_team)
 
         if not org_id:
             print('some errors')
@@ -202,8 +197,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         self.finish({'id':org_id})
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def delete(self, account):
         '''
             Mango organization accounts delete handler
@@ -211,19 +205,22 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             Delete a organization account
         '''
         org = account.rstrip('/')
-        # get members
-        # each member in members remove member
-        members = yield motor.Op(self.get_members, org)
+        
+        # for each member in members remove member.
+        members = yield self.get_members(org)
         members = (members['members'] if members['members'] else False)
         
         # clean this hack
         
         for user in members:
-            rmx = yield motor.Op(self.remove_member, org, user)
+            rmx = yield self.remove_member(org, user)
             
-        # check_member = yield motor.Op(self.remove_member, org_id, current_user)
+        # check_member = yield self.remove_member(org_id, current_user)
         
-        result = yield motor.Op(self.remove_account, org)
+        result = yield self.remove_account(org)
+
+        # again with the result['n'] stuff... what is this shit?
+        print('check for n stuff', result)
         
         if not result['n']:
             self.set_status(400)
@@ -259,16 +256,15 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     '''
 
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account, page_num=0):
         '''
-            Retrieve records from accounts
+            Get records handler
         '''
         # check_type account with organizations
-        #account_type = yield motor.Op(self.check_type, account, 'user')
+        #account_type = yield self.check_type(account, 'user')
         
-        orgs = yield motor.Op(self.get_orgs_list, account)
+        orgs = yield self.get_orgs_list(account)
         
         print(orgs, 'organizations')
         
@@ -281,97 +277,93 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         print(account, page_num)
 
-        result = yield motor.Op(self.get_record_list, 
-                                account=account, 
-                                page_num=page_num,
-                                lapse=None,
-                                start=None,
-                                end=None)
+        result = yield self.get_record_list( 
+                            account=account, 
+                            page_num=page_num,
+                            lapse=None,
+                            start=None,
+                            end=None)
 
         self.finish(result)
         
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def post(self, account):
         '''
-            Create a new record for the current logged account.
+            Post records handler
         '''
-        result = yield gen.Task(check_json, self.request.body)
-        struct, error = result.args
-        if error:
+        struct = yield check_json(self.request.body)
+        
+        format_pass = (True if struct else False)
+        if not format_pass:
             self.set_status(400)
-            self.finish(error)
+            self.finish({'JSON':format_pass})
             return
         
         if account == self.get_current_user():
             struct['account'] = account
         
-        # check if orgs follows the access pattern.
+        # check if ORGs follows same pattern.
         
         else:
             self.set_status(404)
             self.finish({'WARNING':'Pre-Access patterns research'})
             return
         
-        result = yield gen.Task(self.new_cdr, struct)
-        record, error = result.args
-        
-        if record:
+        record = yield self.new_cdr(struct)
 
-            # handle this out-of-band.
-
-            struct = {'account':account,
-                      'resource': 'records',
-                      'id': record}
-
-            res_args = yield gen.Task(self.new_resource, struct)
-
-            update, res_error = res_args.args
-
-            if res_error:
-                print(res_error, 'WARNING: error on new_resource record.')
-
-        if error:
-            self.set_status(400)
+        if not record:
             model = 'Records'
+            error = {'record':False}
             reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
 
-            message = yield motor.Op(
-                self.let_it_crash, 
-                struct, 
-                model, 
-                error,
-                reason
-            )
+            message = yield self.let_it_crash(struct, model, error, reason)
 
+            self.set_status(400)
             self.finish(message)
             return
+
+        # -- handle this out-of-band.
+
+        struct = {'account':account,
+                  'resource': 'records',
+                  'id': record}
+
+        update = yield self.new_resource(struct)
+
+        if not update:
+            print('WARNING: error on new_resource record update.')
+
+        # logging update resource info
+        print(update)
+
+        # id -> uuid
+        # id same as uuid.
 
         self.set_status(201)
         self.finish({'id':record})
     
     @web.authenticated
-    @web.asynchronous
+    @gen.coroutine
     def delete(self, account, record=None, page_num=0):
         '''
-            delete
+            Delete
         '''
         pass
     
     @web.authenticated
-    @web.asynchronous
+    @gen.coroutine
     def put(self, account, record=None, page_num=0):
         '''
-            put
+            Put
         '''
         pass
     
     @web.authenticated
-    @web.asynchronous
+    @gen.coroutine
     def patch(self, account, record=None, page_num=0):
         '''
-            patch
+            Patch
         '''
         pass
 
@@ -383,25 +375,27 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
     '''
     
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, account):
+
         # get account the record billing routes from the database
-        routes = yield motor.Op(self.get_routes, account)
+        
+        routes = yield self.get_route_list(account)
         self.finish(routes)
         
         
     #@web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def post(self, account):
         '''
             Create new record billing route
         '''
         
-        result = yield gen.Task(check_json, self.request.body)
-        struct, error = result.args
-        if error:
+        struct = yield check_json(self.request.body)
+        
+        # where is the error msg?
+
+        if not struct:
             self.set_status(400)
             self.finish(error)
             return
@@ -410,6 +404,6 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         
         print(struct)
         
-        result = yield motor.Op(self.new_route, struct)
+        result = yield self.new_route(struct)
 
         self.finish()

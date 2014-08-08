@@ -11,6 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
+import logging
+
 import motor
 
 #import psycopg2
@@ -104,8 +106,8 @@ class BaseHandler(web.RequestHandler):
         '''
         return self.get_secure_cookie('account')
 
-    @gen.engine
-    def let_it_crash(self, struct, model, error, reason, callback):
+    @gen.coroutine
+    def let_it_crash(self, struct, model, error, reason):
         '''
             Let it crash.
         '''
@@ -135,6 +137,7 @@ class BaseHandler(web.RequestHandler):
             message = error_handler.value()
 
         elif error is not None:
+            
             print(type(error))
             print(error)
             print('WARNING: ', str_error, ' random nonsense.') 
@@ -152,10 +155,10 @@ class BaseHandler(web.RequestHandler):
                 'message': quotes.get()
             }
 
-        callback(message, None)
+        raise gen.Return(message)
 
-    @gen.engine
-    def new_sip_account(self, struct, callback):
+    @gen.coroutine
+    def new_sip_account(self, struct):
         '''
             New sip account
         '''
@@ -192,14 +195,14 @@ class BaseHandler(web.RequestHandler):
 
             cursor = yield momoko.Op(self.sql.execute, query)
 
-        except (psycopg2.Warning, psycopg2.Error) as error:
-            print('WARNING: ', str(error))
-            callback(None, str(error))
-            return
+        except (psycopg2.Warning, psycopg2.Error) as e:
+            print('WARNING: ', str(e))
+            logging.exception(e)
+            raise e
         else:
             result = True
 
-        callback(result, None)
+        raise gen.Return(result)
 
 
 @basic_authentication
@@ -208,8 +211,7 @@ class LoginHandler(BaseHandler):
         BasicAuth login
     '''
 
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self):
         # redirect next url
         next_url = '/'
@@ -217,13 +219,12 @@ class LoginHandler(BaseHandler):
         if args:
             next_url = args[0]
 
-        account = yield motor.Op(check_account_authorization,
-                                 self.db,
-                                 self.username,
-                                 self.password)
+        account = yield check_account_authorization(self.db,
+                            self.username,
+                            self.password)
 
         if not account:
-            # 401?
+            # 401 status code?
             self.set_status(403)
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
@@ -242,7 +243,7 @@ class LogoutHandler(BaseHandler):
         BasicAuth logout
     '''
 
-    @web.asynchronous
+    @gen.coroutine
     def get(self):
         '''
             Clear secure cookie
@@ -258,7 +259,7 @@ class MangoHandler(BaseHandler):
         Mango Handler Quote experiment
     '''
 
-    @web.asynchronous
+    @gen.coroutine
     def get(self):
         '''
             Get some quotes

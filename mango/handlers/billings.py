@@ -47,8 +47,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
     '''
     
     @web.authenticated
-    @web.asynchronous
-    @gen.engine
+    @gen.coroutine
     def get(self, start=None, end=None):
         '''
             Mango get record billing handler
@@ -56,25 +55,25 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
             GET Method Response
         '''
         account = self.get_current_user()
-        routes = yield motor.Op(self.get_routes, account)
+        routes = yield self.get_route_list(account)
         lapse = 'hours'
         
         billing = 0
         
-        orgs = yield motor.Op(self.get_orgs_list, account)
-        mango_accounts = (orgs['orgs'] if orgs else False)
-        if mango_accounts:
-            mango_accounts.append(account)
+        orgs = yield self.get_orgs_list(account)
+        account_list = (orgs['orgs'] if orgs else False)
+        if account_list:
+            account_list.append(account)
 
         # WARNING: Missing billing for multiple route list.
 
         if routes:
             single = (routes['routes'][0] if routes['routes'] else None)
             if single:
-                if mango_accounts:
-                    result = yield motor.Op(self.get_cost_summary, mango_accounts, single, elapse)
+                if account_list:
+                    result = yield self.get_cost_summary(account_list, single, elapse)
                 else:
-                    result = yield motor.Op(self.get_cost_summary, account, single, elapse)
+                    result = yield self.get_cost_summary(account, single, elapse)
 
             # pandas data frame
             frame = (pd.DataFrame(result) if result else pd.DataFrame([{'billsecs': 0}]))
@@ -94,4 +93,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
 
 @content_type_validation
 class SeatsHandler(billings.Billings, accounts.Accounts, BaseHandler):
+    '''
+        Seats Billing Handler
+    '''
     pass

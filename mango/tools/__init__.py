@@ -22,62 +22,60 @@ from mango.messages import accounts
 from mango.messages import reports
 
 
-@gen.engine
-def check_json(struct, callback):
+@gen.coroutine
+def check_json(struct):
     '''
-        check json
-
-        Check for malformed JSON Object
-        < kind of iterator/function >
+        Check for malformed JSON
     '''
     try:
         struct = json.loads(struct)
     except Exception, e:
         api_error = errors.Error(e)
         error = api_error.json()
-        callback(None, error)
+
+        logging.exception(e)
+        raise gen.Return(error)
+
         return
 
-    callback(struct, None)
+    raise gen.Return(struct)
 
-@gen.engine
-def check_account_type(db, account, account_type, callback):
+@gen.coroutine
+def check_account_type(db, account, account_type):
     '''
         check account type
     '''
     try:
-        check_type = yield motor.Op(db.accounts.find_one,
-                                    {'account': account,
-                                     'type':account_type},
-                                    {'type':1, '_id':0})
-        if check_type:
-            check_type = True
-        else:
-            check_type = False
-
+        check_type = yield db.accounts.find_one({'account': account,
+                                                 'type':account_type},
+                                                {'type':1, '_id':0})
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
 
-    callback(check_type, None)
+        return
 
-@gen.engine
-def check_account_authorization(db, account, password, callback):
+    raise gen.Return(check_type)
+
+@gen.coroutine
+def check_account_authorization(db, account, password):
     '''
         Check account authorization
     '''
     try:
-        account = yield motor.Op(db.accounts.find_one,
-                                 {'account': account,
-                                  'password': password})
+        message = yield db.accounts.find_one({'account': account,
+                                              'password': password})
 
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
-    callback(account, None)
+    raise gen.Return(message)
 
-@gen.engine
-def check_aggregation_pipeline(struct, callback):
+@gen.coroutine
+def check_aggregation_pipeline(struct):
     '''
         Check aggregation pipeline
 
@@ -86,15 +84,19 @@ def check_aggregation_pipeline(struct, callback):
     try:
         aggregation = reports.Aggregate(**struct).validate()
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
-    result = aggregation
-    # TODO: test this method in action
-    callback(result, None)
+    message = aggregation
 
-@gen.engine
-def check_times(start, end, callback):
+    # TODO: test this in action
+    
+    raise gen.Return(message)
+    
+@gen.coroutine
+def check_times(start, end):
     '''
         Check times
     '''
@@ -106,11 +108,14 @@ def check_times(start, end, callback):
         end = end.timestamp
 
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
     message = {'start':start, 'end':end}
-    callback(message, None)
+    
+    raise gen.Return(message)
 
 def clean_structure(struct):
     '''
@@ -188,25 +193,25 @@ def content_type_validation(handler_class):
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
 
-@gen.engine
-def new_resource(db, struct, callback):
+@gen.coroutine
+def new_resource(db, struct):
     '''
         New resource
     '''
-
     try:
         message = accounts.AccountResource(struct)
         message.validate()
         message = message.to_primitive()
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
     resource = ''.join(('resources.', message['resource']))
 
     try:
-        message = yield motor.Op(
-            db.accounts.update,
+        message = yield db.accounts.update(
             {
                 'uuid': message['uuid'],
                 'account': message['account']
@@ -223,7 +228,9 @@ def new_resource(db, struct, callback):
             }
         )
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
-    callback(message, None)
+    raise gen.Return(message)

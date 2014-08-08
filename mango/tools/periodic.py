@@ -10,7 +10,6 @@
 
 __author__ = 'Jean Chassoul'
 
-# TODO: refactoring periodic execution functions.
 
 import motor
 
@@ -22,8 +21,8 @@ from tornado import gen
 from bson import objectid
 
 
-@gen.engine
-def get_usernames(db, callback):
+@gen.coroutine
+def get_usernames(db):
     '''
         Mango get usernames
         
@@ -36,40 +35,41 @@ def get_usernames(db, callback):
     try:
         query = db.accounts.find({},{'account':1, '_id':0})
         
-        for a in (yield motor.Op(query.to_list)):
+        for a in (yield query.to_list()):
             usernames.append(a)
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise gen.Return(e)
     
-    callback(usernames, None)
+    raise gen.Return(usernames)
 
-@gen.engine
-def get_unassigned_cdr(db, callback):
+@gen.coroutine
+def get_unassigned_cdr(db):
     '''
-        Mango get unassigned cdr
 
-        Periodic task that returns the unassigned CDR.
+        Get unassigned CDR.
     '''
     try:
         result = []
 
         query = db.calls.find({'assigned':{'$exists':False}}).limit(1000)
         
-        for c in (yield motor.Op(query.to_list)):
-            calls.append(c)
+        for c in (yield query.to_list()):
+            result.append(c)
             
     except Exception, e:
-        callback(None, e)
-    callback(calls, None)
+        logging.exception(e)
+        raise gen.Return(e)
+    
+    raise ren.Return(result)
 
-@gen.engine
-def process_assigned_false(db, callback):
+@gen.coroutine
+def process_assigned_false(db):
     '''
-        Mango process assigned false
+        lol this is fucking nonsense
+        ----------------------------
 
-        lol lol lol this is fucking nonsense
-
-        Periodic task to process each false assigned
+        Periodic task to process assigned false
     '''
 
     result = []
@@ -82,7 +82,7 @@ def process_assigned_false(db, callback):
             channel = (message['channel'] if 'channel' in message else False)
 
             if channel:
-                account = [a for a in _accounts 
+                account = [a for a in _account_list 
                            if ''.join(('/', a['account'], '-')) in channel]
 
                 account = (account[0] if account else False)
@@ -95,37 +95,35 @@ def process_assigned_false(db, callback):
                     }
                     result.append(struct)
         elif error:
-            callback(None, error)
+            #logging.exception(error)
+            raise gen.Return(error)
             return
         else:
-            callback(result, None)
+            raise gen.Return(result)
             return
     try:
-        # Get mango account list
-        _accounts = yield motor.Op(get_usernames, db)
+        _account_list = yield get_usernames(db)
 
         db.calls.find({
             'assigned':False
         }).limit(1000).each(_got_call)
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise gen.Return(e)
 
-@gen.engine
-def process_asterisk_cdr(db, callback):
+@gen.coroutine
+def process_assigned_records(db):
     '''
-        Mango process asterisk cdr
-
-        Periodic task that process each unassigned CDR.
-        Periodic task to process new asterisk cdr entries.
+        Periodic task that process unassigned records.
     '''
     result = []
 
-    def _got_call(message, error):
+    def _got_record(message, error):
         '''
-            got call
+            got record
         '''
         if error:
-            callback(None, error)
+            raise gen.Return(error)
             return
 
         elif message:
@@ -134,7 +132,7 @@ def process_asterisk_cdr(db, callback):
             channel = (message['channel'] if channel else channel)
 
             if channel:
-                account = [a for a in _accounts 
+                account = [a for a in _account_list
                            if ''.join(('/', a['account'], '-')) in channel]
                 account = (account[0] if account else False)
 
@@ -146,38 +144,35 @@ def process_asterisk_cdr(db, callback):
                     }
                     result.append(struct)    
         else:
-            #print('hmmm')
-            # Iteration complete
-            callback(result, None)
+            raise gen.Return(result)
             return
 
     try:
-        # Get mango account list
-        _accounts = yield motor.Op(get_usernames, db)
+        _account_list = yield get_usernames(db)
 
         db.calls.find({
             'assigned':{'$exists':False}
-        }).limit(1000).each(_got_call)
+        }).limit(1000).each(_got_record)
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise gen.Return(e)
 
-@gen.engine
-def assign_call(db, account, callid, callback):
+@gen.coroutine
+def assign_call(db, account, callid):
     '''
-        Mango assign call
-
-        Update a call assigning it to an account.
+        Update call assign flag
     '''
     try:
-        result = yield motor.Op(
-            db.calls.update,
+        result = yield db.calls.update(
             {'_id':objectid.ObjectId(callid)}, 
             {'$set': {'assigned': True,
                       'accountcode':account}}
         )
 
     except Exception, e:
-        callback(None, e)
+        logging.exception(e)
+        raise e
+
         return
 
-    callback(result, None)
+    raise gen.Return(result)

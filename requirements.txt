@@ -1,7 +1,7 @@
-tornado==2.4.1
-pymongo==2.5
-motor==0.1
+tornado
+motor
 schematics
+futures
 psycopg2
 momoko
 numpy
