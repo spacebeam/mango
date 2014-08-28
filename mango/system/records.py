@@ -11,6 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
+import logging
+
 import arrow
 import motor
 
@@ -75,6 +77,7 @@ class Records(object):
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
+            print 'wut?'
             for record in (yield query.to_list()):
                 result.append(records.Record(record))
 

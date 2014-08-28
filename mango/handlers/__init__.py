@@ -137,11 +137,8 @@ class BaseHandler(web.RequestHandler):
             message = error_handler.value()
 
         elif error is not None:
+            logging.warn(str_error)
             
-            print(type(error))
-            print(error)
-            print('WARNING: ', str_error, ' random nonsense.') 
-
             message = {
                 'error': u'nonsense',
                 'message': u'there is no error'
@@ -196,7 +193,6 @@ class BaseHandler(web.RequestHandler):
             cursor = yield momoko.Op(self.sql.execute, query)
 
         except (psycopg2.Warning, psycopg2.Error) as e:
-            print('WARNING: ', str(e))
             logging.exception(e)
             raise e
         else:

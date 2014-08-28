@@ -27,14 +27,14 @@ def options():
     # Startup options
     tornado.options.define('ensure_indexes', default=True, type=bool, 
                            help=('Ensure collection indexes before starting'))
-    
-    # Mango debug mode
-    # TODO: add, check and test the debug mode.
 
-    # tornado.options.define('debug', default=False, type=bool, help=(
-    #     'Turn on autoreload, log to stderr only'))
-    # tornado.options.define('logdir', type=str, default='log', help=(
-    #     'Location of logging (if debug mode is off)'))
+    # debugging
+    tornado.options.define('debug', default=False, type=bool, help=(
+         'Turn on autoreload and log to stderr only'))
+
+    # logging dir
+    tornado.options.define('logdir', type=str, default='log', help=(
+         'Location of logging (if debug mode is off)'))
 
     # Application domain
     tornado.options.define('domain', default='iofun.io', type=str,
@@ -58,20 +58,6 @@ def options():
                            help=('Set a custom page size up to 100'))
     tornado.options.define('cookie_secret', default=secret, type=str,
                            help=('Secure cookie secret string'))
-
-    # Records settings
-    tornado.options.define('record_streamer', default='', type=str,
-                           help='Record streamer')
-    tornado.options.define('record_streamer_host', default='127.0.0.1', type=str,
-                           help='Record streamer host')
-    tornado.options.define('record_streamer_port', default=5555, type=int,
-                           help='Record streamer port')
-
-    tornado.options.define('record_periodic_stuff', default='', type=str,
-                           help='Record periodic stuff')
-
-    tornado.options.define('periodic_records', default='', type=str,
-                           help='Periodic Records Callbacks')
 
     # Parse config file, then command line, so command line switches take
     # precedence

@@ -11,6 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
+import logging
+
 import motor
 
 from contextlib import contextmanager
@@ -31,11 +33,20 @@ def get_usernames(db):
     
     # limit the size of the find query.
 
+
+    # change to query to cursor each 
+
+    # http://motor.readthedocs.org/en/latest/api/motor_cursor.html#motor.MotorCursor.each
+
+    # fetch_next is better
+
+    # http://motor.readthedocs.org/en/latest/api/motor_cursor.html#motor.MotorCursor.fetch_next
+
     usernames = []
     try:
-        query = db.accounts.find({},{'account':1, '_id':0})
+        query = db.accounts.find({}, {'account':1, '_id':0})
         
-        for a in (yield query.to_list()):
+        for a in (yield query.to_list(length=2)):
             usernames.append(a)
     except Exception, e:
         logging.exception(e)
@@ -95,12 +106,11 @@ def process_assigned_false(db):
                     }
                     result.append(struct)
         elif error:
-            #logging.exception(error)
-            raise gen.Return(error)
-            return
+            logging.error(error)
+            return error
         else:
-            raise gen.Return(result)
-            return
+            logging.debug('got call result: %s', result)
+            return result
     try:
         _account_list = yield get_usernames(db)
 
@@ -123,8 +133,8 @@ def process_assigned_records(db):
             got record
         '''
         if error:
-            raise gen.Return(error)
-            return
+            logging.error(error)
+            return error
 
         elif message:
             channel = (True if 'channel' in message else False)
@@ -144,8 +154,8 @@ def process_assigned_records(db):
                     }
                     result.append(struct)    
         else:
-            raise gen.Return(result)
-            return
+            logging.debug('got record result: %s', result)
+            return result
 
     try:
         _account_list = yield get_usernames(db)

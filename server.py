@@ -19,8 +19,8 @@ import motor
 
 import itertools
 
-#import psycopg2
-#import momoko
+import psycopg2
+import momoko
 
 from tornado import ioloop
 from tornado import gen
@@ -63,31 +63,28 @@ def periodic_records_callbacks(stuff='bananas'):
     '''
         Mango periodic records
     '''
-
-    #print('wut v.03')
-
     results = yield [
         periodic.process_assigned_false(db),
-        periodic.process_asterisk_cdr(db)
+        periodic.process_assigned_records(db)
     ]
 
-    # incomprehensible list comprehensions.
-    # result = [item for sublist in results for item in sublist]
+    if all(x is None for x in results):
+        result = None
+    else:
+        result = list(itertools.chain.from_iterable(results))
 
-    # itertools.chain
-    result = list(itertools.chain.from_iterable(results))
+        for record in result:
 
-    # print('periodic records: ', result)
+            flag = yield periodic.assign_call(
+                db,
+                record['account'],
+                record['id'] # uuid?
+            )
 
-    for record in result:
-        flag = yield periodic.assign_call(
-            db,
-            record['account'],
-            record['id'] # uuid?
-        )
+            # check new resource
+            resource = yield new_resource(db, record)
 
-        # check new resource
-        resource = yield new_resource(db, record)
+    logging.debug('periodic records: %s', result)
 
 
 if __name__ == '__main__':
@@ -97,9 +94,6 @@ if __name__ == '__main__':
         Organizations of Restricted Generality.
     '''
     opts = options.options()
-
-    # Mango periodic functions
-    periodic_records = opts.periodic_records
 
     # Set document database
     document = motor.MotorClient().mango
@@ -154,7 +148,7 @@ if __name__ == '__main__':
             (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
 
-            # Organizations of Restricted Generality
+            # ORGs
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 
@@ -225,9 +219,7 @@ if __name__ == '__main__':
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
-
-            # Reports
-            
+            # -- Reports
 
             # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
@@ -244,8 +236,8 @@ if __name__ == '__main__':
         # system database
         db=db,
 
-        # periodic records
-        periodic_records=periodic_records,
+        # debug mode
+        debug=opts.debug,
 
         # application domain
         domain=opts.domain,
