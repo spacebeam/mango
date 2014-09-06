@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>io fun - Build fantastically unbelievable, communication.</title>
+    <title>io fun - Build Fantastical unbelievable, communication.</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,8 +20,10 @@
     <!-- cal-heatmap -->
     <link rel="stylesheet" href={{ static_url("css/cal-heatmap.css") }}>
 
-
+    <!-- bootstrap-datepicker -->
     <link rel="stylesheet" href={{ static_url("css/bootstrap-datepicker.css") }}>
+
+    <!-- countdown -->
     <link rel="stylesheet" href={{ static_url("css/jquery.countdown.css") }}>
 
     <link rel="stylesheet" href={{ static_url("css/landing.css") }}>
@@ -121,18 +123,24 @@
 <!-- settings -->
 <div id="fun-settings"></div>
 
+<!-- phone -->
+<div id="fun-phone"></div>  
+
+<!-- contacts -->
+<div id="fun-contacts"></div>  
+
+<!-- sounds -->
+<div id="fun-sounds"></div>  
+
+<!-- recordings -->
+<div id="fun-recordings"></div> 
+
 <!-- extra -->
 <div id="fun-extra"></div>
 
 <!-- footer -->
 <div id="fun-footer"></div>
 
-
-<!-- phone -->
-<div id="fun-phone"></div>	
-
-<!-- recordings -->
-<div id="fun-recordings"></div>	
 
 
 <script src={{ static_url("js/libs/modernizr-2.5.3.min.js") }}></script>
@@ -148,6 +156,9 @@
 
 <!-- bootstrap enhancement -->
 <script src={{ static_url("js/dropdowns-enhancement.js") }}></script>
+
+<!-- cal heatmap -->
+<script src={{ static_url("js/plugins/heatmap/cal-heatmap.min.js") }}></script>
 
 <!-- custom stuff -->
 <script src={{ static_url("js/libs/bootstrap-datepicker.js") }}></script>
@@ -170,9 +181,6 @@
 
 <!-- funky stuff -->
 <script src={{ static_url("js/plugins/d3/d3.min.js") }}></script>
-
-<!-- cal heatmap -->
-<script src={{ static_url("js/plugins/heatmap/cal-heatmap.min.js") }}></script>
 
 
 <!-- CUSTOM JS FILES -->
@@ -220,7 +228,13 @@
 <script src={{ static_url("js/views/activity.js") }}></script>
 
 <script src={{ static_url("js/views/phone.js") }}></script>
+
+<script src={{ static_url("js/views/contacts.js") }}></script>
+
+<script src={{ static_url("js/views/sounds.js") }}></script>
+
 <script src={{ static_url("js/views/recordings.js") }}></script>
+
 <script src={{ static_url("js/views/reports.js") }}></script>
 <script src={{ static_url("js/views/support.js") }}></script>
 <script src={{ static_url("js/views/settings.js") }}></script>
