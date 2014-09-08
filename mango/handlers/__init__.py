@@ -92,7 +92,8 @@ class BaseHandler(web.RequestHandler):
         '''
             Mango default headers
         '''
-        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+        #self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+        self.set_header("Access-Control-Allow-Origin", '*')
 
     def get_current_user(self):
         '''
