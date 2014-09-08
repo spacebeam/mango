@@ -1,8 +1,9 @@
 tornado
+futures
 motor
 schematics
-futures
 psycopg2
+queries
 momoko
 numpy
 scipy

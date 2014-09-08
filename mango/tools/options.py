@@ -46,6 +46,30 @@ def options():
                            help=('Server hostname'))
     tornado.options.define('port', default=8888, type=int,
                            help=('Server port'))
+    # MongoDB database settings
+    tornado.options.define('mongo_host', type=str,
+                            help=('MongoDB hostname or ip address'))
+
+    tornado.options.define('mongo_port', default=27017, type=int,
+                            help=('MongoDB port'))
+
+    # PostgreSQL database settings
+    tornado.options.define('sql_host', type=str,
+                            help=('PostgreSQL hostname or ip address'))
+
+    tornado.options.define('sql_port', default=5432, type=int,
+                            help=('PostgreSQL port'))
+
+    tornado.options.define('sql_database', type=str,
+                            help=('PostgreSQL database'))
+
+    tornado.options.define('sql_user', type=str,
+                            help=('PostgreSQL username'))
+
+    tornado.options.define('sql_password', type=str,
+                            help=('PostgreSQL username password'))
+
+    # Base url and timezone
     tornado.options.define('base_url', default='api', type=str,
                            help=('Base url, e.g. "api"'))
     tornado.options.define('timezone', type=str, default='America/Costa_Rica',

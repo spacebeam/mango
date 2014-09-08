@@ -96,7 +96,7 @@ if __name__ == '__main__':
     opts = options.options()
 
     # Set document database
-    document = motor.MotorClient().mango
+    document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
     # Set SQL database
     #sql = momoko.Pool(
