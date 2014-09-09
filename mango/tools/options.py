@@ -16,6 +16,8 @@ import uuid
 
 import tornado.options
 
+from tornado.options import parse_config_file
+
 
 secret = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
 config_path = 'mangod.conf'
@@ -25,8 +27,12 @@ def options():
         Mango configuration options
     '''
     # Startup options
-    tornado.options.define('ensure_indexes', default=True, type=bool, 
+    tornado.options.define('ensure_indexes', default=True, type=bool,
                            help=('Ensure collection indexes before starting'))
+
+    # Set config and stuff
+    tornado.options.define('config', type=str, help='path to config file',
+       callback=lambda path: parse_config_file(path, final=False))
 
     # debugging
     tornado.options.define('debug', default=False, type=bool, help=(
