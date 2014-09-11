@@ -60,6 +60,9 @@ class BaseHistory(models.Model):
 
 
 class ConectedDuration(models.Model):
+    '''
+        connected duration
+    '''
     uuid = types.UUIDType(default=_id.uuid4)
     customer_uuid = types.UUIDType(default=_id.uuid4)
     phone_1 = types.StringType()
@@ -71,6 +74,9 @@ class ConectedDuration(models.Model):
 
 
 class VoiceCall(models.Model):
+    '''
+        voice call
+    '''
     uuid = types.UUIDType(default=_id.uuid4)
     account_uuid = types.UUIDType(default=_id.uuid4)
     phone_1 = types.StringType()
