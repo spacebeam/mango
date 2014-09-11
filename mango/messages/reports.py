@@ -60,7 +60,7 @@ class BaseHistory(models.Model):
 
 
 class ConectedDuration(models.Model):
-    uuid = types.UUIDType(default=_iduuid4)
+    uuid = types.UUIDType(default=_id.uuid4)
     customer_uuid = types.UUIDType(default=_id.uuid4)
     phone_1 = types.StringType()
     first_name = types.StringType()
