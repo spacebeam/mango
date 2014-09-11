@@ -18,15 +18,61 @@ from schematics.types import compound
 from mango.messages import records
 
 
-'''
-
-    This is currently nonsense.
-
-'''
-
-
 class BaseResult(models.Model):
     '''
-        Mango base result
+        base result
     '''
     results = compound.ListType(compound.ModelType(records.Record))
+
+
+class BaseHistory(models.Model):
+    '''
+        base history
+
+        Scopes: accounts, numbers
+    '''
+    uuid = types.UUIDType(default=uuid.uuid4)
+    record_uuid = types.UUIDType(default=uuid.uuid4)
+    ban =  types.UUIDType(default=uuid.uuid4) # 'billing account number'
+    country_number = types.IntType()
+    number = types.StringType()
+    campaign_uuid = types.UUIDType(default=uuid.uuid4)
+    start_time = types.DateTimeType()
+    caller_id = types.StringType()
+    caller_id_name = types.StringType()
+    origin_number = types.StringType()
+    origin_city = types.StringType()
+    origin_state = types.StringType()
+    origin_province = types.StringType()
+    destination_type = types.IntType()
+    destination_contry_code = types.StringType()
+    destination_number = types.StringType()
+    destination_city = types.StringType()
+    destination_state = types.StringType()
+    duration = types.IntType()
+    duration_unrounded = types.IntType()
+    cost = types.IntType()
+    special_rate = types.IntType()
+    lead_type = types.IntType()
+    web_call = types.BooleanType(default=False)
+
+
+class ConectedDuration(models.Model):
+    uuid = types.UUIDType(default=uuid.uuid4)
+    customer_uuid = types.UUIDType(default=uuid.uuid4)
+    phone_1 = types.StringType()
+    first_name = types.StringType()
+    rep_phone = types.StringType()
+    keyword = types.StringType()
+    duration_unrounded = types.IntType()
+    record_uuid = types.UUIDType(default=uuid.uuid4)
+
+
+class VoiceCall(models.Model):
+    uuid = types.UUIDType(default=uuid.uuid4)
+    account_uuid = types.UUIDType(default=uuid.uuid4)
+    phone_1 = types.StringType()
+    first_name = types.StringType()
+    last_name = types.StringType()
+    rep_phone = types.StringType()
+    keyword = types.StringType()
