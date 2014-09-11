@@ -11,7 +11,7 @@
 __author__ = 'Jean Chassoul'
 
 
-import uuid
+import uuid as _id
 
 from schematics import models
 from schematics import types
@@ -33,12 +33,12 @@ class BaseHistory(models.Model):
 
         Scopes: accounts, numbers
     '''
-    uuid = types.UUIDType(default=uuid.uuid4)
-    record_uuid = types.UUIDType(default=uuid.uuid4)
-    ban =  types.UUIDType(default=uuid.uuid4) # 'billing account number'
+    uuid = types.UUIDType(default=_id.uuid4)
+    record_uuid = types.UUIDType(default=_id.uuid4)
+    ban =  types.UUIDType(default=_id.uuid4) # 'billing account number'
     country_number = types.IntType()
     number = types.StringType()
-    campaign_uuid = types.UUIDType(default=uuid.uuid4)
+    campaign_uuid = types.UUIDType(default=_id.uuid4)
     start_time = types.DateTimeType()
     caller_id = types.StringType()
     caller_id_name = types.StringType()
@@ -60,19 +60,19 @@ class BaseHistory(models.Model):
 
 
 class ConectedDuration(models.Model):
-    uuid = types.UUIDType(default=uuid.uuid4)
-    customer_uuid = types.UUIDType(default=uuid.uuid4)
+    uuid = types.UUIDType(default=_iduuid4)
+    customer_uuid = types.UUIDType(default=_id.uuid4)
     phone_1 = types.StringType()
     first_name = types.StringType()
     rep_phone = types.StringType()
     keyword = types.StringType()
     duration_unrounded = types.IntType()
-    record_uuid = types.UUIDType(default=uuid.uuid4)
+    record_uuid = types.UUIDType(default=_id.uuid4)
 
 
 class VoiceCall(models.Model):
-    uuid = types.UUIDType(default=uuid.uuid4)
-    account_uuid = types.UUIDType(default=uuid.uuid4)
+    uuid = types.UUIDType(default=_id.uuid4)
+    account_uuid = types.UUIDType(default=_id.uuid4)
     phone_1 = types.StringType()
     first_name = types.StringType()
     last_name = types.StringType()
