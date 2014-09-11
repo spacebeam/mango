@@ -11,6 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
+import uuid
+
 from schematics import models
 from schematics import types
 from schematics.types import compound
