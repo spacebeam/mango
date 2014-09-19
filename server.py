@@ -1,7 +1,7 @@
 '''
-    Manage Asynchronous Number of Granular/Going ORGs
+    Manage Asynchronous Number of Great ORGs
 
-    Organizations of restricted generality (ORGs)
+    Organizations of roman generality (ORGs)
 '''
 
 # This file is part of mango.
@@ -21,6 +21,8 @@ import itertools
 
 import psycopg2
 import momoko
+
+# import queries
 
 from tornado import ioloop
 from tornado import gen
@@ -59,9 +61,16 @@ class IndexHandler(web.RequestHandler):
 
 
 @gen.coroutine
-def periodic_records_callbacks(stuff='bananas'):
+def periorid_calls_callbacks(webhooks='this stuff is'):
     '''
-        Mango periodic records
+        Periodic voice calls
+    '''
+
+
+@gen.coroutine
+def periodic_records_callbacks(websockets='bananas'):
+    '''
+        periodic records
     '''
     results = yield [
         periodic.process_assigned_false(db),
@@ -87,11 +96,13 @@ def periodic_records_callbacks(stuff='bananas'):
     logging.debug('periodic records: %s', result)
 
 
+
+
 if __name__ == '__main__':
     '''
-        Manage Asynchronous Number Granular/Going ORGs
+        Manage Asynchronous Number General ORGs
 
-        Organizations of Restricted Generality.
+        Organizations of Roman Generality.
     '''
     opts = options.options()
 
