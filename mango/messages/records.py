@@ -41,6 +41,8 @@ class Record(models.Model):
 
     clid = types.StringType()
 
+    callerid = types.StringType()
+
     uniqueid = types.StringType()
     queue = compound.ModelType(FromQueue)
 
@@ -58,8 +60,7 @@ class Record(models.Model):
     source_channel = types.StringType()
     destination_channel = types.StringType()
 
-    src = types.StringType()
-    dst = types.StringType()
+    context = types.StringType()
     dcontext = types.StringType()
     
     channel = types.StringType()
