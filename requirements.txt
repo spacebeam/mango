@@ -10,3 +10,4 @@ scipy
 pyzmq
 pandas
 arrow
+apache-libcloud
