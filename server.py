@@ -106,6 +106,10 @@ if __name__ == '__main__':
     '''
     opts = options.options()
 
+    print opts.mongo_host
+
+    logging.error(opts.mango_host)
+
     # Set document database
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
