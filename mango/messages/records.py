@@ -38,16 +38,15 @@ class Record(models.Model):
     '''
     _id = mongo.ObjectIdType(required=False)
     uuid = types.UUIDType(default=uuid.uuid4)
+    uniqueid = types.StringType()
 
     clid = types.StringType()
-
     callerid = types.StringType()
-
-    uniqueid = types.StringType()
-    queue = compound.ModelType(FromQueue)
 
     accountcode = types.StringType()
     userfield = types.StringType()
+
+    queue = compound.ModelType(FromQueue)
     
     assigned = types.BooleanType(default=False)
     checked = types.BooleanType(default=False)
@@ -56,15 +55,16 @@ class Record(models.Model):
 
     source = types.StringType()
     destination = types.StringType()
-
-    source_channel = types.StringType()
-    destination_channel = types.StringType()
-
-    context = types.StringType()
-    dcontext = types.StringType()
     
     channel = types.StringType()
+    source_channel = types.StringType()
+    
+    context = types.StringType()
+    dcontext = types.StringType()
+    destination_context = types.StringType()
+    
     dstchannel = types.StringType()
+    destination_channel = types.StringType()
     
     start = types.DateTimeType(required=True)
     answer = types.DateTimeType()
@@ -72,20 +72,24 @@ class Record(models.Model):
 
     duration = types.IntType()
     billsec = types.IntType()
+    billing = types.IntType()
+
     disposition = types.StringType()
+    status = types.StringType()
+
     amaflags = types.StringType()
 
     lastapp = types.StringType()
     lastdata = types.StringType()
-    
-    # TODO: CEL events
-    # events
-    # recorded = BooleanType()
-    # record_url
-    # checked
-    # checked_by
-    # details
-    # comments
-    # created
-    # last_modify
-    # updated_by
+
+    recorded = types.BooleanType(default=False)
+    record_url = types.StringType()
+
+    checked = types.BooleanType(default=False)
+    checked_by = types.StringType()
+
+    details = compound.ModelType(Log)
+    comments = compound.ModelType(Comment)
+    created = types.DateTimeType(required=True)
+    last_modify = types.DateTimeType()
+    updated_by = types.DateTimeType()

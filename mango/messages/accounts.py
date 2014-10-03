@@ -20,6 +20,13 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
+class Monkey(models.Model):
+    '''
+        Monkey business
+    '''
+    key = types.StringType(required=True)
+
+
 class AccountResource(models.Model):
     '''
         Account resource
@@ -49,6 +56,8 @@ class BaseAccount(models.Model):
         Base account
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
+
+    api_keys = compound.ListType(compound.ModelType(Monkey))
 
     active = types.BooleanType(default=True)
     account = types.StringType(required=True)
