@@ -73,6 +73,7 @@ class BaseAccount(models.Model):
 
     uri = types.StringType(required=False)
 
+
 class User(BaseAccount):
     '''
         User account
