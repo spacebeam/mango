@@ -1,4 +1,4 @@
 mango
 -----
 
-Mango management.
+Management.
