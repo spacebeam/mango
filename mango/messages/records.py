@@ -83,7 +83,7 @@ class Record(models.Model):
     lastdata = types.StringType()
 
     recorded = types.BooleanType(default=False)
-    record_url = types.StringType()
+    record_uri = types.StringType()
 
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
@@ -93,3 +93,5 @@ class Record(models.Model):
     created = types.DateTimeType(required=True)
     last_modify = types.DateTimeType()
     updated_by = types.DateTimeType()
+
+    uri = types.StringType()

@@ -62,7 +62,6 @@ class BaseHandler(web.RequestHandler):
         '''
             Graph database
         '''
-        # Neo4j
         return self.application.graph
 
     def initialize(self, **kwargs):
@@ -223,6 +222,7 @@ class LoginHandler(BaseHandler):
         if not account:
             # 401 status code?
             self.set_status(403)
+            # dude! get realm from options.
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
         else:
