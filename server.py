@@ -118,6 +118,9 @@ if __name__ == '__main__':
     # Set default database
     db = document
 
+    # log mongo host
+    logging.info(opts.mongo_host)
+
     if opts.ensure_indexes:
         logging.info('Ensuring indexes...')
         indexes.ensure_indexes(db)

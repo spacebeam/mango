@@ -88,10 +88,13 @@ class Record(models.Model):
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
 
-    details = compound.ModelType(Log)
-    comments = compound.ModelType(Comment)
+    #details = compound.ModelType(Log)
+    #comments = compound.ModelType(Comment)
+    
     created = types.DateTimeType(required=True)
+    created_at = types.DateTimeType()
     last_modify = types.DateTimeType()
     updated_by = types.DateTimeType()
+    updated_at = types.DateTimeType()
 
     uri = types.StringType()
