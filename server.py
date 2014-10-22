@@ -111,15 +111,15 @@ if __name__ == '__main__':
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
     # Set SQL database
-    sql = momoko.Pool(
-        dsn='dbname=asterisk user=postgres',
-        size=1
-    )
-    
+    #sql = momoko.Pool(
+    #    dsn='dbname=asterisk user=postgres',
+    #    size=1
+    #)
+
     # Set SQL database
     sql = momoko.Pool(
-        dsn='dbname=your_db user=your_user password=very_secret_password '
-            'host=localhost port=5432',
+        dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database,
+            opts.sql_user, opts.sql_host, opts.sql_port),
         size=1
     )
 
