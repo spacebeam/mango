@@ -116,6 +116,11 @@ if __name__ == '__main__':
     #    size=1
     #)
 
+    test = 'dbname=%s user=%s host=%s port=%d' % (opts.sql_database,
+            opts.sql_user, opts.sql_host, opts.sql_port)
+
+    logging.info(test)
+
     # Set SQL database
     sql = momoko.Pool(
         dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database,
