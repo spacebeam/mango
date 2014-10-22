@@ -13,6 +13,8 @@ __author__ = 'Jean Chassoul'
 
 import motor
 
+import logging
+
 # import numpy as np
 # import pandas as pd
 
@@ -80,8 +82,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # handle SIP accounts out-of-band
 
         # momoko insert sip account
-        #if result:
-        #    sip_account = yield self.new_sip_account(struct)
+        if result:
+            sip_account = yield self.new_sip_account(struct)
+
+        logging.info(sip_account)
 
         #else:
         #    self.set_status(400)
