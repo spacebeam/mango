@@ -15,8 +15,8 @@ import logging
 
 import motor
 
-#import psycopg2
-#import momoko
+import psycopg2
+import momoko
 
 from tornado import gen
 from tornado import web
@@ -41,7 +41,7 @@ class BaseHandler(web.RequestHandler):
         '''
             SQL database
         '''
-        return self.application.sql
+        return self.settings['sql']
 
     @property
     def document(self):
