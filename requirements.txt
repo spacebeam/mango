@@ -11,3 +11,4 @@ pyzmq
 pandas
 arrow
 apache-libcloud
+pycurl
