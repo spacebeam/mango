@@ -105,7 +105,7 @@ class Error(object):
         '''
         self.message = ''.join((
             resource, ' ',
-            field, ' ["', value, '"] already exists.'
+            field, ' ["', value, '"] invalid or already taken.'
         ))
         self.data = self.error
 

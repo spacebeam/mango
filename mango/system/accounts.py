@@ -198,12 +198,17 @@ class MangoAccounts(Accounts):
             account = clean_structure(account)
 
         except Exception, e:
-            logging.exception(e)
+            logging.error(e)
             raise e
 
-        result = yield self.db.accounts.insert(account)
+        try:
+            result = yield self.db.accounts.insert(account)
+            message = account.get('uuid')
+        except Exception, e:
+            logging.error(e)
+            message = str(e)
 
-        raise gen.Return(account.get('uuid'))
+        raise gen.Return(message)
 
     @gen.coroutine
     def remove_account(self, account):

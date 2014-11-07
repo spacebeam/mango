@@ -33,7 +33,6 @@ def get_usernames(db):
     
     # limit the size of the find query.
 
-
     # change to query to cursor each 
 
     # http://motor.readthedocs.org/en/latest/api/motor_cursor.html#motor.MotorCursor.each
@@ -109,7 +108,7 @@ def process_assigned_false(db):
             logging.error(error)
             return error
         else:
-            logging.debug('got call result: %s', result)
+            #logging.info('got call result: %s', result)
             return result
     try:
         _account_list = yield get_usernames(db)
@@ -154,7 +153,7 @@ def process_assigned_records(db):
                     }
                     result.append(struct)    
         else:
-            logging.debug('got record result: %s', result)
+            #logging.info('got record result: %s', result)
             return result
 
     try:

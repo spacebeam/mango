@@ -120,16 +120,18 @@ class BaseHandler(web.RequestHandler):
             message = error_handler.model(model)
 
         elif error and 'duplicate' in str_error:
-            # messages = []
+            
             for name, value in reason.get('duplicates'):
 
-                message = error_handler.duplicate(
-                    name.title(),
-                    value,
-                    struct.get(value)
-                )
+                if value in str_error:
 
-                messages.append(message)
+                    message = error_handler.duplicate(
+                        name.title(),
+                        value,
+                        struct.get(value)
+                    )
+
+                    messages.append(message)
             
             message = ({'messages':messages} if messages else False)
 
@@ -137,7 +139,7 @@ class BaseHandler(web.RequestHandler):
             message = error_handler.value()
 
         elif error is not None:
-            logging.warn(str_error)
+            logging.warning(str_error)
             
             message = {
                 'error': u'nonsense',

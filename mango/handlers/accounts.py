@@ -77,20 +77,29 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         struct['account_type'] = 'user'
 
+        #logging.info(struct)
+
         result = yield self.new_account(struct)
 
-        # handle SIP accounts out-of-band
+        if 'error' in result:
+            model = 'User'
+            reason = {'duplicates': [(model, 'account'), (model, 'email')]}
 
-        # momoko insert sip account
+            message = yield self.let_it_crash(struct, model, result, reason)
+
+            logging.warning(message)
+
+            self.set_status(400)
+            self.finish(message)
+            return
+
+
+        # -- handle SIP account creation out-of-band
+
+        # postgresql insert sip account
         if result:
             sip_account = yield self.new_sip_account(struct)
 
-        logging.info(sip_account)
-
-        #else:
-        #    self.set_status(400)
-        #    self.finish({'errors':struct})
-        #    return
 
         self.set_status(201)
         self.finish({'id':result})
@@ -314,7 +323,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             self.finish({'WARNING':'Pre-Access patterns research'})
             return
         
-        record = yield self.new_cdr(struct)
+        record = yield self.new_detail_record(struct)
 
         if not record:
             model = 'Records'

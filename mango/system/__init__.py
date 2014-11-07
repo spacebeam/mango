@@ -10,7 +10,7 @@
 
 __author__ = 'Jean Chassoul'
 
-
+import logging
 import base64
 
 
@@ -49,9 +49,7 @@ def basic_authentication(handler_class):
             handler.username, handler.password = auth_decoded.split(':', 2)
 
             # write msg send right channel.
-
-            print('A user just enter the dungeon! /api/ @basic_authentication')
-            print('username', handler.username, 'password', handler.password)
+            logging.info('%s enter the dungeon! /api/ @basic_authentication' % handler.username)
 
             return True
 

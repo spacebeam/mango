@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Manage Asynchronous Number of Great ORGs
+    Manage Asynchronous Number of General ORGs
 
     Organizations of roman generality (ORGs)
 '''
@@ -94,9 +94,7 @@ def periodic_records_callbacks(websockets='bananas'):
             # check new resource
             resource = yield new_resource(db, record)
 
-    logging.debug('periodic records: %s', result)
-
-
+    #logging.info('periodic records: %s', result)
 
 
 if __name__ == '__main__':
@@ -120,8 +118,9 @@ if __name__ == '__main__':
     # Set default database
     db = document
 
-    # log mongo host
-    logging.info(opts.mongo_host)
+    # logging database hosts
+    logging.info('MongoDB server: %s' % opts.mongo_host)
+    logging.info('PostgreSQL server: %s' % opts.sql_host)
 
     if opts.ensure_indexes:
         logging.info('Ensuring indexes...')
