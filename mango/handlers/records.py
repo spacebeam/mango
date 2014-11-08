@@ -158,7 +158,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             Delete records handler
         '''
         record_uuid = record_uuid.rstrip('/')
-        result = yield self.remove_cdr(record_uuid)
+        result = yield self.remove_record(record_uuid)
 
         if not result['n']:
             self.set_status(400)

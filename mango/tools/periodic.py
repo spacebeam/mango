@@ -26,31 +26,21 @@ from bson import objectid
 @gen.coroutine
 def get_usernames(db):
     '''
-        Mango get usernames
-        
-        Get all the usernames
+        Get all the account usernames
     '''
-    
-    # limit the size of the find query.
-
-    # change to query to cursor each 
-
-    # http://motor.readthedocs.org/en/latest/api/motor_cursor.html#motor.MotorCursor.each
-
-    # fetch_next is better
-
-    # http://motor.readthedocs.org/en/latest/api/motor_cursor.html#motor.MotorCursor.fetch_next
-
     usernames = []
     try:
-        query = db.accounts.find({}, {'account':1, '_id':0})
-        
-        for a in (yield query.to_list(length=2)):
-            usernames.append(a)
+        query = db.accounts.find(
+            {}, 
+            {'account':1, 'uuid':1, '_id':0}
+        )
+        while (yield query.fetch_next):
+            account = query.next_object()
+            usernames.append(account)
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
-    
+
     raise gen.Return(usernames)
 
 @gen.coroutine
@@ -167,9 +157,9 @@ def process_assigned_records(db):
         raise gen.Return(e)
 
 @gen.coroutine
-def assign_call(db, account, callid):
+def assign_record(db, account, callid):
     '''
-        Update call assign flag
+        Update record assigned flag
     '''
     try:
         result = yield db.calls.update(

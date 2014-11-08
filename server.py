@@ -2,7 +2,7 @@
 '''
     Manage Asynchronous Number of General ORGs
 
-    Organizations of roman generality (ORGs)
+    Organizations of Roman Generality (ORGs)
 '''
 
 # This file is part of mango.
@@ -62,16 +62,9 @@ class IndexHandler(web.RequestHandler):
 
 
 @gen.coroutine
-def periorid_calls_callbacks(webhooks='this stuff is'):
+def periodic_records_callback():
     '''
-        Periodic voice calls
-    '''
-
-
-@gen.coroutine
-def periodic_records_callbacks(websockets='bananas'):
-    '''
-        periodic records
+        periodic records callback function
     '''
     results = yield [
         periodic.process_assigned_false(db),
@@ -85,7 +78,7 @@ def periodic_records_callbacks(websockets='bananas'):
 
         for record in result:
 
-            flag = yield periodic.assign_call(
+            flag = yield periodic.assign_record(
                 db,
                 record['account'],
                 record['id'] # uuid?
@@ -281,8 +274,8 @@ if __name__ == '__main__':
         login_url='/login'
     )
 
-    # Tornado periodic callbacks
-    periodic_records = ioloop.PeriodicCallback(periodic_records_callbacks, 10000)
+    # Tornado periodic callback functions
+    periodic_records = ioloop.PeriodicCallback(periodic_records_callback, 10000)
     periodic_records.start()
 
     # Setting up mango processor

@@ -46,22 +46,20 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         account_type = 'user'
         if not account:
-            # get list
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
             account = account.rstrip('/')
             result = yield self.get_account(account, account_type)
             
-            if result:
-                self.finish(result)
-                return
-            else:
-                # let it crash
+            if not result:
                 self.set_status(400)
                 self.finish({'missing':account})
                 return
-
+            else:
+                self.finish(result)
+                return
+                
     @gen.coroutine
     def post(self):
         '''
