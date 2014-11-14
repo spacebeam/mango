@@ -156,7 +156,7 @@ if __name__ == '__main__':
             (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
 
-            # ORGs
+            # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
 

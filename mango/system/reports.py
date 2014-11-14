@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango reports system logic.
+    Mango reports system logic functions.
 '''
 
 # This file is part of mango.

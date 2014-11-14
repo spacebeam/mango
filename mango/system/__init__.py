@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system logic.
+    Mango system logic functions.
 '''
 
 # This file is part of mango.
@@ -17,12 +17,9 @@ import base64
 
 def basic_authentication(handler_class):
     '''
-        basic authentication
-        --------------------
+        @basic_authentication
 
         HTTP Basic Authentication Decorator
-
-        @basic_authentication
     '''
 
     def wrap_execute(handler_execute):
@@ -50,7 +47,8 @@ def basic_authentication(handler_class):
             handler.username, handler.password = auth_decoded.split(':', 2)
 
             # write msg send right channel.
-            logging.info('%s enter the dungeon! /api/ @basic_authentication' % handler.username)
+            # message = {}
+            logging.info('somewhere %s enter the dungeon! /api/ @basic_authentication' % handler.username)
 
             return True
 

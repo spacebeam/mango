@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango billings system logic.
+    Mango billings system logic functions.
 '''
 
 # This file is part of mango.
