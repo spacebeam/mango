@@ -10,6 +10,7 @@
 
 __author__ = 'Jean Chassoul'
 
+
 import uuid
 
 from schematics import models

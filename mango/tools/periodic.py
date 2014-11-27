@@ -44,18 +44,22 @@ def get_usernames(db):
     raise gen.Return(usernames)
 
 @gen.coroutine
-def get_unassigned_cdr(db):
+def get_unassigned_call(db):
     '''
 
-        Get unassigned CDR.
+        Get unassigned call.
     '''
     try:
         result = []
 
-        query = db.calls.find({'assigned':{'$exists':False}}).limit(1000)
+        query = db.calls.find({
+            'assigned': {
+                '$exists': False
+            }
+        }).limit(1000)
         
-        for c in (yield query.to_list()):
-            result.append(c)
+        for call in (yield query.to_list()):
+            result.append(call)
             
     except Exception, e:
         logging.exception(e)
@@ -66,10 +70,7 @@ def get_unassigned_cdr(db):
 @gen.coroutine
 def process_assigned_false(db):
     '''
-        lol this is fucking nonsense
-        ----------------------------
-
-        Periodic task to process assigned false
+        Periodic task that process assigned flag on calls resource.
     '''
 
     result = []

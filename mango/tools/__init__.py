@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system tools.
+    Mango system logic function tools.
 '''
 
 # This file is part of mango.
@@ -11,6 +11,7 @@
 __author__ = 'Jean Chassoul'
 
 
+import logging
 import arrow
 import json
 import motor
@@ -198,6 +199,17 @@ def new_resource(db, struct):
     '''
         New resource
     '''
+    import uuid as _uuid
+    from schematics import models as _models
+
+    class AccountResource(_models.Model):
+        '''
+            Account resource
+        '''
+        account = types.StringType(required=False)
+        uuid = types.UUIDType(default=_uuid.uuid4)
+        resource  = types.StringType(required=True)
+
     try:
         message = accounts.AccountResource(struct)
         message.validate()
@@ -234,3 +246,73 @@ def new_resource(db, struct):
         return
 
     raise gen.Return(message)
+
+@gen.coroutine
+def resource_exists(db, struct):
+    '''
+        resource_exists
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def last_modified(db, struct):
+    '''
+        last_modified
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def moved_permanently(db, struct):
+    '''
+        moved_permanently
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def moved_temporarily(db, struct):
+    '''
+        moved_temporarily
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def previously_existed(db, struct):
+    '''
+        previosly_existed
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def resource_exists(db, struct):
+    '''
+        resource_exists
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def forbidden_resource(db, struct):
+    '''
+        forbidden_resource
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def delete_resource(db, struct):
+    '''
+        delete_resource
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def delete_completed(db, struct):
+    '''
+        delete_resource
+    '''

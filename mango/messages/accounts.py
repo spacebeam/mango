@@ -26,16 +26,22 @@ class Password(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     assigned = types.BooleanType(default=False)
-    password = types.StringType(required=True)
+    password = types.StringType()
+    raw = types.StringType()
+    md5 = types.StringType()
+    sha1 = types.StringType()
+    sha256 = types.StringType()
+    sha384 = types.StringType()
+    sha512 = types.StringType()
     created_at = types.DateTimeType()
     last_modify = types.DateTimeType()
 
 
-class Mon(models.Model):
-    '''
-        Monkey business
-    '''
-    key = types.StringType(required=True)
+#class Mon(models.Model):
+#    '''
+#        Monkey business
+#    '''
+#    key = types.StringType(required=True)
 
 
 class AccountResource(models.Model):
@@ -72,7 +78,7 @@ class BaseAccount(models.Model):
 
     # api samples, remove after finish work on passwords or otherwise secret keys.
     api_key = types.StringType(required=False)
-    api_keys = compound.ListType(compound.ModelType(Mon))
+    # api_keys = compound.ListType(compound.ModelType(Mon))
 
     active = types.BooleanType(default=True)
     account = types.StringType(required=True)

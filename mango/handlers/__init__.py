@@ -11,12 +11,12 @@
 __author__ = 'Jean Chassoul'
 
 
-import logging
-
 import motor
 
 import psycopg2
 import momoko
+
+import logging
 
 from tornado import gen
 from tornado import web
@@ -79,6 +79,7 @@ class BaseHandler(web.RequestHandler):
 
         # The Senate and People of Mars
         # -----------------------------
+        # communication message clannels.
 
         # 0MQ message channels
         # --------------------
@@ -98,8 +99,9 @@ class BaseHandler(web.RequestHandler):
         '''
             Mango default headers
         '''
-        #self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+        # if debug set allow all if not set settings domain
         self.set_header("Access-Control-Allow-Origin", '*')
+        # self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
     def get_current_user(self):
         '''
