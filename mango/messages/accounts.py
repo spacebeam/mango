@@ -20,6 +20,17 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
+class Password(models.Model):
+    '''
+        Password
+    '''
+    uuid = types.UUIDType(default=uuid.uuid4)
+    assigned = types.BooleanType(default=False)
+    password = types.StringType(required=True)
+    created_at = types.DateTimeType()
+    last_modify = types.DateTimeType()
+
+
 class Mon(models.Model):
     '''
         Monkey business
@@ -57,21 +68,24 @@ class BaseAccount(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
 
+    passwords = compound.ListType(compound.ModelType(Password))
+
+    # api samples, remove after finish work on passwords or otherwise secret keys.
     api_key = types.StringType(required=False)
     api_keys = compound.ListType(compound.ModelType(Mon))
 
     active = types.BooleanType(default=True)
     account = types.StringType(required=True)
     name = types.StringType(required=False)
-    timezone = types.StringType()
     email = types.EmailType(required=True)
-    url = types.URLType()
+    timezone = types.StringType()
 
     resources = compound.ModelType(Resource)
     
     routes = compound.ListType(compound.ModelType(Route))
 
     uri = types.StringType(required=False)
+    url = types.URLType()
 
 
 class User(BaseAccount):

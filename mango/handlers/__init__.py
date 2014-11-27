@@ -26,7 +26,7 @@ from mango.system import basic_authentication
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
-from mango.tools.quotes import HackerQuotes
+from mango.tools.quotes import PeopleQuotes
 
 
 class BaseHandler(web.RequestHandler):
@@ -68,6 +68,8 @@ class BaseHandler(web.RequestHandler):
         '''
             Initialize the Base Handler
         '''
+        # Service Process Quality Management
+
         super(BaseHandler, self).initialize(**kwargs)
 
         self.etag = None
@@ -75,8 +77,13 @@ class BaseHandler(web.RequestHandler):
         # System database
         self.db = self.settings['db']
 
+        # The Senate and People of Mars
+        # -----------------------------
+
         # 0MQ message channels
         # --------------------
+
+        # SPQM 
 
         # CDR stream
         # self.cdr_stream = self.settings['cdr_stream']
@@ -147,7 +154,7 @@ class BaseHandler(web.RequestHandler):
             }
 
         else:
-            quotes = HackerQuotes()
+            quotes = PeopleQuotes()
             
             message = {
                 'status': 200,
@@ -181,7 +188,7 @@ class BaseHandler(web.RequestHandler):
                     '%s',
                     'dynamic',
                     '%s',
-                    'g729,gsm,alaw,ulaw',
+                    'ulaw,alaw,g729,gsm',
                     'fun-accounts',
                     'no',
                     'no'
@@ -263,7 +270,7 @@ class MangoHandler(BaseHandler):
         '''
             Get some quotes
         '''
-        quotes = HackerQuotes()
+        quotes = PeopleQuotes()
 
         self.finish(
             {'quote': quotes.get()}

@@ -71,7 +71,7 @@ _john_carmack_quotes = {
 }
 
 
-class HackerQuotes(object):
+class PeopleQuotes(object):
     
     def __init__(self):
         self.quotes = _john_quotes
