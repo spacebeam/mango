@@ -139,8 +139,6 @@ def clean_results(results):
         clean results
     '''
     results = results.to_primitive()
-
-    # results.get('results')
     results = results.get('results')
 
     results = [
