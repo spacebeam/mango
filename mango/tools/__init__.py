@@ -141,7 +141,7 @@ def clean_results(results):
     results = results.to_primitive()
 
     # results.get('results')
-    results = results['results']
+    results = results.get('results')
 
     results = [
         {
@@ -156,8 +156,8 @@ def clean_results(results):
 def content_type_validation(handler_class):
     '''
         Content type validation
-
-        @content_type_validation decorator
+    
+        @decorator
     '''
 
     def wrap_execute(handler_execute):
@@ -182,7 +182,7 @@ def content_type_validation(handler_class):
                 })
                 return False
             return True
-        
+
         def _execute(self, transforms, *args, **kwargs):
             '''
                 Execute the wrapped function
@@ -190,9 +190,9 @@ def content_type_validation(handler_class):
             if not ctype_checker(self, kwargs):
                 return False
             return handler_execute(self, transforms, *args, **kwargs)
-        
+
         return _execute
-    
+
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
 
@@ -222,17 +222,17 @@ def new_resource(db, struct):
 
         return
 
-    resource = ''.join(('resources.', message['resource']))
+    resource = ''.join(('resources.', message.get('resource')))
 
     try:
         message = yield db.accounts.update(
             {
-                'uuid': message['uuid'],
-                'account': message['account']
+                'uuid': message.get('uuid'),
+                'account': message.get('account')
             },
             {
                 '$addToSet': {
-                    ''.join((resource, '.contains')): message['uuid']
+                    ''.join((resource, '.contains')): message.get('uuid')
                 },
                     
                 '$inc': {

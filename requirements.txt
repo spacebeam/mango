@@ -12,3 +12,4 @@ pandas
 arrow
 apache-libcloud
 pycurl
+nose
