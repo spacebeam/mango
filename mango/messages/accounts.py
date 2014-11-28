@@ -34,7 +34,7 @@ class Password(models.Model):
     sha384 = types.StringType()
     sha512 = types.StringType()
     created_at = types.DateTimeType()
-    last_modify = types.DateTimeType()
+    last_modified = types.DateTimeType()
 
 
 #class Mon(models.Model):

@@ -93,7 +93,7 @@ class Record(models.Model):
     
     created = types.DateTimeType(required=True)
     created_at = types.DateTimeType()
-    last_modify = types.DateTimeType()
+    last_modified = types.DateTimeType()
     updated_by = types.DateTimeType()
     updated_at = types.DateTimeType()
 
