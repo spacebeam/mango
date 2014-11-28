@@ -48,8 +48,8 @@ class AccountResource(models.Model):
     '''
         Account resource
     '''
-    account = types.StringType(required=False)
     uuid = types.UUIDType(default=uuid.uuid4)
+    account = types.StringType(required=False)
     resource  = types.StringType(required=True)
 
 
@@ -58,10 +58,12 @@ class Route(models.Model):
         Route
     '''
     # default '*' means all destinations
-    destination = types.StringType(default='*') 
-    dst = types.StringType(default='*')
     
+    dst = types.StringType(default='*')
+    destination = types.StringType(default='*') 
+
     channel = types.StringType(required=True)
+
     dstchannel = types.StringType(required=True)
     destination_channel = types.StringType(required=True)
 
