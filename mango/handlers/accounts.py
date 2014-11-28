@@ -46,6 +46,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Get user accounts
         '''
         account_type = 'user'
+        print account_type
         if not account:
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
@@ -144,6 +145,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             Get organization accounts
         '''
         account_type = 'org'
+        print account_type
         if not account:
             orgs = yield self.get_account_list(account_type, page_num) 
             self.finish({'orgs':orgs})
@@ -273,6 +275,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
             Get records handler
         '''
+        print 'ss records ss'
         # check_type account with organizations
         #account_type = yield self.check_type(account, 'user')
         
@@ -389,6 +392,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
     @web.authenticated
     @gen.coroutine
     def get(self, account):
+        print 'get routes'
 
         # get account the record billing routes from the database
         
