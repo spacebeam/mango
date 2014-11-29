@@ -46,7 +46,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Get user accounts
         '''
         account_type = 'user'
-        print account_type
+        
         if not account:
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})

@@ -142,43 +142,53 @@ class MangoAccounts(Accounts):
     '''
 
     @gen.coroutine
-    def get_accounts(self, account_type, page_num):
+    def get_account_list(self, account_type, page_num):
         '''
             Get the mango accounts
         '''
         # Query each and remove to_list better iteration stuff.
-
+        account_list = []
         page_size = self.settings['page_size']
-        result = []
 
-        query = self.db.accounts.find({'account_type':account_type})
+        query = self.db.accounts.find({'account_type':account_type}, {'_id':0})
         query = query.sort([('_id', -1)]).skip(int(page_num) * page_size).limit(page_size)
+    
+        try:
+        
+            while (yield query.fetch_next):
+                account = query.next_object()
+                account_list.append(account)
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
 
-        for account in (yield query.to_list()):
-            if 'user' in account_type:
-                result.append(accounts.User(**account).validate())
-            
-            if 'org' in account_type:
-                result.append(accounts.Org(**account).validate())
-
-        gen.Return(result)
+        finally:
+            raise gen.Return(account_list)
 
     @gen.coroutine
     def get_account(self, account, account_type):
         '''
             Get mango account
         '''
+        message = None
         result = yield self.db.accounts.find_one(
                                 {'account':account,
-                                 'account_type':account_type})
+                                 'account_type':account_type},
+                                 {'_id':0})
         if result:
             if 'user' in account_type:
-                message = accounts.User(**result).validate()
-
-            if 'org' in account_type:
-                message = accounts.Org(**result).validate()
-            
-        raise gen.Return(message)
+                message = accounts.User(result)
+            elif 'org' in account_type:
+                message = accounts.Org(result)
+                
+        try:
+            message.validate()
+            message = clean_structure(message)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+        finally:
+            raise gen.Return(message)
 
     @gen.coroutine
     def new_account(self, struct):
