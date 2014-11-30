@@ -46,15 +46,15 @@ class Records(object):
         else:
             record = yield self.db.records.find_one({'uuid':record_uuid,
                                                      'accountcode':account})
-        
         try:
-            record = records.Record(record)
-            record.validate()
+            if record:
+                record = records.Record(record)
+                record.validate()
         except Exception, e:
             logging.exception(e)
             raise e
-
-        raise gen.Return(record)
+        finally:
+            raise gen.Return(record)
 
     @gen.coroutine
     def get_record_list(self, account, start, end, lapse, page_num):
@@ -63,7 +63,7 @@ class Records(object):
         '''
         page_num = int(page_num)
         page_size = self.settings['page_size']
-        result = []
+        record_list = []
         
         if not account:
             query = self.db.records.find({'public':True})
@@ -77,19 +77,25 @@ class Records(object):
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
-            print 'wut?'
-            for record in (yield query.to_list()):
-                result.append(records.Record(record))
+            
+            while (yield query.fetch_next):
+                result = query.next_object()
+                record_list.append(records.Record(result))
 
-            struct = {'results': result}
-            results = reports.BaseResult(struct)
-            results.validate()
         except Exception, e:
             logging.exception(e)
             raise e
 
-        results = clean_results(results)
-        raise gen.Return(results)
+        try:
+            struct = {'results': record_list}
+            message = reports.BaseResult(struct)
+            message.validate()
+            message = clean_results(message)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+        finally:
+            raise gen.Return(message)
     
     @gen.coroutine
     def get_unassigned_records(self, start, end, lapse, page_num):

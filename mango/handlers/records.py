@@ -67,11 +67,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         if self.current_user:
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
-
+            
             account_list = (orgs['orgs'] if orgs else False)
-
-            print('WARNING:', user, orgs, ' on GET records.')
-
             if not account_list:
                 result = yield self.get_record_list(
                                         account=user, 
