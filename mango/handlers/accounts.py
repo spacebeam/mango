@@ -53,6 +53,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         else:
             account = account.rstrip('/')
             result = yield self.get_account(account, account_type)
+
+            logging.info(result)
             
             if not result:
                 self.set_status(400)
@@ -347,10 +349,12 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         update = yield self.new_resource(struct)
 
         if not update:
-            print('WARNING: error on new_resource record update.')
+            logging.warning(
+                'account: %s new_resource record: %s update.' % (account, record)
+            )
 
-        # logging update resource info
-        print(update)
+        # logging resource info update
+        logging.info(update)
 
         # id -> uuid
         # id same as uuid.

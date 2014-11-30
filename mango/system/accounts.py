@@ -182,8 +182,9 @@ class MangoAccounts(Accounts):
                 message = accounts.Org(result)
                 
         try:
-            message.validate()
-            message = clean_structure(message)
+            if message:
+                message.validate()
+                message = clean_structure(message)
         except Exception, e:
             logging.exception(e)
             raise e

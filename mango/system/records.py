@@ -271,7 +271,7 @@ class Records(object):
 
             This method set the assigned flag of a record record
         '''
-        # bad stuff
+
         # print('account %s set assigned flag on %s' % account, record_id)
 
         result = yield self.db.records.update(
