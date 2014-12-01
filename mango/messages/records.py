@@ -11,6 +11,7 @@
 __author__ = 'Jean Chassoul'
 
 
+import arrow
 import uuid
 
 from schematics import models
@@ -43,6 +44,7 @@ class Record(models.Model):
     clid = types.StringType()
     callerid = types.StringType()
 
+    account = types.StringType()
     accountcode = types.StringType()
     userfield = types.StringType()
 
@@ -62,11 +64,13 @@ class Record(models.Model):
     context = types.StringType()
     dcontext = types.StringType()
     destination_context = types.StringType()
+
+    destination_number = types.StringType()
     
     dstchannel = types.StringType()
     destination_channel = types.StringType()
     
-    start = types.DateTimeType(required=True)
+    start = types.DateTimeType()
     answer = types.DateTimeType()
     end = types.DateTimeType()
 
@@ -91,8 +95,8 @@ class Record(models.Model):
     #details = compound.ModelType(Log)
     #comments = compound.ModelType(Comment)
     
-    created = types.DateTimeType(required=True)
-    created_at = types.DateTimeType()
+    created = types.DateTimeType(default=arrow.utcnow().naive)
+    #created_at = types.DateTimeType()
     last_modified = types.DateTimeType()
     updated_by = types.DateTimeType()
     updated_at = types.DateTimeType()
