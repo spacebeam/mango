@@ -15,6 +15,8 @@ import time
 import arrow
 import motor
 
+import logging
+
 # import numpy as np
 import pandas as pd
 
@@ -108,6 +110,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
+
+        logging.warning(struct)
 
         record = yield self.new_detail_record(struct)
  
