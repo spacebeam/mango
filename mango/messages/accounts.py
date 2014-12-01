@@ -44,15 +44,6 @@ class Password(models.Model):
 #    key = types.StringType(required=True)
 
 
-class AccountResource(models.Model):
-    '''
-        Account resource
-    '''
-    uuid = types.UUIDType(default=uuid.uuid4)
-    account = types.StringType(required=False)
-    resource  = types.StringType(required=True)
-
-
 class Route(models.Model):
     '''
         Route

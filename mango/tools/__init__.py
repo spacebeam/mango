@@ -211,7 +211,7 @@ def new_resource(db, struct):
         resource  = types.StringType(required=True)
 
     try:
-        message = accounts.AccountResource(struct)
+        message = AccountResource(struct)
         message.validate()
         message = message.to_primitive()
     except Exception, e:

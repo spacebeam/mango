@@ -61,36 +61,6 @@ class Accounts(object):
         raise gen.Return(a_type)
 
     @gen.coroutine
-    def new_resource(self, struct):
-        '''
-            Create a new account resource
-        '''
-        try:
-            res = accounts.AccountResource(struct)
-            res.validate()
-            res = res.to_primitive()
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        resource = ''.join(('resources.', res['resource']))
-
-        # add the account key with the current user
-
-        if res.has_key('account') is False:
-            res['account'] = self.get_current_user()
-        
-        result = yield self.db.accounts.update(
-                        {'account':res['account']},
-                        {
-                         '$addToSet':{''.join((resource, '.contains')):res['uuid']},
-                         '$inc': {'resources.total':1,
-                         ''.join((resource, '.total')):1}
-                        })
-
-        raise gen.Return(result)
-
-    @gen.coroutine
     def new_route(self, struct):
         '''
             New account billing route
