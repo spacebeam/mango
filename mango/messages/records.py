@@ -18,8 +18,6 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 
-from schematics.contrib import mongo
-
 
 class FromQueue(models.Model):
     '''
@@ -37,7 +35,6 @@ class Record(models.Model):
     '''
         Record Object Data Structure
     '''
-    _id = mongo.ObjectIdType(required=False)
     uuid = types.UUIDType(default=uuid.uuid4)
     uniqueid = types.StringType()
 

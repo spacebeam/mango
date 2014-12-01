@@ -252,6 +252,7 @@ class Records(object):
             Create a new record entry
         '''
         try:
+            logging.info(struct)
             record = records.Record(struct)
             record.validate()
         except Exception, e:
