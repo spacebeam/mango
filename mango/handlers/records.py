@@ -15,7 +15,7 @@ import time
 import arrow
 import motor
 
-import logging
+#import logging
 
 # import numpy as np
 import pandas as pd
@@ -111,8 +111,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.finish({'JSON':format_pass})
             return
 
-        logging.warning(struct)
-
         record = yield self.new_detail_record(struct)
  
         if not record:
@@ -133,6 +131,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             exist = yield self.check_exist(account)
 
+            logging.info('check if exist account %s ' % exist)
+
             if exist:
                 update = yield self.new_resource(resource)
 
@@ -142,7 +142,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
 
         self.set_status(201)
-        self.finish({'id':record})
+        self.finish({'uuid':record})
 
     @web.authenticated
     @gen.coroutine
