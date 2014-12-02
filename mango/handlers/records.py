@@ -32,6 +32,7 @@ from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import check_times
 from mango.tools import errors
+from mango.tools import new_resource
 
 from mango.handlers import BaseHandler
 
@@ -104,6 +105,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             Post records handler
         '''
         struct = yield check_json(self.request.body)
+        db = self.settings['db']
         
         format_pass = (True if struct else False)
         if not format_pass:
@@ -136,10 +138,10 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             exist = yield self.check_exist(account)
 
-            logging.info('check if exist account %s ' % exist)
+            logging.info('check if exist %s ' % exist)
 
             if exist:
-                update = yield self.new_resource(resource)
+                update = yield new_resource(db, resource)
 
                 flag = yield self.set_assigned_flag(account, record)
 
