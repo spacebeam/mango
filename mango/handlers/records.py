@@ -15,7 +15,7 @@ import time
 import arrow
 import motor
 
-#import logging
+import logging
 
 # import numpy as np
 import pandas as pd
