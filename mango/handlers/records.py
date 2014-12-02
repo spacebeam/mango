@@ -142,7 +142,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
 
         self.set_status(201)
-        self.finish({'id':result})
+        self.finish({'id':record})
 
     @web.authenticated
     @gen.coroutine
