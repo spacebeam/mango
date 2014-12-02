@@ -124,9 +124,9 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.finish(message)
             return
         
-        if 'account' in struct:
+        if 'accountcode' in struct:
 
-            account = struct.get('account')
+            account = struct.get('accountcode')
 
             resource = {
                 'account': account,
