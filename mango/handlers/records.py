@@ -143,6 +143,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             if exist:
                 update = yield new_resource(db, resource)
 
+                logging.info('update %s' % update)
+
                 flag = yield self.set_assigned_flag(account, record)
 
                 logging.info('after set_assigned_flag account: %s, record: %s' % (account, record))
