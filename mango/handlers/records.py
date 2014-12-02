@@ -143,7 +143,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
                 flag = yield self.set_assigned_flag(account, record)
 
-                print('after flag')
+                logging.info('after set_assigned_flag account: %s, record: %s' % (account, record))
 
         logging.info(record)
 
@@ -367,6 +367,8 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
 
             # lol remove from _id from query
 
+            # lol noob, lolol print lolol, _id lolol
+
             print("WARNING: remove record['_id']: %s from query." % (record['_id'],))
             
             dates = [record['_id'] for record in summary]
@@ -380,7 +382,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
             if lapse:
                 lapse = lapse.rstrip('/')
 
-                print('lapse on handler:', lapse)
+                logging.info('time lapse on summaries: %s' % lapse)
             
                 if 'hours' in lapse:
                     # pandas data-frames
