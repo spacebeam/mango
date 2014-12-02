@@ -124,10 +124,15 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.finish(message)
             return
         
-        if 'accountcode' in struct:
-            account = struct['accountcode']
+        if 'account' in struct:
 
-            resource = {'account': account, 'resource':'records', 'uuid':record}
+            account = struct.get('account')
+
+            resource = {
+                'account': account,
+                'resource':'records',
+                'uuid':record
+            }
 
             exist = yield self.check_exist(account)
 
@@ -140,6 +145,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
                 print('after flag')
 
+        logging.info(record)
 
         self.set_status(201)
         self.finish({'uuid':record})
