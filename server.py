@@ -39,7 +39,6 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
-# new resource function
 from mango.tools import new_resource
 
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler

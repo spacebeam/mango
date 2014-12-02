@@ -201,14 +201,15 @@ def new_resource(db, struct):
     '''
     import uuid as _uuid
     from schematics import models as _models
+    from schematics import types as _types
 
     class AccountResource(_models.Model):
         '''
             Account resource
         '''
-        account = types.StringType(required=False)
-        uuid = types.UUIDType(default=_uuid.uuid4)
-        resource  = types.StringType(required=True)
+        account = _types.StringType(required=False)
+        uuid = _types.UUIDType(default=_uuid.uuid4)
+        resource  = _types.StringType(required=True)
 
     try:
         message = AccountResource(struct)
