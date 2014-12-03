@@ -224,8 +224,8 @@ def new_resource(db, struct):
     resource = ''.join(('resources.', message.get('resource')))
 
     logging.info(resource)
-    logging.info(''.join((resource, '.contains')): message.get('uuid'))
-    logging.info(''.join((resource, '.total')))
+    logging.info({''.join((resource, '.contains')): message.get('uuid')})
+    logging.info({''.join((resource, '.total'))})
 
     try:
         message = yield db.accounts.update(
