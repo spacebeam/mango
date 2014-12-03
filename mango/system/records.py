@@ -273,7 +273,7 @@ class Records(object):
         '''
             Set the record assigned flag
         '''
-        logging.info('set_assigned_flag account: %s, record: %s' % (account, record))
+        logging.info('set_assigned_flag account: %s, record: %s' % (account, record_uuid))
 
         result = yield self.db.records.update(
                                 {'uuid':record_uuid, 
