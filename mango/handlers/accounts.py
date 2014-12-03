@@ -27,6 +27,7 @@ from mango.system import records
 
 from mango.tools import content_type_validation
 from mango.tools import check_json
+from mango.tools import new_resource
 
 from mango.tools import errors
 
@@ -147,7 +148,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             Get organization accounts
         '''
         account_type = 'org'
-        print account_type
+
         if not account:
             orgs = yield self.get_account_list(account_type, page_num) 
             self.finish({'orgs':orgs})
@@ -189,19 +190,22 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 
         team = {
             'name': 'owners',
-            'permission': 'super',
+            'permission': 'super',      # super or admin?
             'members': [current_user]
         }
 
-        print(org, team)
+        logging.info("ORG's: %s team: %s" % (org, team))
 
         check_member = yield self.new_member(org, current_user)
         check_team = yield self.new_team(org, team)
 
+        logging.info(
+            "ORG's: %s team: %s member: %s" % (org_id, check_team, check_member)
+        )
 
-        print('org_id', org_id)
-        print('member', check_member)
-        print('team', check_team)
+        #print('org_id', org_id)
+        #print('member', check_member)
+        #print('team', check_team)
 
         if not org_id:
             print('some errors')
@@ -342,25 +346,24 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         # -- handle this out-of-band.
 
-        struct = {'account':account,
-                  'resource': 'records',
-                  'id': record}
+        struct = {
+            'account':account,
+            'resource': 'records',
+            'uuid': record
+        }
 
-        update = yield self.new_resource(struct)
+        update = yield new_resource(struct)
+
+        # logging new resource update
+        logging.info('update %s' % update)
 
         if not update:
             logging.warning(
                 'account: %s new_resource record: %s update.' % (account, record)
             )
 
-        # logging resource info update
-        logging.info(update)
-
-        # id -> uuid
-        # id same as uuid.
-
         self.set_status(201)
-        self.finish({'id':record})
+        self.finish({'uuid':record})
     
     @web.authenticated
     @gen.coroutine
