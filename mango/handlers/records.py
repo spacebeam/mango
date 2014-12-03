@@ -147,7 +147,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
                 flag = yield self.set_assigned_flag(account, record)
 
-        logging.info(record)
+        logging.info('new spawned record %s ' % record)
 
         self.set_status(201)
         self.finish({'uuid':record})
