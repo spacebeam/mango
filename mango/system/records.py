@@ -44,8 +44,12 @@ class Records(object):
         if not account:
             record = yield self.db.records.find_one({'uuid':record_uuid})
         else:
+
+            # change accountcode to account, because the accountcode is a uuid
+            # and we're expecting an account name.
+
             record = yield self.db.records.find_one({'uuid':record_uuid,
-                                                     'accountcode':account})
+                                                     'account':account})
         try:
             if record:
                 record = records.Record(record)
@@ -267,12 +271,9 @@ class Records(object):
     @gen.coroutine
     def set_assigned_flag(self, account, record_uuid):
         '''
-            Set the assigned record flag
-
-            This method set the assigned flag of a record record
+            Set the record assigned flag
         '''
-
-        # print('account %s set assigned flag on %s' % account, record_id)
+        logging.info('set_assigned_flag account: %s, record: %s' % (account, record))
 
         result = yield self.db.records.update(
                                 {'uuid':record_uuid, 

@@ -147,8 +147,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
                 flag = yield self.set_assigned_flag(account, record)
 
-                logging.info('after set_assigned_flag account: %s, record: %s' % (account, record))
-
         logging.info(record)
 
         self.set_status(201)
