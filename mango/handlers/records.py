@@ -366,7 +366,6 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                              end=times['end'])
         if summary:
 
-
             # lol remove from _id from query
 
             # lol noob, lolol print lolol, _id lolol

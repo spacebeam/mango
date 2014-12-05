@@ -57,7 +57,7 @@ class IndexHandler(web.RequestHandler):
     '''
 
     def get(self):
-        self.render('index.html', test="Hello, world!")
+        self.render('index.html', test='Fantastical unbelievable communication')
 
 
 @gen.coroutine
@@ -80,13 +80,13 @@ def periodic_records_callback():
             flag = yield periodic.assign_record(
                 db,
                 record['account'],
-                record['id'] # uuid?
+                record['uuid'] # id?
             )
 
             # check new resource
             resource = yield new_resource(db, record)
-
-    #logging.info('periodic records: %s', result)
+    if result:
+        logging.info('periodic records %s', result)
 
 
 if __name__ == '__main__':

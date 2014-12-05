@@ -203,10 +203,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             "ORG's: %s team: %s member: %s" % (org_id, check_team, check_member)
         )
 
-        #print('org_id', org_id)
-        #print('member', check_member)
-        #print('team', check_team)
-
         if not org_id:
             print('some errors')
             self.set_status(400)
@@ -314,7 +310,8 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
             Post records handler
         '''
         struct = yield check_json(self.request.body)
-        
+        db = self.settings['db']
+
         format_pass = (True if struct else False)
         if not format_pass:
             self.set_status(400)
@@ -346,13 +343,13 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         # -- handle this out-of-band.
 
-        struct = {
-            'account':account,
+        resource = {
+            'account': account,
             'resource': 'records',
             'uuid': record
         }
 
-        update = yield new_resource(struct)
+        update = yield new_resource(db, resource)
 
         # logging new resource update
         logging.info('update %s' % update)
