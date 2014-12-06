@@ -139,7 +139,7 @@ class Records(object):
         times = yield check_times(start, end)
 
         if lapse:
-            print('given lapse:', lapse)
+            logging.info('get summaries lapse %s' % (lapse))
 
     @gen.coroutine
     def get_summary(self, account, start, end, lapse):
@@ -150,7 +150,7 @@ class Records(object):
         times = yield check_times(start, end)
 
         if lapse:
-            print('given lapse:', lapse)
+            logging.info('get summary lapse %s' % (lapse))
 
         # MongoDB aggregation match operator
         if type(account) is list:

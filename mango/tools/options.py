@@ -11,6 +11,8 @@
 __author__ = 'Jean Chassoul'
 
 
+import logging
+
 import os
 import base64
 import uuid
@@ -23,18 +25,25 @@ from tornado.options import parse_config_file
 secret = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
 config_path = 'mango.conf'
 
-
 def options():
     '''
         Mango configuration options
     '''
     # Startup options
-    tornado.options.define('ensure_indexes', default=True, type=bool,
-                           help=('Ensure collection indexes before starting'))
+    tornado.options.define(
+        'ensure_indexes',
+        default=True,
+        type=bool,
+        help=('Ensure collection indexes before starting')
+    )
 
     # Set config and stuff
-    tornado.options.define('config', type=str, help='path to config file',
-       callback=lambda path: parse_config_file(path, final=False))
+    tornado.options.define(
+        'config',
+        type=str,
+        help='path to config file',
+        callback=lambda path: parse_config_file(path, final=False)
+    )
 
     # debugging
     tornado.options.define('debug', default=False, type=bool, help=(
@@ -94,11 +103,11 @@ def options():
     # Parse config file, then command line, so command line switches take
     # precedence
     if os.path.exists(config_path):
-        print('Loading', config_path)
+        logging.info('Loading %s' % (config_path))
         tornado.options.parse_config_file(config_path)
     else:
-        print('No config file at', config_path)
-
+        logging.info('No config file at %s' % (config_path))
+        
     tornado.options.parse_command_line()
     result = tornado.options.options
 

@@ -116,11 +116,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         account = account.rstrip('/')
         result = yield self.remove_account(account)
 
-        # why we're using result['n']?
+        logging.info(result)
 
-        import pprint
-        pprint(result)
-        print('''delete check result['n'] on UsersHandler''')
+        # why result['n'] ?
 
         if not result['n']:
             self.set_status(400)
@@ -204,7 +202,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         )
 
         if not org_id:
-            print('some errors')
+            logging.warning('some errors %s' % (str(struct)))
             self.set_status(400)
             self.finish({'errors':struct})
             return
@@ -236,7 +234,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         result = yield self.remove_account(org)
 
         # again with the result['n'] stuff... what is this shit?
-        print('check for n stuff', result)
+        logging.info('check for n stuff %s' % (result))
         
         if not result['n']:
             self.set_status(400)
@@ -277,14 +275,14 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
             Get records handler
         '''
-        print 'ss records ss'
+        logging.info(
+            'accounts records handler account %s member of %s orgs.' % (account, orgs)
+        )
         # check_type account with organizations
         #account_type = yield self.check_type(account, 'user')
         
         orgs = yield self.get_orgs_list(account)
-        
-        print(orgs, 'organizations')
-        
+                
         #if not account_type:
         #    system_error = errors.Error('invalid')
         #    self.set_status(400)
@@ -292,14 +290,13 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         #    self.finish(error)
         #    return
 
-        print(account, page_num)
-
         result = yield self.get_record_list( 
-                            account=account, 
-                            page_num=page_num,
-                            lapse=None,
-                            start=None,
-                            end=None)
+            account=account, 
+            page_num=page_num,
+            lapse=None,
+            start=None,
+            end=None
+        )
 
         self.finish(result)
         
@@ -396,10 +393,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
     @web.authenticated
     @gen.coroutine
     def get(self, account):
-        print 'get routes'
-
         # get account the record billing routes from the database
-        
         routes = yield self.get_route_list(account)
         self.finish(routes)
         
@@ -421,9 +415,9 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
             return
         
         struct['account'] = account
-        
-        print(struct)
-        
+
+        logging.info('routes handler struct? %s' % (struct))
+                
         result = yield self.new_route(struct)
 
         self.finish()

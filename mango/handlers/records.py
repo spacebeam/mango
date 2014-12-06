@@ -341,7 +341,8 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
             Get summaries handler
         '''
-        result = 0
+        message = {}
+        result = None
         minutes = 0
         record_avg = 0
 
@@ -355,10 +356,12 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
 
         if account_list:
             account_list.append(account)
-            summary = yield self.get_summary(account=account_list,
-                                             lapse=lapse,
-                                             start=times['start'],
-                                             end=times['end'])
+            summary = yield self.get_summary(
+                account=account_list,
+                lapse=lapse,
+                start=times.get('start'),
+                end=times.get('end')
+            )
         else:
             summary = yield self.get_summary(account=account,
                                              lapse=lapse,
@@ -366,11 +369,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                              end=times['end'])
         if summary:
 
-            # lol remove from _id from query
-
-            # lol noob, lolol print lolol, _id lolol
-
-            print("WARNING: remove record['_id']: %s from query." % (record['_id'],))
+            logging.warning("remove record.get('_id') %s from query" % (record.get('_id')))
             
             dates = [record['_id'] for record in summary]
             
