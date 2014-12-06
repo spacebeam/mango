@@ -11,8 +11,6 @@
 __author__ = 'Jean Chassoul'
 
 
-import logging
-
 import os
 import base64
 import uuid
@@ -103,11 +101,12 @@ def options():
     # Parse config file, then command line, so command line switches take
     # precedence
     if os.path.exists(config_path):
-        logging.info('Loading %s' % (config_path))
+        print('Loading %s' % (config_path))
+
         tornado.options.parse_config_file(config_path)
     else:
-        logging.info('No config file at %s' % (config_path))
-        
+        print('No config file at %s' % (config_path))
+               
     tornado.options.parse_command_line()
     result = tornado.options.options
 
