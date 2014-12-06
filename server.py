@@ -226,8 +226,6 @@ if __name__ == '__main__':
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
-            # -- Reports
-
             # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
             (r'/billings/?', billings.RecordsHandler),

@@ -80,7 +80,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         struct['account_type'] = 'user'
 
-        #logging.info(struct)
+        logging.info('new account structure %s' % str(struct))
 
         result = yield self.new_account(struct)
 
@@ -105,7 +105,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
 
         self.set_status(201)
-        self.finish({'id':result})
+        self.finish({'uuid':result})
 
     @web.authenticated
     @gen.coroutine
@@ -116,9 +116,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         account = account.rstrip('/')
         result = yield self.remove_account(account)
 
-        logging.info(result)
-
-        # why result['n'] ?
+        logging.info("why result['n'] ? %s" % str(result))
 
         if not result['n']:
             self.set_status(400)
@@ -168,6 +166,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
             Create organization accounts
         '''
+        # missing account and/or account_uuid
         current_user = self.get_current_user()
         
         if not current_user:
@@ -213,10 +212,8 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
     @web.authenticated
     @gen.coroutine
     def delete(self, account):
-        '''
-            Mango organization accounts delete handler
-        
-            Delete a organization account
+        '''       
+            Delete organization account
         '''
         org = account.rstrip('/')
         
