@@ -12,14 +12,16 @@
 
 __author__ = 'Jean Chassoul'
 
+import zmq
+import time
+import sys
+import random
+from  multiprocessing import Process
 
 import os
 import logging
-
 import motor
-
 import itertools
-
 import psycopg2
 import momoko
 
@@ -43,6 +45,10 @@ from mango.tools import new_resource
 
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
+from zmq.eventloop import ioloop, zmqstream
+
+# ioloop
+ioloop.install()
 
 # iofun testing box
 iofun = []
