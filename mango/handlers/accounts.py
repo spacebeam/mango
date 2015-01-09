@@ -168,6 +168,8 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         # missing account and/or account_uuid
         current_user = self.get_current_user()
+
+        # kill capnkooc!
         
         if not current_user:
             current_user = 'capnkooc'

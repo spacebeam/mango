@@ -8,6 +8,7 @@ momoko
 numpy
 scipy
 pyzmq
+Jinja2
 pandas
 arrow
 apache-libcloud
