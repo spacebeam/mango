@@ -29,6 +29,15 @@ from mango.tools import errors
 
 from mango.tools.quotes import PeopleQuotes
 
+def getcommand(msg):
+	print "Received control command: %s" % msg
+	if msg[0] == "Exit":
+		print "Received exit command, client will stop receiving messages"
+		should_continue = False
+		ioloop.IOLoop.instance().stop()
+        
+def process_message(msg):
+	print "Processing ... %s" % msg
 
 class BaseHandler(web.RequestHandler):
     '''
