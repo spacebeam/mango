@@ -57,6 +57,37 @@ iofun = []
 e_tag = False
 
 
+def server_push(port="5556"):
+    context = zmq.Context()
+    socket = context.socket(zmq.PUSH)
+    socket.bind("tcp://*:%s" % port)
+    print "Running server on port: ", port
+    # serves only 5 request and dies
+    for reqnum in range(10):
+        if reqnum < 6:
+            socket.send("Continue")
+        else:
+            socket.send("Exit")
+            break
+        time.sleep (1) 
+        
+        
+def server_pub(port="5558"):
+    context = zmq.Context()
+    socket = context.socket(zmq.PUB)
+    socket.bind("tcp://*:%s" % port)
+    publisher_id = random.randrange(0,9999)
+    print "Running server on port: ", port
+    # serves only 5 request and dies
+    for reqnum in range(10):
+        # Wait for next request from client
+        topic = random.randrange(8,10)
+        messagedata = "server#%s" % publisher_id
+        print "%s %s" % (topic, messagedata)
+        socket.send("%d %s" % (topic, messagedata))
+        time.sleep(1)
+
+
 class IndexHandler(web.RequestHandler):
     '''
         HTML5 Index
