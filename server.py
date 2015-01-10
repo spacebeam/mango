@@ -100,6 +100,7 @@ def client(port_push, port_sub):
 	stream_sub = zmqstream.ZMQStream(socket_sub)
 	stream_sub.on_recv(process_message)
 	print("Connected to publisher with port %s" % port_sub)
+
 	ioloop.IOLoop.instance().start()
 	print("Worker has stopped processing messages.")
 
