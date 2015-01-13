@@ -11,6 +11,5 @@ pyzmq
 Jinja2
 pandas
 arrow
-apache-libcloud
 pycurl
 nose
