@@ -86,6 +86,9 @@ class BaseAccount(models.Model):
     uri = types.StringType(required=False)
     url = types.URLType()
 
+    # move this to howler and spider?
+    max_channels = types.IntType()
+
 
 class User(BaseAccount):
     '''

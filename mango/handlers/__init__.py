@@ -16,11 +16,14 @@ import motor
 
 import psycopg2
 import momoko
+import queries
 
 import logging
 
 from tornado import gen
 from tornado import web
+
+from zmq.eventloop import ioloop
 
 from mango.system import basic_authentication
 
@@ -29,15 +32,17 @@ from mango.tools import errors
 
 from mango.tools.quotes import PeopleQuotes
 
-def getcommand(msg):
-	print "Received control command: %s" % msg
-	if msg[0] == "Exit":
-		print "Received exit command, client will stop receiving messages"
-		should_continue = False
-		ioloop.IOLoop.instance().stop()
+
+def get_command(msg):
+    print("Received control command: %s" % msg)
+    if msg[0] == "Exit":
+        print("Received exit command, client will stop receiving messages")
+        should_continue = False
+        ioloop.IOLoop.instance().stop()
         
 def process_message(msg):
-	print "Processing ... %s" % msg
+    print("Processing ... %s" % msg)
+
 
 class BaseHandler(web.RequestHandler):
     '''

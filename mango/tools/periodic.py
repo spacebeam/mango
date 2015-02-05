@@ -26,7 +26,7 @@ from bson import objectid
 @gen.coroutine
 def get_usernames(db):
     '''
-        Get all the account usernames
+        Get all the username accounts
     '''
     usernames = []
     try:

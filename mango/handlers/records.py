@@ -39,8 +39,8 @@ from mango.handlers import BaseHandler
 
 @content_type_validation
 class Handler(records.Records, accounts.Accounts, BaseHandler):
-    '''       
-        Records resource handler
+    '''
+        Records HTTP request handlers
     '''
 
     @gen.coroutine
@@ -48,6 +48,18 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
             Get records handler
         '''
+
+        # -- logging info
+
+        logging.info(self.request.arguments)
+
+        account = (self.request.arguments.get('account', [None])[0] if not account else account)
+
+        # query string checked from string to boolean
+        #checked = str2bool(str(self.request.arguments.get('checked', [False])[0]))
+
+
+
         if record_uuid:
             record_uuid = record_uuid.rstrip('/')
 

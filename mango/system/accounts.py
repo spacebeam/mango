@@ -116,7 +116,6 @@ class MangoAccounts(Accounts):
         '''
             Get the mango accounts
         '''
-        # Query each and remove to_list better iteration stuff.
         account_list = []
         page_size = self.settings['page_size']
 

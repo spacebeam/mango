@@ -35,6 +35,9 @@ from mango.handlers import accounts
 from mango.handlers import billings
 from mango.handlers import records
 
+from mango.handlers import get_command
+from mango.handlers import process_message
+
 from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
@@ -86,23 +89,23 @@ def server_pub(port="5558"):
         socket.send("%d %s" % (topic, messagedata))
         time.sleep(1)
 
-def client(port_push, port_sub):    
-	context = zmq.Context()
-	socket_pull = context.socket(zmq.PULL)
-	socket_pull.connect ("tcp://localhost:%s" % port_push)
-	stream_pull = zmqstream.ZMQStream(socket_pull)
-	stream_pull.on_recv(getcommand)
-	print("Connected to server with port %s" % port_push)
-	
-	socket_sub = context.socket(zmq.SUB)
-	socket_sub.connect ("tcp://localhost:%s" % port_sub)
-	socket_sub.setsockopt(zmq.SUBSCRIBE, "9")
-	stream_sub = zmqstream.ZMQStream(socket_sub)
-	stream_sub.on_recv(process_message)
-	print("Connected to publisher with port %s" % port_sub)
+def client(port_push, port_sub):
+    context = zmq.Context()
+    socket_pull = context.socket(zmq.PULL)
+    socket_pull.connect ("tcp://localhost:%s" % port_push)
+    stream_pull = zmqstream.ZMQStream(socket_pull)
+    stream_pull.on_recv(get_command)
+    print("Connected to server with port %s" % port_push)
 
-	ioloop.IOLoop.instance().start()
-	print("Worker has stopped processing messages.")
+    socket_sub = context.socket(zmq.SUB)
+    socket_sub.connect ("tcp://localhost:%s" % port_sub)
+    socket_sub.setsockopt(zmq.SUBSCRIBE, "9")
+    stream_sub = zmqstream.ZMQStream(socket_sub)
+    stream_sub.on_recv(process_message)
+    print("Connected to publisher with port %s" % port_sub)
+
+    ioloop.IOLoop.instance().start()
+    print("Worker has stopped processing messages.")
 
 
 class IndexHandler(web.RequestHandler):
