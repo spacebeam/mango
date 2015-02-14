@@ -53,12 +53,10 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         logging.info(self.request.arguments)
 
-        account = (self.request.arguments.get('account', [None])[0] if not account else account)
+        #account = (self.request.arguments.get('account', [None])[0] if not account else account)
 
         # query string checked from string to boolean
         #checked = str2bool(str(self.request.arguments.get('checked', [False])[0]))
-
-
 
         if record_uuid:
             record_uuid = record_uuid.rstrip('/')
