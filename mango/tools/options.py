@@ -20,7 +20,8 @@ import tornado.options
 from tornado.options import parse_config_file
 
 
-secret = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
+#secret = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
+secret = base64.b64encode("I've said before that I'm a remarkably unsentimental person.")
 config_path = 'mango.conf'
 
 def options():
