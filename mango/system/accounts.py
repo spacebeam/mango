@@ -236,7 +236,8 @@ class Orgs(MangoAccounts):
                             {'$addToSet':{'members':user}})
 
         result = yield [update_user, update_org]
-        raise gen.Return(result)
+        message = [bool(n.get('n')) for n in result]
+        raise gen.Return(message)
 
     @gen.coroutine
     def get_member(self):
@@ -276,7 +277,8 @@ class Orgs(MangoAccounts):
                             {'$pull':{'members':user}})
 
         result = yield [update_user, update_org]
-        raise gen.Return(result)
+        message = [n.get(n) for n in result]
+        raise gen.Return(message)
 
     @gen.coroutine
     def new_team(self, org, team):
@@ -284,15 +286,22 @@ class Orgs(MangoAccounts):
             New team
         '''
         try:
-            team = accounts.Team(**team).validate()
+            team = accounts.Team(team)
+            team.validate()
+            team = clean_structure(team)
         except Exception, e:
-            logging.exception(e)
+            logging.error(e)
+            raise e
+        try:
+            message = yield self.db.accounts.update(
+                {'account':org},
+                {'$addToSet':{'teams':team}}
+            )
+        except Exception, e:
+            logging.error(e)
             raise e
 
-        result = yield self.db.accounts.update(
-                        {'account':org},
-                        {'$addToSet':{'teams':team}})
-        raise gen.Return(result)
+        raise gen.Return(bool(message.get('n')))
 
     @gen.coroutine
     def get_team(self):

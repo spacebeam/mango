@@ -166,14 +166,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
             Create organization accounts
         '''
-        # missing account and/or account_uuid
-        current_user = self.get_current_user()
-
-        # kill capnkooc!
-        
-        if not current_user:
-            current_user = 'capnkooc'
-        
         struct = yield check_json(self.request.body)
         struct['account_type'] = 'org'
 
@@ -185,31 +177,55 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             self.finish({'JSON':format_pass})
             return
 
-        org_id = yield self.new_account(struct)
-                
-        team = {
-            'name': 'owners',
-            'permission': 'super',      # super or admin?
-            'members': [current_user]
-        }
+        # logging new contact structure
+        logging.info('new contact structure {0}'.format(str(struct)))
 
-        logging.info("ORG's: %s team: %s" % (org, team))
+        # logging request query arguments
+        logging.info(self.request.arguments)
 
-        check_member = yield self.new_member(org, current_user)
-        check_team = yield self.new_team(org, team)
+        # request query arguments
+        query_args = self.request.arguments
 
-        logging.info(
-            "ORG's: %s team: %s member: %s" % (org_id, check_team, check_member)
-        )
+        # get owner account from new org struct
+        owner_user = struct.get('owner', None)
 
-        if not org_id:
-            logging.warning('some errors %s' % (str(struct)))
+        # get the current frontend logged username
+        username = self.get_current_username()
+
+        # last but not least, we check query_args for owner
+        owner_user = (query_args.get('owner', [username])[0] if not owner_user else owner_user)
+        
+        # we use the front-end username as last resort
+        #if not struct.get('owner'):
+        #    struct['owner'] = owner_user
+
+        new_org = yield self.new_account(struct)
+        
+        if 'error' in new_org:
+            scheme = 'org'
+            reason = {'duplicates':[
+                (scheme, 'account'),
+                (scheme, 'email')
+            ]}
+            message = yield self.let_it_crash(struct, scheme, new_org, reason)
+            logging.warning(message)
             self.set_status(400)
-            self.finish({'errors':struct})
+            self.finish(message)
             return
 
+        team = {
+            'name': 'owners',
+            'permission': 'admin',
+            'members': [owner_user]
+        }
+
+        check_member, check_team = yield [
+            self.new_member(org, owner_user),
+            self.new_team(org, team)
+        ]
+
         self.set_status(201)
-        self.finish({'id':org_id})
+        self.finish({'uuid':new_org})
 
     @web.authenticated
     @gen.coroutine

@@ -57,7 +57,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
 
             GET Method Response
         '''
-        account = self.get_current_user()
+        account = self.get_current_username()
         routes = yield self.get_route_list(account)
         lapse = 'hours'
         
