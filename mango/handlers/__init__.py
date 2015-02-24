@@ -260,6 +260,11 @@ class LoginHandler(BaseHandler):
             self.set_status(200)
             self.finish()
 
+    @gen.coroutine
+    def options(self):
+        self.set_status(200)
+        self.finish()
+
 
 class LogoutHandler(BaseHandler):
     '''

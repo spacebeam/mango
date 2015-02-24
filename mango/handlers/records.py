@@ -162,7 +162,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':record})
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def put(self):
         '''
@@ -170,7 +170,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
         pass
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def delete(self, record_uuid):
         '''
@@ -189,7 +189,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.set_status(204)
         self.finish()
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def patch(self):
         '''
@@ -245,7 +245,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Summary requests handler 
     '''
-    #@web.authenticated
+    ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse='hours', page_num=0):
         '''
@@ -345,7 +345,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
        Summaries requests handler.
     '''
     
-    #@web.authenticated
+    ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse=None, page_num=0):
         '''
