@@ -40,7 +40,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         User accounts HTTP request handlers
     '''
 
-    @web.authenticated
+    ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
@@ -107,7 +107,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':result})
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def delete(self, account):
         '''
@@ -135,7 +135,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         Organization account resource handlers
     '''
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
@@ -227,7 +227,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':new_org})
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def delete(self, account):
         '''       
@@ -284,7 +284,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         Records resource handlers
     '''
 
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def get(self, account, page_num=0):
         '''
@@ -315,7 +315,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         self.finish(result)
         
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def post(self, account):
         '''
@@ -374,7 +374,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':record})
     
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def delete(self, account, record=None, page_num=0):
         '''
@@ -382,7 +382,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
         pass
     
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def put(self, account, record=None, page_num=0):
         '''
@@ -390,7 +390,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
         pass
     
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def patch(self, account, record=None, page_num=0):
         '''
@@ -405,7 +405,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         Routes resource handlers
     '''
     
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def get(self, account):
         # get account the record billing routes from the database
@@ -413,7 +413,7 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         self.finish(routes)
         
         
-    #@web.authenticated
+    ###@web.authenticated
     @gen.coroutine
     def post(self, account):
         '''

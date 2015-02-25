@@ -49,7 +49,7 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
         Billings handlers for records resources
     '''
     
-    @web.authenticated
+    ##@web.authenticated
     @gen.coroutine
     def get(self, start=None, end=None):
         '''

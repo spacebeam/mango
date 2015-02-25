@@ -13,3 +13,4 @@ pandas
 arrow
 pycurl
 nose
+ujson

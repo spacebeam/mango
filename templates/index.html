@@ -30,10 +30,13 @@
         <!-- International Telephone Input-->
         <link rel="stylesheet" href={{ static_url("css/intlTelInput.css") }}>
 
+        <!-- Seed CSS -->
         <link rel="stylesheet" href={{ static_url("css/landing.css") }}>
         <link rel="stylesheet" href={{ static_url("css/seed.css") }}>
         <link rel="stylesheet" href={{ static_url("css/seed-responsive.css") }}>
         <link rel="stylesheet" href={{ static_url("css/background.css") }}>
+
+        <!-- Custom stuffs here -->
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -101,6 +104,9 @@
             <!-- calls -->
             <div id="fun-calls"></div>
 
+            <!-- carriers -->
+            <div id="fun-carriers"></div>
+
             <!-- campaigns --> 
             <div id="fun-campaigns"></div>
 
@@ -140,6 +146,9 @@
             <!-- phone -->
             <div id="fun-phone"></div>  
 
+
+            <!-- phone numbers -->
+            <div id="fun-phone-numbers"></div>  
 
             <!-- recordings -->
             <div id="fun-recordings"></div> 
@@ -245,6 +254,12 @@
 
         <script src={{ static_url("js/views/phone.js") }}></script>
 
+
+        <script src={{ static_url("js/views/phoneNumbers.js") }}></script>
+        <script src={{ static_url("js/views/carriers.js") }}></script>
+        <script src={{ static_url("js/views/gateways.js") }}></script>
+
+
         <script src={{ static_url("js/views/contacts.js") }}></script>
 
         <script src={{ static_url("js/views/sounds.js") }}></script>
@@ -257,13 +272,15 @@
         <script src={{ static_url("js/views/extra.js") }}></script>
         <script src={{ static_url("js/views/footer.js") }}></script>
 
-        <!-- noob code -->
+
+        <!-- noob chart code -->
         <script src={{ static_url("js/Theme.js") }}></script>
+
         <script src={{ static_url("js/Charts.js") }}></script>
 
-        <!-- noob charts -->
         <script src={{ static_url("js/charts/line.js") }}></script>
         <script src={{ static_url("js/charts/donut.js") }}></script>
+
 
         <!-- fun router -->
         <script src={{ static_url("js/seed/fun.router.js") }}></script>
