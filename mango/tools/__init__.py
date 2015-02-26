@@ -13,7 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import time
 import arrow
-import json
+import ujson as json
 import motor
 
 import logging

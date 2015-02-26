@@ -20,10 +20,9 @@ import os
 import logging
 import motor
 import itertools
-import psycopg2
-import momoko
 
-# import queries
+#import psycopg2
+import queries
 
 from tornado import ioloop
 from tornado import gen
@@ -165,12 +164,16 @@ if __name__ == '__main__':
     # Set document database
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
+    sql = queries.TornadoSession()
+
     # Set SQL database
+    '''
     sql = momoko.Pool(
         dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database,
             opts.sql_user, opts.sql_host, opts.sql_port),
         size=1
     )
+    '''
 
     # Set default database
     db = document

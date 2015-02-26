@@ -4,7 +4,6 @@ motor
 schematics
 psycopg2
 queries
-momoko
 numpy
 scipy
 pyzmq

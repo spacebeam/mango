@@ -14,8 +14,7 @@ __author__ = 'Jean Chassoul'
 import time
 import motor
 
-import psycopg2
-import momoko
+#import psycopg2
 import queries
 
 import logging
@@ -91,6 +90,9 @@ class BaseHandler(web.RequestHandler):
 
         # System database
         self.db = self.settings['db']
+
+        # queries session        
+        self.session = queries.TornadoSession()
 
         # The Senate and People of Mars
         # -----------------------------
@@ -216,7 +218,7 @@ class BaseHandler(web.RequestHandler):
                    self.settings['domain'],
                    struct['password'])
 
-            cursor = yield momoko.Op(self.sql.execute, query)
+            #cursor = yield momoko.Op(self.sql.execute, query)
 
         except (psycopg2.Warning, psycopg2.Error) as e:
             logging.exception(e)
