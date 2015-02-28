@@ -136,13 +136,15 @@ def periodic_records_callback():
             flag = yield periodic.assign_record(
                 db,
                 record['account'],
-                record['uuid'] # id?
+                record['uuid']
             )
 
             # check new resource
             resource = yield new_resource(db, record)
     if result:
         logging.info('periodic records %s', result)
+
+    logging.info('after periodic records callback')
 
 
 if __name__ == '__main__':
@@ -168,9 +170,8 @@ if __name__ == '__main__':
 
     # Set SQL database
     '''
-    sql = momoko.Pool(
-        dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database,
-            opts.sql_user, opts.sql_host, opts.sql_port),
+    sql = (
+        dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database, opts.sql_user, opts.sql_host, opts.sql_port),
         size=1
     )
     '''

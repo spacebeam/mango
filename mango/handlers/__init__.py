@@ -14,7 +14,6 @@ __author__ = 'Jean Chassoul'
 import time
 import motor
 
-#import psycopg2
 import queries
 
 import logging
@@ -72,11 +71,11 @@ class BaseHandler(web.RequestHandler):
         return self.application.kvalue
 
     @property
-    def graph(self):
+    def cache(self):
         '''
-            Graph database
+            Cache backend
         '''
-        return self.application.graph
+        return self.application.cache
 
     def initialize(self, **kwargs):
         '''
