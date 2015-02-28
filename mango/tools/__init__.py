@@ -194,8 +194,53 @@ def content_type_validation(handler_class):
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
 
+def content_type_msgpack_validation(handler_class):
+    '''
+        Content-Type validation
+        type: application/msgpack
+        
+        This function is a @decorator.
+    '''
+
+    def wrap_execute(handler_execute):
+        '''
+            Content-Type checker
+
+            Wrapper execute function
+        '''
+
+        def content_type_checker(handler, kwargs):
+            '''
+                Content-Type checker implementation
+            '''
+            content_type = handler.request.headers.get('Content-Type', "")
+            if content_type is None or not content_type.startswith('application/msgpack'):
+                handler.set_status(415)
+                handler._transforms = []
+                handler.finish({
+                    'status': 415,
+                    'reason': 'Unsupported Media Type',
+                    'message': 'Must ACCEPT application/msgpack: '\
+                               '[\"%s\"]' % content_type
+                })
+                return False
+            return True
+
+        def _execute(self, transforms, *args, **kwargs):
+            '''
+                Execute the wrapped function
+            '''
+            if not content_type_checker(self, kwargs):
+                return False
+            return handler_execute(self, transforms, *args, **kwargs)
+
+        return _execute
+
+    handler_class._execute = wrap_execute(handler_class._execute)
+    return handler_class
+
 @gen.coroutine
-def new_resource(db, struct):
+def new_resource(db, struct, collection=None, scheme=None):
     '''
         New resource
     '''
@@ -203,46 +248,50 @@ def new_resource(db, struct):
     from schematics import models as _models
     from schematics import types as _types
 
-    class AccountResource(_models.Model):
+
+    class MangoResource(_models.Model):
         '''
-            Account resource
+            Mango resource
         '''
-        account = _types.StringType(required=False)
         uuid = _types.UUIDType(default=_uuid.uuid4)
+        account = _types.StringType(required=False)
         resource  = _types.StringType(required=True)
 
+
+    # Calling getattr(x, "foo") is just another way to write x.foo
+    collection = getattr(db, collection)  
+
     try:
-        message = AccountResource(struct)
+        message = MangoResource(struct)
         message.validate()
         message = message.to_primitive()
     except Exception, e:
         logging.exception(e)
         raise e
-
         return
 
-    resource = ''.join(('resources.', message.get('resource')))
+    resource = 'resources.{0}'.format(message.get('resource'))
 
     try:
-        message = yield db.accounts.update(
+        message = yield collection.update(
             {
+                #'uuid': message.get(scheme),
                 'account': message.get('account')
             },
             {
                 '$addToSet': {
-                    ''.join((resource, '.contains')): message.get('uuid')
+                    '{0}.contains'.format(resource): message.get('uuid')
                 },
                     
                 '$inc': {
                     'resources.total': 1,
-                    ''.join((resource, '.total')): 1
+                    '{0}.total'.format(resource): 1
                 }
             }
         )
     except Exception, e:
         logging.exception(e)
         raise e
-
         return
 
     raise gen.Return(message)
