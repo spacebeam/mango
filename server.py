@@ -21,7 +21,6 @@ import logging
 import motor
 import itertools
 
-#import psycopg2
 import queries
 
 from tornado import ioloop
@@ -48,6 +47,7 @@ from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 from  multiprocessing import Process
 
 from zmq.eventloop import ioloop, zmqstream
+
 
 # ioloop
 ioloop.install()
@@ -111,8 +111,11 @@ class IndexHandler(web.RequestHandler):
     '''
         HTML5 Index
     '''
-
+    @gen.coroutine
     def get(self):
+        '''
+            Render fun mango index.html
+        '''
         self.render('index.html', test='Fantastical unbelievable communication')
 
 
@@ -166,15 +169,16 @@ if __name__ == '__main__':
     # Set document database
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
-    sql = queries.TornadoSession()
-
-    # Set SQL database
-    '''
-    sql = (
-        dsn='dbname=%s user=%s host=%s port=%d' % (opts.sql_database, opts.sql_user, opts.sql_host, opts.sql_port),
-        size=1
+    # Set SQL URI
+    postgresql_uri = queries.uri(
+        host=opts.sql_host,
+        port=opts.sql_port,
+        dbname=opts.sql_database,
+        user=opts.sql_user,
+        password=None
     )
-    '''
+    # Set SQL session
+    sql = queries.TornadoSession(uri=postgresql_uri)
 
     # Set default database
     db = document
