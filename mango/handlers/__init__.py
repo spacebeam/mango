@@ -82,6 +82,21 @@ class BaseHandler(web.RequestHandler):
             Initialize the Base Handler
         '''
         # Service Process Quality Management
+        #===================================
+
+        # The Senate and People of Mars
+        # -----------------------------
+        # SPQM communication message clannels.
+
+        # 0MQ message channels
+        # --------------------
+
+        # CDR stream
+        # self.cdr_stream = self.settings['cdr_stream']
+
+        # CDR periodic channel
+        # self.cdr_periodic = self.settings['cdr_periodic']
+
 
         super(BaseHandler, self).initialize(**kwargs)
 
@@ -89,24 +104,6 @@ class BaseHandler(web.RequestHandler):
 
         # System database
         self.db = self.settings['db']
-
-        # queries session        
-        self.session = queries.TornadoSession()
-
-        # The Senate and People of Mars
-        # -----------------------------
-        # communication message clannels.
-
-        # 0MQ message channels
-        # --------------------
-
-        # SPQM 
-
-        # CDR stream
-        # self.cdr_stream = self.settings['cdr_stream']
-
-        # CDR periodic channel
-        # self.cdr_periodic = self.settings['cdr_periodic']
 
         # Page settings
         self.page_size = self.settings['page_size']
@@ -132,7 +129,7 @@ class BaseHandler(web.RequestHandler):
         return self.get_secure_cookie('account')
 
     @gen.coroutine
-    def let_it_crash(self, struct, model, error, reason):
+    def let_it_crash(self, struct, scheme, error, reason):
         '''
             Let it crash.
         '''
@@ -142,7 +139,7 @@ class BaseHandler(web.RequestHandler):
         messages = []
 
         if error and 'Model' in str_error:
-            message = error_handler.model(model)
+            message = error_handler.model(scheme)
 
         elif error and 'duplicate' in str_error:
             
@@ -187,6 +184,9 @@ class BaseHandler(web.RequestHandler):
             New sip account
         '''
         try:
+            # Get SQL database from mango settings
+            sql = self.settings.get('sql')
+            # PostgreSQL insert new sip account query
             query = '''
                 insert into sip (
                     name,
@@ -200,32 +200,39 @@ class BaseHandler(web.RequestHandler):
                     avpf,
                     encryption
                 ) values (
-                    '%s',
-                    '%s',
-                    '%s',
-                    '%s',
+                    '{0}',
+                    '{1}',
+                    '{2}',
+                    '{3}',
                     'dynamic',
-                    '%s',
+                    '{4}',
                     'ulaw,alaw,g729,gsm',
                     'fun-accounts',
                     'no',
                     'no'
                 );
-            ''' % (struct['account'],
-                   struct['account'],
-                   struct['account'],
-                   self.settings['domain'],
-                   struct['password'])
+            '''.format(
+                struct.get('account'),
+                struct.get('account'),
+                struct.get('account'),
+                struct.get('domain', self.settings.get('domain')),
+                struct.get('password')
+            )
 
-            #cursor = yield momoko.Op(self.sql.execute, query)
+            result = yield sql.query(query)
+            message = {'data': result.items()}
+            result.free()
 
+            logging.warning(message)
+
+        # TODO: Still need to check the follings exceptions with the new queries module.
         except (psycopg2.Warning, psycopg2.Error) as e:
             logging.exception(e)
             raise e
         else:
             result = True
 
-        raise gen.Return(result)
+        raise gen.Return(message)
 
 
 @basic_authentication

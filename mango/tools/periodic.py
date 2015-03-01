@@ -23,6 +23,32 @@ from tornado import gen
 from bson import objectid
 
 
+'''
+    SELECT
+        DISTINCT ON (uniqueid) uniqueid,
+        calldate,
+        src,
+        dst,
+        dcontext,
+        channel,
+        dstchannel,
+        lastapp,
+        lastdata,
+        duration,
+        billsec,
+        disposition,
+        checked
+
+    FROM cdr
+
+    WHERE src = '{account}'
+
+    ORDER BY uniqueid DESC
+
+    limit 10;
+'''
+
+
 @gen.coroutine
 def get_usernames(db):
     '''
