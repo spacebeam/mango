@@ -5,7 +5,7 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Dist4ributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
@@ -72,8 +72,7 @@ def get_usernames(db):
 @gen.coroutine
 def get_unassigned_call(db):
     '''
-
-        Get unassigned call.
+        Get 'one thousand' unassigned calls.
     '''
     try:
         result = []
@@ -96,7 +95,8 @@ def get_unassigned_call(db):
 @gen.coroutine
 def process_assigned_false(db):
     '''
-        Periodic task that process assigned flag on calls resource.
+        Periodic task that process 'one thousand' 
+        assigned False flag on calls resource.
     '''
 
     result = []
@@ -140,7 +140,8 @@ def process_assigned_false(db):
 @gen.coroutine
 def process_assigned_records(db):
     '''
-        Periodic task that process unassigned records.
+        Periodic task that process 'one thousand' 
+        unassigned calls resource.
     '''
     result = []
 
