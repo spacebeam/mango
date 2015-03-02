@@ -52,14 +52,11 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
-            account = account.rstrip('/')
-            result = yield self.get_account(account, account_type)
+            result = yield self.get_account(account.rstrip('/'), account_type)
 
-            logging.info(result)
-            
             if not result:
                 self.set_status(400)
-                self.finish({'missing':account})
+                self.finish({'missing':account.rstrip('/')})
                 return
             else:
                 self.finish(result)

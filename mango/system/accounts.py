@@ -143,10 +143,10 @@ class MangoAccounts(Accounts):
         result = yield self.db.accounts.find_one(
                                 {'account':account,
                                  'account_type':account_type},
-                                 {'_id':0})
+                                 {'_id':0, 'password':0})
         if result:
             if 'user' in account_type:
-                message = accounts.User(result)
+                message = accounts.ModifyUser(result)
             elif 'org' in account_type:
                 message = accounts.Org(result)
                 

@@ -102,6 +102,18 @@ class User(BaseAccount):
     company = types.StringType()
 
 
+class ModifyUser(BaseAccount):
+    '''
+        Modify account
+    '''
+    account_type = types.StringType(default='user')
+    orgs = compound.ListType(types.StringType())
+    password = types.StringType()
+    
+    # move company to baseAccount class?
+    company = types.StringType()
+
+
 class Team(models.Model):
     '''
         Org team
