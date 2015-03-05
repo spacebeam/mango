@@ -125,6 +125,7 @@ def periodic_records_callback():
     '''
         periodic records callback function
     '''
+    start = time.time()
     results = yield [
         periodic.process_assigned_false(db),
         periodic.process_assigned_records(db)
@@ -148,7 +149,13 @@ def periodic_records_callback():
     if result:
         logging.info('periodic records %s', result)
 
-    logging.info('after periodic records callback')
+    end = time.time()
+    periodic_take = (end - start)
+
+    logging.info('it takes {0} processing periodic {1}'.format(
+        periodic_take,
+        'callbacks for records resource.'
+    ))
 
 
 if __name__ == '__main__':
