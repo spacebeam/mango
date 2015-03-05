@@ -177,6 +177,12 @@ if __name__ == '__main__':
     # Set document database
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
+    # Set kvalue database
+    kvalue = False
+
+    # Set cache backend
+    cache = False
+
     # Set SQL URI
     postgresql_uri = queries.uri(
         host=opts.sql_host,
@@ -324,6 +330,10 @@ if __name__ == '__main__':
 
         document=document,
 
+        kvalue=kvalue,
+
+        cache=cache,
+
         sql=sql,
 
         # debug mode
@@ -361,6 +371,4 @@ if __name__ == '__main__':
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()
 
-
-
-    #uuid io fun's org: 3ed5426d-a040-43f5-906c-b1529b44b174
+    # uuid io fun's example: 3ed5426d-a040-43f5-906c-b1529b44b174
