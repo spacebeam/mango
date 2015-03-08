@@ -135,3 +135,4 @@ class Org(BaseAccount):
     # tests for members and teams.
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
+    description = types.StringType()
