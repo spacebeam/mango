@@ -286,7 +286,7 @@ class Orgs(MangoAccounts):
             New team
         '''
         try:
-            team = accounts.Team(team)
+            team = accounts.Team(team) # team validate and clean structure return team or log crash errors; variable assigned to team variable.
             team.validate()
             team = clean_structure(team)
         except Exception, e:

@@ -37,12 +37,38 @@ class Password(models.Model):
     last_modified = types.DateTimeType()
 
 
-#class Mon(models.Model):
-#    '''
-#        Monkey business
-#    '''
-#    key = types.StringType(required=True)
+class Monkey(models.Model):
+    '''
+        Monkey business
+    '''
+    uuid = types.UUIDType(default=uuid.uuid4)
+    sshkey = types.StringType(required=True)
+    sw = types.StringType(required=True)
+    hw = types.StringType(required=True)
+    ''' 
+    # can get this with / from pillar and salt states.
 
+    address = {
+        sw: 'http://sw.iofun.io',
+        bn: '192.168.148.23:80',
+        fn: '192.168.157.23:8008',
+        hw: '5c:c5:d4:0e:12:58',
+        web: '',
+        rtc: ,
+        sql: ,
+        nsql :,
+        kvalue:,
+        cache:,
+        document:,
+        storage:,
+        session:,
+        data:,
+        search:,
+        voice:,
+        ears:;
+
+    }
+    '''
 
 class Route(models.Model):
     '''
