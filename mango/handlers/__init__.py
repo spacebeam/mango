@@ -253,12 +253,16 @@ class BaseHandler(web.RequestHandler):
                 struct.get('domain', self.settings.get('domain')),
                 struct.get('password')
             )
-
             result = yield sql.query(query)
-            message = {'data': result.items()}
+
+            if result:
+                message = {'ack': True}
+            else:
+                message = {'ack': False}
+
             result.free()
 
-            logging.warning(message)
+            logging.warning('new sip account spawned on PostgreSQL {0}'.format(message))
 
         # TODO: Still need to check the follings exceptions with the new queries module.
         #except (psycopg2.Warning, psycopg2.Error) as e:
@@ -268,8 +272,6 @@ class BaseHandler(web.RequestHandler):
         except Exception, e:
             logging.exception(e)
             raise e
-        else:
-            result = True
 
         raise gen.Return(message)
 
