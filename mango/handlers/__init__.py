@@ -261,7 +261,11 @@ class BaseHandler(web.RequestHandler):
             logging.warning(message)
 
         # TODO: Still need to check the follings exceptions with the new queries module.
-        except (psycopg2.Warning, psycopg2.Error) as e:
+        #except (psycopg2.Warning, psycopg2.Error) as e:
+        #    logging.exception(e)
+        #    raise e
+        
+        except Exception, e:
             logging.exception(e)
             raise e
         else:
