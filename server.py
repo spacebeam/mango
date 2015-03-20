@@ -61,6 +61,9 @@ e_tag = False
 
 
 def server_push(port="5556"):
+    '''
+        PUSH process
+    '''
     context = zmq.Context()
     socket = context.socket(zmq.PUSH)
     socket.bind("tcp://*:%s" % port)
@@ -75,6 +78,9 @@ def server_push(port="5556"):
         time.sleep (1)
 
 def server_pub(port="5558"):
+    '''
+        PUB process
+    '''
     context = zmq.Context()
     socket = context.socket(zmq.PUB)
     socket.bind("tcp://*:%s" % port)
@@ -90,6 +96,9 @@ def server_pub(port="5558"):
         time.sleep(1)
 
 def client(port_push, port_sub):
+    '''
+        Client process
+    '''
     context = zmq.Context()
     socket_pull = context.socket(zmq.PULL)
     socket_pull.connect ("tcp://localhost:%s" % port_push)
