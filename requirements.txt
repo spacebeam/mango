@@ -13,3 +13,5 @@ arrow
 pycurl
 nose
 ujson
+umemcache
+requests
