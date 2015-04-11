@@ -127,6 +127,10 @@ class User(BaseAccount):
     # move company to baseAccount class?
     company = types.StringType()
 
+    # clx stuff, please move this to another place that makes more sense.
+    UserId = types.IntType()
+    AccountNum = types.StringType()
+
 
 class ModifyUser(BaseAccount):
     '''
