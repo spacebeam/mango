@@ -159,10 +159,12 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 return
 
     @gen.coroutine
-    def post(self):
+    def post(self, account):
         '''
             Create organization accounts
         '''
+        logging.info('hola hola hola hola')
+        logging.info(account)
         struct = yield check_json(self.request.body)
         struct['account_type'] = 'org'
 

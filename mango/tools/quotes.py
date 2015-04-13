@@ -70,6 +70,7 @@ _john_carmack_quotes = {
         "to do.",
 }
 
+# get json medium fun-technology
 
 class PeopleQuotes(object):
     

@@ -60,6 +60,14 @@ iofun = []
 e_tag = False
 
 
+
+
+def server_router(port="5560"):
+    '''
+        ROUTER process
+    '''
+    pass
+
 def server_push(port="5556"):
     '''
         PUSH process
@@ -94,6 +102,12 @@ def server_pub(port="5558"):
         print "%s %s" % (topic, messagedata)
         socket.send("%d %s" % (topic, messagedata))
         time.sleep(1)
+
+def client_dealer(por="5559"):
+    '''
+        DEALER process
+    '''
+    pass
 
 def client(port_push, port_sub):
     '''

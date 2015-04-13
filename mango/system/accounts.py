@@ -2,7 +2,7 @@
 '''
     Mango accounts system logic functions.
 '''
-
+# 
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
@@ -22,10 +22,14 @@ from mango.messages import accounts
 
 from mango.tools import clean_structure, clean_results
 
+# Systems are distribute applications build with organisational programming principles.
+
 
 class Accounts(object):
     '''
         Accounts main class
+
+        Organisational programming class
     '''
 
     @gen.coroutine
