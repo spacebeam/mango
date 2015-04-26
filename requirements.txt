@@ -13,5 +13,5 @@ arrow
 pycurl
 nose
 ujson
-umemcache
+pylibmc
 requests
