@@ -18,11 +18,14 @@ import time
 import sys
 import random
 import os
+import uuid
 import logging
 import motor
 import itertools
 
 import queries
+
+import pylibmc as mc
 
 from tornado import ioloop
 from tornado import gen
@@ -58,8 +61,6 @@ iofun = []
 
 # e_tag
 e_tag = False
-
-
 
 
 def server_router(port="5560"):
@@ -200,11 +201,19 @@ if __name__ == '__main__':
     # Set document database
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
+    # Set memcached backend
+
+    # opts.memcached_host, opts.memcached_port, opts.memcached_binary, opts.memcached_tcp_nodelay, opts.memcached_ketama
+
+    memcache = mc.Client(["127.0.0.1"], binary=True,
+                     behaviors={"tcp_nodelay": True,
+                                "ketama": True})
+
     # Set kvalue database
     kvalue = False
 
-    # Set cache backend
-    cache = False
+    # Set default cache
+    cache = memcache
 
     # Set SQL URI
     postgresql_uri = queries.uri(
@@ -351,11 +360,11 @@ if __name__ == '__main__':
         # system databases
         db=db,
 
+        cache=cache,
+
         document=document,
 
         kvalue=kvalue,
-
-        cache=cache,
 
         sql=sql,
 

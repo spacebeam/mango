@@ -85,6 +85,26 @@ def options():
     tornado.options.define('sql_password', type=str,
                             help=('PostgreSQL username password'))
 
+    tornado.options.define('memcached_host',
+        default='127.0.0.1', type=str,
+        help=('Memcached host'))
+
+    tornado.options.define('memcached_port',
+        default=11211, type=int,
+        help=('Memcached port'))
+
+    tornado.options.define('memcached_binary',
+        default=True, type=bool,
+        help=('Memcached binary'))
+
+    tornado.options.define('memcached_tcp_nodelay',
+        default=True, type=bool,
+        help=('Memcached tcp_nodelay'))
+
+    tornado.options.define('memcached_ketama',
+        default=True, type=bool,
+        help=('Memcached ketama'))
+    
     # Base url and timezone
     tornado.options.define('base_url', default='api', type=str,
                            help=('Base url, e.g. "api"'))
