@@ -111,7 +111,8 @@ class BaseHandler(web.RequestHandler):
         '''
             Cache backend
         '''
-        return self.application.cache
+        #return self.application.cache
+        return self.settings['cache']
 
     def initialize(self, **kwargs):
         '''
