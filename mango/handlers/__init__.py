@@ -111,7 +111,6 @@ class BaseHandler(web.RequestHandler):
         '''
             Cache backend
         '''
-        #return self.application.cache
         return self.settings['cache']
 
     def initialize(self, **kwargs):
@@ -204,7 +203,6 @@ class BaseHandler(web.RequestHandler):
                 'error': u'nonsense',
                 'message': u'there is no error'
             }
-
         else:
             quotes = PeopleQuotes()
             
