@@ -12,9 +12,8 @@ __author__ = 'Jean Chassoul'
 
 
 import time
+import ujson as json
 import motor
-
-import logging
 
 # import numpy as np
 # import pandas as pd
@@ -22,6 +21,9 @@ import logging
 from tornado import gen
 from tornado import web
 
+import logging
+
+# Mango system
 from mango.system import accounts
 from mango.system import records
 
@@ -31,6 +33,7 @@ from mango.tools import new_resource
 
 from mango.tools import errors
 
+# system handlers
 from mango.handlers import BaseHandler
 
 
@@ -40,27 +43,106 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         User accounts HTTP request handlers
     '''
 
+    @gen.coroutine
+    def head(self, account=None, page_num=0):
+        '''
+            Head users
+        '''
+
+        # logging request query arguments
+        logging.info('request query arguments {0}'.format(self.request.arguments))
+
+        # request query arguments
+        query_args = self.request.arguments
+
+        # get the current frontend logged username
+        username = self.get_current_username()
+
+        # if the user don't provide an account we use the frontend username as last resort
+        account = (query_args.get('account', [username])[0] if not account else account)
+
+        account_type = 'user'
+
+        if not account:
+            users = yield self.get_account_list(account_type, page_num)
+            self.finish({'users':users})
+        else:
+
+             # try to get stuff from cache first
+            logging.info('getting users:{0} from cache'.format(account))
+
+            data = self.cache.get('users:{0}'.format(account))
+
+            if data is not None:
+                logging.info('users:{0} done retrieving!'.format(account))
+                result = data
+            else:
+                data = yield self.get_account(account.rstrip('/'), account_type)
+                if self.cache.add('users:{0}'.format(account), data, 60):
+                    logging.info('new cache entry {0}'.format(str(data)))
+                    result = data
+
+            
+            #result = yield self.get_account(account.rstrip('/'), account_type)
+
+            if not result:
+
+                # -- nead mear info
+
+                self.set_status(400)
+                self.finish({'missing':account.rstrip('/')})
+            else:
+                self.set_status(200)
+                self.finish(result)
+
     ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
             Get user accounts
         '''
+        # logging request query arguments
+        logging.info('request query arguments {0}'.format(self.request.arguments))
+
+        # request query arguments
+        query_args = self.request.arguments
+
+        # get the current frontend logged username
+        username = self.get_current_username()
+
+        # if the user don't provide an account we use the frontend username as last resort
+        account = (query_args.get('account', [username])[0] if not account else account)
+
         account_type = 'user'
         
         if not account:
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
-            result = yield self.get_account(account.rstrip('/'), account_type)
+
+             # try to get stuff from cache first
+            logging.info('getting users:{0} from cache'.format(account))
+
+            data = self.cache.get('users:{0}'.format(account))
+
+            if data is not None:
+                logging.info('users:{0} done retrieving!'.format(account))
+                result = data
+            else:
+                data = yield self.get_account(account.rstrip('/'), account_type)
+                if self.cache.add('users:{0}'.format(account), data, 60):
+                    logging.info('new cache entry {0}'.format(str(data)))
+                    result = data
+
+            
+            #result = yield self.get_account(account.rstrip('/'), account_type)
 
             if not result:
                 self.set_status(400)
                 self.finish({'missing':account.rstrip('/')})
-                return
             else:
+                self.set_status(200)
                 self.finish(result)
-                return
                 
     @gen.coroutine
     def post(self):
