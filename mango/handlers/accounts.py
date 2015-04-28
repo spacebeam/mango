@@ -48,7 +48,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
             Head users
         '''
-
         # logging request query arguments
         logging.info('request query arguments {0}'.format(self.request.arguments))
 
@@ -61,33 +60,43 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
 
+        # account type flag
         account_type = 'user'
+
+        # cache data
+        data = None
+
+        # return result message
+        result = None
 
         if not account:
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
-
-             # try to get stuff from cache first
+            # try to get stuff from cache first
             logging.info('getting users:{0} from cache'.format(account))
 
-            data = self.cache.get('users:{0}'.format(account))
+            try:
+                data = self.cache.get('users:{0}'.format(account))
+            except Exception, e:
+                logging.exception(e)
 
             if data is not None:
                 logging.info('users:{0} done retrieving!'.format(account))
                 result = data
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
-                if self.cache.add('users:{0}'.format(account), data, 60):
-                    logging.info('new cache entry {0}'.format(str(data)))
-                    result = data
-
+                try:
+                    if self.cache.add('users:{0}'.format(account), data, 60):
+                        logging.info('new cache entry {0}'.format(str(data)))
+                except Exception, e:
+                    logging.exception(e)
             
-            #result = yield self.get_account(account.rstrip('/'), account_type)
+            result = (data if data else None)
 
             if not result:
 
-                # -- nead mear info
+                # -- nead moar info
 
                 self.set_status(400)
                 self.finish({'missing':account.rstrip('/')})
@@ -113,31 +122,43 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
 
+        # account type flag
         account_type = 'user'
+
+        # cache data
+        data = None
+
+        # return result message
+        result = None
         
         if not account:
             users = yield self.get_account_list(account_type, page_num)
             self.finish({'users':users})
         else:
-
-             # try to get stuff from cache first
+            # try to get stuff from cache first
             logging.info('getting users:{0} from cache'.format(account))
 
-            data = self.cache.get('users:{0}'.format(account))
+            try:
+                data = self.cache.get('users:{0}'.format(account))
+            except Exception, e:
+                logging.exception(e)
 
             if data is not None:
                 logging.info('users:{0} done retrieving!'.format(account))
-                result = data
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
-                if self.cache.add('users:{0}'.format(account), data, 60):
-                    logging.info('new cache entry {0}'.format(str(data)))
-                    result = data
+                try:
+                    if self.cache.add('users:{0}'.format(account), data, 60):
+                        logging.info('new cache entry {0}'.format(str(data)))
+                except Exception, e:
+                    logging.exception(e)
 
+            result = (data if data else None)
             
             #result = yield self.get_account(account.rstrip('/'), account_type)
 
             if not result:
+                # -- need more info
                 self.set_status(400)
                 self.finish({'missing':account.rstrip('/')})
             else:
