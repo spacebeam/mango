@@ -68,6 +68,12 @@ def server_router(port="5560"):
     '''
     pass
 
+def gen_daemon(server_router):
+    '''
+        OTP gen_server analogy
+    '''
+    pass
+
 def server_push(port="5556"):
     '''
         PUSH process
@@ -188,12 +194,14 @@ if __name__ == '__main__':
     document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
 
     # Set memcached backend
-
-    # opts.memcached_host, opts.memcached_port, opts.memcached_binary, opts.memcached_tcp_nodelay, opts.memcached_ketama
-
-    memcache = mc.Client(["127.0.0.1"], binary=True,
-                     behaviors={"tcp_nodelay": True,
-                                "ketama": True})
+    memcache = mc.Client(
+        [opts.memcached_host],
+        binary=opts.memcached_binary,
+        behaviors={
+            "tcp_nodelay": opts.memcached_tcp_nodelay,
+            "ketama": opts.memcached_ketama
+        }
+    )
 
     # Set kvalue database
     kvalue = False
@@ -369,7 +377,7 @@ if __name__ == '__main__':
         cookie_secret=opts.cookie_secret,
 
         # login url
-        login_url='/login'
+        login_url='/login/'
     )
 
     # Tornado periodic callback functions
