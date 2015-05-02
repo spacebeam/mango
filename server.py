@@ -245,7 +245,7 @@ if __name__ == '__main__':
     application = web.Application(
 
         [
-            (r'/', IndexHandler),
+            #(r'/', IndexHandler),
 
             # Mango system knowledge (quotes) and realtime events.
             (r'/system/?', MangoHandler),
@@ -388,7 +388,7 @@ if __name__ == '__main__':
 
         static_path=os.path.join(os.path.dirname(__file__), "static"),
 
-        template_path=os.path.join(os.path.dirname(__file__), "templates"),
+        #template_path=os.path.join(os.path.dirname(__file__), "templates"),
 
         # login url
         login_url='/login'
