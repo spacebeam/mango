@@ -17,7 +17,6 @@ import zmq
 import time
 import sys
 import random
-import os
 import uuid
 import logging
 import motor
@@ -131,19 +130,6 @@ def client(port_push, port_sub):
     ioloop.IOLoop.instance().start()
     print("Worker has stopped processing messages.")
 
-
-class IndexHandler(web.RequestHandler):
-    '''
-        HTML5 Index
-    '''
-    @gen.coroutine
-    def get(self):
-        '''
-            Render fun mango index.html
-        '''
-        self.render('index.html', test='Fantastical unbelievable communication')
-
-
 @gen.coroutine
 def periodic_records_callback():
     '''
@@ -245,13 +231,8 @@ if __name__ == '__main__':
     application = web.Application(
 
         [
-            #(r'/', IndexHandler),
-
             # Mango system knowledge (quotes) and realtime events.
             (r'/system/?', MangoHandler),
-
-            # Tornado static file handler 
-            (r'/static/(.*)', web.StaticFileHandler, {'path': './static'},),
 
             # Basic-Auth session
             (r'/login/?', LoginHandler),
@@ -357,15 +338,19 @@ if __name__ == '__main__':
 
         ],
 
-        # system databases
+        # system database
         db=db,
 
+        # system cache
         cache=cache,
 
+        # document datastorage
         document=document,
 
+        # kvalue datastorage
         kvalue=kvalue,
 
+        # sql datastorage
         sql=sql,
 
         # debug mode
@@ -383,13 +368,6 @@ if __name__ == '__main__':
         # cookie settings
         cookie_secret=opts.cookie_secret,
 
-        # static files (this is all the html, css, js and stuff)
-        # on production environment the static stuff is served with nginx.
-
-        static_path=os.path.join(os.path.dirname(__file__), "static"),
-
-        #template_path=os.path.join(os.path.dirname(__file__), "templates"),
-
         # login url
         login_url='/login'
     )
@@ -402,5 +380,3 @@ if __name__ == '__main__':
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()
-
-    # uuid io fun's example: 3ed5426d-a040-43f5-906c-b1529b44b174
