@@ -173,8 +173,7 @@ def periodic_records_callback():
         'callbacks for records resource.'
     ))
 
-
-if __name__ == '__main__':
+def main():
     '''
         Manage Asynchronous Number General ORGs
 
@@ -388,3 +387,7 @@ if __name__ == '__main__':
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     ioloop.IOLoop.instance().start()
+
+
+if __name__ == '__main__':
+    main()
