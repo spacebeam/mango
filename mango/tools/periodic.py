@@ -14,6 +14,7 @@ __author__ = 'Jean Chassoul'
 import logging
 
 import motor
+import queries
 
 from contextlib import contextmanager
 from tornado import gen
@@ -23,31 +24,53 @@ from tornado import gen
 from bson import objectid
 
 
-'''
-    SELECT
-        DISTINCT ON (uniqueid) uniqueid,
-        calldate,
-        src,
-        dst,
-        dcontext,
-        channel,
-        dstchannel,
-        lastapp,
-        lastdata,
-        duration,
-        billsec,
-        disposition,
-        checked
+@gen.coroutine
+def get_raw_records(sql, query_limit):
+    '''
+        Get RAW records
+    '''
+    try:
+        # Get SQL database from mango settings
+        query = '''
+            SELECT
+                DISTINCT ON (uniqueid) uniqueid,
+                calldate,
+                src,
+                dst,
+                dcontext,
+                channel,
+                dstchannel,
+                lastapp,
+                lastdata,
+                duration,
+                billsec,
+                disposition,
+                checked
+            
+            FROM cdr
 
-    FROM cdr
+            ORDER BY uniqueid DESC
 
-    WHERE src = '{account}'
+            limit {0};
+        '''.format(
+            query_limit
+        )
+        result = yield sql.query(query)
 
-    ORDER BY uniqueid DESC
+        if result:
+            message = {'ack': True}
+        else:
+            message = {'ack': False}
 
-    limit 10;
-'''
+        result.free()
 
+        logging.warning('get raw records spawned on PostgreSQL {0}'.format(message))
+        
+    except Exception, e:
+        logging.exception(e)
+        raise e
+
+    raise gen.Return(message)
 
 @gen.coroutine
 def get_usernames(db):
