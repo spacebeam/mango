@@ -42,20 +42,21 @@ class Records(object):
             Get a detail record
         '''
         if not account:
-            record = yield self.db.records.find_one({'uuid':record_uuid})
+            record = yield self.db.records.find_one({'uuid':record_uuid},{'_id':0})
         else:
 
             # change accountcode to account, because the accountcode is a uuid
             # and we're expecting an account name.
 
             record = yield self.db.records.find_one({'uuid':record_uuid,
-                                                     'account':account})
+                                                     'account':account},
+                                                    {'_id':0})
         try:
             if record:
                 record = records.Record(record)
                 record.validate()
         except Exception, e:
-            logging.exception(e)
+            logging.exception(e) # catch some daemon here!
             raise e
         finally:
             raise gen.Return(record)

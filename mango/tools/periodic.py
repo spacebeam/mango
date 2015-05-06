@@ -10,9 +10,10 @@
 
 __author__ = 'Jean Chassoul'
 
-
 import logging
-
+from tornado import httpclient
+import ujson as json
+import urllib
 import motor
 import queries
 
@@ -29,14 +30,52 @@ def get_raw_records(sql, query_limit):
     '''
         Get RAW records
     '''
+    httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+    http_client = httpclient.AsyncHTTPClient()
+
+    def handle_restuff(response):
+        '''
+            Request Handler
+        '''
+        print 'yeahaha'
+        if response.error:
+            logging.error(response.error)
+        else:
+            logging.info(response.body)
+
+    def handle_request(response):
+        '''
+            Request Handler
+        '''
+        if response.error:
+            logging.error(response.error)
+        else:
+
+            logging.info(response.body)
+
+            res = json.loads(response.body)
+
+            logging.info(res.get('uuid', None))
+
+            http_client.fetch(
+                'http://127.0.0.1/records/' + res.get('uuid'), 
+                headers={"Content-Type": "application/json"},
+                method='GET',
+                #body=json.dumps(record),
+                callback=handle_restuff
+            )
+
+            # if successful response we need to send ack now to sql
+            # and mack the flag of that call as checked, otherwise
+            # we need some othe type of validation.
+
     try:
         # Get SQL database from mango settings
         query = '''
             SELECT
                 DISTINCT ON (uniqueid) uniqueid,
-                calldate,
-                src,
-                dst,
+                src as source,
+                dst as destination,
                 dcontext,
                 channel,
                 dstchannel,
@@ -46,7 +85,7 @@ def get_raw_records(sql, query_limit):
                 billsec,
                 disposition,
                 checked
-            
+
             FROM cdr
 
             ORDER BY uniqueid DESC
@@ -58,6 +97,19 @@ def get_raw_records(sql, query_limit):
         result = yield sql.query(query)
 
         if result:
+
+            for row in result:
+
+                record = dict(row.items())
+
+                http_client.fetch(
+                    'http://127.0.0.1/records/', 
+                    headers={"Content-Type": "application/json"},
+                    method='POST',
+                    body=json.dumps(record),
+                    callback=handle_request
+                )
+
             message = {'ack': True}
         else:
             message = {'ack': False}
@@ -104,7 +156,7 @@ def get_unassigned_call(db):
             'assigned': {
                 '$exists': False
             }
-        }).limit(1000)
+        }).limit(800)
         
         for call in (yield query.to_list()):
             result.append(call)
@@ -155,7 +207,7 @@ def process_assigned_false(db):
 
         db.calls.find({
             'assigned':False
-        }).limit(1000).each(_got_call)
+        }).limit(800).each(_got_call)
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
@@ -202,7 +254,7 @@ def process_assigned_records(db):
 
         db.calls.find({
             'assigned':{'$exists':False}
-        }).limit(1000).each(_got_record)
+        }).limit(800).each(_got_record)
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)

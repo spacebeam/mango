@@ -61,6 +61,15 @@ iofun = []
 # e_tag
 e_tag = False
 
+# db global variable
+db = False
+
+# sql global variable
+sql = False
+
+# cache glogbal variable
+cache = False
+
 
 def server_router(port="5560"):
     '''
@@ -144,7 +153,8 @@ def periodic_records_callback():
     start = time.time()
     results = yield [
         periodic.process_assigned_false(db),
-        periodic.process_assigned_records(db)
+        periodic.process_assigned_records(db),
+        periodic.get_raw_records(sql, 800)
     ]
 
     if all(x is None for x in results):
@@ -206,6 +216,7 @@ def main():
     kvalue = False
 
     # Set default cache
+    global cache
     cache = memcache
 
     # Set SQL URI
@@ -217,9 +228,11 @@ def main():
         password=None
     )
     # Set SQL session
+    global sql
     sql = queries.TornadoSession(uri=postgresql_uri)
 
     # Set default database
+    global db
     db = document
 
     # logging database hosts
@@ -380,8 +393,8 @@ def main():
     )
 
     # Tornado periodic callback functions
-    periodic_records = ioloop.PeriodicCallback(periodic_records_callback, 10000)
-    periodic_records.start()
+    #periodic_records = ioloop.PeriodicCallback(periodic_records_callback, 10000)
+    #periodic_records.start()
 
     # Setting up mango processor
     application.listen(opts.port)
