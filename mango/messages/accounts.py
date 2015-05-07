@@ -104,6 +104,7 @@ class BaseAccount(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     phone_number = types.StringType()
+    country_code = types.StringType()
     timezone = types.StringType()
 
     resources = compound.ModelType(Resource)
