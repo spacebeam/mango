@@ -75,7 +75,7 @@ _john_carmack_quotes = {
 class PeopleQuotes(object):
     
     def __init__(self):
-        self.quotes = _john_quotes
+        self.quotes = _john_carmack_quotes
     
     def get(self):
         x = random.randrange(0, len(self.quotes))
