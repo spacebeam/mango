@@ -34,6 +34,7 @@ from tornado import web
 
 from mango.handlers import accounts
 from mango.handlers import billings
+from mango.handlers import tasks
 from mango.handlers import records
 
 from mango.handlers import get_command
@@ -345,6 +346,10 @@ def main():
             # Records
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
+
+            # Records
+            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
+            (r'/tasks/?', tasks.Handler),
 
             # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),

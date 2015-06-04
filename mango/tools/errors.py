@@ -17,6 +17,8 @@ __author__ = 'Jean Chassoul'
 
     Most watchdog/supervisor type systems start two processes 
     that watch each other in addition to the target process(es).
+
+    Monit and supervisor watch each other in addition to the system process(es).
 '''
 
 

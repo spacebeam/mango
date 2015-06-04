@@ -66,7 +66,6 @@ class Monkey(models.Model):
         search:,
         voice:,
         ears:;
-
     }
     '''
 
