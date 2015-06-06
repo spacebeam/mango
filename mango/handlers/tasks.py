@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango HTTP records handlers.
+    Mango HTTP tasks handlers.
 '''
 
 # This file is part of mango.
@@ -44,14 +44,14 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def get(self, record_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
         '''
             Get tasks handler
         '''
 
         # -- logging info
 
-        logging.warning('daaaa fuck1!!{0}'.format(record_uuid))
+        logging.warning('daaaa fuck1!!{0}'.format(task_uuid))
 
         logging.info(self.request.arguments)
 
@@ -65,9 +65,9 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
             if self.current_user:
                 user = self.current_user
-                record = yield self.get_task(user, task_uuid)
+                task = yield self.get_task(user, task_uuid)
             else:
-                record = yield self.get_task(None, task_uuid)
+                task = yield self.get_task(None, task_uuid)
 
             if not task:
                 self.set_status(400)
@@ -114,7 +114,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
     @gen.coroutine
     def post(self):
         '''
-            Post tasks handler
+            POST tasks handler
         '''
         struct = yield check_json(self.request.body)
         db = self.settings['db']
@@ -125,11 +125,11 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             self.finish({'JSON':format_pass})
             return
 
-        record = yield self.new_task(struct)
+        task = yield self.new_task(struct)
  
-        if not record:
+        if not task:
             model = 'Tasks'
-            error = {'record':False}
+            error = {'task':False}
             reason = {'duplicates':[('Task', 'uniqueid'), (model, 'uuid')]}
 
             message = yield self.let_it_crash(struct, model, error, reason)
@@ -159,7 +159,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
                 flag = yield self.set_assigned_flag(account, task)
 
-        logging.info('new spawned record %s ' % task)
+        logging.info('new spawned task %s ' % task)
 
         self.set_status(201)
         self.finish({'uuid':task})
@@ -179,12 +179,12 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             Delete tasks handler
         '''
         task_uuid = task_uuid.rstrip('/')
-        result = yield self.remove_record(record_uuid)
+        result = yield self.remove_task(task_uuid)
 
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('record', record_uuid)
+            error = system_error.missing('task', task_uuid)
             self.finish(error)
             return
 
@@ -213,7 +213,7 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         '''
             Get public handler
         '''
-        # get public details: record get_record_list without an account
+        # get public details: task get_task_list without an account
         account = None
         result = yield self.get_task_list(account=account,
                                             lapse=None,
