@@ -11,7 +11,6 @@ Jinja2
 pandas
 arrow
 pycurl
-nose
 ujson
 pylibmc
-requests
+msgpack-python
