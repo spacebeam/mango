@@ -23,6 +23,13 @@ class Task(models.Model):
         Task Object Data Structure
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
+
+    first_name = types.StringType()
+    last_name = types.StringType()
+    description = types.StringType()
+    label = types.StringType()
+
+    email = types.StringType()
     
 
     account = types.StringType()
@@ -56,20 +63,23 @@ class Task(models.Model):
     duration = types.IntType()
     billsec = types.IntType()
     billing = types.IntType()
+    rate = types.IntType()
 
     disposition = types.StringType()
-    status = types.StringType()
+    status = types.StringType(choices=['now',
+                                       'later',
+                                       'done'],
+                              default='now',
+                              required=True)
 
-    recorded = types.BooleanType(default=False)
-    record_uri = types.StringType()
 
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     
     created = types.DateTimeType(default=arrow.utcnow().naive)
-    #created_at = types.DateTimeType()
+
     last_modified = types.DateTimeType()
-    updated_by = types.DateTimeType()
+    updated_by = types.StringType()
     updated_at = types.DateTimeType()
 
     uri = types.StringType()
