@@ -107,6 +107,8 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                     end=end,
                                     page_num=page_num)
         
+        logging.error(result)
+
         result = json_util.dumps(result)
 
         self.finish(result)
