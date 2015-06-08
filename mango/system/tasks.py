@@ -71,7 +71,7 @@ class Tasks(object):
         task_list = []
         
         if not account:
-            query = self.db.tasks.find({'public':True})
+            query = self.db.tasks.find({'public':False})
         elif type(account) is list:
             accounts = [{'accountcode':a, 'assigned': True} for a in account]
             query = self.db.tasks.find({'$or':accounts})
