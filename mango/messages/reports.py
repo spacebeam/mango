@@ -27,7 +27,7 @@ class BaseResult(models.Model):
     results = compound.ListType(compound.ModelType(records.Record))
 
 
-class BaseGoal(models.Model)
+class BaseGoal(models.Model):
     '''
         base goal
     '''
