@@ -17,6 +17,7 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 
+from mango.messages import tasks
 from mango.messages import records
 
 
