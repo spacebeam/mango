@@ -92,8 +92,8 @@ class Tasks(object):
             raise e
 
         try:
-            struct = {'results': task_list}
-            message = reports.BaseResult(struct)
+            struct = {'goals': task_list}
+            message = reports.BaseGoal(struct)
             message.validate()
             message = clean_results(message)
         except Exception, e:
