@@ -35,7 +35,7 @@ from mango.tools.quotes import PeopleQuotes
 
 # dht means distributed hash table
 
-# share hash table missing.
+# share hash table missing. cebus integration?
 
 def spawn(message):
     '''
@@ -52,6 +52,18 @@ def link(message):
 def spawn_link(message):
     '''
         Spawn link processes
+    '''
+    print("Spawn new process, {0} return Received process uuid".format(message))
+
+def monitor(message):
+    '''
+        Monitor processes
+    '''
+    print("Monitor processes {0}".format(message))
+
+def spawn_monitor(message):
+    '''
+        Spawn monitor processes
     '''
     print("Spawn new process, {0} return Received process uuid".format(message))
 
@@ -198,6 +210,8 @@ class BaseHandler(web.RequestHandler):
 
         elif error is not None:
             logging.warning(str_error)
+
+            logging.error(struct, scheme, error, reason)
             
             message = {
                 'error': u'nonsense',
