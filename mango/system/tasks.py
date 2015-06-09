@@ -69,6 +69,7 @@ class Tasks(object):
         page_num = int(page_num)
         page_size = self.settings['page_size']
         task_list = []
+        message = None
         
         if not account:
             query = self.db.tasks.find({'public':False},{'_id':0})
@@ -98,7 +99,11 @@ class Tasks(object):
             
             message = reports.BaseGoal(struct)
             message.validate()
+
+            logging.error(message)
             message = clean_results(message)
+
+            logging.error(message)
         except Exception, e:
             logging.exception(e)
             raise e
