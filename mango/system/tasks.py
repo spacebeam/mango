@@ -92,7 +92,7 @@ class Tasks(object):
             raise e
 
         try:
-            struct = {'goals': task_list}
+            struct = {'results': task_list}
 
             logging.error(struct)
             
