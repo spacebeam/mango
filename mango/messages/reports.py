@@ -32,7 +32,7 @@ class BaseGoal(models.Model):
     '''
         base goal
     '''
-    goals = compound.ListType(compound.ModelType(tasks.Task))
+    results = compound.ListType(compound.ModelType(tasks.Task))
 
 
 class BaseHistory(models.Model):
