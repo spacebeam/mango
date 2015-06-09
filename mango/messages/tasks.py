@@ -18,20 +18,27 @@ from schematics import models
 from schematics import types
 
 
+# missing compoing of comments on task history
+
+
 class Task(models.Model):
     '''
         Task Object Data Structure
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
 
+    title = types.StringType()
+
     first_name = types.StringType()
     last_name = types.StringType()
     description = types.StringType()
+    
     label = types.StringType()
+    
+    category = types.StringType()
 
     email = types.StringType()
     
-
     account = types.StringType()
     accountcode = types.StringType()
     userfield = types.StringType()
@@ -70,6 +77,18 @@ class Task(models.Model):
                                        'later',
                                        'done'],
                               default='now',
+                              required=True)
+    
+    priority = types.StringType(choices=['small',
+                                       'medium',
+                                       'hight'],
+                              default='small',
+                              required=True)
+    
+    severity = types.StringType(choices=['info',
+                                       'warning',
+                                       'error'],
+                              default='info',
                               required=True)
 
 
