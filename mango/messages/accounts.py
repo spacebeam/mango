@@ -121,6 +121,8 @@ class User(BaseAccount):
     '''
         User account
     '''
+    first_name = 
+    last_name = 
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
