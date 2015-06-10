@@ -105,7 +105,7 @@ class BaseAccount(models.Model):
     phone_number = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
-
+    location = types.StringType()
     resources = compound.ModelType(Resource)
     
     routes = compound.ListType(compound.ModelType(Route))
