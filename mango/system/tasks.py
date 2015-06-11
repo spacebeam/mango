@@ -94,16 +94,11 @@ class Tasks(object):
 
         try:
             struct = {'results': task_list}
-
-            logging.error(struct)
             
             message = reports.BaseGoal(struct)
             message.validate()
-
-            logging.error(message)
             message = clean_results(message)
 
-            logging.error(message)
         except Exception, e:
             logging.exception(e)
             raise e
