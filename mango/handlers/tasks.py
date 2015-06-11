@@ -77,9 +77,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 self.finish(error)
                 return
 
-            logging.warning(clean_structure(task))
-
-            self.finish(task)
+            self.finish(clean_structure(task))
             return
 
         if self.current_user:
