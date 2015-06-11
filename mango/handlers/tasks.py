@@ -76,6 +76,8 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 self.finish(error)
                 return
 
+            logging.warning(task)
+
             self.finish(task)
             return
 
