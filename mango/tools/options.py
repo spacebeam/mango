@@ -104,6 +104,10 @@ def options():
     tornado.options.define('memcached_ketama',
         default=True, type=bool,
         help=('Memcached ketama'))
+
+    tornado.options.define('cache_enabled',
+        default=False, type=bool,
+        help=('Enable cache'))
     
     # Base url and timezone
     tornado.options.define('base_url', default='api', type=str,
