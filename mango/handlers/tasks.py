@@ -33,6 +33,7 @@ from mango.tools import check_json
 from mango.tools import check_times
 from mango.tools import errors
 from mango.tools import new_resource
+from mango.tools import clean_structure
 
 from mango.handlers import BaseHandler
 
@@ -76,7 +77,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 self.finish(error)
                 return
 
-            logging.warning(task)
+            logging.warning(clean_structure(task))
 
             self.finish(task)
             return
