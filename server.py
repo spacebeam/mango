@@ -248,6 +248,8 @@ def main():
     # base url
     base_url = opts.base_url
 
+    cache_enabled = opts.cache_enabled
+
     # mango web application daemon
     application = web.Application(
 
@@ -368,6 +370,9 @@ def main():
 
         # system cache
         cache=cache,
+
+        # cache enabled flag
+        cache_enabled=cache_enabled,
 
         # document datastorage
         document=document,
