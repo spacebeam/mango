@@ -207,6 +207,43 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':result})
 
+    @gen.coroutine
+    def patch(self, account):
+        '''
+            Update user account
+        '''
+
+        logging.info(account)
+
+        struct = yield check_json(self.result.body)
+
+        format_pass = (True if struct else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+
+        struct['account_type'] = 'user'
+
+        logging.info('new update on account structure %s' % str(struct))
+
+        result = yield self.modify_account(struct)
+
+         if 'error' in result:
+            model = 'User'
+            reason = {'duplicates': [(model, 'account'), (model, 'email')]}
+
+            message = yield self.let_it_crash(struct, model, result, reason)
+
+            logging.warning(message)
+
+            self.set_status(400)
+            self.finish(message)
+            return
+
+        self.set_status(201)
+        self.finish({'uuid':result})
+
     ##@web.authenticated
     @gen.coroutine
     def delete(self, account):
