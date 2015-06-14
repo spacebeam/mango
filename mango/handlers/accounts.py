@@ -213,9 +213,12 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Update user account
         '''
 
-        logging.info(account)
+        logging.info('request.arguments {0}'.format(self.request.arguments))
+        logging.info('request.body {0}'.format(self.request.body))
 
         struct = yield check_json(self.result.body)
+
+        logging.info('patch received struct {0}'.format(struct))
 
         format_pass = (True if struct else False)
         if not format_pass:
@@ -227,9 +230,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         logging.info('new update on account structure %s' % str(struct))
 
-        result = yield self.modify_account(struct)
+        result = yield self.modify_account(account, struct)
 
-         if 'error' in result:
+        if 'error' in result:
             model = 'User'
             reason = {'duplicates': [(model, 'account'), (model, 'email')]}
 
