@@ -237,8 +237,9 @@ def main():
     db = document
 
     # logging database hosts
-    logging.info('MongoDB server: %s' % opts.mongo_host)
-    logging.info('PostgreSQL server: %s' % opts.sql_host)
+    logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
+
+    logging.info('PostgreSQL server: {0}:{1}'.format(opts.sql_host, opts.sql_port))
 
     if opts.ensure_indexes:
         logging.info('Ensuring indexes...')
