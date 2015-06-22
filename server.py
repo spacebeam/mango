@@ -250,6 +250,9 @@ def main():
 
     cache_enabled = opts.cache_enabled
 
+    if cache_enabled:
+        logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
+
     # mango web application daemon
     application = web.Application(
 

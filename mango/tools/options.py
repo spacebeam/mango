@@ -62,6 +62,7 @@ def options():
                            help=('Server hostname'))
     tornado.options.define('port', default=8888, type=int,
                            help=('Server port'))
+    
     # MongoDB database settings
     tornado.options.define('mongo_host', type=str,
                             help=('MongoDB hostname or ip address'))
@@ -85,6 +86,7 @@ def options():
     tornado.options.define('sql_password', type=str,
                             help=('PostgreSQL username password'))
 
+    # Memcached cache datastorage settings
     tornado.options.define('memcached_host',
         default='127.0.0.1', type=str,
         help=('Memcached host'))
