@@ -175,6 +175,15 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
     ##@web.authenticated
     @gen.coroutine
+    def patch(self, task_uuid):
+        '''
+            Patch tasks handler
+        '''
+        logging.info(task_uuid)
+        self.finish({'uuid': task_uuid})
+
+    ##@web.authenticated
+    @gen.coroutine
     def delete(self, task_uuid):
         '''
             Delete tasks handler
@@ -191,14 +200,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
         self.set_status(204)
         self.finish()
-
-    ##@web.authenticated
-    @gen.coroutine
-    def patch(self):
-        '''
-            Patch tasks handler
-        '''
-        pass
 
 
 @content_type_validation
