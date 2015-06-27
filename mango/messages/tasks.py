@@ -16,15 +16,28 @@ import uuid
 
 from schematics import models
 from schematics import types
+from schematics.types import compound
 
 
 # missing compoing of comments on task history
 
-class Comment(models.Model):
+
+class SimpleEntry(models.Model):
     '''
-        Comment class
+        Simple comment Entry
     '''
+    account = types.StringType()
     comment = types.StringType()
+    created = types.DateTimeType(default=arrow.utcnow().naive)
+
+
+class Comment(models.Model):
+    ''' 
+        Comment
+    '''
+    commments = compound.ModelType(SimpleEntry)
+
+    total = types.IntType()
 
 
 class Task(models.Model):
@@ -103,7 +116,7 @@ class Task(models.Model):
     
     created = types.DateTimeType(default=arrow.utcnow().naive)
 
-    comments = compound.ModelType(Comment)
+    comments = compound.ListType(compound.ModelType(Comment))
 
     last_modified = types.DateTimeType()
     updated_by = types.StringType()
@@ -161,6 +174,7 @@ class ModifyTask(models.Model):
     checked = types.BooleanType()
     checked_by = types.StringType()
     created = types.DateTimeType()
+    comments = compound.ListType(compound.ModelType(Comment))
     last_modified = types.DateTimeType()
     updated_by = types.StringType()
     updated_at = types.DateTimeType()
