@@ -150,7 +150,7 @@ class ModifyTask(models.Model):
     status = types.StringType()
     priority = types.StringType()
     severity = types.StringType()
-    checked = types.BooleanType)
+    checked = types.BooleanType()
     checked_by = types.StringType()
     created = types.DateTimeType()
     last_modified = types.DateTimeType()
