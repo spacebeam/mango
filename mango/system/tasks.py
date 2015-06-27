@@ -176,6 +176,32 @@ class Tasks(object):
         raise gen.Return(result)
 
     @gen.coroutine
+    def modify_task(self, account, task_uuid, struct):
+        '''
+            Modify task
+        '''
+        try:
+            task = tasks.ModifyTask(struct)
+            task.validate()
+            task = clean_structure(task)
+        except Exception, e:
+            logging.error(e)
+            raise e
+
+        try:
+            result = yield self.db.tasks.update(
+                {'account':account,
+                 'uuid':task_uuid},
+                {'$set':task}
+            )
+            logging.info(result)            
+        except Exception, e:
+            logging.error(e)
+            message = str(e)
+
+        raise gen.Return(bool(result.get('n')))
+
+    @gen.coroutine
     def replace_task(self, struct):
         '''
             Replace a existent task entry
@@ -189,12 +215,4 @@ class Tasks(object):
             Return resource options
         '''
         # options implementation
-        pass
-
-    @gen.coroutine
-    def modify_task(self, struct):
-        '''
-            Modify a existent task entry
-        '''
-        # patch implementation
         pass
