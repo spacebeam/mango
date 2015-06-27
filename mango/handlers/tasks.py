@@ -167,20 +167,46 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
     ##@web.authenticated
     @gen.coroutine
+    def patch(self, task_uuid):
+        '''
+            Modify task
+        '''
+        logging.info('request.arguments {0}'.format(self.request.arguments))
+        logging.info('request.body {0}'.format(self.request.body))
+
+        struct = yield check_json(self.request.body)
+
+        logging.info('patch received struct {0}'.format(struct))
+
+        format_pass = (True if not dict(struct).get('errors', False) else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+
+        account = self.request.arguments.get('account', [None])[0]
+
+        logging.info('account {0} uuid {1} struct {2}'.format(account, task_uuid, struct))
+
+        result = yield self.modify_task(account, task_uuid, struct)
+
+        if not result:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('task', task_uuid)
+            self.finish(error)
+            return
+
+        self.set_status(200)
+        self.finish({'message': 'update completed successfully'})
+
+    ##@web.authenticated
+    @gen.coroutine
     def put(self):
         '''
             Put tasks handler
         '''
         pass
-
-    ##@web.authenticated
-    @gen.coroutine
-    def patch(self, task_uuid):
-        '''
-            Patch tasks handler
-        '''
-        logging.info(task_uuid)
-        self.finish({'uuid': task_uuid})
 
     ##@web.authenticated
     @gen.coroutine
