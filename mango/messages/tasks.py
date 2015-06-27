@@ -20,6 +20,12 @@ from schematics import types
 
 # missing compoing of comments on task history
 
+class Comment(models.Model):
+    '''
+        Comment class
+    '''
+    comment = types.StringType()
+
 
 class Task(models.Model):
     '''
@@ -96,6 +102,8 @@ class Task(models.Model):
     checked_by = types.StringType()
     
     created = types.DateTimeType(default=arrow.utcnow().naive)
+
+    comments = compound.ModelType(Comment)
 
     last_modified = types.DateTimeType()
     updated_by = types.StringType()
