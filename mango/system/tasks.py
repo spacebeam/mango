@@ -97,6 +97,8 @@ class Tasks(object):
 
         try:
             struct = {'results': task_list}
+
+            logging.error(struct)
             
             message = reports.BaseGoal(struct)
             message.validate()

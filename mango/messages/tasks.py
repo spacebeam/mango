@@ -26,6 +26,7 @@ class SimpleEntry(models.Model):
     '''
         Simple comment Entry
     '''
+    count = types.IntType()
     account = types.StringType()
     comment = types.StringType()
     created = types.DateTimeType(default=arrow.utcnow().naive)
@@ -35,7 +36,7 @@ class Comment(models.Model):
     ''' 
         Comment
     '''
-    comments = compound.ModelType(SimpleEntry)
+    comments = compound.ListType(compound.ModelType(SimpleEntry))
 
     total = types.IntType()
 
@@ -114,7 +115,7 @@ class Task(models.Model):
     
     created = types.DateTimeType(default=arrow.utcnow().naive)
 
-    comments = compound.ListType(compound.ModelType(Comment))
+    comments = compound.ModelType(Comment)
 
     last_modified = types.DateTimeType()
     updated_by = types.StringType()
