@@ -186,6 +186,7 @@ class Tasks(object):
             Modify task
         '''
         try:
+            logging.info(struct)
             task = tasks.ModifyTask(struct)
             task.validate()
             task = clean_structure(task)
