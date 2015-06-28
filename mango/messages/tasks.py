@@ -78,7 +78,6 @@ class Task(models.Model):
     destination_context = types.StringType()
 
     destination_number = types.StringType()
-    
    
     destination_channel = types.StringType()
     
@@ -109,7 +108,6 @@ class Task(models.Model):
                                        'error'],
                               default='info',
                               required=True)
-
 
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()

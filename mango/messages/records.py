@@ -31,11 +31,11 @@ class FromQueue(models.Model):
     hangup_time = types.DateTimeType()
 
 
-class Comment(models.Model):
-    '''
-        Comment class
-    '''
-    comment = types.StringType()
+#class Comment(models.Model):
+#    '''
+#        Comment class
+#    '''
+#    comment = types.StringType()
 
 
 class Record(models.Model):
