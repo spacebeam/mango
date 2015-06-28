@@ -72,13 +72,16 @@ class Tasks(object):
         message = None
         
         if not account:
-            query = self.db.tasks.find({'public':False},{'_id':0})
+            query = self.db.tasks.find({'public':False},
+                                       {'_id':0, 'comments':0})
         elif type(account) is list:
             accounts = [{'accountcode':a, 'assigned': True} for a in account]
-            query = self.db.tasks.find({'$or':accounts},{'_id':0})
+            query = self.db.tasks.find({'$or':accounts},
+                                       {'_id':0, 'comments':0})
         else:
             query = self.db.tasks.find({'accountcode':account,
-                                        'assigned':True},{'_id':0})
+                                        'assigned':True},
+                                       {'_id':0, 'comments':0})
         
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
