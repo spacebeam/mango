@@ -173,7 +173,7 @@ class ModifyTask(models.Model):
     checked = types.BooleanType()
     checked_by = types.StringType()
     created = types.DateTimeType()
-    comments = compound.ListType(compound.ModelType(Comment))
+    comments = compound.ModelType(Comment)
     last_modified = types.DateTimeType()
     updated_by = types.StringType()
     updated_at = types.DateTimeType()
