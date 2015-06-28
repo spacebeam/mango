@@ -35,7 +35,7 @@ class Comment(models.Model):
     ''' 
         Comment
     '''
-    commments = compound.ModelType(SimpleEntry)
+    comments = compound.ModelType(SimpleEntry)
 
     total = types.IntType()
 
