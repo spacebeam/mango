@@ -16,4 +16,4 @@ Contribution process
 License
 -------
 
-The project is released under the AGPL 3 license
+The project is released under the AGPL 3 license https://gnu.org/licenses/agpl.html
