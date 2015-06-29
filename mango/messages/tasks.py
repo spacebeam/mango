@@ -114,6 +114,7 @@ class Task(models.Model):
     checked_by = types.StringType()
     
     created = types.DateTimeType(default=arrow.utcnow().naive)
+    created_at = types.DateTimeType(default=arrow.utcnow().naive)
 
     comments = compound.ModelType(Comment)
 
