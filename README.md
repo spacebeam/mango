@@ -11,7 +11,7 @@ Growing mango trees in the home landscape will give you a lifetime of fresh pung
 Contribution process
 --------------------
 
-* C4 [RFC 22 C4.1](http://rfc.zeromq.org/spec:22)
+* ZeroMQ [RFC 22 C4.1](http://rfc.zeromq.org/spec:22)
 
 License
 -------
