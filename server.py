@@ -66,15 +66,12 @@ iofun = []
 e_tag = False
 
 # db global variable
-global db
 db = False
 
 # sql global variable
-global sql
 sql = False
 
 # cache glogbal variable
-global cache
 cache = False
 
 
@@ -107,12 +104,6 @@ def main():
         }
     )
 
-    # Set kvalue database
-    kvalue = False
-
-    # Set default cache
-    cache = memcache
-
     # Set SQL URI
     postgresql_uri = queries.uri(
         host=opts.sql_host,
@@ -121,10 +112,20 @@ def main():
         user=opts.sql_user,
         password=None
     )
+
+    # Set kvalue database
+    kvalue = False
+
+    # Set default cache
+    global cache
+    cache = memcache
+
     # Set SQL session
+    global sql
     sql = queries.TornadoSession(uri=postgresql_uri)
 
     # Set default database
+    global db
     db = document
 
     # logging database hosts
