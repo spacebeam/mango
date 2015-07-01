@@ -278,3 +278,41 @@ def assign_record(db, account, callid):
         return
 
     raise gen.Return(result)
+
+@gen.coroutine
+def periodic_records_callback():
+    '''
+        periodic records callback function
+    '''
+    start = time.time()
+    results = yield [
+        periodic.process_assigned_false(db),
+        periodic.process_assigned_records(db),
+        periodic.get_raw_records(sql, 800)
+    ]
+
+    if all(x is None for x in results):
+        result = None
+    else:
+        result = list(itertools.chain.from_iterable(results))
+
+        for record in result:
+
+            flag = yield periodic.assign_record(
+                db,
+                record['account'],
+                record['uuid']
+            )
+
+            # check new resource
+            resource = yield new_resource(db, record)
+    if result:
+        logging.info('periodic records %s', result)
+
+    end = time.time()
+    periodic_take = (end - start)
+
+    logging.info('it takes {0} processing periodic {1}'.format(
+        periodic_take,
+        'callbacks for records resource.'
+    ))

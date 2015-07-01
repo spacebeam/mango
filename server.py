@@ -14,9 +14,9 @@ __author__ = 'Jean Chassoul'
 
 
 import zmq
-import time
+#import time
 import sys
-import random
+#import random
 import uuid
 import logging
 import motor
@@ -37,8 +37,8 @@ from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records
 
-from mango.handlers import get_command
-from mango.handlers import process_message
+#from mango.handlers import get_command
+#from mango.handlers import process_message
 
 from mango.tools import options
 from mango.tools import indexes
@@ -50,7 +50,7 @@ from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 from multiprocessing import Process
 
-from zmq.eventloop import ioloop, zmqstream
+from zmq.eventloop import ioloop
 
 
 # ioloop
@@ -71,118 +71,6 @@ sql = False
 # cache glogbal variable
 cache = False
 
-
-def server_router(port="5560"):
-    '''
-        ROUTER process
-    '''
-    pass
-
-def gen_daemon(server_router):
-    '''
-        OTP gen_server analogy
-    '''
-    pass
-
-def server_push(port="5556"):
-    '''
-        PUSH process
-    '''
-    context = zmq.Context()
-    socket = context.socket(zmq.PUSH)
-    socket.bind("tcp://*:%s" % port)
-    print "Running server on port: ", port
-    # serves only 5 request and dies
-    for reqnum in range(10):
-        if reqnum < 6:
-            socket.send("Continue")
-        else:
-            socket.send("Exit")
-            break
-        time.sleep (1)
-
-def server_pub(port="5558"):
-    '''
-        PUB process
-    '''
-    context = zmq.Context()
-    socket = context.socket(zmq.PUB)
-    socket.bind("tcp://*:%s" % port)
-    publisher_id = random.randrange(0,9999)
-    print "Running server on port: ", port
-    # serves only 5 request and dies
-    for reqnum in range(10):
-        # Wait for next request from client
-        topic = random.randrange(8,10)
-        messagedata = "server#%s" % publisher_id
-        print "%s %s" % (topic, messagedata)
-        socket.send("%d %s" % (topic, messagedata))
-        time.sleep(1)
-
-def client_dealer(por="5559"):
-    '''
-        DEALER process
-    '''
-    pass
-
-def client(port_push, port_sub):
-    '''
-        Client process
-    '''
-    context = zmq.Context()
-    socket_pull = context.socket(zmq.PULL)
-    socket_pull.connect ("tcp://localhost:%s" % port_push)
-    stream_pull = zmqstream.ZMQStream(socket_pull)
-    stream_pull.on_recv(get_command)
-    print("Connected to server with port %s" % port_push)
-
-    socket_sub = context.socket(zmq.SUB)
-    socket_sub.connect ("tcp://localhost:%s" % port_sub)
-    socket_sub.setsockopt(zmq.SUBSCRIBE, "9")
-    stream_sub = zmqstream.ZMQStream(socket_sub)
-    stream_sub.on_recv(process_message)
-    print("Connected to publisher with port %s" % port_sub)
-
-    ioloop.IOLoop.instance().start()
-    print("Worker has stopped processing messages.")
-
-@gen.coroutine
-def periodic_records_callback():
-    '''
-        periodic records callback function
-    '''
-    start = time.time()
-    results = yield [
-        periodic.process_assigned_false(db),
-        periodic.process_assigned_records(db),
-        periodic.get_raw_records(sql, 800)
-    ]
-
-    if all(x is None for x in results):
-        result = None
-    else:
-        result = list(itertools.chain.from_iterable(results))
-
-        for record in result:
-
-            flag = yield periodic.assign_record(
-                db,
-                record['account'],
-                record['uuid']
-            )
-
-            # check new resource
-            resource = yield new_resource(db, record)
-    if result:
-        logging.info('periodic records %s', result)
-
-    end = time.time()
-    periodic_take = (end - start)
-
-    logging.info('it takes {0} processing periodic {1}'.format(
-        periodic_take,
-        'callbacks for records resource.'
-    ))
 
 def main():
     '''
