@@ -280,6 +280,13 @@ def assign_record(db, account, callid):
     raise gen.Return(result)
 
 @gen.coroutine
+def records_callback():
+    '''
+        periodic records callback
+    '''
+    logging.info('a little brain dead around the adges')
+
+@gen.coroutine
 def periodic_records_callback():
     '''
         periodic records callback function
