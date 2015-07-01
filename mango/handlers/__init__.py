@@ -37,58 +37,6 @@ from mango.tools.quotes import PeopleQuotes
 
 # share hash table missing. cebus integration?
 
-def spawn(message):
-    '''
-        Spawn process, return new uuid
-    '''
-    print("Spawn process {0}".format(message))
-
-def link(message):
-    '''
-        Link processes
-    '''
-    print("Link processes {0}".format(message))
-
-def spawn_link(message):
-    '''
-        Spawn link processes
-    '''
-    print("Spawn new process, {0} return Received process uuid".format(message))
-
-def monitor(message):
-    '''
-        Monitor processes
-    '''
-    print("Monitor processes {0}".format(message))
-
-def spawn_monitor(message):
-    '''
-        Spawn monitor processes
-    '''
-    print("Spawn new process, {0} return Received process uuid".format(message))
-
-def register(message):
-    '''
-        Register process uuid
-    '''
-    print("Received message: %s" % message)
-
-def get_command(message):
-    print("Received control command: %s" % message)
-    if message[0] == "Exit":
-        print("Received exit command, client will stop receiving messages")
-        should_continue = False
-        ioloop.IOLoop.instance().stop()
-        
-def process_message(message):
-    print("Processing ... %s" % message)
-
-def context_switch(message):
-    '''
-        Node context switch
-    '''
-    print("talk between nodes")
-
 
 class BaseHandler(web.RequestHandler):
     '''
