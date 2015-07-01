@@ -27,6 +27,10 @@ import queries
 import pylibmc as mc
 
 from tornado import ioloop # ???
+
+# system periodic cast callback
+from tornado.ioloop import PeriodicCallback as PeriodicCast
+
 from tornado import gen
 from tornado import web
 
@@ -37,8 +41,7 @@ from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records
 
-#from mango.handlers import get_command
-#from mango.handlers import process_message
+from mango.system import server_push, server_pub, client
 
 from mango.tools import options
 from mango.tools import indexes
@@ -294,9 +297,9 @@ def main():
         login_url='/login/'
     )
 
-    # Tornado periodic callback functions
-    #periodic_records = ioloop.PeriodicCallback(periodic_records_callback, 10000)
-    #periodic_records.start()
+    # Mango periodic cast callbacks
+    periodic_records = PeriodicCast(periodic.records_callback, 10000)
+    periodic_records.start()
 
     # Setting up mango processor
     application.listen(opts.port)
