@@ -15,8 +15,8 @@ import zmq
 
 from zmq.eventloop import ioloop, zmqstream
 
-from howler.handlers import get_command
-from howler.handlers import process_message
+from mango.handlers import get_command
+from mango.handlers import process_message
 
 import time
 import random
