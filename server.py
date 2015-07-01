@@ -26,7 +26,7 @@ import queries
 
 import pylibmc as mc
 
-from tornado import ioloop
+from tornado import ioloop # ???
 from tornado import gen
 from tornado import web
 
@@ -63,12 +63,15 @@ iofun = []
 e_tag = False
 
 # db global variable
+global db
 db = False
 
 # sql global variable
+global sql
 sql = False
 
 # cache glogbal variable
+global cache
 cache = False
 
 
@@ -105,7 +108,6 @@ def main():
     kvalue = False
 
     # Set default cache
-    global cache
     cache = memcache
 
     # Set SQL URI
@@ -117,11 +119,9 @@ def main():
         password=None
     )
     # Set SQL session
-    global sql
     sql = queries.TornadoSession(uri=postgresql_uri)
 
     # Set default database
-    global db
     db = document
 
     # logging database hosts
