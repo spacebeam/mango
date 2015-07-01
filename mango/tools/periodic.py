@@ -284,7 +284,7 @@ def records_callback():
     '''
         periodic records callback
     '''
-    logging.info('a little brain dead around the adges')
+    logging.info('a little brain dead around the adges, shop show with the time lets face it this deadline is very dead, dont call me call waht this face manana forever')
 
 @gen.coroutine
 def periodic_records_callback():
