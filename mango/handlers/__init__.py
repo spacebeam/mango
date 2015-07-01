@@ -23,7 +23,7 @@ from tornado import web
 
 from zmq.eventloop import ioloop
 
-#from mango.system import basic_authentication
+from mango.system import basic_authentication
 
 from mango.tools import check_account_authorization
 from mango.tools import errors
