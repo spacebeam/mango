@@ -98,6 +98,9 @@ class BaseAccount(models.Model):
     api_key = types.StringType(required=False)
     # api_keys = compound.ListType(compound.ModelType(Mon))
 
+    # system admin account
+    is_admin = types.BooleanType(default=False)
+
     active = types.BooleanType(default=True)
     account = types.StringType(required=True)
     name = types.StringType(required=False)
