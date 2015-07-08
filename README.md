@@ -1,6 +1,5 @@
-[![Stories in Ready](https://badge.waffle.io/iofun/mango.png?label=ready&title=Ready)](https://waffle.io/iofun/mango)
 mango
------
+=====
 
 Mango manage martian asynchronous number of granular general going organizations of old roman generality.
 
