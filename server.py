@@ -14,9 +14,7 @@ __author__ = 'Jean Chassoul'
 
 
 import zmq
-#import time
 import sys
-#import random
 import uuid
 import logging
 import motor
