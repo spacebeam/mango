@@ -26,8 +26,6 @@ import queries
 
 import pylibmc as mc
 
-from tornado import ioloop # ???
-
 # system periodic cast callback
 from tornado.ioloop import PeriodicCallback as PeriodicCast
 
@@ -81,9 +79,13 @@ def main():
 
         Organizations of Roman Generality.
     '''
-    # Now we can run a few servers 
+    # Now we can run a few servers and processes
+
+    # daemon server port
     server_push_port = "5556"
     server_pub_port = "5558"
+
+    # Python processes
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
@@ -130,9 +132,9 @@ def main():
 
     # logging database hosts
     logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
-
     logging.info('PostgreSQL server: {0}:{1}'.format(opts.sql_host, opts.sql_port))
 
+    # Ensure 
     if opts.ensure_indexes:
         logging.info('Ensuring indexes...')
         indexes.ensure_indexes(db)
