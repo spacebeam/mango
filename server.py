@@ -32,13 +32,6 @@ from tornado import web
 
 # from tornado import websocket
 
-from mango.handlers import accounts
-from mango.handlers import billings
-from mango.handlers import tasks
-from mango.handlers import records
-
-from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
-
 from mango.system import server_push
 from mango.system import server_pub
 from mango.system import client
@@ -48,6 +41,13 @@ from mango.tools import indexes
 from mango.tools import periodic
 
 from mango.tools import new_resource
+
+from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
+
+from mango.handlers import accounts
+from mango.handlers import billings
+from mango.handlers import tasks
+from mango.handlers import records
 
 from multiprocessing import Process
 
