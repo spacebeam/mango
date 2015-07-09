@@ -37,15 +37,17 @@ from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records
 
-from mango.system import server_push, server_pub, client
+from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
+
+from mango.system import server_push
+from mango.system import server_pub
+from mango.system import client
 
 from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
 from mango.tools import new_resource
-
-from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 from multiprocessing import Process
 
@@ -141,6 +143,7 @@ def main():
     # base url
     base_url = opts.base_url
 
+    # system cache
     cache_enabled = opts.cache_enabled
 
     if cache_enabled:
