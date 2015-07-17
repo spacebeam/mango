@@ -176,12 +176,31 @@ class BaseHandler(web.RequestHandler):
         raise gen.Return(message)
 
     @gen.coroutine
+    def remove_sip_account(self, struct):
+        '''
+            Remove sip account
+        '''
+        try:
+            # Get SQL database from system settings
+            sql = self.settings.get('sql')
+            # PostgreSQL remove delete sip account query
+            query = '''
+                delete 
+            '''
+            message = query
+        except Exception, e:
+            logging.exception(e)
+            raise e
+
+        raise gen.Return(message)
+
+    @gen.coroutine
     def new_sip_account(self, struct):
         '''
             New sip account
         '''
         try:
-            # Get SQL database from mango settings
+            # Get SQL database from system settings
             sql = self.settings.get('sql')
             # PostgreSQL insert new sip account query
             query = '''
@@ -194,6 +213,8 @@ class BaseHandler(web.RequestHandler):
                     sippasswd,
                     allow,
                     context,
+                    nat,
+                    qualify,
                     avpf,
                     encryption
                 ) values (
@@ -205,6 +226,8 @@ class BaseHandler(web.RequestHandler):
                     '{4}',
                     'ulaw,alaw,g729,gsm',
                     'fun-accounts',
+                    'force_rport,comedia',
+                    'yes',
                     'no',
                     'no'
                 );
