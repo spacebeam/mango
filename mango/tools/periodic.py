@@ -324,7 +324,7 @@ def records_callback(sql):
 
         result.free()
 
-        logging.warning('{0} rows spawned on {1} {2}'.format(rows, 'mango' 'ack missing')
+        logging.warning('{0} rows spawned on {1} {2}'.format(rows, 'mango', 'ack missing')
 
         # TODO: Still need to check the follings exceptions with the new queries module.
         #except (psycopg2.Warning, psycopg2.Error) as e:
