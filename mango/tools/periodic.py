@@ -312,7 +312,7 @@ def records_callback(sql):
         #)
         result = yield sql.query(query)
 
-        logging.info(result)
+        rows = len(result)
 
         for x in result:
             logging.info(x)
@@ -324,7 +324,7 @@ def records_callback(sql):
 
         result.free()
 
-        logging.warning('New SIP account spawned on PostgreSQL {0}'.format(message))
+        logging.warning('{0} rows spawned on {1} {2}'.format(rows, 'mango' message))
 
         # TODO: Still need to check the follings exceptions with the new queries module.
         #except (psycopg2.Warning, psycopg2.Error) as e:
