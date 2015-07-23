@@ -81,7 +81,7 @@ def periodic_records_callback():
     '''
     start = time.time()
     results = yield [
-        periodic.records_callback(db)
+        periodic.records_callback(sql)
         #periodic.process_assigned_false(db),
         #periodic.process_assigned_records(db),
         #periodic.get_raw_records(sql, 800)

@@ -280,7 +280,7 @@ def assign_record(db, account, callid):
     raise gen.Return(result)
 
 @gen.coroutine
-def records_callback(db):
+def records_callback(sql=sql):
     '''
         periodic records callback
     '''
@@ -288,7 +288,6 @@ def records_callback(db):
 
     try:
         # Get SQL database from system settings
-        sql = db
         # PostgreSQL insert new sip account query
         query = '''
             SELECT DISTINCT uniqueid, 
