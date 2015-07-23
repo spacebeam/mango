@@ -314,6 +314,9 @@ def records_callback(sql):
 
         logging.info(result)
 
+        for x in result:
+            logging.info(x)
+
         if result:
             message = {'ack': True}
         else:
