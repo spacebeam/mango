@@ -280,11 +280,61 @@ def assign_record(db, account, callid):
     raise gen.Return(result)
 
 @gen.coroutine
-def records_callback():
+def records_callback(db):
     '''
         periodic records callback
     '''
     logging.info('a little brain dead')
+
+    try:
+        # Get SQL database from system settings
+        sql = db
+        # PostgreSQL insert new sip account query
+        query = '''
+            SELECT DISTINCT uniqueid, 
+                   date(calldate),
+                   src as source,
+                   dst as destination,
+                   sum(billsec) as seconds,
+                   CASE 
+                       WHEN checked IS NULL 
+                       THEN 'False' 
+                       ELSE 'True' 
+                   END AS has_profile 
+            FROM cdr WHERE date(calldate) = '2015-07-23' and dstchannel like 'SIP/ticolinea_0%'
+            GROUP by uniqueid, date, src, destination, checked 
+            ORDER by uniqueid;
+        '''#.format(
+            #struct.get('account'),
+            #struct.get('account'),
+            #struct.get('account'),
+            #struct.get('domain', self.settings.get('domain')),
+            #struct.get('password')
+        #)
+        result = yield sql.query(query)
+
+        logging.info(result)
+
+        if result:
+            message = {'ack': True}
+        else:
+            message = {'ack': False}
+
+        result.free()
+
+        logging.warning('New SIP account spawned on PostgreSQL {0}'.format(message))
+
+        # TODO: Still need to check the follings exceptions with the new queries module.
+        #except (psycopg2.Warning, psycopg2.Error) as e:
+        #    logging.exception(e)
+        #    raise e
+        
+    except Exception, e:
+        logging.exception(e)
+        raise e
+
+    raise gen.Return(message)
+
 
 @gen.coroutine
 def periodic_records_callback():
