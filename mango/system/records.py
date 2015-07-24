@@ -259,6 +259,7 @@ class Records(object):
         if not db:
             db = self.db
         try:
+            struct['strdate'] = str(struct.get('strdate'))
             record = records.Record(struct)
             record.validate()
         except Exception, e:
