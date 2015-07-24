@@ -72,6 +72,8 @@ class Record(models.Model):
     end = types.DateTimeType()
 
     duration = types.IntType()
+    seconds = types.IntType()
+    minutes = types.IntType()
     billsec = types.IntType()
     billing = types.IntType()
 
