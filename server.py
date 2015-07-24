@@ -98,7 +98,7 @@ def periodic_records_callback():
 
             # this changes to the assign_records function
             # or call system records.new_detail_record() from here??
-            '''
+            
             recs = record_tools.Records()
 
             record = yield recs.new_detail_record(stuff, db)
@@ -110,7 +110,6 @@ def periodic_records_callback():
             checked = yield periodic.checked_flag(sql, record.get('uniqueid'))
 
             logging.info(checked)
-            '''
 
             flag = yield periodic.assign_record(
                 db,
