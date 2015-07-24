@@ -280,7 +280,7 @@ def assign_record(db, account, callid):
     raise gen.Return(result)
 
 @gen.coroutine
-def records_callback(sql):
+def records_callback(sql, query_limit):
     '''
         periodic records callback
     '''

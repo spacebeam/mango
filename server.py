@@ -80,8 +80,8 @@ def periodic_records_callback():
         periodic records callback function
     '''
     start = time.time()
-    results = yield [
-        periodic.records_callback(sql)
+    raw_records = yield [
+        periodic.records_callback(sql, 888),
         #periodic.process_assigned_false(db),
         #periodic.process_assigned_records(db),
         #periodic.get_raw_records(sql, 800)
