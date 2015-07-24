@@ -105,7 +105,7 @@ def periodic_records_callback():
 
             logging.info('checked SQL uniqueid')
 
-            logging.info(record)
+            logging.info(record.get('uniqueid'))
 
             flag = yield periodic.assign_record(
                 db,
