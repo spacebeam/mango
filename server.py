@@ -33,6 +33,7 @@ from tornado import web
 
 # from tornado import websocket
 
+from mango.system import records
 from mango.system import server_push
 from mango.system import server_pub
 from mango.system import client
@@ -94,6 +95,13 @@ def periodic_records_callback():
         results = list(itertools.chain.from_iterable(raw_records))
 
         for stuff in results:
+
+            # this changes to the assign_records function
+            # or call system records.new_detail_record() from here??
+
+            recs = records.Records()
+
+            #record = yield recs.new_detail_record(db, stuff)
 
             flag = yield periodic.assign_record(
                 db,
