@@ -308,7 +308,7 @@ def records_callback(sql, query_limit):
     '''
         periodic records callback
     '''
-    logging.info('a little brain dead')
+    logging.info('a little brain dead recolection of records')
     record_list = []
 
     try:
@@ -352,7 +352,6 @@ def records_callback(sql, query_limit):
 
         for x in result:
             record_list.append(x)
-            logging.info(x)
 
         result.free()
 
