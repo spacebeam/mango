@@ -103,9 +103,7 @@ def periodic_records_callback():
 
             record = yield recs.new_detail_record(stuff, db)
 
-            logging.info('checked SQL uniqueid')
-
-            logging.info(record.get('uniqueid'))
+            logging.info('checked SQL uniqueid {0}'.format(str(record.get('uniqueid'))))
 
             checked = yield periodic.checked_flag(sql, record.get('uniqueid'))
 
@@ -116,10 +114,6 @@ def periodic_records_callback():
                 stuff.get('account'),
                 stuff.get('uuid')
             )
-
-            logging.info(stuff)
-
-            logging.info(flag)
 
             # check new resource
             #resource = yield new_resource(db, stuff, 'records')
