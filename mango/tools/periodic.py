@@ -285,6 +285,25 @@ def assign_record(db, account, callid): # , struct
     raise gen.Return(result)
 
 @gen.coroutine
+def checked_flag(sql, uniqueid):
+    '''
+        periodic checked flag
+    '''
+    message = False
+    try:
+        query = '''
+
+            UPDATE cdr set checked = true where uniqueid = '{0}'
+        '''.format(uniqueid)
+        result = yield sql.query(query)
+        result.free()
+    except Exception, e:
+        logging.exception(e)
+        raise e
+
+    raise gen.Return(message)
+
+@gen.coroutine
 def records_callback(sql, query_limit):
     '''
         periodic records callback
