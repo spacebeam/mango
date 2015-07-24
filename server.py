@@ -107,7 +107,7 @@ def periodic_records_callback():
 
             logging.info(record.get('uniqueid'))
 
-            checked = yield periodic.checked_flag(record.get('uniqueid'))
+            checked = yield periodic.checked_flag(db, record.get('uniqueid'))
 
             logging.info(checked)
 
