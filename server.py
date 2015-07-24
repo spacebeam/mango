@@ -100,8 +100,13 @@ def periodic_records_callback():
                 stuff.get('uuid')
             )
 
+
+            logging.info(stuff)
+
+            logging.info(flag)
+
             # check new resource
-            resource = yield new_resource(db, stuff)
+            #resource = yield new_resource(db, stuff)
             # check this stuff up
     if result:
         logging.info('periodic records %s', stuff)
