@@ -242,13 +242,14 @@ def content_type_msgpack_validation(handler_class):
 @gen.coroutine
 def new_resource(db, struct, collection=None, scheme=None):
     '''
-        New resource
+        New resource function
     '''
     import uuid as _uuid
     from schematics import models as _models
     from schematics import types as _types
 
-
+    # Trying to find analogies with erlang records
+    # We need more experience on OTP.
     class MangoResource(_models.Model):
         '''
             Mango resource
@@ -275,7 +276,7 @@ def new_resource(db, struct, collection=None, scheme=None):
     try:
         message = yield collection.update(
             {
-                #'uuid': message.get(scheme),
+                #'uuid': message.get(scheme),           # tha fucks ?
                 'account': message.get('account')
             },
             {
