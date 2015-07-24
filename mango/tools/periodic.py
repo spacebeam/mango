@@ -297,7 +297,7 @@ def records_callback(sql, query_limit):
         # PostgreSQL insert new sip account query
         query = '''
             SELECT DISTINCT uniqueid, 
-                   date(calldate) as strdate,
+                   string(date(calldate)) as strdate,
                    clid as callerid,
                    src as source,
                    dst as destination,
