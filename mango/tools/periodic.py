@@ -326,11 +326,11 @@ def records_callback(sql, query_limit):
                 disposition,
                 sum(billsec) as seconds,
                 CASE 
-                    WHEN checked IS NULL 
+                    WHEN checked IS NULL or checked = 'False'
                        THEN 'False' 
                     ELSE 'True' 
                 END AS checked 
-            FROM cdr WHERE checked != 'True'
+            FROM cdr 
             GROUP by uniqueid, 
                 strdate,
                 clid,
@@ -340,7 +340,7 @@ def records_callback(sql, query_limit):
                 channel,
                 dstchannel,
                 disposition,
-                checked
+                checked 
             ORDER by uniqueid;
         '''#.format(
             #struct.get('account'),
