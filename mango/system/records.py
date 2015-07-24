@@ -259,6 +259,7 @@ class Records(object):
         if not db:
             db = self.db
         try:
+            # if not type str convert to str
             struct['strdate'] = str(struct.get('strdate'))
             record = records.Record(struct)
             record.validate()
@@ -270,7 +271,11 @@ class Records(object):
 
         result = yield db.records.insert(record)
 
-        raise gen.Return(record.get('uuid'))
+        message = {struct.get('uniqueid'):record.get('uuid')}
+
+        logging.info(message)
+
+        raise gen.Return(message)
 
     @gen.coroutine
     def set_assigned_flag(self, account, record_uuid):
