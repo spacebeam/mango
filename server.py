@@ -86,28 +86,26 @@ def periodic_records_callback():
         #periodic.process_assigned_records(db),
         #periodic.get_raw_records(sql, 800)
     ]
-
-    logging.info(raw_records)
     
-    '''
-    if all(x is None for x in results):
-        result = None
+    if all(record is None for record in raw_records):
+        results = None
     else:
-        result = list(itertools.chain.from_iterable(results))
+        results = list(itertools.chain.from_iterable(raw_records))
 
-        for record in result:
+        for stuff in results:
 
             flag = yield periodic.assign_record(
                 db,
-                record['account'],
-                record['uuid']
+                stuff.get('account'),
+                stuff.get('uuid')
             )
 
             # check new resource
-            resource = yield new_resource(db, record)
+            resource = yield new_resource(db, stuff)
+            # check this stuff up
     if result:
-        logging.info('periodic records %s', result)
-    '''
+        logging.info('periodic records %s', stuff)
+    
 
     end = time.time()
     periodic_take = (end - start)
