@@ -271,9 +271,10 @@ class Records(object):
 
         result = yield db.records.insert(record)
 
-        message = {struct.get('uniqueid'):record.get('uuid')}
-
-        logging.info(message)
+        message = {
+            'uniqueid':struct.get('uniqueid'),
+            'uuid':record.get('uuid')
+        }
 
         raise gen.Return(message)
 
