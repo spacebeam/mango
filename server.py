@@ -103,6 +103,8 @@ def periodic_records_callback():
 
             record = yield recs.new_detail_record(stuff, db)
 
+            logging.info('checked SQL uniqueid ' + record.get('uniqueid'))
+
             flag = yield periodic.assign_record(
                 db,
                 #stuff
