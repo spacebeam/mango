@@ -263,7 +263,7 @@ def process_assigned_records(db):
         raise gen.Return(e)
 
 @gen.coroutine
-def assign_record(db, struct): # , account, callid
+def assign_record(db, account, callid): # , struct
     '''
         Update record assigned flag
     '''
