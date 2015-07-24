@@ -81,6 +81,7 @@ def periodic_records_callback():
         periodic records callback function
     '''
     start = time.time()
+    recs = record_tools.Records()
     raw_records = yield [
         #periodic.get_raw_records(sql, 800)
         periodic.records_callback(sql, 888),
@@ -96,18 +97,11 @@ def periodic_records_callback():
 
         for stuff in results:
 
-            # this changes to the assign_records function
-            # or call system records.new_detail_record() from here??
-            
-            recs = record_tools.Records()
-
             record = yield recs.new_detail_record(stuff, db)
-
-            logging.info('checked SQL uniqueid {0}'.format(str(record.get('uniqueid'))))
 
             checked = yield periodic.checked_flag(sql, record.get('uniqueid'))
 
-            logging.info(checked)
+            logging.info('checked {0} SQL uniqueid {1}'.format(str(checked) str(record.get('uniqueid'))))
 
             flag = yield periodic.assign_record(
                 db,
