@@ -81,10 +81,11 @@ def periodic_records_callback():
     '''
     start = time.time()
     raw_records = yield [
+        #periodic.get_raw_records(sql, 800)
         periodic.records_callback(sql, 888),
+
         #periodic.process_assigned_false(db),
         #periodic.process_assigned_records(db),
-        #periodic.get_raw_records(sql, 800)
     ]
     
     if all(record is None for record in raw_records):
@@ -100,7 +101,6 @@ def periodic_records_callback():
                 stuff.get('uuid')
             )
 
-
             logging.info(stuff)
 
             logging.info(flag)
@@ -108,9 +108,6 @@ def periodic_records_callback():
             # check new resource
             #resource = yield new_resource(db, stuff)
             # check this stuff up
-    if results:
-        logging.info('periodic records %s', results)
-    
 
     end = time.time()
     periodic_take = (end - start)
