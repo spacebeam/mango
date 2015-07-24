@@ -312,7 +312,7 @@ def records_callback(sql, query_limit):
                        ELSE 'True' 
                    END AS checked 
             FROM cdr WHERE date(calldate) = '2015-07-23' and dstchannel like 'SIP/ticolinea_0%'
-            GROUP by uniqueid, date, clid, src, destination, dcontext, channel, dstchannel, disposition, checked 
+            GROUP by uniqueid, strdate, clid, src, destination, dcontext, channel, dstchannel, disposition, checked 
             ORDER by uniqueid;
         '''#.format(
             #struct.get('account'),
