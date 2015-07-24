@@ -67,7 +67,7 @@ class Record(models.Model):
     dstchannel = types.StringType()
     destination_channel = types.StringType()
 
-    date = types.DateTimeType()
+    strdate = types.StringType()
     
     start = types.DateTimeType()
     answer = types.DateTimeType()
