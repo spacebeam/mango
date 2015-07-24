@@ -316,22 +316,31 @@ def records_callback(sql, query_limit):
         # PostgreSQL insert new sip account query
         query = '''
             SELECT DISTINCT uniqueid, 
-                   date(calldate) as strdate,
-                   clid as callerid,
-                   src as source,
-                   dst as destination,
-                   dcontext as destination_context,
-           channel,
-           dstchannel as destination_channel,
-           disposition,
-                   sum(billsec) as seconds,
-                   CASE 
-                       WHEN checked IS NULL 
+                date(calldate) as strdate,
+                clid as callerid,
+                src as source,
+                dst as destination,
+                dcontext as destination_context,
+                channel,
+                dstchannel as destination_channel,
+                disposition,
+                sum(billsec) as seconds,
+                CASE 
+                    WHEN checked IS NULL 
                        THEN 'False' 
-                       ELSE 'True' 
-                   END AS checked 
-            FROM cdr WHERE date(calldate) = '2015-07-23' and dstchannel like 'SIP/ticolinea_0%' and checked != 'True'
-            GROUP by uniqueid, strdate, clid, src, destination, dcontext, channel, dstchannel, disposition, checked
+                    ELSE 'True' 
+                END AS checked 
+            FROM cdr WHERE checked != 'True'
+            GROUP by uniqueid, 
+                strdate,
+                clid,
+                src,
+                destination,
+                dcontext,
+                channel,
+                dstchannel,
+                disposition,
+                checked
             ORDER by uniqueid;
         '''#.format(
             #struct.get('account'),
