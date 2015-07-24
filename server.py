@@ -86,6 +86,8 @@ def periodic_records_callback():
         #periodic.process_assigned_records(db),
         #periodic.get_raw_records(sql, 800)
     ]
+
+    logging.info(raw_records)
     
     '''
     if all(x is None for x in results):

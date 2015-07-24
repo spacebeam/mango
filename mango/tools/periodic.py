@@ -285,6 +285,7 @@ def records_callback(sql, query_limit):
         periodic records callback
     '''
     logging.info('a little brain dead')
+    record_list = []
 
     try:
         # Get SQL database from system settings
@@ -320,12 +321,8 @@ def records_callback(sql, query_limit):
         rows = len(result)
 
         for x in result:
+            record_list.append(x)
             logging.info(x)
-
-        if result:
-            message = {'ack': True}
-        else:
-            message = {'ack': False}
 
         result.free()
 
@@ -340,4 +337,4 @@ def records_callback(sql, query_limit):
         logging.exception(e)
         raise e
 
-    raise gen.Return(message)
+    raise gen.Return(record_list)
