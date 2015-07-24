@@ -97,8 +97,9 @@ def periodic_records_callback():
 
             flag = yield periodic.assign_record(
                 db,
-                stuff.get('account'),
-                stuff.get('uuid')
+                stuff
+                #stuff.get('account'),
+                #stuff.get('uuid')
             )
 
             logging.info(stuff)
@@ -106,7 +107,7 @@ def periodic_records_callback():
             logging.info(flag)
 
             # check new resource
-            resource = yield new_resource(db, stuff, 'records')
+            #resource = yield new_resource(db, stuff, 'records')
             # check this stuff up
 
     end = time.time()

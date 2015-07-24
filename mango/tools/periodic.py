@@ -22,6 +22,9 @@ from tornado import gen
 
 # from mango.messages import accounts
 
+from mango.system import records
+
+
 from bson import objectid
 
 
@@ -260,16 +263,18 @@ def process_assigned_records(db):
         raise gen.Return(e)
 
 @gen.coroutine
-def assign_record(db, account, callid):
+def assign_record(db, struct): # , account, callid
     '''
         Update record assigned flag
     '''
+    recs = records.Records()
     try:
-        result = yield db.calls.update(
-            {'_id':objectid.ObjectId(callid)}, 
-            {'$set': {'assigned': True,
-                      'accountcode':account}}
-        )
+        #result = yield db.calls.update(
+        #    {'_id':objectid.ObjectId(callid)}, 
+        #    {'$set': {'assigned': True,
+        #              'accountcode':account}}
+        #)
+        result = yield recs.new_detail_record(struct)
 
     except Exception, e:
         logging.exception(e)
