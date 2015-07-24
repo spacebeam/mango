@@ -325,12 +325,9 @@ def records_callback(sql, query_limit):
                 dstchannel as destination_channel,
                 disposition,
                 sum(billsec) as seconds,
-                CASE 
-                    WHEN checked IS NULL or checked = 'False'
-                       THEN 'False' 
-                    ELSE 'True' 
-                END AS checked 
+                checked 
             FROM cdr 
+            WHERE checked = false
             GROUP by uniqueid, 
                 strdate,
                 clid,
