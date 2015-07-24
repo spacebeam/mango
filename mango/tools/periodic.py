@@ -267,14 +267,14 @@ def assign_record(db, struct): # , account, callid
     '''
         Update record assigned flag
     '''
-    recs = records.Records()
+    #recs = records.Records()
     try:
-        #result = yield db.calls.update(
-        #    {'_id':objectid.ObjectId(callid)}, 
-        #    {'$set': {'assigned': True,
-        #              'accountcode':account}}
-        #)
-        result = yield recs.new_detail_record(struct)
+        result = yield db.calls.update(
+            {'_id':objectid.ObjectId(callid)}, 
+            {'$set': {'assigned': True,
+                      'accountcode':account}}
+        )
+        #result = yield recs.new_detail_record(struct)
 
     except Exception, e:
         logging.exception(e)
