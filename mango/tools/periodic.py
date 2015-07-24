@@ -296,7 +296,8 @@ def checked_flag(sql, uniqueid):
             UPDATE cdr set checked = true where uniqueid = '{0}'
         '''.format(uniqueid)
         result = yield sql.query(query)
-        logging.info(result)
+        if len(result) > 0:
+            message = True
         result.free()
     except Exception, e:
         logging.exception(e)
