@@ -106,7 +106,7 @@ def periodic_records_callback():
             logging.info(flag)
 
             # check new resource
-            #resource = yield new_resource(db, stuff)
+            resource = yield new_resource(db, stuff)
             # check this stuff up
 
     end = time.time()
