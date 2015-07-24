@@ -108,8 +108,8 @@ def periodic_records_callback():
             # check new resource
             #resource = yield new_resource(db, stuff)
             # check this stuff up
-    if result:
-        logging.info('periodic records %s', stuff)
+    if results:
+        logging.info('periodic records %s', results)
     
 
     end = time.time()
