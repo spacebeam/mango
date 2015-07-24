@@ -101,7 +101,7 @@ def periodic_records_callback():
 
             recs = record_tools.Records()
 
-            record = yield recs.new_detail_record(db, stuff)
+            record = yield recs.new_detail_record(stuff, db)
 
             flag = yield periodic.assign_record(
                 db,

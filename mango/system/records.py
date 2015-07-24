@@ -252,10 +252,12 @@ class Records(object):
         raise gen.Return(result.get('result'))
 
     @gen.coroutine
-    def new_detail_record(self, struct):
+    def new_detail_record(self, struct, db=None):
         '''
             Create a new record entry
         '''
+        if not db:
+            db = self.db
         try:
             record = records.Record(struct)
             record.validate()
@@ -265,7 +267,7 @@ class Records(object):
 
         record = clean_structure(record)
 
-        result = yield self.db.records.insert(record)
+        result = yield db.records.insert(record)
 
         raise gen.Return(record.get('uuid'))
 
