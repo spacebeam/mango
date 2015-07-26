@@ -311,7 +311,6 @@ def records_callback(sql, query_limit):
     '''
     logging.info('a little brain dead recolection of records')
     record_list = []
-
     try:
         # Get SQL database from system settings
         # PostgreSQL insert new sip account query
