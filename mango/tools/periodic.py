@@ -106,7 +106,7 @@ def get_raw_records(sql, query_limit):
                 record = dict(row.items())
 
                 http_client.fetch(
-                    'http://127.0.0.1/records/', 
+                    'http://iofun.io/records/', 
                     headers={"Content-Type": "application/json"},
                     method='POST',
                     body=json.dumps(record),
