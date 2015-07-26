@@ -58,10 +58,14 @@ def get_raw_records(sql, query_limit):
 
             res = json.loads(response.body)
 
-            logging.info(res.get('uuid', None))
+            request_id = res.get('uuid', None)
+            if request_id:
+                request_id = request_id.get('uuid')
+
+            logging.info(request_id)
 
             http_client.fetch(
-                'http://127.0.0.1/records/' + res.get('uuid'), 
+                'http://127.0.0.1/records/' + request_id, 
                 headers={"Content-Type": "application/json"},
                 method='GET',
                 #body=json.dumps(record),
