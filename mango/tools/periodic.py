@@ -40,7 +40,7 @@ def get_raw_records(sql, query_limit):
         '''
             Request Handler
         '''
-        print 'yeahaha'
+        logging.info(response.body)
         if response.error:
             logging.error(response.error)
         else:
