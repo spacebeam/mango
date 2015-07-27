@@ -260,7 +260,10 @@ class Records(object):
             db = self.db
         try:
             # if not type str convert to str
-            struct['strdate'] = str(struct.get('strdate'))
+            
+            struct['strdate'] = (str(struct.get('strdate')) if struct['strdate'] else '')
+
+
             record = records.Record(struct)
             record.validate()
         except Exception, e:
