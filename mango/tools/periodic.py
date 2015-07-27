@@ -92,9 +92,11 @@ def get_raw_records(sql, query_limit):
 
             FROM cdr
 
+            WHERE checked = false
+
             ORDER BY uniqueid DESC
 
-            limit {0};
+            LIMIT {0};
         '''.format(
             query_limit
         )
@@ -318,7 +320,8 @@ def records_callback(sql, query_limit):
         # Get SQL database from system settings
         # PostgreSQL insert new sip account query
         query = '''
-            SELECT DISTINCT uniqueid, 
+            SELECT
+                DISTINCT ON (uniqueid) uniqueid,
                 date(calldate) as strdate,
                 clid as callerid,
                 src as source,
@@ -326,22 +329,14 @@ def records_callback(sql, query_limit):
                 dcontext as destination_context,
                 channel,
                 dstchannel as destination_channel,
+                duration,
+                billsec,
+                billsec as seconds,
                 disposition,
-                sum(billsec) as seconds,
                 checked 
             FROM cdr 
             WHERE checked = false
-            GROUP by uniqueid, 
-                strdate,
-                clid,
-                src,
-                destination,
-                dcontext,
-                channel,
-                dstchannel,
-                disposition,
-                checked 
-            ORDER by uniqueid;
+            ORDER BY uniqueid DESC;
         '''#.format(
             #struct.get('account'),
             #struct.get('account'),
