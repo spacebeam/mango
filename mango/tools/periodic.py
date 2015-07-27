@@ -40,7 +40,6 @@ def get_raw_records(sql, query_limit):
         '''
             Request Handler
         '''
-        logging.info(response.body)
         if response.error:
             logging.error(response.error)
         else:
@@ -61,8 +60,6 @@ def get_raw_records(sql, query_limit):
             request_id = res.get('uuid', None)
             if request_id:
                 request_id = request_id.get('uuid')
-
-            logging.info(request_id)
 
             http_client.fetch(
                 'http://127.0.0.1/records/' + request_id, 
