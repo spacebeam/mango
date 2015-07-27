@@ -261,7 +261,7 @@ class Records(object):
         try:
             # if not type str convert to str
             
-            struct['strdate'] = (str(struct.get('strdate')) if struct['strdate'] else '')
+            struct['strdate'] = (str(struct.get('strdate')) if struct.get('strdate', None) else '')
 
 
             record = records.Record(struct)
