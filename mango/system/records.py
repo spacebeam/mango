@@ -260,7 +260,11 @@ class Records(object):
             db = self.db
         try:
             # if not type str convert to str
+
             logging.info(struct)
+            logging.info(struct)
+            logging.info(struct)
+
             struct['strdate'] = struct.get('strdate', '')
 
             record = records.Record(struct)
