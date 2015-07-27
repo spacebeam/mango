@@ -61,6 +61,9 @@ def get_raw_records(sql, query_limit):
             if request_id:
                 request_id = request_id.get('uuid')
 
+
+            logging.info('http://iofun.io/records/{0}'.format(request_id))
+
             http_client.fetch(
                 'http://127.0.0.1/records/' + request_id, 
                 headers={"Content-Type": "application/json"},
