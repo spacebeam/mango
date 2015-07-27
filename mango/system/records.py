@@ -260,13 +260,15 @@ class Records(object):
             db = self.db
         try:
             # if not type str convert to str
-
-            logging.info(struct)
             logging.info(struct)
             logging.info(struct)
 
-            struct['strdate'] = struct.get('strdate', '')
+            if type(struct) == dict():
 
+                struct['strdate'] = struct.get('strdate', '')
+
+            logging.info(struct)
+            
             record = records.Record(struct)
             record.validate()
         except Exception, e:
