@@ -59,7 +59,7 @@ def get_raw_records(sql, query_limit):
 
             request_id = res.get('uuid', None)
             if request_id:
-                request_id = request_id.get('uuid')9
+                request_id = request_id.get('uuid')
 
             http_client.fetch(
                 'http://127.0.0.1/records/' + request_id, 
