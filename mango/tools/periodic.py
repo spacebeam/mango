@@ -59,7 +59,7 @@ def get_raw_records(sql, query_limit):
 
             request_id = res.get('uuid', None)
             if request_id:
-                request_id = request_id.get('uuid')
+                request_id = request_id.get('uuid')9
 
             http_client.fetch(
                 'http://127.0.0.1/records/' + request_id, 
@@ -101,6 +101,8 @@ def get_raw_records(sql, query_limit):
         result = yield sql.query(query)
 
         if result:
+
+            logging.info(len(result)) 
 
             for row in result:
 
