@@ -272,8 +272,6 @@ class Records(object):
             if isinstance(struct, dict):
 
                 struct['strdate'] = '"{0}"'.format(struct.get('strdate', ''))
-
-            logging.info(struct)
             
             record = records.Record(struct)
             record.validate()
