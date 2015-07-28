@@ -262,7 +262,7 @@ class Records(object):
             # if not type str convert to str...
             # same note different day... WTF I'm talking about...
 
-            if type(struct) == type({}):
+            if isinstance(struct, dict):
 
                 struct['strdate'] = '"{0}"'.format(struct.get('strdate', ''))
 
