@@ -354,7 +354,7 @@ def main():
     )
 
     # Mango periodic cast callbacks
-    periodic_records = PeriodicCast(periodic_get_records, 15000)
+    periodic_records = PeriodicCast(periodic_get_records, 8000)
     periodic_records.start()
 
     # Setting up mango processor
