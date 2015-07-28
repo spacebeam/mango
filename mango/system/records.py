@@ -41,6 +41,7 @@ class Records(object):
         '''
             Get a detail record
         '''
+        logging.info(account, record_uuid)
         if not account:
             record = yield self.db.records.find_one({'uuid':record_uuid},{'_id':0})
         else:
