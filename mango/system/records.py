@@ -60,6 +60,8 @@ class Records(object):
             if record:
                 record = records.Record(record)
                 record.validate()
+
+                record = clean_structure(record)
         except Exception, e:
             logging.exception(e) # catch some daemon here!
             raise e
