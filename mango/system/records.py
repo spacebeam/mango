@@ -259,11 +259,10 @@ class Records(object):
         if not db:
             db = self.db
         try:
-            # if not type str convert to str
-            logging.info(struct)
-            logging.info(struct)
+            # if not type str convert to str...
+            # same note different day... WTF I'm talking about...
 
-            if type(struct) == dict():
+            if type(struct) == type({}):
 
                 struct['strdate'] = struct.get('strdate', '')
 
