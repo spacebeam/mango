@@ -41,17 +41,21 @@ class Records(object):
         '''
             Get a detail record
         '''
-        logging.info(account, record_uuid)
+        message = 'where is this account {0} record {1}'.format(account, record_uuid)
+        logging.info(message)
         if not account:
-            record = yield self.db.records.find_one({'uuid':record_uuid},{'_id':0})
+            record = yield self.db.records.find_one({'uuid':record_uuid}, {'_id':0})
         else:
 
             # change accountcode to account, because the accountcode is a uuid
             # and we're expecting an account name.
+            message = 'account {0} and record {1} are you for real?'.format(account, record_uuid)
+            logging.info(message)
 
             record = yield self.db.records.find_one({'uuid':record_uuid,
                                                      'account':account},
                                                     {'_id':0})
+            logging.info(record)
         try:
             if record:
                 record = records.Record(record)
