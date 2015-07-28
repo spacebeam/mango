@@ -78,7 +78,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
             logging.info(record)
 
-            self.finish(record)
+            self.finish(dict(record))
             return
 
         if self.current_user:
