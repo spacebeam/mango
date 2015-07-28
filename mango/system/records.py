@@ -264,7 +264,7 @@ class Records(object):
 
             if type(struct) == type({}):
 
-                struct['strdate'] = str(struct.get('strdate', ''))
+                struct['strdate'] = '"{0}"'.format(struct.get('strdate', ''))
 
             logging.info(struct)
             
