@@ -76,14 +76,14 @@ cache = False
 
 
 @gen.coroutine
-def periodic_records_callback():
+def periodic_get_records():
     '''
-        periodic records callback function
+        periodic_get_records callback function
     '''
     start = time.time()
     recs = record_tools.Records()
     raw_records = yield [
-        periodic.get_raw_records(sql, 888),
+        #periodic.get_raw_records(sql, 888),
         periodic.records_callback(sql, 888),
 
         #periodic.process_assigned_false(db),
@@ -101,13 +101,16 @@ def periodic_records_callback():
 
             checked = yield periodic.checked_flag(sql, record.get('uniqueid'))
 
-            logging.info('checked {0} SQL uniqueid {1}'.format(str(checked), str(record.get('uniqueid'))))
+            logging.info('checked {0} SQL uniqueid {1}'.format(
+                str(checked),
+                str(record.get('uniqueid'))
+            ))
 
-            flag = yield periodic.assign_record(
-                db,
-                stuff.get('account'),
-                stuff.get('uuid')
-            )
+            #flag = yield periodic.assign_record(
+            #    db,
+            #    stuff.get('account'),
+            #    stuff.get('uuid')
+            #)
 
             # check new resource
             #resource = yield new_resource(db, stuff, 'records')
@@ -351,7 +354,7 @@ def main():
     )
 
     # Mango periodic cast callbacks
-    periodic_records = PeriodicCast(periodic_records_callback, 15000)
+    periodic_records = PeriodicCast(periodic_get_records, 15000)
     periodic_records.start()
 
     # Setting up mango processor
