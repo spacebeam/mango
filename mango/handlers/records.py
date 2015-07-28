@@ -76,6 +76,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                 self.finish(error)
                 return
 
+            logging.info(record)
+
             self.finish(record)
             return
 
