@@ -50,9 +50,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
 
         # -- logging info
-
-        logging.warning('daaaa fuck1!!{0}'.format(record_uuid))
-
         logging.info(self.request.arguments)
 
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
@@ -75,8 +72,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                 error = system_error.missing('record', record_uuid)
                 self.finish(error)
                 return
-
-            logging.info(record)
 
             self.finish(record)
             return
