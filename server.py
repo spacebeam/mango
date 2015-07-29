@@ -84,7 +84,7 @@ def periodic_get_records():
     recs = record_tools.Records()
     raw_records = yield [
         #periodic.get_raw_records(sql, 888),
-        periodic.records_callback(sql, 888),
+        periodic.get_query_records(sql, 888),
 
         #periodic.process_assigned_false(db),
         #periodic.process_assigned_records(db),
