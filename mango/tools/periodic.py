@@ -38,7 +38,7 @@ def get_raw_records(sql, query_limit):
 
     def handle_restuff(response):
         '''
-            Request Handler
+            Request Handler Restuff
         '''
         if response.error:
             logging.error(response.error)
@@ -65,9 +65,12 @@ def get_raw_records(sql, query_limit):
                 'http://iofun.io/records/{0}'.format(request_id), 
                 headers={"Content-Type": "application/json"},
                 method='GET',
+
                 #body=json.dumps(record),
+
                 callback=handle_restuff
             )
+
 
             # if successful response we need to send ack now to sql
             # and mack the flag of that call as checked, otherwise
@@ -310,12 +313,47 @@ def checked_flag(sql, uniqueid):
     raise gen.Return(message)
 
 @gen.coroutine
-def records_callback(sql, query_limit):
+def get_query_records(sql, query_limit):
     '''
-        periodic records callback
+        periodic query records function
     '''
     logging.info('a little brain dead recolection of records')
     record_list = []
+
+    httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+    http_client = httpclient.AsyncHTTPClient()
+
+    def handle_record_uuid(response):
+        '''
+            Request Handler Record UUID
+        '''
+        if response.error:
+            logging.error(response.error)
+        else:
+            logging.info(response.body)
+
+    def handle_request(response):
+        '''
+            Request Handler
+        '''
+        if response.error:
+            logging.error(response.error)
+        else:
+            logging.info(response.body)
+
+            result = json.loads(response.body)
+
+            request_id = result.get('uuid', None)
+            if request_id:
+                request_id = request_id.get('uuid')
+
+            http_client.fetch(
+                'http://iofun.io/records/{0}'.format(request_id), 
+                headers={"Content-Type": "application/json"},
+                method='GET',
+                callback=handle_record_uuid
+            )
+
     try:
         # Get SQL database from system settings
         # PostgreSQL insert new sip account query
