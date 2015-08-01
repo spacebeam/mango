@@ -375,13 +375,7 @@ def get_query_records(sql, query_limit):
             FROM cdr 
             WHERE checked = false
             ORDER BY uniqueid DESC;
-        '''#.format(
-            #struct.get('account'),
-            #struct.get('account'),
-            #struct.get('account'),
-            #struct.get('domain', self.settings.get('domain')),
-            #struct.get('password')
-        #)
+        '''
         result = yield sql.query(query)
 
         rows = len(result)
