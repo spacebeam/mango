@@ -365,7 +365,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         orgs = yield self.get_orgs_list(account)
         account_list = (orgs['orgs'] if orgs else False)
 
-        logging.info('get summary accounts {0} lapse {1}'.format(account_list, lapse))
+        logging.info('get summary account {0} s {1} lapse {2}'.format(account, account_list, lapse))
 
         if account_list:
             account_list.append(account)
