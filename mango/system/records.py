@@ -80,7 +80,7 @@ class Records(object):
         record_list = []
         
         if not account:
-            query = self.db.records.find({'public':False})
+            query = self.db.records.find({'public':False}, {'_id':0})
         elif type(account) is list:
             accounts = [{'accountcode':a, 'assigned': True} for a in account]
             query = self.db.records.find({'$or':accounts})
