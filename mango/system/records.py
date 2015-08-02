@@ -176,6 +176,11 @@ class Records(object):
                 'assigned': True,
                 'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
+
+        if isinstance(account, None):
+            logging.info('is instance account None')
+        else:
+            logging.info(type(account))
         
         # MongoDB aggregation project operator
         project = {
