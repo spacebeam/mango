@@ -160,7 +160,7 @@ class Records(object):
         times = yield check_times(start, end)
 
         if lapse:
-            logging.info('get summary lapse %s' % (lapse))
+            logging.info('get account {0} summary lapse {1}'.format(account, lapse))
 
         # MongoDB aggregation match operator
         if type(account) is list:
