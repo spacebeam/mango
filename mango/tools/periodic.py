@@ -360,6 +360,7 @@ def get_query_records(sql, query_limit):
         query = '''
             SELECT
                 DISTINCT ON (uniqueid) uniqueid,
+                calldate as start,
                 date(calldate) as strdate,
                 clid as callerid,
                 src as source,
