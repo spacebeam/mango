@@ -38,7 +38,6 @@ class Record(models.Model):
     uuid = types.UUIDType(default=uuid.uuid4)
     uniqueid = types.StringType()
 
-    clid = types.StringType()
     callerid = types.StringType()
 
     account = types.StringType()
@@ -59,12 +58,11 @@ class Record(models.Model):
     source_channel = types.StringType()
     
     context = types.StringType()
-    dcontext = types.StringType()
+
     destination_context = types.StringType()
 
     destination_number = types.StringType()
     
-    dstchannel = types.StringType()
     destination_channel = types.StringType()
 
     strdate = types.StringType()
