@@ -73,6 +73,8 @@ class Records(object):
         '''
             Get detail records 
         '''
+        message = 'where are the records for this account {0} page {1}'.format(account, page_num)
+        logging.info(message)
         page_num = int(page_num)
         page_size = self.settings['page_size']
         record_list = []
