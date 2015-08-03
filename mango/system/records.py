@@ -204,22 +204,22 @@ class Records(object):
                 "$year" : "ISODate(start)"
             },
             "month" : {  
-                "$month" : "$start"
+                "$month" : "ISODate(start)"
             },
             "week" : {  
-                "$week" : "$start"
+                "$week" : "ISODate(start)"
             },
             "day" : {
-                "$dayOfMonth" : "$start"
+                "$dayOfMonth" : "ISODate(start)"
             },
             "hour" : {
-                "$hour" : "$start"
+                "$hour" : "ISODate(start)"
             },
             "minute" : {
-                "$minute" : "$start"
+                "$minute" : "ISODate(start)"
             },
             "second" : {
-                "$second" : "$start"
+                "$second" : "ISODate(start)"
             }
         }
 
