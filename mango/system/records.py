@@ -201,25 +201,25 @@ class Records(object):
             
             # project id's timestamp stuff?
             "year" : {  
-                "$year" : "ISODate($start)"
+                "$year" : "ISODate(start)"
             },
             "month" : {  
-                "$month" : "ISODate($start)"
+                "$month" : "ISODate(start)"
             },
             "week" : {  
-                "$week" : "ISODate($start)"
+                "$week" : "ISODate(start)"
             },
             "day" : {
-                "$dayOfMonth" : "ISODate($start)"
+                "$dayOfMonth" : "ISODate(start)"
             },
             "hour" : {
-                "$hour" : "ISODate($start)"
+                "$hour" : "ISODate(start)"
             },
             "minute" : {
-                "$minute" : "ISODate($start)"
+                "$minute" : "ISODate(start)"
             },
             "second" : {
-                "$second" : "ISODate($start)"
+                "$second" : "ISODate(start)"
             }
         }
 
