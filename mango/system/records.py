@@ -183,6 +183,8 @@ class Records(object):
                 'public': False
             }
 
+        #  month : { $month : ISODate(localHitDate) }
+
         # MongoDB aggregation project operator
         project = {
             "_id" : 0,
@@ -199,7 +201,7 @@ class Records(object):
             
             # project id's timestamp stuff?
             "year" : {  
-                "$year" : "$start"
+                "$year" : "ISODate(start)"
             },
             "month" : {  
                 "$month" : "$start"
