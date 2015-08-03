@@ -229,7 +229,7 @@ class Records(object):
 
         group = {
             '_id': {
-                'start': '$start',
+                'start': 'ISODate($start)',
                 #'answer': '$answer',
                 #'end': '$end',
                 'year': '$year',
