@@ -351,4 +351,3 @@ class Records(object):
         '''
         # patch implementation
         pass
-})
