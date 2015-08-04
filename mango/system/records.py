@@ -26,7 +26,7 @@ from tornado import gen
 from mango.messages import records
 from mango.messages import reports
 
-from mango.tools import clean_structure
+from mango.tools import clean_structure, clean_message
 from mango.tools import clean_results
 from mango.tools import check_times
 
@@ -291,13 +291,11 @@ class Records(object):
             logging.exception(e)
             raise e
 
-        logging.info(record.to_native())
-
         record2 = clean_structure(record)
 
-        logging.info(record2)
+        record = clean_message(record)
 
-        result = yield db.records.insert(record.to_native())
+        result = yield db.records.insert(record)
 
         message = {
             'uniqueid':struct.get('uniqueid'),

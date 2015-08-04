@@ -120,6 +120,20 @@ def check_times(start, end):
     
     raise gen.Return(message)
 
+def clean_message(struct):
+    '''
+        clean message structure
+    '''
+    struct = struct.to_native()
+
+    struct = {
+        key: struct[key] 
+            for key in struct
+                if struct[key] is not None
+    }
+
+    return struct
+
 def clean_structure(struct):
     '''
         clean structure
