@@ -156,12 +156,12 @@ class Records(object):
         '''
             Get summary
         '''
-        
-        times = yield check_times(start, end)
 
         logging.info('Get summary for {0} lapse {1} start period {2} end period {3}'.format(
             account, lapse, start, end
         ))
+
+        times = yield check_times(start, end)
 
         # MongoDB aggregation match operator
         if type(account) is list:
@@ -190,14 +190,14 @@ class Records(object):
             "_id" : 0,
             
             # record timestamps
-            "start":1,
+            "start": 1,
             #"answer":1,
             #"end":1,
             
             # record duration seconds
-            "duration" : 1,
+            "duration": 1,
             # record billing seconds
-            "billsec" : 1,
+            "billsec": 1,
             
             # project id's timestamp stuff?
             "year" : {  
