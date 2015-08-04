@@ -161,7 +161,6 @@ class Records(object):
         logging.info('Get summary for {0} lapse {1} start period {2} end period {3}'.format(
             account, lapse, start, end
         ))
-
         
         times = yield check_times(start, end)
 
