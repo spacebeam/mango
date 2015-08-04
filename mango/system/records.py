@@ -161,7 +161,7 @@ class Records(object):
         logging.info('Get summary for {0} lapse {1} start period {2} end period {3}'.format(
             account, lapse, start, end
         ))
-        
+
         times = yield check_times(start, end)
 
         # MongoDB aggregation match operator
@@ -291,7 +291,11 @@ class Records(object):
             logging.exception(e)
             raise e
 
-        record = clean_structure(record)
+        logging.info(record)
+
+        record2 = clean_structure(record)
+
+        logging.info(record2)
 
         result = yield db.records.insert(record)
 
@@ -347,3 +351,4 @@ class Records(object):
         '''
         # patch implementation
         pass
+})
