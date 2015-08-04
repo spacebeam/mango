@@ -291,13 +291,13 @@ class Records(object):
             logging.exception(e)
             raise e
 
-        logging.info(record)
+        logging.info(record.to_native())
 
         record2 = clean_structure(record)
 
         logging.info(record2)
 
-        result = yield db.records.insert(record)
+        result = yield db.records.insert(record.to_native())
 
         message = {
             'uniqueid':struct.get('uniqueid'),
