@@ -156,11 +156,13 @@ class Records(object):
         '''
             Get summary
         '''
+        # MongoDB Aggregation operators process data and return computed results
 
         logging.info('Get summary for {0} lapse {1} start period {2} end period {3}'.format(
             account, lapse, start, end
         ))
 
+        
         times = yield check_times(start, end)
 
         # MongoDB aggregation match operator
@@ -178,7 +180,7 @@ class Records(object):
             }
 
         if not account:
-            logging.info('not account')
+            logging.info("there is not account on aggregation match")
             match = {
                 'public': False
             }
