@@ -101,11 +101,6 @@ def periodic_get_records():
 
             checked = yield periodic.checked_flag(sql, record.get('uniqueid'))
 
-            logging.info('checked {0} SQL uniqueid {1}'.format(
-                str(checked),
-                str(record.get('uniqueid'))
-            ))
-
             #flag = yield periodic.assign_record(
             #    db,
             #    stuff.get('account'),
