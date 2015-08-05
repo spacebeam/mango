@@ -292,7 +292,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                 del _x['_id']
 
 
-            # logging.info(summary)
+            logging.info(summary)
 
             # {u'duration': 0, u'records': 2, u'average': 0.0, u'billing': 0}
             
