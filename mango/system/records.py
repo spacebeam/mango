@@ -202,25 +202,25 @@ class Records(object):
             
             # project id's timestamp stuff?
             "year" : {  
-                "$year" : "ISODate(start)"
+                "$year" : "$start"
             },
             "month" : {  
-                "$month" : "ISODate(start)"
+                "$month" : "$start"
             },
             "week" : {  
-                "$week" : "ISODate(start)"
+                "$week" : "$start"
             },
             "day" : {
-                "$dayOfMonth" : "ISODate(start)"
+                "$dayOfMonth" : "$start"
             },
             "hour" : {
-                "$hour" : "ISODate(start)"
+                "$hour" : "$start"
             },
             "minute" : {
-                "$minute" : "ISODate(start)"
+                "$minute" : "$start"
             },
             "second" : {
-                "$second" : "ISODate(start)"
+                "$second" : "$start"
             }
         }
 
@@ -230,7 +230,7 @@ class Records(object):
 
         group = {
             '_id': {
-                'start': 'ISODate($start)',
+                'start': '$start',
                 #'answer': '$answer',
                 #'end': '$end',
                 'year': '$year',

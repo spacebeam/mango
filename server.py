@@ -84,7 +84,7 @@ def periodic_get_records():
     recs = record_tools.Records()
     raw_records = yield [
         #periodic.get_raw_records(sql, 888),
-        periodic.get_query_records(sql, 888),
+        periodic.get_query_records(sql, 1000),
 
         #periodic.process_assigned_false(db),
         #periodic.process_assigned_records(db),
@@ -354,7 +354,7 @@ def main():
     )
 
     # Mango periodic cast callbacks
-    periodic_records = PeriodicCast(periodic_get_records, 8000)
+    periodic_records = PeriodicCast(periodic_get_records, 3000)
     periodic_records.start()
 
     # Setting up mango processor

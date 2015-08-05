@@ -375,8 +375,11 @@ def get_query_records(sql, query_limit):
                 checked 
             FROM cdr 
             WHERE checked = false
-            ORDER BY uniqueid DESC;
-        '''
+            ORDER BY uniqueid DESC
+            LIMIT {0};
+        '''.format(
+            query_limit
+        )
         result = yield sql.query(query)
 
         rows = len(result)
