@@ -113,13 +113,13 @@ class Billings(object):
                 '$sum': 1
             },
             'average': {
-                '$avg':'$billsec'
+                '$avg':'$seconds'
             },
             'duration': {
                 '$sum':'$duration'
             },
-            'billsecs': {
-                '$sum':'$billsec'
+            'seconds': {
+                '$sum':'$seconds'
             }
         }
         

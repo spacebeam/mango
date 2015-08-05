@@ -299,7 +299,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
                 if 'hours' in lapse:
                     # pandas data-frames
-                    frame['minutes'] = frame['billsecs'] / 60
+                    frame['minutes'] = frame['seconds'] / 60
                     
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
@@ -327,7 +327,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                     return
             
             result = frame['records'].sum()
-            seconds = frame['billsecs'].sum()
+            seconds = frame['seconds'].sum()
             average = frame['average'].sum()
         
             minutes = seconds / 60
@@ -399,7 +399,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
             
                 if 'hours' in lapse:
                     # pandas data-frames
-                    frame['minutes'] = frame['billsecs'] / 60
+                    frame['minutes'] = frame['seconds'] / 60
                     
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
@@ -426,7 +426,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                     return
             
             result = frame['result'].sum()
-            seconds = frame['billsecs'].sum()
+            seconds = frame['seconds'].sum()
             average = frame['average'].sum()
         
             minutes = seconds / 60

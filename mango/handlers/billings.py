@@ -79,10 +79,10 @@ class RecordsHandler(billings.Billings, accounts.Accounts, BaseHandler):
                     result = yield self.get_cost_summary(account, single, elapse)
 
             # pandas data frame
-            frame = (pd.DataFrame(result) if result else pd.DataFrame([{'billsecs': 0}]))
+            frame = (pd.DataFrame(result) if result else pd.DataFrame([{'seconds': 0}]))
             
             # calculate the minutes
-            frame['minutes'] = frame['billsecs'] / 60
+            frame['minutes'] = frame['seconds'] / 60
 
             # calculate the cost and add the result to the dataframe
             frame['billing'] = frame['minutes'] * single_route['cost']
