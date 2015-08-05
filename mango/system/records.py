@@ -179,7 +179,7 @@ class Records(object):
             }
 
         if not account:
-            logging.info("there is not account on aggregation match")
+            logging.info("there is not an account on aggregation match")
             match = {
                 'public': False
             }
