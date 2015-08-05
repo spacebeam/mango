@@ -197,8 +197,12 @@ class Records(object):
             
             # record duration seconds
             "duration": 1,
+
             # record billing seconds
             "billsec": 1,
+            
+            # duration of the call in seconds (only billing time)
+            "seconds": 1,
             
             # project id's timestamp stuff?
             "year" : {  
