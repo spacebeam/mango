@@ -382,14 +382,12 @@ def get_query_records(sql, query_limit):
         )
         result = yield sql.query(query)
 
-        rows = len(result)
+        logging.warning('Getting {0} rows from PostgreSQL'.format(len(result)))
 
         for x in result:
             record_list.append(x)
 
         result.free()
-
-        logging.warning('{0} rows spawned on {1} {2}'.format(rows, 'mango', 'ack missing'))
 
         # TODO: Still need to check the follings exceptions with the new queries module.
         #except (psycopg2.Warning, psycopg2.Error) as e:
