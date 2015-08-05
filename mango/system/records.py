@@ -260,8 +260,14 @@ class Records(object):
 
             'billing': {
                 '$sum':'$billsec'
+            },
+
+            'seconds': {
+                '$sum': '$seconds'
             }
         }
+
+        {u'duration': 0, u'records': 2, u'average': 0.0, u'billing': 0}
 
         # MongoDB aggregation pipeline
         pipeline = [
