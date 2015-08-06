@@ -291,11 +291,6 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             for _x in summary:
                 del _x['_id']
 
-
-            logging.info(summary)
-
-            # {u'duration': 0, u'records': 2, u'average': 0.0, u'billing': 0}
-            
             frame = pd.DataFrame(summary)
             frame = frame.join(pd.DataFrame(dates))
         
