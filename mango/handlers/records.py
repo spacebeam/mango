@@ -367,7 +367,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         orgs = yield self.get_orgs_list(account)
         account_list = (orgs['orgs'] if orgs else False)
 
-        logging.info('Get summary account {0} s {1} lapse {2}'.format(account, account_list, lapse))
+        logging.info('Get summary for {0} or {1} lapse {2}'.format(account, account_list, lapse))
 
         if account_list:
             account_list.append(account)
@@ -419,6 +419,10 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                         time.mktime(key.timetuple()): int(minutes[key])
                         for key in minutes
                     } 
+
+
+                    # missing seconds ???
+
                                         
                     # return the clean version of the data
                     self.finish({
