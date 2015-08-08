@@ -361,7 +361,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         times = yield check_times(start, end)
 
 
-        logging.info(times)
+        logging.info('da fuck is going on {0}'.format(str(times)))
 
 
         logging.info('Start {0} and {1} end times\n'.format(start, end))
