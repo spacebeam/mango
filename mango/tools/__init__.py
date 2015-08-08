@@ -126,15 +126,15 @@ def check_times_get_timestamp(start, end):
         Check times
     '''
     try:
-        start = (arrow.get(start).timestamp if start else arrow.utcnow().timestamp)
-        end = (arrow.get(end).timestamp if end else start.replace(days=+1).timestamp)
+        start = (arrow.get(start) if start else arrow.utcnow())
+        end = (arrow.get(end) if end else start.replace(days=+1))
     except Exception, e:
         logging.exception(e)
         raise e
 
         return
 
-    message = {'start':start, 'end':end}
+    message = {'start':start.timestamp, 'end':end.timestamp}
     
     raise gen.Return(message)
 
@@ -144,15 +144,15 @@ def check_times_get_datetime(start, end):
         Check times
     '''
     try:
-        start = (arrow.get(start).naive if start else arrow.utcnow().naive)
-        end = (arrow.get(end).naive if end else start.replace(days=+1).naive)
+        start = (arrow.get(start) if start else arrow.utcnow())
+        end = (arrow.get(end) if end else start.replace(days=+1))
     except Exception, e:
         logging.exception(e)
         raise e
 
         return
 
-    message = {'start':start, 'end':end}
+    message = {'start':start.naive, 'end':end.naive}
     
     raise gen.Return(message)
 
