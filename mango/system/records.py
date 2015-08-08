@@ -167,7 +167,7 @@ class Records(object):
             account, lapse, start, end
         ))
 
-        times = yield check_times(start, end)
+        times = yield check_times_get_datetime(start, end)
 
         # MongoDB aggregation match operator
         if type(account) is list:

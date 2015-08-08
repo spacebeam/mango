@@ -120,6 +120,42 @@ def check_times(start, end):
     
     raise gen.Return(message)
 
+@gen.coroutine
+def check_times_get_timestamp(start, end):
+    '''
+        Check times
+    '''
+    try:
+        start = (arrow.get(start).timestamp if start else arrow.utcnow().timestamp)
+        end = (arrow.get(end).timestamp if end else start.replace(days=+1).timestamp)
+    except Exception, e:
+        logging.exception(e)
+        raise e
+
+        return
+
+    message = {'start':start, 'end':end}
+    
+    raise gen.Return(message)
+
+@gen.coroutine
+def check_times_get_datetime(start, end):
+    '''
+        Check times
+    '''
+    try:
+        start = (arrow.get(start).naive if start else arrow.utcnow().naive)
+        end = (arrow.get(end).naive if end else start.replace(days=+1).naive)
+    except Exception, e:
+        logging.exception(e)
+        raise e
+
+        return
+
+    message = {'start':start, 'end':end}
+    
+    raise gen.Return(message)
+
 def clean_message(struct):
     '''
         clean message structure
