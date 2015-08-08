@@ -360,7 +360,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
 
         times = yield check_times(start, end)
 
-        logging.info('Start {0} and {1} end times'.format(start, end))
+        logging.info('Start {0} and {1} end times\n'.format(start, end))
 
         if not account:
             account = self.current_user
@@ -368,7 +368,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         orgs = yield self.get_orgs_list(account)
         account_list = (orgs['orgs'] if orgs else False)
 
-        logging.info('Get summary for {0} or {1} lapse {2}'.format(account, account_list, lapse))
+        logging.info('Get summary for {0} or {1} lapse {2}\n'.format(account, account_list, lapse))
 
         if account_list:
             account_list.append(account)
@@ -385,7 +385,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                              end=times['end'])
         if summary:
 
-            logging.warning("remove record.get('_id') %s from query" % (record.get('_id')))
+            logging.warning("Remove record.get('_id') {0} from query\n".format(record.get('_id')))
             
             dates = [record['_id'] for record in summary]
             
