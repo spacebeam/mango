@@ -73,7 +73,7 @@ class Records(object):
         '''
             Get detail records 
         '''
-        message = 'where are the records for this account {0} page {1}'.format(account, page_num)
+        message = 'where are the records for this account {0} page {1} bro'.format(account, page_num)
         logging.info(message)
         page_num = int(page_num)
         page_size = self.settings['page_size']
@@ -164,8 +164,6 @@ class Records(object):
 
         times = yield check_times(start, end)
 
-        logging.info('da fuck is going on {0}\n'.format(str(times)))
-
         # MongoDB aggregation match operator
         if type(account) is list:
             match = {
@@ -183,7 +181,8 @@ class Records(object):
         if not account:
             logging.info("there is not an account on aggregation match")
             match = {
-                'public': False
+                'public': False,
+                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
 
         #  month : { $month : ISODate(localHitDate) }
