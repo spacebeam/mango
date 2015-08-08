@@ -190,8 +190,6 @@ class Records(object):
                 'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
 
-        #  month : { $month : ISODate(localHitDate) }
-
         # MongoDB aggregation project operator
         project = {
             "_id" : 0,
