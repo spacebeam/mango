@@ -28,7 +28,7 @@ from mango.messages import reports
 
 from mango.tools import clean_structure, clean_message
 from mango.tools import clean_results
-from mango.tools import check_times
+from mango.tools import check_times, check_times_get_datetime
 
 
 class Records(object):
