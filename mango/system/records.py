@@ -158,11 +158,13 @@ class Records(object):
         '''
         # MongoDB Aggregation operators process data and return computed results
 
-        logging.info('Get summary for {0} lapse {1} start period {2} end period {3}'.format(
+        logging.info('Get summary for {0} lapse {1} start {2} and end {3} time periods\n'.format(
             account, lapse, start, end
         ))
 
         times = yield check_times(start, end)
+
+        logging.info('da fuck is going on {0}\n'.format(str(times)))
 
         # MongoDB aggregation match operator
         if type(account) is list:
