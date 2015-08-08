@@ -49,7 +49,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             Get records handler
         '''
 
-        logging.info('Get records handler, time stuff up sounds cool at this moment.')
+        logging.info('Get records handler')
 
         # -- logging info
         logging.info(self.request.arguments)
