@@ -73,20 +73,23 @@ class Records(object):
         '''
             Get detail records 
         '''
-        message = 'where are the records for this account {0} page {1} bro'.format(account, page_num)
-        logging.info(message)
+        
         page_num = int(page_num)
         page_size = self.settings['page_size']
         record_list = []
         
         if not account:
-            query = self.db.records.find({'public':False}, {'_id':0})
+            query = self.db.records.find({
+                'start':{'$gte':times.get('start'), '$lt':times.get('end')},
+                'public':False}, {'_id':0}) 
         elif type(account) is list:
             accounts = [{'accountcode':a, 'assigned': True} for a in account]
             query = self.db.records.find({'$or':accounts})
         else:
-            query = self.db.records.find({'accountcode':account,
-                                        'assigned':True})
+            query = self.db.records.find({
+                'accountcode':account,
+                'start':{'$gte':times.get('start'), '$lt':times.get('end')},
+                'assigned':True})
         
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
