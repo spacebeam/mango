@@ -354,6 +354,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
         message = {}
         result = None
+        seconds = 0
         minutes = 0
         record_avg = 0
 
@@ -418,7 +419,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                     minutes = {
                         time.mktime(key.timetuple()): int(minutes[key])
                         for key in minutes
-                    } 
+                    }
 
 
                     # missing seconds ???
@@ -442,4 +443,5 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         
         self.finish({'records': int(result),
                      'minutes': int(minutes),
+                     'seconds': int(seconds),
                      'record_avg': int(record_avg)})
