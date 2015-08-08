@@ -280,7 +280,11 @@ class Records(object):
             {'$group':group}
         ]
 
+        logging.info(match)
+
         result = yield self.db.records.aggregate(pipeline)
+
+        logging.info(len(result))
 
         raise gen.Return(result.get('result'))
 
