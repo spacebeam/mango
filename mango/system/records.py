@@ -169,6 +169,8 @@ class Records(object):
 
         times = yield check_times_get_datetime(start, end)
 
+        logging.warning(times)
+
         # MongoDB aggregation match operator
         if type(account) is list:
             match = {
@@ -184,7 +186,7 @@ class Records(object):
             }
 
         if not account:
-            logging.info("there is not an account on aggregation match")
+            logging.info("There is not an account on get_summary aggregation match")
             match = {
                 'public': False,
                 'start': {'$gte':times.get('start'), '$lt': times.get('end')}
