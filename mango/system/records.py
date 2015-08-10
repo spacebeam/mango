@@ -175,21 +175,21 @@ class Records(object):
         if type(account) is list:
             match = {
                 'assigned':True,
-                'start':{'$gte':times.get('start'), '$lt':times.get('end')},
+                'start':{'$gte':times.get('end'), '$lt':times.get('start')},
                 '$or':[{'accountcode':a} for a in account]
             }
         else:
             match = {
                 'accountcode':account, 
                 'assigned': True,
-                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
+                'start': {'$gte':times.get('end'), '$lt':times.get('start')}
             }
 
         if not account:
             logging.info("There is not an account on get_summary aggregation match")
             match = {
                 'public': False,
-                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
+                'start': {'$gte':times.get('end'), '$lt':times.get('start')}
             }
 
         # MongoDB aggregation project operator
