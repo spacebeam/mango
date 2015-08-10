@@ -169,27 +169,25 @@ class Records(object):
 
         times = yield check_times_get_datetime(start, end)
 
-        logging.warning(times)
-
         # MongoDB aggregation match operator
         if type(account) is list:
             match = {
                 'assigned':True,
-                'start':{'$gte':times.get('end'), '$lt':times.get('start')},
+                'start':{'$gte':times.get('start'), '$lt':times.get('end')},
                 '$or':[{'accountcode':a} for a in account]
             }
         else:
             match = {
                 'accountcode':account, 
                 'assigned': True,
-                'start': {'$gte':times.get('end'), '$lt':times.get('start')}
+                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
 
         if not account:
             logging.info("There is not an account on get_summary aggregation match")
             match = {
                 'public': False,
-                'start': {'$gte':times.get('end'), '$lt':times.get('start')}
+                'start': {'$gte':times.get('start'), '$lt': times.get('end')}
             }
 
         # MongoDB aggregation project operator
@@ -279,6 +277,8 @@ class Records(object):
             {'$project':project},
             {'$group':group}
         ]
+
+        logging.info(pipeline)
 
         result = yield self.db.records.aggregate(pipeline)
 
