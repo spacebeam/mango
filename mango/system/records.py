@@ -283,11 +283,16 @@ class Records(object):
 
         result = yield self.db.records.aggregate(pipeline)
 
-        if result.get('result'):
-            message = [rec in result.get('result')]
-            raise gen.Return(message)
-        else:
-            raise gen.Return({'message':'aggregation issues and stuff'})
+        cursor = yield collection.aggregate(pipeline, cursor={})
+       
+        while (yield cursor.fetch_next):
+            doc = cursor.next_object()
+            message.append(doc)
+
+        raise gen.Return(message)
+        
+        #else:
+        #    raise gen.Return({'message':'aggregation issues and stuff'})
 
         
 
