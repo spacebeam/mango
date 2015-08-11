@@ -287,7 +287,6 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             # remove from query
 
             logging.error(summary)
-            break
 
             dates = [record['_id'] for record in summary]
             
