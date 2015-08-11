@@ -11,7 +11,7 @@
 __author__ = 'Jean Chassoul'
 
 import logging
-from tornado import httpclient as http_client
+from tornado import httpclient
 import ujson as json
 import uuid
 import urllib
@@ -31,13 +31,16 @@ from mango.system import records
 from bson import objectid
 
 
+httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+
+
 @gen.coroutine
 def get_raw_records(sql, query_limit):
     '''
         Get RAW records
     '''
-    http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
-    http_client = http_client.AsyncHTTPClient()
+    #httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+    http_client = httpclient.AsyncHTTPClient()
 
     def handle_restuff(response):
         '''
@@ -325,7 +328,6 @@ def get_query_records(sql, query_limit):
     logging.info('a little brain dead recolection of records')
     record_list = []
 
-    httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
     http_client = httpclient.AsyncHTTPClient()
 
     def handle_record_uuid(response):
