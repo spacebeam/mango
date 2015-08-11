@@ -157,6 +157,16 @@ class Records(object):
         if lapse:
             logging.info('get summaries lapse %s' % (lapse))
 
+    def get_su_maria(self, account, start, end, lapse):
+        '''
+        '''
+        from pymongo import MongoClient
+        import datetime
+        connection = MongoClient('52.25.179.104')
+        dbx = connection.mango
+        message = dbx.records.find_one()
+        return message
+
     @gen.coroutine
     def get_summary(self, account, start, end, lapse):
         '''
