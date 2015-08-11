@@ -164,6 +164,8 @@ class Records(object):
         '''
         # MongoDB Aggregation operators process data and return computed results
 
+        message = []
+
         logging.info('Get summary for {0} lapse {1} start {2} and end {3} time periods\n'.format(
             account, lapse, start, end
         ))
@@ -279,13 +281,14 @@ class Records(object):
             {'$group':group}
         ]
 
-        logging.info(pipeline)
-
         result = yield self.db.records.aggregate(pipeline)
 
-        logging.info(result)
+        for record in result:
+            message.append(record)
 
-        raise gen.Return(result.get('result'))
+        logging.info(message)
+
+        raise gen.Return(message)
 
     @gen.coroutine
     def new_detail_record(self, struct, db=None):

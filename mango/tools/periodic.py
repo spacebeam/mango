@@ -39,7 +39,6 @@ def get_raw_records(sql, query_limit):
     '''
         Get RAW records
     '''
-    #httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
     http_client = httpclient.AsyncHTTPClient()
 
     def handle_restuff(response):
