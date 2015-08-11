@@ -286,7 +286,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
             # remove from query
 
-            logging.error(summary)
+            logging.error(summary.get('result'))
 
             dates = [record['_id'] for record in summary]
             
