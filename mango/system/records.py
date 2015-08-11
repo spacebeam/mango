@@ -252,7 +252,7 @@ class Records(object):
         ]
         result = dbx.records.aggregate(pipeline)
 
-        message = [res for res in result]
+        message = [res for res in result.get('result')]
 
         logging.error(message)
 
