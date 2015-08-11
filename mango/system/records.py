@@ -283,7 +283,8 @@ class Records(object):
 
         result = yield self.db.records.aggregate(pipeline)
 
-        for record in result:
+        for record in result.get('result'):
+            logging.info(record)
             message.append(record)
 
         logging.info(message)
