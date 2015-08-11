@@ -284,7 +284,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
 
-        logging.info(summaria)
+        logging.info(summaria.get('result'))
 
         if summary:
 
