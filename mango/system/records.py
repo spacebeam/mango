@@ -281,20 +281,13 @@ class Records(object):
             {'$group':group}
         ]
 
-        result = yield self.db.records.aggregate(pipeline)
-
-        cursor = yield collection.aggregate(pipeline, cursor={})
+        result = yield self.db.records.aggregate(pipeline, cursor={})
        
-        while (yield cursor.fetch_next):
-            doc = cursor.next_object()
+        while (yield result.fetch_next):
+            doc = result.next_object()
             message.append(doc)
 
-        raise gen.Return(message)
-        
-        #else:
-        #    raise gen.Return({'message':'aggregation issues and stuff'})
-
-        
+        raise gen.Return(message)        
 
     @gen.coroutine
     def new_detail_record(self, struct, db=None):
