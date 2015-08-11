@@ -125,9 +125,23 @@ class BaseHandler(web.RequestHandler):
         return self.get_secure_cookie('account')
 
     @gen.coroutine
+    def catch_down(self, struct, scheme, error, reason):
+        '''
+            Catch down
+        '''
+        pass
+
+    @gen.coroutine
+    def catch_daemon(self, struct, scheme, error, reason):
+        '''
+            Catch daemon
+        '''
+        pass
+
+    @gen.coroutine
     def let_it_crash(self, struct, scheme, error, reason):
         '''
-            Let it crash.
+            Let it crash
         '''
 
         str_error = str(error)

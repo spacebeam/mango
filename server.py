@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Manage Asynchronous Number of General ORGs
+    Manage Asynchronous Number General ORGs
 
     Organizations of Roman Generality (ORGs)
 '''
@@ -17,12 +17,12 @@ import time
 import zmq
 import sys
 import uuid
-import logging
-import motor
 import itertools
 
-import queries
+import logging
 
+import motor
+import queries
 import pylibmc as mc
 
 # system periodic cast callback

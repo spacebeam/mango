@@ -22,16 +22,6 @@ import logging
 import base64
 
 
-def get_command(message):
-    print("Received control command: %s" % message)
-    if message[0] == "Exit":
-        print("Received exit command, client will stop receiving messages")
-        should_continue = False
-        ioloop.IOLoop.instance().stop()
-        
-def process_message(message):
-    print("Processing ... %s" % message)
-
 def basic_authentication(handler_class):
     '''
         @basic_authentication
@@ -82,6 +72,17 @@ def basic_authentication(handler_class):
     handler_class._execute = wrap_execute(handler_class._execute)
 
     return handler_class
+
+
+def get_command(message):
+    print("Received control command: %s" % message)
+    if message[0] == "Exit":
+        print("Received exit command, client will stop receiving messages")
+        should_continue = False
+        ioloop.IOLoop.instance().stop()
+        
+def process_message(message):
+    print("Processing ... %s" % message)
 
 def server_router(port="5560"):
     '''

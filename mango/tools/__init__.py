@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system logic function tools.
+    Mango tools system logic functions.
 '''
 
 # This file is part of mango.
@@ -13,6 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import time
 import arrow
+import datetime
 import ujson as json
 import motor
 
@@ -156,6 +157,134 @@ def check_times_get_datetime(start, end):
     
     raise gen.Return(message)
 
+@gen.coroutine
+def new_resource(db, struct, collection=None, scheme=None):
+    '''
+        New resource function
+    '''
+    import uuid as _uuid
+    from schematics import models as _models
+    from schematics import types as _types
+
+    # Trying to find analogies with erlang records
+    # We need more experience on OTP.
+    class MangoResource(_models.Model):
+        '''
+            Mango resource
+        '''
+        uuid = _types.UUIDType(default=_uuid.uuid4)
+        account = _types.StringType(required=False)
+        resource  = _types.StringType(required=True)
+
+
+    # Calling getattr(x, "foo") is just another way to write x.foo
+    collection = getattr(db, collection)  
+
+    try:
+        message = MangoResource(struct)
+        message.validate()
+        message = message.to_primitive()
+    except Exception, e:
+        logging.exception(e)
+        raise e
+        return
+
+    resource = 'resources.{0}'.format(message.get('resource'))
+
+    try:
+        message = yield collection.update(
+            {
+                #'uuid': message.get(scheme),           # tha fucks ?
+                'account': message.get('account')
+            },
+            {
+                '$addToSet': {
+                    '{0}.contains'.format(resource): message.get('uuid')
+                },
+                    
+                '$inc': {
+                    'resources.total': 1,
+                    '{0}.total'.format(resource): 1
+                }
+            }
+        )
+    except Exception, e:
+        logging.exception(e)
+        raise e
+        return
+
+    raise gen.Return(message)
+
+@gen.coroutine
+def resource_exists(db, struct):
+    '''
+        resource_exists
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def last_modified(db, struct):
+    '''
+        last_modified
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def moved_permanently(db, struct):
+    '''
+        moved_permanently
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def moved_temporarily(db, struct):
+    '''
+        moved_temporarily
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def previously_existed(db, struct):
+    '''
+        previosly_existed
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def resource_exists(db, struct):
+    '''
+        resource_exists
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def forbidden_resource(db, struct):
+    '''
+        forbidden_resource
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def delete_resource(db, struct):
+    '''
+        delete_resource
+
+        exist, exists, existed
+    '''
+
+@gen.coroutine
+def delete_completed(db, struct):
+    '''
+        delete_resource
+    '''
+
 def clean_message(struct):
     '''
         clean message structure
@@ -288,131 +417,3 @@ def content_type_msgpack_validation(handler_class):
 
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
-
-@gen.coroutine
-def new_resource(db, struct, collection=None, scheme=None):
-    '''
-        New resource function
-    '''
-    import uuid as _uuid
-    from schematics import models as _models
-    from schematics import types as _types
-
-    # Trying to find analogies with erlang records
-    # We need more experience on OTP.
-    class MangoResource(_models.Model):
-        '''
-            Mango resource
-        '''
-        uuid = _types.UUIDType(default=_uuid.uuid4)
-        account = _types.StringType(required=False)
-        resource  = _types.StringType(required=True)
-
-
-    # Calling getattr(x, "foo") is just another way to write x.foo
-    collection = getattr(db, collection)  
-
-    try:
-        message = MangoResource(struct)
-        message.validate()
-        message = message.to_primitive()
-    except Exception, e:
-        logging.exception(e)
-        raise e
-        return
-
-    resource = 'resources.{0}'.format(message.get('resource'))
-
-    try:
-        message = yield collection.update(
-            {
-                #'uuid': message.get(scheme),           # tha fucks ?
-                'account': message.get('account')
-            },
-            {
-                '$addToSet': {
-                    '{0}.contains'.format(resource): message.get('uuid')
-                },
-                    
-                '$inc': {
-                    'resources.total': 1,
-                    '{0}.total'.format(resource): 1
-                }
-            }
-        )
-    except Exception, e:
-        logging.exception(e)
-        raise e
-        return
-
-    raise gen.Return(message)
-
-@gen.coroutine
-def resource_exists(db, struct):
-    '''
-        resource_exists
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def last_modified(db, struct):
-    '''
-        last_modified
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def moved_permanently(db, struct):
-    '''
-        moved_permanently
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def moved_temporarily(db, struct):
-    '''
-        moved_temporarily
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def previously_existed(db, struct):
-    '''
-        previosly_existed
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def resource_exists(db, struct):
-    '''
-        resource_exists
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def forbidden_resource(db, struct):
-    '''
-        forbidden_resource
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def delete_resource(db, struct):
-    '''
-        delete_resource
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def delete_completed(db, struct):
-    '''
-        delete_resource
-    '''

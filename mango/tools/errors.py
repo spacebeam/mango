@@ -21,6 +21,9 @@ __author__ = 'Jean Chassoul'
     Monit and supervisor watch each other in addition to the system process(es).
 '''
 
+# it's cool and all to have a errors module and a Error class but we're missing the point of the hole error thing
+# the out-of-band error channel is missing from the system.
+
 
 class Error(object):
     '''

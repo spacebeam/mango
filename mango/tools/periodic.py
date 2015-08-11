@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system periodic tools.
+    Mango tools system periodic functions.
 '''
 
 # This file is part of mango.
 
-# Dist4ributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
 
 import logging
-from tornado import httpclient
+from tornado import httpclient as http_client
 import ujson as json
+import uuid
 import urllib
 import motor
 import queries
+
+#import address
 
 from contextlib import contextmanager
 from tornado import gen
@@ -33,8 +36,8 @@ def get_raw_records(sql, query_limit):
     '''
         Get RAW records
     '''
-    httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
-    http_client = httpclient.AsyncHTTPClient()
+    http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+    http_client = http_client.AsyncHTTPClient()
 
     def handle_restuff(response):
         '''
@@ -74,7 +77,8 @@ def get_raw_records(sql, query_limit):
 
             # if successful response we need to send ack now to sql
             # and mack the flag of that call as checked, otherwise
-            # we need some othe type of validation.
+            # we need some other type of validation.
+
 
     try:
         # Get SQL database from mango settings
@@ -185,17 +189,17 @@ def process_assigned_false(db):
         assigned False flag on calls resource.
     '''
 
-    result = []
+    message = []
 
-    def _got_call(message, error):
+    def got_record(record, error):
         '''
-            got call
+            got record
         '''
-        if message:
-            channel = (message['channel'] if 'channel' in message else False)
+        if record:
+            channel = (record['channel'] if 'channel' in record else False)
 
             if channel:
-                account = [a for a in _account_list 
+                account = [a for a in account_list 
                            if ''.join(('/', a['account'], '-')) in channel]
 
                 account = (account[0] if account else False)
@@ -203,22 +207,23 @@ def process_assigned_false(db):
                 if account:
                     struct = {
                         'account':account['account'],
-                        'resource':'calls',
-                        'id':message['_id']
+                        'resource':'records',
+                        'id':record['_id']
                     }
-                    result.append(struct)
+                    message.append(struct)
         elif error:
             logging.error(error)
             return error
         else:
-            #logging.info('got call result: %s', result)
-            return result
+            logging.info('got record function result: {0}'.format(message))
+            return message
     try:
-        _account_list = yield get_usernames(db)
 
-        db.calls.find({
+        account_list = yield get_usernames(db)
+
+        db.records.find({
             'assigned':False
-        }).limit(800).each(_got_call)
+        }).limit(1000).each(got_record)
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
