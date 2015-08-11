@@ -283,13 +283,13 @@ class Records(object):
 
         result = yield self.db.records.aggregate(pipeline)
 
-        for record in result.get('result'):
-            logging.info(record)
-            message.append(record)
+        if result.get('result'):
+            message = [rec in result.get('result')]
+            raise gen.Return(message)
+        else:
+            raise gen.Return({'message':'aggregation issues and stuff'})
 
-        logging.info(message)
-
-        raise gen.Return(message)
+        
 
     @gen.coroutine
     def new_detail_record(self, struct, db=None):
