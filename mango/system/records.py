@@ -164,7 +164,96 @@ class Records(object):
         import datetime
         connection = MongoClient('52.25.179.104')
         dbx = connection.mango
-        message = dbx.records.find_one()
+
+        start = (arrow.get(start) if start else arrow.utcnow())
+
+        end = (arrow.get(end) if end else start.replace(days=+1))
+
+        match = {'start':{'$gte':start.naive, '$lt':end.naive}, 'public': False}
+
+        project = {
+            "_id" : 0,
+            
+            # record timestamps
+            "start": 1,
+            #"answer":1,
+            #"end":1,
+            
+            # record duration seconds
+            "duration": 1,
+
+            # record billing seconds
+            "billsec": 1,
+            
+            # duration of the call in seconds (only billing time)
+            "seconds": 1,
+            
+            # project id's timestamp stuff?
+            "year" : {  
+                "$year" : "$start"
+            },
+            "month" : {  
+                "$month" : "$start"
+            },
+            "week" : {  
+                "$week" : "$start"
+            },
+            "day" : {
+                "$dayOfMonth" : "$start"
+            },
+            "hour" : {
+                "$hour" : "$start"
+            },
+            "minute" : {
+                "$minute" : "$start"
+            },
+            "second" : {
+                "$second" : "$start"
+            }
+        }
+        group = {
+            '_id': {
+                'start': '$start',
+                #'answer': '$answer',
+                #'end': '$end',
+                'year': '$year',
+                'month': '$month',
+                'week':'$week',
+                'day': '$day',
+                'hour':'$hour',
+                'minute': '$minute',
+                'second': '$second',
+            },
+
+            'records': {
+                '$sum':1
+            },
+
+            'average': {
+                '$avg':'$billsec'
+            },
+
+            'duration': {
+                '$sum':'$duration'
+            },
+
+            'billing': {
+                '$sum':'$billsec'
+            },
+
+            'seconds': {
+                '$sum': '$seconds'
+            }
+        }
+        pipeline = [
+            {'$match':match},
+            {'$project':project},
+            {'$group':group}
+        ]
+        result = dbx.records.aggregate(pipeline)
+
+        message = [res for res in result]
+
         return message
 
     @gen.coroutine
