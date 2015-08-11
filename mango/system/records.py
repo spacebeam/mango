@@ -254,6 +254,8 @@ class Records(object):
 
         message = [res for res in result]
 
+        logging.error(message)
+
         return message
 
     @gen.coroutine
