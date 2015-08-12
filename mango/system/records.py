@@ -159,6 +159,7 @@ class Records(object):
 
     def get_su_maria(self, account, start, end, lapse):
         '''
+            Get su maria it's a blocking pymongo aggregation stuff
         '''
         from pymongo import MongoClient
         import datetime
@@ -170,6 +171,8 @@ class Records(object):
         end = (arrow.get(end) if end else start.replace(days=+1))
 
         match = {'start':{'$gte':start.naive, '$lt':end.naive}, 'public': False}
+
+        logging.info(match)
 
         project = {
             "_id" : 0,
@@ -250,11 +253,12 @@ class Records(object):
             {'$project':project},
             {'$group':group}
         ]
+
+        logging.info(pipeline)
+
         result = dbx.records.aggregate(pipeline)
 
         message = [res for res in result.get('result')]
-
-        logging.error(message)
 
         return message
 
