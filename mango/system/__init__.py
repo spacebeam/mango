@@ -108,9 +108,8 @@ def server_push(port="5556"):
     while message == 'Continue':
         socket.send(message)
         time.sleep(1)
-    else:
-        socket.send("Exit")
-        break
+    
+    socket.send("Exit")
 
 def server_pub(port="5558"):
     '''
