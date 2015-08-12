@@ -341,6 +341,10 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             
             record_avg = round(min_avg / result)
         
+
+        if summary == summaria:
+            logging.error('motor and pymongo return the same stuff')
+
         self.finish({'records': int(result),
                      'minutes': int(minutes),
                      'record_avg': int(record_avg)})
