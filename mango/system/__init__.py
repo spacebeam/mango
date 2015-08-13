@@ -154,15 +154,13 @@ def server_pub(port="5558"):
     socket.bind("tcp://*:%s" % port)
     publisher_id = random.randrange(0,9999)
     logging.warning("Running PUB server process on port: {0}".format(port))
-    logging.warning("serves only 5 request and dies")
 
     while True:
         # Wait for next request from client
         topic = random.randrange(8,10)
-        
         messagedata = "server#{0}".format(publisher_id)
+        logging.warning("Server publisher_id {0} publish message {1}".format(publisher_id, message))
         message = "{0} {1}".format(topic, messagedata)
-        logging.warning(message)
         socket.send(message)
         time.sleep(1)
 
