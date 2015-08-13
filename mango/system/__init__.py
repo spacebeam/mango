@@ -86,7 +86,8 @@ def server_router(frontend_port, backend_port):
         ROUTER process
     '''
     # Prepare context and sockets
-    context = zmq.Context.instance()
+    context = zmq.Context()
+    #context = zmq.Context.instance()
     frontend = context.socket(zmq.ROUTER)
     networks = "tcp://*.{0}".format(frontend_port)
     logging.warning(networks)

@@ -132,14 +132,15 @@ def main():
     # Server daemons and ports
     server_push_port = "5556"
     server_pub_port = "5558"
-    frontend_router_port = "4144"
-    backend_router_port = "4188"
+    # System frontend & backend routers and ports
+    frontend_port = "4144"
+    backend_port = "4188"
 
     # Python processes
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
-    Process(target=server_router, args=(frontend_router_port,backend_router_port,)).start()
+    Process(target=server_router, args=(frontend_port,backend_port,)).start()
     
     # daemon options
     opts = options.options()
