@@ -31,10 +31,7 @@ def basic_authentication(handler_class):
 
     def wrap_execute(handler_execute):
         '''
-            Execute basic authentication
-            ----------------------------
-
-            Wrapper execute function.
+            Wrap Execute basic authentication function
         '''
 
         def basic_auth(handler, kwargs):
@@ -49,14 +46,9 @@ def basic_authentication(handler_class):
                 handler._transforms = []
                 handler.finish()
                 return False
-
             auth_decoded = base64.decodestring(auth_header[6:])
             handler.username, handler.password = auth_decoded.split(':', 2)
-
-            # write msg send right channel.
-            # message = {}
-            logging.info('somewhere %s enter the dungeon! /api/ @basic_authentication' % handler.username)
-
+            logging.info('Somewhere %s enter the dungeon! /api/ @basic_authentication' % handler.username)
             return True
 
         def _execute(self, transforms, *args, **kwargs):
@@ -84,7 +76,7 @@ def get_command(message):
         ioloop.IOLoop.instance().stop()
         
 def process_message(message):
-    print("Processing ... %s" % message)
+    logging.warning("Processing ... {0}".format(message))
 
 def server_router(port="5560"):
     '''
@@ -121,14 +113,17 @@ def server_pub(port="5558"):
     socket = context.socket(zmq.PUB)
     socket.bind("tcp://*:%s" % port)
     publisher_id = random.randrange(0,9999)
-    print "Running server on port: ", port
-    # serves only 5 request and dies
+    logging.warning("Running PUB server process on port: {0}".format(port))
+    logging.warning("serves only 5 request and dies")
+
     for reqnum in range(10):
         # Wait for next request from client
         topic = random.randrange(8,10)
-        messagedata = "server#%s" % publisher_id
-        print "%s %s" % (topic, messagedata)
-        socket.send("%d %s" % (topic, messagedata))
+        
+        messagedata = "server#{0}".format(publisher_id)
+        message = "{0} {1}".format(topic, messagedata)
+        logging.warning(message)
+        socket.send(message)
         time.sleep(1)
 
 def client_dealer(por="5559"):
