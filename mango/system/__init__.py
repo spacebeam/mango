@@ -105,7 +105,7 @@ def server_push(port="5556"):
     context = zmq.Context()
     socket = context.socket(zmq.PUSH)
     socket.bind("tcp://*:%s" % port)
-    print "Running server on port: ", port
+    logging.warning("Running server on port: {0}".format(port))
     message = 'Continue'
     # serves only 5 request and dies
     while message == 'Continue':
