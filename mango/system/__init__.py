@@ -119,7 +119,7 @@ def server_pub(port="5558"):
     logging.warning("Running PUB server process on port: {0}".format(port))
     logging.warning("serves only 5 request and dies")
 
-    for reqnum in range(10):
+    while True:
         # Wait for next request from client
         topic = random.randrange(8,10)
         
@@ -144,7 +144,7 @@ def client(port_push, port_sub):
     socket_pull.connect ("tcp://localhost:%s" % port_push)
     stream_pull = zmqstream.ZMQStream(socket_pull)
     stream_pull.on_recv(get_command)
-    logging.warning("Connected to server with port {0}".format(port_push))
+    logging.warning("Connected to pull server with port {0}".format(port_push))
 
     socket_sub = context.socket(zmq.SUB)
     socket_sub.connect ("tcp://localhost:%s" % port_sub)
