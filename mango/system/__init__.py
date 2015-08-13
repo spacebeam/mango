@@ -76,6 +76,9 @@ def get_command(message):
         ioloop.IOLoop.instance().stop()
         
 def process_message(message):
+    '''
+        process_message system function
+    '''
     logging.warning("Processing ... {0}".format(message))
 
 def server_router(port="5560"):
@@ -141,56 +144,56 @@ def client(port_push, port_sub):
     socket_pull.connect ("tcp://localhost:%s" % port_push)
     stream_pull = zmqstream.ZMQStream(socket_pull)
     stream_pull.on_recv(get_command)
-    print("Connected to server with port %s" % port_push)
+    logging.warning("Connected to server with port {0}".format(port_push))
 
     socket_sub = context.socket(zmq.SUB)
     socket_sub.connect ("tcp://localhost:%s" % port_sub)
     socket_sub.setsockopt(zmq.SUBSCRIBE, "9")
     stream_sub = zmqstream.ZMQStream(socket_sub)
     stream_sub.on_recv(process_message)
-    print("Connected to publisher with port %s" % port_sub)
+    logging.warning("Connected to publisher with port {0}".format(port_sub))
 
     ioloop.IOLoop.instance().start()
-    print("Worker has stopped processing messages.")
+    logging.warning("Worker has stopped processing messages.")
 
 def spawn(message):
     '''
         Spawn process, return new uuid
     '''
-    print("Spawn process {0}".format(message))
+    logging.info("Spawn process {0}".format(message))
 
 def link(message):
     '''
         Link processes
     '''
-    print("Link processes {0}".format(message))
+    logging.info("Link processes {0}".format(message))
 
 def spawn_link(message):
     '''
         Spawn link processes
     '''
-    print("Spawn new process, {0} return Received process uuid".format(message))
+    logging.info("Spawn new process, {0} return Received process uuid".format(message))
 
 def monitor(message):
     '''
         Monitor processes
     '''
-    print("Monitor processes {0}".format(message))
+    logging.info("Monitor processes {0}".format(message))
 
 def spawn_monitor(message):
     '''
         Spawn monitor processes
     '''
-    print("Spawn new process, {0} return Received process uuid".format(message))
+    logging.info("Spawn new process, {0} return Received process uuid".format(message))
 
 def register(message):
     '''
         Register process uuid
     '''
-    print("Received message: %s" % message)
+    logging.info("Received message: %s" % message)
 
 def context_switch(message):
     '''
         Node context switch
     '''
-    print("talk between nodes")
+    logging.info("talk between nodes")
