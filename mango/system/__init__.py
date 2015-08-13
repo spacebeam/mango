@@ -88,6 +88,8 @@ def server_router(frontend_port, backend_port):
     # Prepare context and sockets
     context = zmq.Context.instance()
     frontend = context.socket(zmq.ROUTER)
+    networks = "tcp://*.{0}".format(frontend_port)
+    logging.warning(networks)
     frontend.bind("tcp://*.{0}".format(frontend_port))
     backend = context.socket(zmq.ROUTER)
     backend.bind("tcp://*.{0}".format(backend_port))
