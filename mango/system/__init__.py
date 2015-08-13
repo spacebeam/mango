@@ -77,9 +77,9 @@ def get_command(message):
     '''
         get_command system function
     '''
-    logging.info('Received control command: {0}'.format(message))
+    logging.warning('Received control command: {0}'.format(message))
     if message[0] == "Exit":
-        logging.info('Received exit command, client will stop receiving messages')
+        logging.warning('Received exit command, client will stop receiving messages')
         should_continue = False
         ioloop.IOLoop.instance().stop()
         
