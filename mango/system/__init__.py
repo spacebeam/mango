@@ -81,11 +81,45 @@ def process_message(message):
     '''
     logging.warning("Processing ... {0}".format(message))
 
-def server_router(port="5560"):
+def server_router(frontend_port, backend_port):
     '''
         ROUTER process
     '''
-    pass
+    # Prepare context and sockets
+    context = zmq.Context.instance()
+    frontend = context.socket(zmq.ROUTER)
+    frontend.bind("tcp://*.{0}".format(frontend_port))
+    backend = context.socket(zmq.ROUTER)
+    backend.bind("tcp://*.{0}".format(backend_port))
+
+def client_task(ident):
+    """Basic request-reply client using REQ socket."""
+    socket = zmq.Context().socket(zmq.REQ)
+    socket.identity = u"Client-{}".format(ident).encode("ascii")
+    socket.connect("tcp://*.4144")
+
+    # Send request, get reply
+    socket.send(b"HELLO")
+    reply = socket.recv()
+    print("{}: {}".format(socket.identity.decode("ascii"),
+                          reply.decode("ascii")))
+
+
+def worker_task(ident):
+    """Worker task, using a REQ socket to do load-balancing."""
+    socket = zmq.Context().socket(zmq.REQ)
+    socket.identity = u"Worker-{}".format(ident).encode("ascii")
+    socket.connect("tcp://*.4188")
+
+    # Tell broker we're ready for work
+    socket.send(b"READY")
+
+    while True:
+        address, empty, request = socket.recv_multipart()
+        print("{}: {}".format(socket.identity.decode("ascii"),
+                              request.decode("ascii")))
+        socket.send_multipart([address, b"", b"OK"])
+
 
 def gen_daemon(server_router):
     '''

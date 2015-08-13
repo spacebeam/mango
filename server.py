@@ -36,6 +36,7 @@ from tornado import web
 from mango.system import records as record_tools
 from mango.system import server_push
 from mango.system import server_pub
+from mango.system import server_router
 from mango.system import client
 
 from mango.tools import options
@@ -128,17 +129,17 @@ def main():
     '''
     # Now we can run a few servers and processes
 
-    # daemon server port
+    # Server daemons and ports
     server_push_port = "5556"
     server_pub_port = "5558"
-
-    # client and worker processes
-    
+    frontend_router_port = "4144"
+    backend_router_port = "4188"
 
     # Python processes
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
+    Process(target=server_router, args=(frontend_router_port,backend_router_port,)).start()
     
     # daemon options
     opts = options.options()
