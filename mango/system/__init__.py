@@ -74,10 +74,12 @@ def basic_authentication(handler_class):
     return handler_class
 
 def get_command(message):
-    logging.error('da fuq is wrong with you?')
-    print("Received control command: %s" % message)
+    '''
+        get_command system function
+    '''
+    logging.info('Received control command: {0}'.format(message))
     if message[0] == "Exit":
-        print("Received exit command, client will stop receiving messages")
+        logging.info('Received exit command, client will stop receiving messages')
         should_continue = False
         ioloop.IOLoop.instance().stop()
         
