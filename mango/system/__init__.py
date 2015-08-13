@@ -89,17 +89,16 @@ def server_router(frontend_port, backend_port):
     context = zmq.Context()
     #context = zmq.Context.instance()
     frontend = context.socket(zmq.ROUTER)
-    networks = "tcp://*.{0}".format(frontend_port)
-    logging.warning(networks)
-    frontend.bind("tcp://*.{0}".format(frontend_port))
+    frontend.bind("tcp://*:{0}".format(frontend_port))
     backend = context.socket(zmq.ROUTER)
-    backend.bind("tcp://*.{0}".format(backend_port))
+    backend.bind("tcp://*:{0}".format(backend_port))
 
 def client_task(ident):
     """Basic request-reply client using REQ socket."""
     socket = zmq.Context().socket(zmq.REQ)
     socket.identity = u"Client-{}".format(ident).encode("ascii")
-    socket.connect("tcp://*.4144")
+    socket.connect("tcp://*:4144")
+    stream_req = zmqstream.ZMQStream(socket)
 
     # Send request, get reply
     socket.send(b"HELLO")
@@ -112,8 +111,8 @@ def worker_task(ident):
     """Worker task, using a REQ socket to do load-balancing."""
     socket = zmq.Context().socket(zmq.REQ)
     socket.identity = u"Worker-{}".format(ident).encode("ascii")
-    socket.connect("tcp://*.4188")
-
+    socket.connect("tcp://*:4188")
+    stream_req = zmqstream.ZMQStream(socket)
     # Tell broker we're ready for work
     socket.send(b"READY")
 
