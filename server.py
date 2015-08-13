@@ -132,6 +132,9 @@ def main():
     server_push_port = "5556"
     server_pub_port = "5558"
 
+    # client and worker processes
+    
+
     # Python processes
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
