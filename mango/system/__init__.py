@@ -90,6 +90,7 @@ def client_task(ident):
 
     # Send request, get reply
     socket.send(b"HELLO")
+
     reply = socket.recv()
     print("{}: {}".format(socket.identity.decode("ascii"),
                           reply.decode("ascii")))
@@ -98,6 +99,7 @@ def client_task(ident):
 def worker_task(ident):
     """Worker task, using a REQ socket to do load-balancing."""
     socket = zmq.Context().socket(zmq.REQ)
+    # q dada dada
     socket.identity = u"Worker-{}".format(ident).encode("ascii")
     socket.connect("tcp://*:4188")
     stream_req = zmqstream.ZMQStream(socket)

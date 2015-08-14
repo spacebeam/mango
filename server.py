@@ -61,6 +61,9 @@ from multiprocessing import Process
 from zmq.eventloop import ioloop
 
 
+NBR_CLIENTS = 10
+NBR_WORKERS = 3
+
 # ioloop
 ioloop.install()
 
@@ -136,15 +139,17 @@ def main():
     # Server daemons and ports
     server_push_port = "5556"
     server_pub_port = "5558"
+
     # System frontend & backend routers and ports
     frontend_port = "4144"
     backend_port = "4188"
 
-    # servers
+    # Servers
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=server_router, args=(frontend_port,backend_port,)).start()
-    # clients
+
+    # Clients
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
 
     # Start background tasks
@@ -328,7 +333,6 @@ def main():
             (r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
             (r'/billings/records/end/(?P<end>.*)/?', billings.RecordsHandler),
             (r'/billings/records/?', billings.RecordsHandler)
-
         ],
 
         # system database
