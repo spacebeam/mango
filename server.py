@@ -37,7 +37,11 @@ from mango.system import records as record_tools
 from mango.system import server_push
 from mango.system import server_pub
 from mango.system import server_router
+
 from mango.system import client
+
+from mango.system import worker_task
+from mango.system import client_task
 
 from mango.tools import options
 from mango.tools import indexes
@@ -136,11 +140,22 @@ def main():
     frontend_port = "4144"
     backend_port = "4188"
 
-    # Python processes
+    # servers
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
-    Process(target=client, args=(server_push_port,server_pub_port,)).start()
     Process(target=server_router, args=(frontend_port,backend_port,)).start()
+    # clients
+    Process(target=client, args=(server_push_port,server_pub_port,)).start()
+
+    # Start background tasks
+    def start(task, *args):
+        process = Process(target=task, args=args)
+        process.daemon = True
+        process.start()
+    for i in range(NBR_CLIENTS):
+        start(client_task, i)
+    for i in range(NBR_WORKERS):
+        start(worker_task, i)
     
     # daemon options
     opts = options.options()

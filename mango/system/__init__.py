@@ -81,18 +81,6 @@ def process_message(message):
     '''
     logging.warning("Processing ... {0}".format(message))
 
-def server_router(frontend_port, backend_port):
-    '''
-        ROUTER process
-    '''
-    # Prepare context and sockets
-    context = zmq.Context()
-    #context = zmq.Context.instance()
-    frontend = context.socket(zmq.ROUTER)
-    frontend.bind("tcp://*:{0}".format(frontend_port))
-    backend = context.socket(zmq.ROUTER)
-    backend.bind("tcp://*:{0}".format(backend_port))
-
 def client_task(ident):
     """Basic request-reply client using REQ socket."""
     socket = zmq.Context().socket(zmq.REQ)
@@ -162,6 +150,48 @@ def server_pub(port="5558"):
         logging.warning("Server publisher_id {0} publish message {1}".format(publisher_id, message))
         socket.send(message)
         time.sleep(1)
+
+def server_router(frontend_port, backend_port):
+    '''
+        ROUTER process
+    '''
+    # Prepare context and sockets
+    context = zmq.Context()
+    #context = zmq.Context.instance()
+    frontend = context.socket(zmq.ROUTER)
+    frontend.bind("tcp://*:{0}".format(frontend_port))
+
+    backend = context.socket(zmq.ROUTER)
+    backend.bind("tcp://*:{0}".format(backend_port))
+
+    workers = []
+
+    while True:
+        request = backend.recv_multipart()
+
+        worker, empty, client = request[:3]
+        workers.append(worker)
+        if client != b"READY" and len(request) > 3:
+            # If client reply, send rest back to frontend
+            empty, reply = request[3:]
+            frontend.send_multipart([client, b"", reply])
+            count -= 1
+            if not count:
+                break
+
+        # Get next client request, route to last-used worker
+        client, empty, request = frontend.recv_multipart()
+        worker = workers.pop(0)
+        backend.send_multipart([worker, b"", client, b"", request])
+
+
+     # Clean up
+    backend.close()
+    frontend.close()
+    context.term()
+
+
+
 
 def client_dealer(por="5559"):
     '''
