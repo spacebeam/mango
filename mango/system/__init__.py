@@ -83,41 +83,38 @@ def process_message(message):
 
 
 def client_task(ident):
-    """Basic request-reply client using REQ socket."""
+    """
+        Basic request-reply client using REQ socket.
+    """
     context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    socket.identity = u"Client-{}".format(ident).encode("ascii")
-    socket.connect("tcp://localhost:%s" % '4144')
-    stream_req = zmqstream.ZMQStream(socket)
+    socket_req = context.socket(zmq.REQ)
+    socket_req.identity = u"Client-{}".format(ident).encode("ascii")
+    socket_req.connect("tcp://localhost:%s" % '4144')
+    stream_req = zmqstream.ZMQStream(socket_req)
 
     # Send request, get reply
-    socket.send(b"HELLO")
-
-    #ioloop.IOLoop.instance().start()
-
-    reply = socket.recv()
-    logging.warning("{}: {}".format(socket.identity.decode("ascii"),
+    socket_req.send(b"HELLO")
+    reply = socket_req.recv()
+    logging.warning("{}: {}".format(socket_req.identity.decode("ascii"),
                           reply.decode("ascii")))
 
 def worker_task(ident):
-    """Worker task, using a REQ socket to do load-balancing."""
+    """
+        Worker task, using a REQ socket to do load-balancing.
+    """
     context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    # q dada dada
-    socket.identity = u"Worker-{}".format(ident).encode("ascii")
-    #socket.connect("tcp://*:4188")
-    socket.connect("tcp://localhost:%s" % '4188')
-    stream_req = zmqstream.ZMQStream(socket)
+    socket_req = context.socket(zmq.REQ)
+    socket_req.identity = u"Worker-{}".format(ident).encode("ascii")
+    socket_req.connect("tcp://localhost:%s" % '4188')
+    stream_req = zmqstream.ZMQStream(socket_req)
     # Tell broker we're ready for work
-    socket.send(b"READY")
-
-    #ioloop.IOLoop.instance().start()
+    socket_req.send(b"READY")
 
     while True:
-        address, empty, request = socket.recv_multipart()
-        logging.warning("{}: {}".format(socket.identity.decode("ascii"),
+        address, empty, request = socket_req.recv_multipart()
+        logging.warning("{}: {}".format(socket_req.identity.decode("ascii"),
                               request.decode("ascii")))
-        socket.send_multipart([address, b"", b"OK"])
+        socket_req.send_multipart([address, b"", b"OK"])
 
 
 def gen_daemon(server_router):
