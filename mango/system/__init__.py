@@ -83,32 +83,40 @@ def process_message(message):
 
 def client_task(ident):
     """Basic request-reply client using REQ socket."""
-    socket = zmq.Context().socket(zmq.REQ)
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
     socket.identity = u"Client-{}".format(ident).encode("ascii")
-    socket.connect("tcp://*:4144")
+    socket.connect("tcp://localhost:%s" % '4144')
     stream_req = zmqstream.ZMQStream(socket)
 
     # Send request, get reply
     socket.send(b"HELLO")
 
+    #ioloop.IOLoop.instance().start()
+
     reply = socket.recv()
     print("{}: {}".format(socket.identity.decode("ascii"),
                           reply.decode("ascii")))
+    
 
 
 def worker_task(ident):
     """Worker task, using a REQ socket to do load-balancing."""
-    socket = zmq.Context().socket(zmq.REQ)
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
     # q dada dada
     socket.identity = u"Worker-{}".format(ident).encode("ascii")
-    socket.connect("tcp://*:4188")
+    #socket.connect("tcp://*:4188")
+    socket.connect("tcp://localhost:%s" % '4188')
     stream_req = zmqstream.ZMQStream(socket)
     # Tell broker we're ready for work
     socket.send(b"READY")
 
+    #ioloop.IOLoop.instance().start()
+
     while True:
         address, empty, request = socket.recv_multipart()
-        print("{}: {}".format(socket.identity.decode("ascii"),
+        logging.warning("{}: {}".format(socket.identity.decode("ascii"),
                               request.decode("ascii")))
         socket.send_multipart([address, b"", b"OK"])
 
@@ -166,6 +174,10 @@ def server_router(frontend_port, backend_port):
     backend = context.socket(zmq.ROUTER)
     backend.bind("tcp://*:{0}".format(backend_port))
 
+    NBR_CLIENTS = 10
+
+    # Initialize main loop state
+    count = NBR_CLIENTS
     workers = []
 
     while True:
@@ -207,7 +219,7 @@ def client(port_push, port_sub):
     '''
     context = zmq.Context()
     socket_pull = context.socket(zmq.PULL)
-    socket_pull.connect ("tcp://localhost:%s" % port_push)
+    socket_pull.connect("tcp://localhost:%s" % port_push)
     stream_pull = zmqstream.ZMQStream(socket_pull)
     stream_pull.on_recv(get_command)
     logging.warning("Connected to pull server with port {0}".format(port_push))

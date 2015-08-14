@@ -161,6 +161,9 @@ def main():
         start(client_task, i)
     for i in range(NBR_WORKERS):
         start(worker_task, i)
+
+    # Initialize main loop state
+    count = NBR_CLIENTS
     
     # daemon options
     opts = options.options()
