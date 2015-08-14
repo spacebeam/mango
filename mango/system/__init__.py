@@ -81,6 +81,7 @@ def process_message(message):
     '''
     logging.warning("Processing ... {0}".format(message))
 
+
 def client_task(ident):
     """Basic request-reply client using REQ socket."""
     context = zmq.Context()
@@ -95,10 +96,8 @@ def client_task(ident):
     #ioloop.IOLoop.instance().start()
 
     reply = socket.recv()
-    print("{}: {}".format(socket.identity.decode("ascii"),
+    logging.warning("{}: {}".format(socket.identity.decode("ascii"),
                           reply.decode("ascii")))
-    
-
 
 def worker_task(ident):
     """Worker task, using a REQ socket to do load-balancing."""
