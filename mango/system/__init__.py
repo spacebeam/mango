@@ -11,6 +11,45 @@
 __author__ = 'Jean Chassoul'
 
 
+'''
+
+import json
+import zmq
+import sys
+import time
+import logging
+
+def start():
+    context = zmq.Context()
+    socket = init_socket(context)
+    while True:
+        message_handler(socket.recv(), socket)
+
+def init_socket(context):
+    socket = context.socket(zmq.REP)
+    socket.bind("tcp://*:8155")
+    logging.warning("Listening on port 8155")
+    return socket
+
+def message_handler(message, socket):
+    logging.warning("Got {0}".format(message))
+    try:
+        socket.send("+{0}".format(format_json(message)))
+    except Exception, e:
+        socket.send("-{0}".format(str(e)))
+
+def format_json(raw):
+    return json.dumps(json.loads(raw))
+
+if __name__ == "__main__":
+    start()
+    
+
+'''
+
+
+
+
 import zmq
 
 from zmq.eventloop import ioloop, zmqstream
