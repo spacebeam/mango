@@ -169,7 +169,7 @@ def server_router(frontend_port, backend_port):
         '''
             Process backend
         '''
-        logging.warning("Processing ... {0}".format(message))
+        logging.warning("Processing backend message ... {0}".format(message))
         worker, empty, client = message[:3]
 
         workers.append(worker)
@@ -185,6 +185,7 @@ def server_router(frontend_port, backend_port):
         '''
             Process frontend
         '''
+        logging.warning("Processing frontend message ... {0}".format(message))
         # Get next client request, route to last-used worker
       
         client, empty, request = message
@@ -193,10 +194,11 @@ def server_router(frontend_port, backend_port):
             # Don't poll clients if no workers are available
             logging.warning("Don't poll clients if no workers are available")
             logging.error(message)
-            #poller.unregister(frontend)
         else:
             worker = workers.pop(0)
-            backend.send_multipart([worker, b"", client, b"", request])
+            message = [worker, b"", client, b"", request]
+            logging.warning('message {0}'.format(message))
+            backend.send_multipart(message)
 
     # Prepare context and sockets
     context = zmq.Context()

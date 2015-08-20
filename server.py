@@ -61,8 +61,8 @@ from multiprocessing import Process
 from zmq.eventloop import ioloop
 
 
-NBR_CLIENTS = 10
-NBR_WORKERS = 3
+CLIENTS = 10
+WORKERS = 3
 
 # ioloop
 ioloop.install()
@@ -158,14 +158,14 @@ def main():
         process = Process(target=task, args=args)
         process.daemon = True
         process.start()
-    for i in range(NBR_WORKERS):
+    for i in range(WORKERS):
         start(worker_task, i)
-    for i in range(NBR_CLIENTS):
+    for i in range(CLIENTS):
         start(client_task, i)
     
 
     # Initialize main loop state
-    count = NBR_CLIENTS
+    count = CLIENTS
     
     # daemon options
     opts = options.options()
