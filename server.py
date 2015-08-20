@@ -61,7 +61,7 @@ from multiprocessing import Process
 from zmq.eventloop import ioloop
 
 
-CLIENTS = 30
+CLIENTS = 10
 
 WORKERS = 3
 
