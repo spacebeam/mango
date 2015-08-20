@@ -181,7 +181,6 @@ def server_router(frontend_port, backend_port):
 
         logging.warning('Current workers {0}'.format(workers))
 
-
     def process_frontend(message):
         '''
             Process frontend
@@ -195,7 +194,6 @@ def server_router(frontend_port, backend_port):
             logging.warning("Don't poll clients if no workers are available")
             logging.error(message)
             #poller.unregister(frontend)
-
         else:
             worker = workers.pop(0)
             backend.send_multipart([worker, b"", client, b"", request])
@@ -218,36 +216,6 @@ def server_router(frontend_port, backend_port):
     logging.warning("Bind frontend server router with port {0}".format(frontend_port))
     
     ioloop.IOLoop.instance().start()
-
-
-    while True:
-        request = backend.recv_multipart()
-
-        worker, empty, client = request[:3]
-        workers.append(worker)
-        if client != b"READY" and len(request) > 3:
-            # If client reply, send rest back to frontend
-            empty, reply = request[3:]
-            frontend.send_multipart([client, b"", reply])
-            #count -= 1
-            #if not count:
-            #    break
-
-        # Get next client request, route to last-used worker
-        client, empty, request = frontend.recv_multipart()
-        worker = workers.pop(0)
-        backend.send_multipart([worker, b"", client, b"", request])
-
-    '''
-    s = ctx.socket(zmq.REP)
-    s.bind('tcp://localhost:12345')
-    stream = ZMQStream(s)
-    
-    def echo(msg):
-        stream.send_multipart(msg)
-    
-    stream.on_recv(echo)
-    '''
 
 
 def client_dealer(por="5559"):
