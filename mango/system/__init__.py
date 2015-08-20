@@ -21,6 +21,8 @@ import random
 import logging
 import base64
 
+workers = []
+
 
 def basic_authentication(handler_class):
     '''
@@ -157,24 +159,66 @@ def server_pub(port="5558"):
         socket.send(message)
         time.sleep(1)
 
+
 def server_router(frontend_port, backend_port):
     '''
         ROUTER process
     '''
+
+    def process_backend(message):
+        '''
+            Process backend
+        '''
+        logging.warning("Processing ... {0}".format(message))
+        worker, empty, client = message[:3]
+
+        workers.append(worker)
+        
+        if client != b"READY" and len(message) > 3:
+            # If client reply, send rest back to frontend
+            empty, reply = message[3:]
+            frontend.send_multipart([client, b"", reply])
+
+        logging.warning('Current workers {0}'.format(workers))
+
+
+    def process_frontend(message):
+        '''
+            Process frontend
+        '''
+        # Get next client request, route to last-used worker
+      
+        client, empty, request = message
+
+        if not workers:
+            # Don't poll clients if no workers are available
+            logging.warning("Don't poll clients if no workers are available")
+            logging.error(message)
+            #poller.unregister(frontend)
+
+        else:
+            worker = workers.pop(0)
+            backend.send_multipart([worker, b"", client, b"", request])
+
     # Prepare context and sockets
     context = zmq.Context()
-    #context = zmq.Context.instance()
-    frontend = context.socket(zmq.ROUTER)
-    frontend.bind("tcp://*:{0}".format(frontend_port))
-
+    
     backend = context.socket(zmq.ROUTER)
     backend.bind("tcp://*:{0}".format(backend_port))
 
-    NBR_CLIENTS = 10
+    backend_stream = zmqstream.ZMQStream(backend)
+    backend_stream.on_recv(process_backend)
+    logging.warning("Bind backend server router with port {0}".format(backend_port))
 
-    # Initialize main loop state
-    count = NBR_CLIENTS
-    workers = []
+    frontend = context.socket(zmq.ROUTER)
+    frontend.bind("tcp://*:{0}".format(frontend_port))
+
+    frontend_stream = zmqstream.ZMQStream(frontend)
+    frontend_stream.on_recv(process_frontend)
+    logging.warning("Bind frontend server router with port {0}".format(frontend_port))
+    
+    ioloop.IOLoop.instance().start()
+
 
     while True:
         request = backend.recv_multipart()
@@ -185,22 +229,25 @@ def server_router(frontend_port, backend_port):
             # If client reply, send rest back to frontend
             empty, reply = request[3:]
             frontend.send_multipart([client, b"", reply])
-            count -= 1
-            if not count:
-                break
+            #count -= 1
+            #if not count:
+            #    break
 
         # Get next client request, route to last-used worker
         client, empty, request = frontend.recv_multipart()
         worker = workers.pop(0)
         backend.send_multipart([worker, b"", client, b"", request])
 
-
-     # Clean up
-    backend.close()
-    frontend.close()
-    context.term()
-
-
+    '''
+    s = ctx.socket(zmq.REP)
+    s.bind('tcp://localhost:12345')
+    stream = ZMQStream(s)
+    
+    def echo(msg):
+        stream.send_multipart(msg)
+    
+    stream.on_recv(echo)
+    '''
 
 
 def client_dealer(por="5559"):

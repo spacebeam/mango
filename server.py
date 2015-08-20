@@ -153,14 +153,16 @@ def main():
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
 
     # Start background tasks
+    
     def start(task, *args):
         process = Process(target=task, args=args)
         process.daemon = True
         process.start()
-    for i in range(NBR_CLIENTS):
-        start(client_task, i)
     for i in range(NBR_WORKERS):
         start(worker_task, i)
+    for i in range(NBR_CLIENTS):
+        start(client_task, i)
+    
 
     # Initialize main loop state
     count = NBR_CLIENTS
