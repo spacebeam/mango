@@ -102,6 +102,7 @@ class BaseAccount(models.Model):
     account = types.StringType(required=True)
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
+    is_admin = types.BooleanType(default=False)
     phone_number = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
