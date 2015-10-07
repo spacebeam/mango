@@ -285,8 +285,11 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
             # remove from query
             dates = [record['_id'] for record in summary]
+
+
             
             for _x in summary:
+                logging.info(_x)
                 del _x['_id']
 
             frame = pd.DataFrame(summary)
