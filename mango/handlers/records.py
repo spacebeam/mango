@@ -77,12 +77,11 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             self.finish(record)
             return
 
+        # where is this self.current_user??? it's use on the system?
         if self.current_user:
 
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
-
-            logging.info(user)
             
             account_list = (orgs['orgs'] if orgs else False)
             if not account_list:
@@ -101,6 +100,9 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                         end=end,
                                         page_num=page_num)
         else:
+
+            logging.warning('final else on get records')
+            
             result = yield self.get_record_list(
                                     account=None,
                                     lapse=lapse,
