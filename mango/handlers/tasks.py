@@ -52,9 +52,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
 
         # -- logging info
 
-        logging.warning('daaaa fuck1!!{0}'.format(task_uuid))
-
-        logging.info(self.request.arguments)
+        #logging.info(self.request.arguments)
 
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
 
