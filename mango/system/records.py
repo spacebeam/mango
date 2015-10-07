@@ -172,8 +172,6 @@ class Records(object):
 
         match = {'start':{'$gte':start.naive, '$lt':end.naive}, 'public': False}
 
-        logging.info(match)
-
         project = {
             "_id" : 0,
             
@@ -253,8 +251,6 @@ class Records(object):
             {'$project':project},
             {'$group':group}
         ]
-
-        logging.info(pipeline)
 
         result = dbx.records.aggregate(pipeline)
 
