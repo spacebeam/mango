@@ -283,8 +283,8 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
 
-        logging.warning(len(summaria))
-        logging.error(len(summary))
+        if len(summary) == len(summaria):
+            logging.warning('and now it returns the same fucking shit, motor and pymongo')
 
         if summary:
 
