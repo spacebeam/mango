@@ -127,7 +127,7 @@ def check_times_get_timestamp(start, end):
         Check times
     '''
     try:
-        start = (arrow.get(start) if start else arrow.utcnow())
+        start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
     except Exception, e:
         logging.exception(e)
