@@ -283,24 +283,25 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         if summary:
 
-            # remove from query
-            dates = [record['_id'] for record in summary]
+            # 
+            date_info = [record['_id'] for record in summary]
 
-
-            
             for _x in summary:
-                logging.info(_x)
                 del _x['_id']
 
             frame = pd.DataFrame(summary)
-            frame = frame.join(pd.DataFrame(dates))
+            frame = frame.join(pd.DataFrame(date_info))
         
             if lapse:
                 lapse = lapse.rstrip('/')
 
+                logging.info('lapiz de pintar')
+
                 if 'hours' in lapse:
                     # pandas data-frames
                     frame['minutes'] = frame['seconds'] / 60
+
+                    logging.info('despues de clases')
                     
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
