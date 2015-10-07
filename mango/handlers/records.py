@@ -282,14 +282,14 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                                              lapse=lapse)
 
         if summary:
-
-            # 
+            # date info have the "_id" fields of the aggregation group
             date_info = [record['_id'] for record in summary]
-
+            # this is kind of ugly but, we clear the summary
             for _x in summary:
                 del _x['_id']
 
             frame = pd.DataFrame(summary)
+            # to later join the summary with the date_info on pandas DataFrame
             frame = frame.join(pd.DataFrame(date_info))
         
             if lapse:
