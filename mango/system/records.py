@@ -170,7 +170,7 @@ class Records(object):
 
         lapse = (lapse if lapse else None)
 
-        logging.info('Getting summary for account {0} by lapse {1} start {2} end {3} time periods\n'.format(
+        logging.info('Getting summary for account {0} by lapse {1} start {2} end {3} time periods'.format(
             account, lapse, times.get('start'), times.get('end')
         ))
         
