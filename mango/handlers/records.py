@@ -295,13 +295,9 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             if lapse:
                 lapse = lapse.rstrip('/')
 
-                logging.info('lapiz de pintar')
-
                 if 'hours' in lapse:
                     # pandas data-frames
                     frame['minutes'] = frame['seconds'] / 60
-
-                    logging.info('despues de clases')
                     
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
@@ -318,9 +314,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                     minutes = {
                         time.mktime(key.timetuple()): int(minutes[key])
                         for key in minutes
-                    } 
-
-                    logging.error({'records':result, 'minutes':minutes})
+                    }
                                         
                     # return the clean version of the data
                     self.finish({
