@@ -281,11 +281,6 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                                              end=end,
                                              lapse=lapse)
 
-        summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
-
-        if len(summary) == len(summaria):
-            logging.warning('and now it returns the same fucking shit, motor and pymongo')
-
         if summary:
 
             # remove from query
@@ -337,10 +332,6 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
             min_avg = average / 60
             
             record_avg = round(min_avg / result)
-        
-
-        if summary == summaria:
-            logging.error('motor and pymongo return the same stuff')
 
         self.finish({'records': int(result),
                      'minutes': int(minutes),
