@@ -168,7 +168,9 @@ class Records(object):
 
         times = yield check_times_get_datetime(start, end)
 
-        logging.info('Get summary for {0} lapse {1} start {2} and end {3} time periods\n'.format(
+        lapse = (lapse if lapse else None)
+
+        logging.info('Getting summary for account {0} by lapse {1} start {2} end {3} time periods\n'.format(
             account, lapse, times.get('start'), times.get('end')
         ))
         
