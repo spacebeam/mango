@@ -311,7 +311,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                     minutes = dict(hours['minutes'])
                     
                     result = {         
-                        time.mktime(key.timetuple()): int(result[key]) 
+                        time.mktime(key.timetuple()): int(result[key])
                         for key in result
                     }            
                     
@@ -319,6 +319,8 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                         time.mktime(key.timetuple()): int(minutes[key])
                         for key in minutes
                     } 
+
+                    logging.error({'records':result, 'minutes':minutes})
                                         
                     # return the clean version of the data
                     self.finish({
