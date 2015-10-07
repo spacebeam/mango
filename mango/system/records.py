@@ -166,11 +166,11 @@ class Records(object):
         connection = MongoClient('52.25.179.104')
         dbx = connection.mango
 
-        start = (arrow.get(start) if start else arrow.utcnow())
+        times = yield check_times(start, end)
 
-        end = (arrow.get(end) if end else start.replace(days=+1))
+        match = {'start':{'$gte':times.get('start').naive, '$lt':times.get('end').naive}, 'public': False}
 
-        match = {'start':{'$gte':start.naive, '$lt':end.naive}, 'public': False}
+        logging.info(match)
 
         project = {
             "_id" : 0,
