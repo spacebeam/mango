@@ -148,6 +148,7 @@ def main():
     frontend_port = "4144"
     backend_port = "4188"
 
+    '''
     # Servers
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
@@ -166,6 +167,7 @@ def main():
         start(worker_task, i)
     for i in range(CLIENTS):
         start(client_task, i)
+    '''
     
 
     # Initialize main loop state
