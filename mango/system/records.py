@@ -252,7 +252,7 @@ class Records(object):
             },
 
             'records': {
-                '$sum':1
+                '$sum':1    # Is possible that this tell us if we have duplicate records?
             },
 
             'average': {
