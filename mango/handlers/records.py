@@ -283,6 +283,9 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
 
+        logging.warning(summaria)
+        logging.error(summary)
+
         if summary:
 
             # remove from query
