@@ -283,14 +283,9 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
 
-        logging.info(summaria)
-
         if summary:
 
             # remove from query
-
-            logging.error(summary)
-
             dates = [record['_id'] for record in summary]
             
             for _x in summary:
@@ -368,10 +363,6 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         record_avg = 0
 
         times = yield check_times(start, end)
-
-
-        logging.info('da fuck is going on {0}'.format(str(times)))
-
 
         logging.info('Start {0} and {1} end times\n'.format(start, end))
 
