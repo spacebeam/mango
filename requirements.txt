@@ -1,5 +1,6 @@
 tornado
 futures
+riak
 motor
 schematics
 psycopg2
@@ -13,4 +14,5 @@ arrow
 pycurl
 ujson
 pylibmc
+protobuf
 msgpack-python

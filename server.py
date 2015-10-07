@@ -80,6 +80,9 @@ db = False
 # sql global variable
 sql = False
 
+# kvalue global variable
+kvalue = False
+
 # cache glogbal variable
 cache = False
 
@@ -194,7 +197,8 @@ def main():
     )
 
     # Set kvalue database
-    kvalue = False
+    global kvalue
+    kvalue = kvalue
 
     # Set default cache
     global cache
