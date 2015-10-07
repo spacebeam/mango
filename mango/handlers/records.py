@@ -283,8 +283,8 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         summaria = self.get_su_maria(account=account, start=start, end=end, lapse=lapse)
 
-        logging.warning('lenth on summaria ', len(summaria))
-        logging.error('lenth on summary ', len(summary))
+        logging.warning(len(summaria))
+        logging.error(len(summary))
 
         if summary:
 
