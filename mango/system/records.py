@@ -166,11 +166,12 @@ class Records(object):
 
         message = []
 
-        logging.info('Get summary for {0} lapse {1} start {2} and end {3} time periods\n'.format(
-            account, lapse, start, end
-        ))
-
         times = yield check_times_get_datetime(start, end)
+
+        logging.info('Get summary for {0} lapse {1} start {2} and end {3} time periods\n'.format(
+            account, lapse, times.get('start'), times.get('end')
+        ))
+        
 
         # MongoDB aggregation match operator
         if type(account) is list:
@@ -197,7 +198,7 @@ class Records(object):
         project = {
             "_id" : 0,
             
-            # record timestamps
+            # record timestamps start, answer, end
             "start": 1,
             #"answer":1,
             #"end":1,
@@ -211,7 +212,6 @@ class Records(object):
             # duration of the call in seconds (only billing time)
             "seconds": 1,
             
-            # project id's timestamp stuff?
             "year" : {  
                 "$year" : "$start"
             },
@@ -234,10 +234,6 @@ class Records(object):
                 "$second" : "$start"
             }
         }
-
-        # MongoDB aggregation group operator
-
-        # R&D on group by accountcode, account, uuid, or something else ...
 
         group = {
             '_id': {
