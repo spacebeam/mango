@@ -49,10 +49,9 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             Get records handler
         '''
 
-        logging.info('Get records handler')
-
-        # -- logging info
-        logging.info(self.request.arguments)
+        logging.info('Get records handler, request arguments {0}'.format(
+            self.request.arguments
+        ))
 
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
 
