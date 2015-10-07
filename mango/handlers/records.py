@@ -78,8 +78,11 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
             return
 
         if self.current_user:
+
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
+
+            logging.info(user)
             
             account_list = (orgs['orgs'] if orgs else False)
             if not account_list:
@@ -106,6 +109,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                     page_num=page_num)
         
         result = json_util.dumps(result)
+        logging.error(result)
+        logging.info('wtf mae')
 
         self.finish(result)
 
