@@ -271,7 +271,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
 
         if account_list:
             account_list.append(account)
-            summary = yield self.get_summary(account=accounts,
+            summary = yield self.get_summary(account=account_list,
                                              start=start,
                                              end=end,
                                              lapse=lapse)
