@@ -79,7 +79,7 @@ class Records(object):
         page_size = self.settings['page_size']
         record_list = []
 
-        times = yield check_times(start, end)
+        times = yield check_times_get_datetime(start, end)
         
         if not account:
             query = self.db.records.find({
