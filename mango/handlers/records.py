@@ -80,6 +80,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         # where is this self.current_user??? it's use on the system?
         if self.current_user:
 
+            logging.warning('inside if self.current_user')
+
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
             
@@ -101,8 +103,8 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                         page_num=page_num)
         else:
 
-            logging.warning('final else on get records')
-            
+            logging.warning('inside final else on get records')
+
             result = yield self.get_record_list(
                                     account=None,
                                     lapse=lapse,
@@ -112,7 +114,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         
         result = json_util.dumps(result)
         logging.error(result)
-        logging.info('wtf mae')
+        logging.info('wtf mae bson and stuff')
 
         self.finish(result)
 
