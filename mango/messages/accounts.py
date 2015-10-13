@@ -99,6 +99,7 @@ class BaseAccount(models.Model):
     # api_keys = compound.ListType(compound.ModelType(Mon))
 
     active = types.BooleanType(default=True)
+    status = types.StringType(required=False)
     account = types.StringType(required=True)
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
