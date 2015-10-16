@@ -201,7 +201,7 @@ class MangoAccounts(Accounts):
         '''
         try:
             logging.info(struct)
-            schema = accounts.ModifyAccount(struct)
+            schema = accounts.ModifyUser(struct)
             schema.validate()
             schema = clean_structure(schema)
         except Exception, e:
