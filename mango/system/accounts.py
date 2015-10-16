@@ -199,6 +199,10 @@ class MangoAccounts(Accounts):
         '''
             Modify task
         '''
+        # note: yes is kind of crappy and stuff but we're doing it
+        # the account unique query stuff instead of uuid.
+        # uuid's are the answer, but...! there is no but, and this is nonsense.
+        logging.warning('warning account_uuid not used on modify_account')
         try:
             logging.info(struct)
             schema = accounts.ModifyUser(struct)
@@ -212,7 +216,7 @@ class MangoAccounts(Accounts):
             logging.warning(schema)
             result = yield self.db.accounts.update(
                 {'account':account,
-                 'uuid':account_uuid},
+                # 'uuid':account_uuid},      read the note!
                 {'$set':schema}
             )
             logging.warning(result)            
