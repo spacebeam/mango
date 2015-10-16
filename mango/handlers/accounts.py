@@ -248,7 +248,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.finish(message)
             return
         '''
-
         self.set_status(200)
         self.finish({'wut':result})
 
