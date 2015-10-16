@@ -209,12 +209,13 @@ class MangoAccounts(Accounts):
             raise e
 
         try:
+            logging.warning(schema)
             result = yield self.db.accounts.update(
                 {'account':account,
                  'uuid':account_uuid},
                 {'$set':schema}
             )
-            logging.info(result)            
+            logging.warning(result)            
         except Exception, e:
             logging.error(e)
             message = str(e)
