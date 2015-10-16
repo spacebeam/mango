@@ -215,7 +215,7 @@ class MangoAccounts(Accounts):
         try:
             logging.warning(schema)
             result = yield self.db.accounts.update(
-                {'account':account,
+                {'account':account},
                 # 'uuid':account_uuid},      read the note!
                 {'$set':schema}
             )
