@@ -23,8 +23,8 @@ from mango.messages import Resource
 
 class RequiredBase(models.Model):
     '''
+        Required base class
     '''
-    uuid = types.UUIDType(default=uuid.uuid4)
     active = types.BooleanType(default=True)
     status = types.StringType(required=False)
     account = types.StringType(required=True)
@@ -34,19 +34,17 @@ class RequiredBase(models.Model):
     phone_number = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
+    company = types.StringType()
     location = types.StringType()
     resources = compound.ModelType(Resource)
-    
     routes = compound.ListType(compound.ModelType(Route))
     url = types.URLType(required=False)
-
-    # move this to howler and spider?
     max_channels = types.IntType()
 
 class CleanBase(models.Model):
     '''
+        Clean base class
     '''
-    uuid = types.UUIDType()
     active = types.BooleanType()
     status = types.StringType()
     account = types.StringType()
@@ -56,41 +54,24 @@ class CleanBase(models.Model):
     phone_number = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
+    company = types.StringType()
     location = types.StringType()
     resources = compound.ModelType(Resource)
-    
     routes = compound.ListType(compound.ModelType(Route))
-
     url = types.URLType()
-
-    # move this to howler or spider?
     max_channels = types.IntType()
 
-class BaseAccount(models.Model):
+class BaseAccount(RequiredBase):
     '''
         Base account
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    active = types.BooleanType(default=True)
-    status = types.StringType(required=False)
-    account = types.StringType(required=True)
-    name = types.StringType(required=False)
-    email = types.EmailType(required=True)
-    is_admin = types.BooleanType(default=False)
-    phone_number = types.StringType()
-    country_code = types.StringType()
-    timezone = types.StringType()
-    location = types.StringType()
-    resources = compound.ModelType(Resource)
-    
-    routes = compound.ListType(compound.ModelType(Route))
 
-    uri = types.StringType(required=False)
-    url = types.URLType() #?
-
-    # move this to howler and spider?
-    max_channels = types.IntType()
-
+class CleanBaseAccount(CleanBase):
+    '''
+        Clean base account
+    '''
+    uuid = types.UUIDType()
 
 class User(BaseAccount):
     '''
@@ -110,16 +91,15 @@ class User(BaseAccount):
     AccountNum = types.StringType()
 
 
-class ModifyUser(BaseAccount):
+class ModifyUser(CleanBaseAccount):
     '''
         Modify account
     '''
+    first_name = types.StringType()
+    last_name = types.StringType()
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
-    
-    # move company to baseAccount class?
-    company = types.StringType()
 
     # clx stuff, please move this to another place that makes more sense.
     UserId = types.IntType()
