@@ -195,6 +195,33 @@ class MangoAccounts(Accounts):
         raise gen.Return(message)
 
     @gen.coroutine
+    def modify_account(self, account, account_uuid, struct):
+        '''
+            Modify task
+        '''
+        try:
+            logging.info(struct)
+            schema = accounts.ModifyAccount(struct)
+            schema.validate()
+            schema = clean_structure(schema)
+        except Exception, e:
+            logging.error(e)
+            raise e
+
+        try:
+            result = yield self.db.accounts.update(
+                {'account':account,
+                 'uuid':account_uuid},
+                {'$set':schema}
+            )
+            logging.info(result)            
+        except Exception, e:
+            logging.error(e)
+            message = str(e)
+
+        raise gen.Return(bool(result.get('n')))
+
+    @gen.coroutine
     def remove_account(self, account):
         '''
             Remove mango account
