@@ -20,7 +20,6 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-
 class RequiredBase(models.Model):
     '''
         Required base class
@@ -40,6 +39,7 @@ class RequiredBase(models.Model):
     routes = compound.ListType(compound.ModelType(Route))
     url = types.URLType(required=False)
     max_channels = types.IntType()
+
 
 class CleanBase(models.Model):
     '''
@@ -61,17 +61,20 @@ class CleanBase(models.Model):
     url = types.URLType()
     max_channels = types.IntType()
 
+
 class BaseAccount(RequiredBase):
     '''
         Base account
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
 
+
 class CleanBaseAccount(CleanBase):
     '''
         Clean base account
     '''
     uuid = types.UUIDType()
+
 
 class User(BaseAccount):
     '''
@@ -135,7 +138,6 @@ class Route(models.Model):
         Route
     '''
     # default '*' means all destinations
-    
     dst = types.StringType(default='*')
     destination = types.StringType(default='*') 
 
