@@ -235,21 +235,15 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         result = yield self.modify_account(account, account_uuid, struct)
 
         logging.error(result)
-        '''
-        if 'error' in result:
-            model = 'User'
-            reason = {'duplicates': [(model, 'account'), (model, 'email')]}
 
-            message = yield self.let_it_crash(struct, model, result, reason)
-
-            logging.warning(message)
-
+        if not result:
+            message = 'update failed something is bananas'
             self.set_status(400)
-            self.finish(message)
-            return
-        '''
-        self.set_status(200)
-        self.finish({'wut':result})
+        else:
+            message = 'update completed successfully'
+            self.set_status(200)
+
+        self.finish({'message': message})
 
     ##@web.authenticated
     @gen.coroutine
