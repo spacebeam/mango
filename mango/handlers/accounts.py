@@ -230,11 +230,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         logging.info('new update on account structure %s' % str(struct))
 
-        account_uuid = struct['uuid']
+        MISSING_ACCOUNT_UUID = None
 
-        result = yield self.modify_account(account, account_uuid, struct)
-
-        logging.error(result)
+        result = yield self.modify_account(account, MISSING_ACCOUNT_UUID, struct)
 
         if not result:
             message = 'update failed something is bananas'

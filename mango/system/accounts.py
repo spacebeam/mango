@@ -204,7 +204,6 @@ class MangoAccounts(Accounts):
         # uuid's are the answer, but...! there is no but, and this is nonsense.
         logging.warning('warning account_uuid not used on modify_account')
         try:
-            logging.info(struct)
             schema = accounts.ModifyUser(struct)
             schema.validate()
             schema = clean_structure(schema)
@@ -213,13 +212,12 @@ class MangoAccounts(Accounts):
             raise e
 
         try:
-            logging.warning(schema)
             result = yield self.db.accounts.update(
                 {'account':account},
                 # 'uuid':account_uuid},      read the note!
                 {'$set':schema}
             )
-            logging.warning(result)            
+            logging.warning(result)
         except Exception, e:
             logging.error(e)
             message = str(e)
