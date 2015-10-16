@@ -230,6 +230,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         logging.info('new update on account structure %s' % str(struct))
 
+
         result = yield self.modify_account(account, struct)
 
         if 'error' in result:
