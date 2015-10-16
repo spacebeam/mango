@@ -234,6 +234,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         result = yield self.modify_account(account, account_uuid, struct)
 
+        logging.error(result)
+        '''
         if 'error' in result:
             model = 'User'
             reason = {'duplicates': [(model, 'account'), (model, 'email')]}
@@ -245,9 +247,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.set_status(400)
             self.finish(message)
             return
+        '''
 
-        self.set_status(201)
-        self.finish({'uuid':result})
+        self.set_status(200)
+        self.finish({'wut':result})
 
     ##@web.authenticated
     @gen.coroutine
