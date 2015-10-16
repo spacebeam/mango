@@ -216,7 +216,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         logging.info('request.arguments {0}'.format(self.request.arguments))
         logging.info('request.body {0}'.format(self.request.body))
 
-        struct = yield check_json(self.result.body)
+        struct = yield check_json(self.request.body)
 
         logging.info('patch received struct {0}'.format(struct))
 
