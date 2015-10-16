@@ -20,6 +20,22 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
+class Route(models.Model):
+    '''
+        Route
+    '''
+    # default '*' means all destinations
+    dst = types.StringType(default='*')
+    destination = types.StringType(default='*') 
+
+    channel = types.StringType(required=True)
+
+    dstchannel = types.StringType(required=True)
+    destination_channel = types.StringType(required=True)
+
+    cost = types.FloatType(required=True)
+
+
 class RequiredBase(models.Model):
     '''
         Required base class
@@ -131,19 +147,3 @@ class Org(BaseAccount):
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
     description = types.StringType()
-
-
-class Route(models.Model):
-    '''
-        Route
-    '''
-    # default '*' means all destinations
-    dst = types.StringType(default='*')
-    destination = types.StringType(default='*') 
-
-    channel = types.StringType(required=True)
-
-    dstchannel = types.StringType(required=True)
-    destination_channel = types.StringType(required=True)
-
-    cost = types.FloatType(required=True)
