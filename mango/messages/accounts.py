@@ -20,84 +20,57 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-class Password(models.Model):
+
+class RequiredBase(models.Model):
     '''
-        Password
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    assigned = types.BooleanType(default=False)
-    password = types.StringType()
-    raw = types.StringType()
-    md5 = types.StringType()
-    sha1 = types.StringType()
-    sha256 = types.StringType()
-    sha384 = types.StringType()
-    sha512 = types.StringType()
-    created_at = types.DateTimeType()
-    last_modified = types.DateTimeType()
-
-
-class Monkey(models.Model):
-    '''
-        Monkey business
-    '''
-    uuid = types.UUIDType(default=uuid.uuid4)
-    sshkey = types.StringType(required=True)
-    sw = types.StringType(required=True)
-    hw = types.StringType(required=True)
-    ''' 
-    # can get this with / from pillar and salt states.
-
-    address = {
-        sw: 'http://sw.iofun.io',
-        bn: '192.168.148.23:80',
-        fn: '192.168.157.23:8008',
-        hw: '5c:c5:d4:0e:12:58',
-        web: '',
-        rtc: ,
-        sql: ,
-        nsql :,
-        kvalue:,
-        cache:,
-        document:,
-        storage:,
-        session:,
-        data:,
-        search:,
-        voice:,
-        ears:;
-    }
-    '''
-
-class Route(models.Model):
-    '''
-        Route
-    '''
-    # default '*' means all destinations
+    active = types.BooleanType(default=True)
+    status = types.StringType(required=False)
+    account = types.StringType(required=True)
+    name = types.StringType(required=False)
+    email = types.EmailType(required=True)
+    is_admin = types.BooleanType(default=False)
+    phone_number = types.StringType()
+    country_code = types.StringType()
+    timezone = types.StringType()
+    location = types.StringType()
+    resources = compound.ModelType(Resource)
     
-    dst = types.StringType(default='*')
-    destination = types.StringType(default='*') 
+    routes = compound.ListType(compound.ModelType(Route))
+    url = types.URLType(required=False)
 
-    channel = types.StringType(required=True)
+    # move this to howler and spider?
+    max_channels = types.IntType()
 
-    dstchannel = types.StringType(required=True)
-    destination_channel = types.StringType(required=True)
+class CleanBase(models.Model):
+    '''
+    '''
+    uuid = types.UUIDType()
+    active = types.BooleanType()
+    status = types.StringType()
+    account = types.StringType()
+    name = types.StringType()
+    email = types.EmailType()
+    is_admin = types.BooleanType()
+    phone_number = types.StringType()
+    country_code = types.StringType()
+    timezone = types.StringType()
+    location = types.StringType()
+    resources = compound.ModelType(Resource)
+    
+    routes = compound.ListType(compound.ModelType(Route))
 
-    cost = types.FloatType(required=True)
+    url = types.URLType()
 
+    # move this to howler or spider?
+    max_channels = types.IntType()
 
 class BaseAccount(models.Model):
     '''
         Base account
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-
-    passwords = compound.ListType(compound.ModelType(Password))
-
-    # api samples, remove after finish work on passwords or otherwise secret keys.
-    api_key = types.StringType(required=False)
-    # api_keys = compound.ListType(compound.ModelType(Mon))
-
     active = types.BooleanType(default=True)
     status = types.StringType(required=False)
     account = types.StringType(required=True)
@@ -113,7 +86,7 @@ class BaseAccount(models.Model):
     routes = compound.ListType(compound.ModelType(Route))
 
     uri = types.StringType(required=False)
-    url = types.URLType()
+    url = types.URLType() #?
 
     # move this to howler and spider?
     max_channels = types.IntType()
@@ -175,3 +148,20 @@ class Org(BaseAccount):
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
     description = types.StringType()
+
+
+class Route(models.Model):
+    '''
+        Route
+    '''
+    # default '*' means all destinations
+    
+    dst = types.StringType(default='*')
+    destination = types.StringType(default='*') 
+
+    channel = types.StringType(required=True)
+
+    dstchannel = types.StringType(required=True)
+    destination_channel = types.StringType(required=True)
+
+    cost = types.FloatType(required=True)
