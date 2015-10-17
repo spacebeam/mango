@@ -244,9 +244,6 @@ def main():
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
-            # Orgs and users are cool and all, but we need to use them as accounts.
-            # It make some sense for the api, to just talk about accounts and pass uuids.
-
             # ORGs records
             (r'/orgs/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/orgs/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
