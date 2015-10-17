@@ -344,7 +344,16 @@ def main():
             (r'/records/(?P<record_uuid>.+)/?', records.Handler),
             (r'/records/?', records.Handler),
 
-            # Records
+            # Tasks now 
+            (r'/tasks/now/?', tasks.NowHandler),
+
+            # Tasks later 
+            (r'/tasks/later/?', tasks.LaterHandler),
+
+            # Tasks done
+            (r'/tasks/done/?', tasks.DoneHandler),
+
+            # Tasks
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
 
