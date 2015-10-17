@@ -20,7 +20,7 @@ import logging
 # import numpy as np
 import pandas as pd
 
-from bson import json_util
+import ujson as json
 
 from tornado import gen
 from tornado import web
@@ -60,7 +60,7 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           end=end,
                                           status='now',
                                           page_num=page_num)
-        result = json_util.dumps(result)
+        result = json.dumps(result)
         self.finish(result)
 
 @content_type_validation
@@ -85,7 +85,7 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           end=end,
                                           status='later',
                                           page_num=page_num)
-        result = json_util.dumps(result)
+        result = json.dumps(result)
         self.finish(result)
 
 
@@ -111,7 +111,7 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           end=end,
                                           status='done',
                                           page_num=page_num)
-        result = json_util.dumps(result)
+        result = json.dumps(result)
         self.finish(result)
 
 
@@ -186,7 +186,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                     end=end,
                                     page_num=page_num)
 
-        result = json_util.dumps(result)
+        result = json.dumps(result)
 
         self.finish(result)
 
