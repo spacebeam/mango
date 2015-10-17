@@ -63,6 +63,57 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         result = json_util.dumps(result)
         self.finish(result)
 
+@content_type_validation
+class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
+    '''
+        Tasks HTTP request handlers
+    '''
+
+    @gen.coroutine
+    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+        '''
+            Get not tasks handler
+        '''
+        if task_uuid:
+            message = 'crash on task_uuid on later handler'
+            self.set_status(500)
+            self.finish(message)
+            return
+        result = yield self.get_task_list(account=None,
+                                          lapse=lapse,
+                                          start=start,
+                                          end=end,
+                                          status='later',
+                                          page_num=page_num)
+        result = json_util.dumps(result)
+        self.finish(result)
+
+
+@content_type_validation
+class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
+    '''
+        Tasks HTTP request handlers
+    '''
+
+    @gen.coroutine
+    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+        '''
+            Get not tasks handler
+        '''
+        if task_uuid:
+            message = 'crash on task_uuid on done handler'
+            self.set_status(500)
+            self.finish(message)
+            return
+        result = yield self.get_task_list(account=None,
+                                          lapse=lapse,
+                                          start=start,
+                                          end=end,
+                                          status='done',
+                                          page_num=page_num)
+        result = json_util.dumps(result)
+        self.finish(result)
+
 
 @content_type_validation
 class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
