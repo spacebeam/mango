@@ -272,7 +272,7 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         account = None
         result = yield self.get_task_list(account=account,
                                             lapse=None,
-                                            status='all'
+                                            status='all',
                                             start=None,
                                             end=None,
                                             page_num=page_num)
