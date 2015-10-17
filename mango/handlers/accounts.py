@@ -42,7 +42,43 @@ class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User active accounts HTTP request handlers
     '''
-    pass
+
+    @gen.coroutine
+    def head(self, page_num=0):
+        '''
+            Head stuff
+        '''
+        pass
+
+    @gen.coroutine
+    def get(self, page_num=0):
+        '''
+            Get user accounts
+        '''
+        # logging request query arguments
+        logging.info('request query arguments {0}'.format(self.request.arguments))
+
+        # request query arguments
+        query_args = self.request.arguments
+
+        # get the current frontend logged username
+        username = self.get_current_username()
+
+        # if the user don't provide an account we use the frontend username as last resort
+        account = (query_args.get('account', [username])[0] if not account else None)
+
+        # account type flag
+        account_type = 'user'
+
+        # status
+        status = 'all'
+        
+
+        users = yield self.get_account_list(account_type, status, page_num)
+
+        self.set_status(200)
+        self.finish({'users':users})
+        
 
 
 @content_type_validation
@@ -87,6 +123,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # account type flag
         account_type = 'user'
 
+        # status
+        status = 'all'
+
         # cache data
         data = None
 
@@ -94,7 +133,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         result = None
 
         if not account:
-            users = yield self.get_account_list(account_type, page_num)
+            users = yield self.get_account_list(account_type, status, page_num)
             self.finish({'users':users})
         else:
             # try to get stuff from cache first
@@ -149,6 +188,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # account type flag
         account_type = 'user'
 
+        # status
+        status = 'all'
+
         # cache data
         data = None
 
@@ -156,7 +198,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         result = None
         
         if not account:
-            users = yield self.get_account_list(account_type, page_num)
+            users = yield self.get_account_list(account_type, status, page_num)
             self.finish({'users':users})
         else:
             # try to get stuff from cache first
@@ -311,6 +353,9 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         # get the current frontend logged username
         username = self.get_current_username()
 
+        # status
+        status = 'all'
+
         # get the current frontend context account
         #organization = self.get_current_org()
 
@@ -320,7 +365,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         account_type = 'org'
 
         if not account:
-            orgs = yield self.get_account_list(account_type, page_num) 
+            orgs = yield self.get_account_list(account_type, status, page_num) 
             self.finish({'orgs':orgs})
         else:
 
@@ -369,13 +414,16 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         # get the current frontend context account
         #organization = self.get_current_org()
 
+        #status
+        status = 'all'
+
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
 
         account_type = 'org'
 
         if not account:
-            orgs = yield self.get_account_list(account_type, page_num) 
+            orgs = yield self.get_account_list(account_type, status, page_num) 
             self.finish({'orgs':orgs})
         else:
             # try to get stuff from cache first

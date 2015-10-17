@@ -116,14 +116,17 @@ class MangoAccounts(Accounts):
     '''
 
     @gen.coroutine
-    def get_account_list(self, account_type, page_num):
+    def get_account_list(self, account_type, status, page_num):
         '''
             Get the mango accounts
         '''
         account_list = []
         page_size = self.settings['page_size']
 
-        query = self.db.accounts.find({'account_type':account_type}, {'_id':0})
+        query = {'account_type':account_type}
+        if status != 'all':
+            query['status'] = status
+        query = self.db.accounts.find(query, {'_id':0})
         query = query.sort([('_id', -1)]).skip(int(page_num) * page_size).limit(page_size)
     
         try:
