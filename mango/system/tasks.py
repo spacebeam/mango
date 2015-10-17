@@ -62,7 +62,7 @@ class Tasks(object):
             raise gen.Return(task)
 
     @gen.coroutine
-    def get_task_list(self, account, start, end, lapse, page_num):
+    def get_task_list(self, account, start, end, lapse, status, page_num):
         '''
             Get detail tasks 
         '''
@@ -70,9 +70,13 @@ class Tasks(object):
         page_size = self.settings['page_size']
         task_list = []
         message = None
+        query = {'public':False}
+
+        if status != 'all':
+            query['status'] = status
         
         if not account:
-            query = self.db.tasks.find({'public':False},
+            query = self.db.tasks.find(query,
                                        {'_id':0, 'comments':0})
         elif type(account) is list:
             accounts = [{'accountcode':a, 'assigned': True} for a in account]

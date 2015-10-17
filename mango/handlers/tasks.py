@@ -39,6 +39,32 @@ from mango.handlers import BaseHandler
 
 
 @content_type_validation
+class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
+    '''
+        Tasks HTTP request handlers
+    '''
+
+    @gen.coroutine
+    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+        '''
+            Get not tasks handler
+        '''
+        if task_uuid:
+            message = 'crash on task_uuid on now handler'
+            self.set_status(500)
+            self.finish(message)
+            return
+        result = yield self.get_task_list(account=None,
+                                          lapse=lapse,
+                                          start=start,
+                                          end=end,
+                                          status='now',
+                                          page_num=page_num)
+        result = json_util.dumps(result)
+        self.finish(result)
+
+
+@content_type_validation
 class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -49,7 +75,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         '''
             Get tasks handler
         '''
-
+        status = 'all'
         # -- logging info
 
         #logging.info(self.request.arguments)
@@ -87,6 +113,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 result = yield self.get_task_list(
                                         account=user, 
                                         lapse=lapse,
+                                        status=status,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
@@ -95,6 +122,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 result = yield self.get_task_list(
                                         account=account_list,
                                         lapse=lapse,
+                                        status=status,
                                         start=start,
                                         end=end,
                                         page_num=page_num)
@@ -102,6 +130,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             result = yield self.get_task_list(
                                     account=None,
                                     lapse=lapse,
+                                    status=status,
                                     start=start,
                                     end=end,
                                     page_num=page_num)
@@ -243,6 +272,7 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         account = None
         result = yield self.get_task_list(account=account,
                                             lapse=None,
+                                            status='all'
                                             start=None,
                                             end=None,
                                             page_num=page_num)
