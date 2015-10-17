@@ -275,6 +275,15 @@ def main():
             # Users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
 
+            # Users suspended
+            (r'/users/suspended/?', accounts.UsersSuspendedHandler),
+
+            # Users disable
+            (r'/users/disable/?', accounts.UsersDisableHandler),
+            
+            # Users active
+            (r'/users/active/?', accounts.UsersActiveHandler),
+
             # Users
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),

@@ -38,6 +38,30 @@ from mango.handlers import BaseHandler
 
 
 @content_type_validation
+class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
+    '''
+        User active accounts HTTP request handlers
+    '''
+    pass
+
+
+@content_type_validation
+class UsersDisableHandler(accounts.MangoAccounts, BaseHandler):
+    '''
+        User disable accounts HTTP request handlers
+    '''
+    pass
+
+
+@content_type_validation
+class UsersSuspendedHandler(accounts.MangoAccounts, BaseHandler):
+    '''
+        User suspended accounts HTTP request handlers
+    '''
+    pass
+
+
+@content_type_validation
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User accounts HTTP request handlers
