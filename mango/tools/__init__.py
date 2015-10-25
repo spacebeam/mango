@@ -25,6 +25,10 @@ from mango.tools import errors
 from mango.messages import accounts
 from mango.messages import reports
 
+import zmq
+
+from zmq.log.handlers import PUBHandler
+
 
 @gen.coroutine
 def check_json(struct):
@@ -417,3 +421,17 @@ def content_type_msgpack_validation(handler_class):
 
     handler_class._execute = wrap_execute(handler_class._execute)
     return handler_class
+
+
+def zmq_external_logger(host='localhost', port='8899'):
+    '''
+        This publish logging messages over a zmq.PUB socket
+    '''
+    context = zmq.Context()
+    socket = context.socket(zmq.PUB)
+    socket.connect('tcp://{0}:{1}'.format(host, port))
+    handler = PUBHandler(socket)
+    logger = logging.getLogger()
+    logger.addHandler(handler)
+    handler.root_topic = 'logging'
+    return logger
