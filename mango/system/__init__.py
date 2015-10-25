@@ -83,7 +83,6 @@ def process_message(message):
     '''
     logging.warning("Processing ... {0}".format(message))
 
-
 def client_task(ident):
     """
         Basic request-reply client using REQ socket.
