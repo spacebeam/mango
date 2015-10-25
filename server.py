@@ -62,8 +62,8 @@ from zmq.eventloop import ioloop
 
 
 
-CLIENTS = 10
-WORKERS = 3
+CLIENTS = 100
+WORKERS = 10
 
 
 
@@ -146,18 +146,19 @@ def main():
     server_push_port = "5556"
     server_pub_port = "5558"
 
-    # System frontend & backend routers and ports
+    # Servers
+    #Process(target=server_push, args=(server_push_port,)).start()
+    #Process(target=server_pub, args=(server_pub_port,)).start()
+    
+    # Clients
+    #Process(target=client, args=(server_push_port,server_pub_port,)).start()
+
+    '''
+    # System frontend & backend routers ports
     frontend_port = "4144"
     backend_port = "4188"
 
-    '''
-    # Servers
-    Process(target=server_push, args=(server_push_port,)).start()
-    Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=server_router, args=(frontend_port,backend_port,)).start()
-
-    # Clients
-    Process(target=client, args=(server_push_port,server_pub_port,)).start()
 
     # Start background tasks
     
@@ -165,16 +166,16 @@ def main():
         process = Process(target=task, args=args)
         process.daemon = True
         process.start()
+
     for i in range(WORKERS):
         start(worker_task, i)
     for i in range(CLIENTS):
         start(client_task, i)
-    '''
-    
 
     # Initialize main loop state
     count = CLIENTS
-    
+    '''
+
     # daemon options
     opts = options.options()
 
