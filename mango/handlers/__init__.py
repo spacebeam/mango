@@ -34,7 +34,11 @@ import logging
 
 # dht means distributed hash table
 
-# share hash table missing. cebus integration?
+# share hash table missing. cebus integration? 
+
+#cebus missing completetly.
+
+# but on the other hand overlords start to make sense.
 
 
 class BaseHandler(web.RequestHandler):
@@ -89,7 +93,7 @@ class BaseHandler(web.RequestHandler):
         # CDR stream
         # self.cdr_stream = self.settings['cdr_stream'] || or just subscribe to the cdr topic on SUB.
 
-        # CDR periodic channel
+        # CDR periodic channel, why channel? the world channel, etc.
         # self.cdr_periodic = self.settings['cdr_periodic']
 
 
