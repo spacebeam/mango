@@ -13,10 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import time
 import motor
-
 import queries
-
-import logging
 
 from tornado import gen
 from tornado import web
@@ -29,6 +26,8 @@ from mango.tools import check_account_authorization
 from mango.tools import errors
 
 from mango.tools.quotes import PeopleQuotes
+
+import logging
 
 
 # msg means message
@@ -82,13 +81,13 @@ class BaseHandler(web.RequestHandler):
 
         # The Senate and People of Mars
         # -----------------------------
-        # SPQM communication message clannels.
+        # SPQM communication messages.
 
-        # 0MQ message channels
+        # 0MQ message streams
         # --------------------
 
         # CDR stream
-        # self.cdr_stream = self.settings['cdr_stream']
+        # self.cdr_stream = self.settings['cdr_stream'] || or just subscribe to the cdr topic on SUB.
 
         # CDR periodic channel
         # self.cdr_periodic = self.settings['cdr_periodic']
