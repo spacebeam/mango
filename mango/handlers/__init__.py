@@ -13,10 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import time
 import motor
-
 import queries
-
-import logging
 
 from tornado import gen
 from tornado import web
@@ -30,12 +27,18 @@ from mango.tools import errors
 
 from mango.tools.quotes import PeopleQuotes
 
+import logging
+
 
 # msg means message
 
 # dht means distributed hash table
 
-# share hash table missing. cebus integration?
+# share hash table missing. cebus integration? 
+
+# cebus missing completetly.
+
+# but on the other hand overlords start to make sense.
 
 
 class BaseHandler(web.RequestHandler):
@@ -82,17 +85,16 @@ class BaseHandler(web.RequestHandler):
 
         # The Senate and People of Mars
         # -----------------------------
-        # SPQM communication message clannels.
+        # SPQM communication messages.
 
-        # 0MQ message channels
+        # 0MQ message streams
         # --------------------
 
         # CDR stream
-        # self.cdr_stream = self.settings['cdr_stream']
+        # self.cdr_stream = self.settings['cdr_stream'] || or just subscribe to the cdr topic on SUB.
 
-        # CDR periodic channel
+        # CDR periodic channel, why channel? the world channel, etc.
         # self.cdr_periodic = self.settings['cdr_periodic']
-
 
         super(BaseHandler, self).initialize(**kwargs)
 
@@ -143,50 +145,38 @@ class BaseHandler(web.RequestHandler):
         '''
             Let it crash
         '''
-
+        # missing zmq sub topic
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
 
         if error and 'Model' in str_error:
             message = error_handler.model(scheme)
-
         elif error and 'duplicate' in str_error:
-            
             for name, value in reason.get('duplicates'):
-
                 if value in str_error:
-
                     message = error_handler.duplicate(
                         name.title(),
                         value,
                         struct.get(value)
                     )
-
                     messages.append(message)
-            
             message = ({'messages':messages} if messages else False)
-
         elif error and 'value' in str_error:
             message = error_handler.value()
-
         elif error is not None:
             logging.warning(str_error)
-
             logging.error(struct, scheme, error, reason)
-            
             message = {
                 'error': u'nonsense',
                 'message': u'there is no error'
             }
         else:
             quotes = PeopleQuotes()
-            
             message = {
                 'status': 200,
                 'message': quotes.get()
             }
-
         raise gen.Return(message)
 
     @gen.coroutine
@@ -253,14 +243,11 @@ class BaseHandler(web.RequestHandler):
                 struct.get('password')
             )
             result = yield sql.query(query)
-
             if result:
                 message = {'ack': True}
             else:
                 message = {'ack': False}
-
             result.free()
-
             logging.warning('new sip account spawned on PostgreSQL {0}'.format(message))
 
         # TODO: Still need to check the follings exceptions with the new queries module.
@@ -302,9 +289,7 @@ class LoginHandler(BaseHandler):
         else:
             self.set_secure_cookie('username', self.username)
             self.username, self.password = (None, None)
-
             # self.redirect(next_url)
-
             self.set_status(200)
             self.finish()
 
@@ -325,7 +310,6 @@ class LogoutHandler(BaseHandler):
             Clear secure cookie
         '''
         self.clear_cookie('username')
-
         self.set_status(200)
         self.finish()
 
@@ -341,7 +325,6 @@ class MangoHandler(BaseHandler):
             Get some quotes
         '''
         quotes = PeopleQuotes()
-
         self.finish(
             {'quote': quotes.get()}
         )
