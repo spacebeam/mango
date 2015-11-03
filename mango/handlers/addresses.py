@@ -39,7 +39,7 @@ from mango.handlers import BaseHandler
 
 
 @content_type_validation
-class NowHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
+class PrimaryHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
     '''
         Addresses HTTP request handlers
     '''
@@ -47,7 +47,7 @@ class NowHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
     @gen.coroutine
     def get(self, address_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
         '''
-            Get not addresses handler
+            Get primary addresses handler
         '''
         if address_uuid:
             message = 'crash on address_uuid on now handler'
@@ -58,58 +58,7 @@ class NowHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
                                           lapse=lapse,
                                           start=start,
                                           end=end,
-                                          status='now',
-                                          page_num=page_num)
-        result = json.dumps(result)
-        self.finish(result)
-
-@content_type_validation
-class LaterHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
-    '''
-        Addresses HTTP request handlers
-    '''
-
-    @gen.coroutine
-    def get(self, address_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
-        '''
-            Get not addresses handler
-        '''
-        if address_uuid:
-            message = 'crash on address_uuid on later handler'
-            self.set_status(500)
-            self.finish(message)
-            return
-        result = yield self.get_address_list(account=None,
-                                          lapse=lapse,
-                                          start=start,
-                                          end=end,
-                                          status='later',
-                                          page_num=page_num)
-        result = json.dumps(result)
-        self.finish(result)
-
-
-@content_type_validation
-class DoneHandler(addresses.Addresses, accounts.Accounts, BaseHandler):
-    '''
-        Addresses HTTP request handlers
-    '''
-
-    @gen.coroutine
-    def get(self, address_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
-        '''
-            Get not addresses handler
-        '''
-        if address_uuid:
-            message = 'crash on address_uuid on done handler'
-            self.set_status(500)
-            self.finish(message)
-            return
-        result = yield self.get_address_list(account=None,
-                                          lapse=lapse,
-                                          start=start,
-                                          end=end,
-                                          status='done',
+                                          status='primary',
                                           page_num=page_num)
         result = json.dumps(result)
         self.finish(result)

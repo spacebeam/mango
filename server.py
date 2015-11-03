@@ -52,6 +52,7 @@ from mango.tools import new_resource, zmq_external_logger
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 from mango.handlers import accounts
+from mango.handlers import addresses
 from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records

@@ -726,3 +726,16 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         result = yield self.new_route(struct)
 
         self.finish()
+
+
+@content_type_validation
+class AddressesHandler(accounts.Accounts, BaseHandler):
+    '''
+        Addresses resource handlers
+    '''
+
+    @gen.coroutine
+    def get(self, account):
+        darq = yield self.get_address_list(account)
+        self.finish(darq)
+    
