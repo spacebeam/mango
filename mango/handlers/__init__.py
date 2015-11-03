@@ -48,6 +48,10 @@ class BaseHandler(web.RequestHandler):
         gente d'armi e ganti
     '''
 
+    @gen.coroutine
+    def prepare(self):
+        yield super().prepare() or gen.moment
+
     @property
     def sql(self):
         '''
