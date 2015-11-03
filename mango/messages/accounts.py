@@ -36,6 +36,15 @@ class Route(models.Model):
     cost = types.FloatType(required=True)
 
 
+class Email(models.Model):
+    '''
+        Email
+    '''
+    address = types.EmailType()
+    validated = types.BooleanType(default=False)
+    primary = types.BooleanType(default=False)
+
+
 class RequiredBase(models.Model):
     '''
         Required base class
@@ -53,6 +62,9 @@ class RequiredBase(models.Model):
     location = types.StringType()
     resources = compound.ModelType(Resource)
     routes = compound.ListType(compound.ModelType(Route))
+
+    emails = compound.ListType(compound.ModelType(Email))
+
     url = types.URLType(required=False)
     max_channels = types.IntType()
 
@@ -74,6 +86,7 @@ class CleanBase(models.Model):
     location = types.StringType()
     resources = compound.ModelType(Resource)
     routes = compound.ListType(compound.ModelType(Route))
+    emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType()
     max_channels = types.IntType()
 
