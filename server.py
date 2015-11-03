@@ -280,6 +280,11 @@ def main():
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
+            # Users addresses 
+            (r'/users/(?P<account>.+)/addresses/?', accounts.AddressesHandler),
+            (r'/users/(?P<account>.+)/addresses/page/(?P<page_num>\d+)/?', accounts.AddressesHandler),
+
+
             # Users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
 
@@ -364,6 +369,13 @@ def main():
             # Tasks
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
+
+            # Addresses primary
+            (r'/addresses/primary/?', addresses.PrimaryHandler),
+
+            # Addresses
+            (r'/addresses/(?P<address_uuid>.+)/?', addresses.Handler),
+            (r'/addresses/?', addresses.Handler),
 
             # Billings
             (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
