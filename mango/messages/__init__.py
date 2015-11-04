@@ -32,5 +32,7 @@ class Resource(models.Model):
         Resource
     '''
     records = compound.ModelType(SimpleResource)
+    tasks = compound.ModelType(SimpleResource)
+    addresses = compound.ModelType(SimpleResource)
 
     total = types.IntType()
