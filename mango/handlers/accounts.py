@@ -269,6 +269,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         if result:
             sip_account = yield self.new_sip_account(struct)
 
+            coturn_account = yield self.new_coturn_account(struct)
+
+            new_address = yield self.new_address(struct)
+
 
         self.set_status(201)
         self.finish({'uuid':result})
