@@ -152,7 +152,7 @@ class Addresses(object):
             Create a new address entry
         '''
         try:
-            address = address.Address(struct)
+            address = addresses.Address(struct)
             address.validate()
         except Exception, e:
             logging.exception(e)
