@@ -265,6 +265,34 @@ class BaseHandler(web.RequestHandler):
 
         raise gen.Return(message)
 
+    @gen.coroutine
+    def new_coturn_account(self, struct):
+        '''
+            New coturn account
+        '''
+        try:
+            message = 'warning are cool'
+            logging.warning(message)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+
+        raise gen.Return(message)
+
+    @gen.coroutine
+    def new_address(self, struct):
+        '''
+            New address
+        '''
+        try:
+            message = 'test this shit out'
+            logging.warning(message)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+
+        raise gen.Return(message)
+
 
 @basic_authentication
 class LoginHandler(BaseHandler):
