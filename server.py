@@ -222,6 +222,9 @@ def main():
     global db
     db = document
 
+    # logging system spawned
+    logging.info('Mango system {0} spawned'.format(uuid.uuid4()))
+
     # logging database hosts
     logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
     logging.info('PostgreSQL server: {0}:{1}'.format(opts.sql_host, opts.sql_port))
