@@ -22,6 +22,10 @@ from zmq.eventloop import ioloop
 
 from mango.system import basic_authentication
 
+from mango.messages import addresses as _addresses
+from mango.messages import tasks as _tasks
+
+from mango.tools import clean_structure
 from mango.tools import check_account_authorization
 from mango.tools import errors
 
@@ -268,16 +272,20 @@ class BaseHandler(web.RequestHandler):
     @gen.coroutine
     def new_coturn_account(self, struct):
         '''
-            New coturn account
+            New coturn account task
         '''
         try:
-            message = 'warning are cool'
-            logging.warning(message)
+            task = _tasks.Task(struct)
+            task.validate()
         except Exception, e:
             logging.exception(e)
             raise e
 
-        raise gen.Return(message)
+        task = clean_structure(task)
+
+        result = yield self.db.tasks.insert(task)
+
+        raise gen.Return(task.get('uuid'))
 
     @gen.coroutine
     def new_address(self, struct):
@@ -285,13 +293,17 @@ class BaseHandler(web.RequestHandler):
             New address
         '''
         try:
-            message = 'test this shit out'
-            logging.warning(message)
+            address = _addresses.Address(struct)
+            address.validate()
         except Exception, e:
             logging.exception(e)
             raise e
 
-        raise gen.Return(message)
+        address = clean_structure(address)
+
+        result = yield self.db.addresses.insert(address)
+
+        raise gen.Return(address.get('uuid'))
 
 
 @basic_authentication
