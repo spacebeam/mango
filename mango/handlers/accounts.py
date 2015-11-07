@@ -267,17 +267,25 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         # postgresql insert sip account
         if result:
+            # generate sip struct
             sip_account = yield self.new_sip_account(struct)
-
+            # generate coturn struct
             coturn_struct = {
                 'account': struct['account'],
                 'label': 'coturn',
+                'title': 'new coturn lt account',
                 'source': struct['password']
             }
-
+            # generate address struct
+            address_struct = {
+                'account': struct['account'],
+                'email': struct['email']
+            }
+            # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
-
-            new_address = yield self.new_address(struct)
+            new_address = yield self.new_address(address_struct)
+            # log result to see whats up
+            logging.info(coturn_account, new_address)
 
 
         self.set_status(201)
