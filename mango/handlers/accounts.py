@@ -273,8 +273,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             coturn_struct = {
                 'account': struct['account'],
                 'label': 'coturn',
-                'title': 'new coturn lt account',
-                'source': struct['password']
+                'title': 'new coturn account',
+                'data': {'password': struct['password'], 'account': struct['account']}
             }
             # generate address struct
             address_struct = {

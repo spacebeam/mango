@@ -52,6 +52,8 @@ class Task(models.Model):
     first_name = types.StringType()
     last_name = types.StringType()
     description = types.StringType()
+
+    data = types.StringType()
     
     label = types.StringType()
     
