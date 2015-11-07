@@ -269,7 +269,13 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         if result:
             sip_account = yield self.new_sip_account(struct)
 
-            coturn_account = yield self.new_coturn_account(struct)
+            coturn_struct = {
+                account: struct['account'],
+                label: 'coturn',
+                source: struct['password']
+            }
+
+            coturn_account = yield self.new_coturn_account(coturn_struct)
 
             new_address = yield self.new_address(struct)
 
