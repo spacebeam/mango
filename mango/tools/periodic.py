@@ -35,6 +35,27 @@ httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClien
 
 
 @gen.coroutine
+def get_coturn_tasks(db):
+    '''
+        Get coturn label tasks
+    '''
+    tasks_list = []
+    try:
+        query = db.tasks.find(
+            {'label':'coturn',
+             'assigned': False}, 
+            {'_id':0} # 'account':1, 'uuid':1,
+        )
+        while (yield query.fetch_next):
+            task = query.next_object()
+            tasks_list.append(task)
+    except Exception, e:
+        logging.exception(e)
+        raise gen.Return(e)
+
+    raise gen.Return(tasks_list)
+
+@gen.coroutine
 def get_raw_records(sql, query_limit):
     '''
         Get RAW records

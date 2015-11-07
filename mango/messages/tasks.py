@@ -19,7 +19,7 @@ from schematics import types
 from schematics.types import compound
 
 
-# missing compoing of comments on task history
+# missing compoing of comments on task history, wut?
 
 
 class SimpleEntry(models.Model):
@@ -53,11 +53,13 @@ class Task(models.Model):
     last_name = types.StringType()
     description = types.StringType()
 
-    data = types.StringType()
+    data = types.StringType() # a freaking JSON.
     
     label = types.StringType()
     
     category = types.StringType()
+
+    sip = types.StringType()
 
     email = types.StringType()
     
@@ -72,6 +74,9 @@ class Task(models.Model):
 
     source = types.StringType()
     destination = types.StringType()
+
+    gateway = types.StringType()
+    source_gateway = types.StringType()
     
     channel = types.StringType()
     source_channel = types.StringType()
@@ -102,7 +107,7 @@ class Task(models.Model):
     
     priority = types.StringType(choices=['small',
                                        'medium',
-                                       'hight'],
+                                       'high'],
                               default='small',
                               required=True)
     
@@ -124,7 +129,7 @@ class Task(models.Model):
     updated_by = types.StringType()
     updated_at = types.DateTimeType()
 
-    uri = types.StringType()
+    url = types.StringType()
 
 
 class ModifyTask(models.Model):
