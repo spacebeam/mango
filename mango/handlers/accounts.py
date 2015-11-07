@@ -275,7 +275,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 'account': struct['account'],
                 'label': 'coturn',
                 'title': 'new coturn account',
-                'data': json.dump(data)
+                'data': json.dumps(data)
             }
             # generate address struct
             address_struct = {
