@@ -18,7 +18,7 @@ import zmq
 import sys
 import uuid
 import itertools
-
+import ujson as json
 import logging
 
 import motor
