@@ -31,7 +31,7 @@ from tornado.ioloop import PeriodicCallback as PeriodicCast
 from tornado import gen
 from tornado import web
 
-# from tornado import websocket
+from tornado import websocket
 
 from mango.system import records as record_tools
 from mango.system import server_push
@@ -91,6 +91,20 @@ cache = False
 
 # external logger handler
 logger = False
+
+
+class MangoWSHandler(websocket.WebSocketHandler):
+    def get_compression_options(self):
+        # Non-None enables compression with default options.
+        return {}
+    
+    def open(self):
+        if self not in iofun:
+            iofun.append(self)
+
+    def on_close(self):
+        if self in iofun:
+            iofun.remove(self)
 
 
 @gen.coroutine
@@ -252,6 +266,9 @@ def main():
     application = web.Application(
 
         [
+            # experiment with WS
+            (r'/ws/alerts', MangoWSHandler),
+
             # Mango system knowledge (quotes) and realtime events.
             (r'/system/?', MangoHandler),
 
