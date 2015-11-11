@@ -116,12 +116,13 @@ def wsSend(message):
             ws.write_message(message)
 
 @gen.coroutine
-def periodic_ws_test():
+def periodic_ws_send():
     '''
-        Periodic websocket test
+        Periodic websocket send
     '''
-    wsSend('ping')
-    logging.info('after ping ...')
+    message = {'event':'ping'}
+    message = json.dumps(message)
+    wsSend(message)
 
 @gen.coroutine
 def periodic_get_records():
