@@ -101,6 +101,7 @@ class MangoWSHandler(websocket.WebSocketHandler):
     def open(self):
         if self not in iofun:
             iofun.append(self)
+        logging.error(iofun)
 
     def on_close(self):
         if self in iofun:
