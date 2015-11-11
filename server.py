@@ -101,12 +101,27 @@ class MangoWSHandler(websocket.WebSocketHandler):
     def open(self):
         if self not in iofun:
             iofun.append(self)
-        logging.error(iofun)
 
     def on_close(self):
         if self in iofun:
             iofun.remove(self)
 
+
+def wsSend(message):
+    for ws in iofun:
+        if not ws.ws_connection.stream.socket:
+            logging.error("Web socket does not exist anymore!!!")
+            iofun.remove(ws)
+        else:
+            ws.write_message(message)
+
+@gen.coroutine
+def periodic_ws_test():
+    '''
+        Periodic websocket test
+    '''
+    wsSend('ping')
+    logging.info('after ping ...')
 
 @gen.coroutine
 def periodic_get_records():
@@ -450,6 +465,9 @@ def main():
     # Mango periodic cast callbacks
     periodic_records = PeriodicCast(periodic_get_records, 5000)
     periodic_records.start()
+
+    periodic_ws = PeriodicCast(periodic_ws_test, 3000)
+    periodic_ws.start()
 
     # Setting up mango processor
     application.listen(opts.port)
