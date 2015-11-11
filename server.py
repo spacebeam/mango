@@ -467,7 +467,7 @@ def main():
     periodic_records = PeriodicCast(periodic_get_records, 5000)
     periodic_records.start()
 
-    periodic_ws = PeriodicCast(periodic_ws_test, 3000)
+    periodic_ws = PeriodicCast(periodic_ws_send, 3000)
     periodic_ws.start()
 
     # Setting up mango processor
