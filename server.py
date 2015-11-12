@@ -31,17 +31,11 @@ from tornado.ioloop import PeriodicCallback as PeriodicCast
 from tornado import gen
 from tornado import web
 
+from mango.system.client import publisher
+
 from tornado import websocket
 
 from mango.system import records as record_tools
-from mango.system import server_push
-from mango.system import server_pub
-from mango.system import server_router
-
-from mango.system import client
-
-from mango.system import worker_task
-from mango.system import client_task
 
 from mango.tools import options
 from mango.tools import indexes
@@ -57,15 +51,9 @@ from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records
 
-from multiprocessing import Process
-
 from zmq.eventloop import ioloop
 
-
-
-CLIENTS = 100
-WORKERS = 10
-
+from zmq.eventloop.future import Context, Poller
 
 
 # ioloop
@@ -94,6 +82,10 @@ logger = False
 
 
 class MangoWSHandler(websocket.WebSocketHandler):
+    '''
+        Websocket Handler
+    '''
+
     def get_compression_options(self):
         # Non-None enables compression with default options.
         return {}
@@ -106,14 +98,42 @@ class MangoWSHandler(websocket.WebSocketHandler):
         if self in iofun:
             iofun.remove(self)
 
-
 def wsSend(message):
+    '''
+        Websocket send message
+    '''
     for ws in iofun:
         if not ws.ws_connection.stream.socket:
             logging.error("Web socket does not exist anymore!!!")
             iofun.remove(ws)
         else:
             ws.write_message(message)
+
+@gen.coroutine
+def subscriber(port=8899):
+    '''
+        ZMQ Subscriber
+    '''
+    logging.warning("Running SUB server on port: {0}".format(port))
+    context = Context()
+    sub = context.socket(zmq.SUB)
+    sub.bind("tcp://*:%s" % port)
+
+    sub.setsockopt(zmq.SUBSCRIBE, "heartbeat")
+    sub.setsockopt(zmq.SUBSCRIBE, "asterisk")
+    sub.setsockopt(zmq.SUBSCRIBE, "logging")
+
+    poller = Poller()
+    poller.register(sub, zmq.POLLIN)
+    while True:
+        events = yield poller.poll(timeout=500)
+        if sub in dict(events):
+            msg = yield sub.recv()
+            wsSend(msg)
+            logging.info(msg)
+        else:
+            pass
+            #logging.info('nothing to recv')
 
 @gen.coroutine
 def periodic_ws_send():
@@ -175,43 +195,6 @@ def main():
 
         Organizations of Roman Generality.
     '''
-
-    # Now we can run a few servers and processes
-
-    # Server daemons and ports
-    server_push_port = "5556"
-    server_pub_port = "5558"
-
-    # Servers
-    #Process(target=server_push, args=(server_push_port,)).start()
-    #Process(target=server_pub, args=(server_pub_port,)).start()
-    
-    # Clients
-    #Process(target=client, args=(server_push_port,server_pub_port,)).start()
-
-    '''
-    # System frontend & backend routers ports
-    frontend_port = "4144"
-    backend_port = "4188"
-
-    Process(target=server_router, args=(frontend_port,backend_port,)).start()
-
-    # Start background tasks
-    
-    def start(task, *args):
-        process = Process(target=task, args=args)
-        process.daemon = True
-        process.start()
-
-    for i in range(WORKERS):
-        start(worker_task, i)
-    for i in range(CLIENTS):
-        start(client_task, i)
-
-    # Initialize main loop state
-    count = CLIENTS
-    '''
-
     # daemon options
     opts = options.options()
 
@@ -473,7 +456,11 @@ def main():
     # Setting up mango processor
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
-    ioloop.IOLoop.instance().start()
+    
+    loop = ioloop.IOLoop.instance()
+    loop.add_callback(subscriber)
+    loop.add_callback(publisher)
+    loop.start()
 
 
 if __name__ == '__main__':

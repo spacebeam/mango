@@ -27,7 +27,7 @@ from mango.messages import tasks as _tasks
 
 from mango.tools import clean_structure
 from mango.tools import check_account_authorization
-from mango.tools import errors
+from mango import errors
 
 from mango.tools.quotes import PeopleQuotes
 

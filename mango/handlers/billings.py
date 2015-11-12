@@ -28,7 +28,7 @@ from mango.system import records
 
 from mango.tools import content_type_validation
 from mango.tools import check_json
-from mango.tools import errors
+from mango import errors
 
 from mango.handlers import BaseHandler
 

@@ -31,7 +31,7 @@ from mango.system import records
 from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import check_times
-from mango.tools import errors
+from mango import errors
 from mango.tools import new_resource
 
 from mango.handlers import BaseHandler
