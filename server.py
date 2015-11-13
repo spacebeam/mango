@@ -114,7 +114,7 @@ def subscriber(port=8899):
     '''
         ZMQ Subscriber
     '''
-    logging.warning("Running SUB server on port: {0}".format(port))
+    logging.warning("Binding SUB socket on port: {0}".format(port))
     context = Context()
     sub = context.socket(zmq.SUB)
     sub.bind("tcp://*:%s" % port)
@@ -136,8 +136,8 @@ def subscriber(port=8899):
                 pass
             elif msg.startswith('logging'):
                 pass
-            finally:
-                wsSend({'message': msg})
+            # websocket send
+            wsSend({'message': msg})
         else:
             pass
             #logging.info('nothing to recv')
