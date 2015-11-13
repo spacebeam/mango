@@ -25,7 +25,6 @@ import motor
 import queries
 import pylibmc as mc
 
-# system periodic cast callback
 from tornado.ioloop import PeriodicCallback as PeriodicCast
 
 from tornado import gen
