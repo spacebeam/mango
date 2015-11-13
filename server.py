@@ -128,9 +128,16 @@ def subscriber(port=8899):
     while True:
         events = yield poller.poll(timeout=500)
         if sub in dict(events):
+            #logging.info(msg)
             msg = yield sub.recv()
-            wsSend(msg)
-            logging.info(msg)
+            if msg.startswith('heartbeat'):
+                msg = msg.split(' ')[1]
+            elif msg.startswith('asterisk'):
+                pass
+            elif msg.startswith('logging'):
+                pass
+            finally:
+                wsSend({'message': msg})
         else:
             pass
             #logging.info('nothing to recv')
