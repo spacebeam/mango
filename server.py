@@ -131,12 +131,14 @@ def subscriber(port=8899):
             msg = yield sub.recv()
             if msg.startswith('heartbeat'):
                 msg = msg.split(' ')[1]
+                # websocket send
+                wsSend({'message': msg})
             elif msg.startswith('asterisk'):
-                pass
+                msg = msg.split(' ')[1]
+                # websocket send
+                wsSend(msg)
             elif msg.startswith('logging'):
                 pass
-            # websocket send
-            wsSend({'message': msg})
         else:
             pass
             #logging.info('nothing to recv')
