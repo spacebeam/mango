@@ -38,7 +38,7 @@ class Billings(object):
 
         start = start.timestamp
 
-        # TODO: multiple routes
+        # TODO: multiple routes, getting there..
         single_route = routes
 
         # MongoDB aggregation match operator

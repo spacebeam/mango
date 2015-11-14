@@ -279,10 +279,18 @@ class Records(object):
             {'$group':group}
         ]
 
-        result = yield self.db.records.aggregate(pipeline, cursor={})
+
+        # Motor 0.5: no "cursor={}", no "yield".
+        #cursor = collection.aggregate(pipeline)
+        #while (yield cursor.fetch_next):
+        #    doc = cursor.next_object()
+        #    print(doc)
+
+
+        cursor = yield self.db.records.aggregate(pipeline, cursor={})
        
-        while (yield result.fetch_next):
-            doc = result.next_object()
+        while (yield cursor.fetch_next):
+            doc = cursor.next_object()
             message.append(doc)
 
         raise gen.Return(message)        
