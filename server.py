@@ -55,6 +55,11 @@ from zmq.eventloop import ioloop
 from zmq.eventloop.future import Context, Poller
 
 
+'''
+# remove global variables
+'''
+
+
 # ioloop
 ioloop.install()
 

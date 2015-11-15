@@ -88,22 +88,6 @@ class BaseHandler(web.RequestHandler):
         '''
             Initialize the Base Handler
         '''
-        # Service Process Quality Management
-        #===================================
-
-        # The Senate and People of Mars
-        # -----------------------------
-        # SPQM communication messages.
-
-        # 0MQ message streams
-        # --------------------
-
-        # CDR stream
-        # self.cdr_stream = self.settings['cdr_stream'] || or just subscribe to the cdr topic on SUB.
-
-        # CDR periodic channel, why channel? the world channel, etc.
-        # self.cdr_periodic = self.settings['cdr_periodic']
-
         super(BaseHandler, self).initialize(**kwargs)
 
         self.etag = None
@@ -133,20 +117,6 @@ class BaseHandler(web.RequestHandler):
             Return the account from a secure cookie
         '''
         return self.get_secure_cookie('account')
-
-    @gen.coroutine
-    def catch_down(self, struct, scheme, error, reason):
-        '''
-            Catch down
-        '''
-        pass
-
-    @gen.coroutine
-    def catch_daemon(self, struct, scheme, error, reason):
-        '''
-            Catch daemon
-        '''
-        pass
 
     @gen.coroutine
     def let_it_crash(self, struct, scheme, error, reason):
