@@ -153,7 +153,7 @@ def periodic_ws_send():
     '''
         Periodic websocket send
     '''
-    message = {'message':'heartbeat'}
+    message = {'message': 'heartbeat'}
     message = json.dumps(message)
     wsSend(message)
 
