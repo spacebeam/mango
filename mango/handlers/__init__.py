@@ -191,9 +191,9 @@ class BaseHandler(web.RequestHandler):
         try:
             # Get SQL database from system settings
             sql = self.settings.get('sql')
-        query = '''
-            insert into queues () values ();
-        '''.format(
+            query = '''
+                insert into queues () values ();
+            '''.format(
                 struct.get('account'),
                 struct.get('account'),
                 struct.get('account'),
