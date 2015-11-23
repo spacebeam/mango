@@ -118,12 +118,6 @@ def worker_task(ident):
         socket_req.send_multipart([address, b"", b"OK"])
 
 
-def gen_daemon(server_router):
-    '''
-        OTP gen_server analogy
-    '''
-    pass
-
 def server_push(port="5556"):
     '''
         PUSH process
@@ -219,12 +213,6 @@ def server_router(frontend_port, backend_port):
     ioloop.IOLoop.instance().start()
 
 
-def client_dealer(por="5559"):
-    '''
-        DEALER process
-    '''
-    pass
-
 def client(port_push, port_sub):
     '''
         Client process
@@ -245,45 +233,3 @@ def client(port_push, port_sub):
 
     ioloop.IOLoop.instance().start()
     logging.warning("Worker has stopped processing messages.")
-
-def spawn(message):
-    '''
-        Spawn process, return new uuid
-    '''
-    logging.info("Spawn process {0}".format(message))
-
-def link(message):
-    '''
-        Link processes
-    '''
-    logging.info("Link processes {0}".format(message))
-
-def spawn_link(message):
-    '''
-        Spawn link processes
-    '''
-    logging.info("Spawn new process, {0} return Received process uuid".format(message))
-
-def monitor(message):
-    '''
-        Monitor processes
-    '''
-    logging.info("Monitor processes {0}".format(message))
-
-def spawn_monitor(message):
-    '''
-        Spawn monitor processes
-    '''
-    logging.info("Spawn new process, {0} return Received process uuid".format(message))
-
-def register(message):
-    '''
-        Register process uuid
-    '''
-    logging.info("Received message: %s" % message)
-
-def context_switch(message):
-    '''
-        Node context switch
-    '''
-    logging.info("talk between nodes")

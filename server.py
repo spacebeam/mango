@@ -137,7 +137,7 @@ def subscriber(port=8899):
             if msg.startswith('heartbeat'):
                 msg = msg.split(' ')[1]
                 # websocket send
-                wsSend({'message': msg})
+                wsSend({'message':msg})
             elif msg.startswith('asterisk'):
                 msg = msg.split(' ')[1]
                 # websocket send
@@ -145,15 +145,15 @@ def subscriber(port=8899):
             elif msg.startswith('logging'):
                 pass
         else:
-            pass
             #logging.info('nothing to recv')
+            pass
 
 @gen.coroutine
 def periodic_ws_send():
     '''
         Periodic websocket send
     '''
-    message = {'message': 'heartbeat'}
+    message = {'message':'heartbeat'}
     message = json.dumps(message)
     wsSend(message)
 

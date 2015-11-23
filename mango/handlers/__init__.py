@@ -177,6 +177,44 @@ class BaseHandler(web.RequestHandler):
         raise gen.Return(message)
 
     @gen.coroutine
+    def remove_asterisk_queue(self, struct):
+        '''
+            Remove asterisk queue
+        '''
+        pass
+
+    @gen.coroutine
+    def new_asterisk_queue(self, struct):
+        '''
+            New asterisk queue
+        '''
+        try:
+            # Get SQL database from system settings
+            sql = self.settings.get('sql')
+        query = '''
+            insert into queues () values ();
+        '''.format(
+                struct.get('account'),
+                struct.get('account'),
+                struct.get('account'),
+                struct.get('domain', self.settings.get('domain')),
+                struct.get('password')
+            )
+            result = yield sql.query(query)
+            if result:
+                message = {'ack': True}
+            else:
+                message = {'ack': False}
+            result.free()
+            logging.warning('new asterisk queue spawned on PostgreSQL {0}'.format(message))
+        
+        except Exception, e:
+            logging.exception(e)
+            raise e
+
+        raise gen.Return(message)
+
+    @gen.coroutine
     def new_sip_account(self, struct):
         '''
             New sip account
