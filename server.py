@@ -2,7 +2,7 @@
 '''
     Manage Asynchronous Number General ORGs
 
-    Organizations of Roman Generality (ORGs)
+    Organizations of Random Generality (ORGs)
 '''
 
 # This file is part of mango.
@@ -56,7 +56,7 @@ from zmq.eventloop.future import Context, Poller
 
 
 '''
-# remove global variables
+# todo: remove global variables
 '''
 
 
@@ -133,21 +133,18 @@ def subscriber(port=8899):
     while True:
         events = yield poller.poll(timeout=500)
         if sub in dict(events):
-            #logging.info(msg)
-            msg = yield sub.recv()
-            if msg.startswith('heartbeat'):
-                msg = msg.split(' ')[1]
-                # websocket send
-                wsSend({'message':msg})
-            elif msg.startswith('asterisk'):
-                msg = msg.split(' ')[1]
-                # websocket send
-                wsSend(msg)
-            elif msg.startswith('upload'):
-                msg = msg.split(' ')[1]
-                # websocket send
-                wsSend(msg)
-            elif msg.startswith('logging'):
+
+            message = yield sub.recv()
+            if message.startswith('heartbeat'):
+                message = message.split(' ')[1]
+                wsSend({'message':message})
+            elif message.startswith('asterisk'):
+                message = message.split(' ')[1]
+                wsSend(message)
+            elif message.startswith('upload'):
+                message = message.split(' ')[1]
+                wsSend(message)
+            elif message.startswith('logging'):
                 pass
         else:
             #logging.info('nothing to recv')
@@ -211,7 +208,7 @@ def main():
     '''
         Manage Asynchronous Number General ORGs
 
-        Organizations of Roman Generality.
+        Organizations of Random Generality.
     '''
     # daemon options
     opts = options.options()
@@ -237,6 +234,8 @@ def main():
         user=opts.sql_user,
         password=None
     )
+
+    # TODO: remove global variables!!!
 
     # Set kvalue database
     global kvalue
