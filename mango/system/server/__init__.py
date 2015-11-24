@@ -34,6 +34,7 @@ def subscriber(port=8899):
     sub.bind("tcp://*:%s" % port)
     sub.setsockopt(zmq.SUBSCRIBE, "heartbeat")
     sub.setsockopt(zmq.SUBSCRIBE, "asterisk")
+    sub.setsockopt(zmq.SUBSCRIBE, "upload")
     sub.setsockopt(zmq.SUBSCRIBE, "logging")
     
     poller = Poller()
