@@ -126,6 +126,7 @@ def subscriber(port=8899):
     sub.setsockopt(zmq.SUBSCRIBE, "heartbeat")
     sub.setsockopt(zmq.SUBSCRIBE, "asterisk")
     sub.setsockopt(zmq.SUBSCRIBE, "logging")
+    sub.setsockopt(zmq.SUBSCRIBE, "upload")
 
     poller = Poller()
     poller.register(sub, zmq.POLLIN)
@@ -139,6 +140,10 @@ def subscriber(port=8899):
                 # websocket send
                 wsSend({'message':msg})
             elif msg.startswith('asterisk'):
+                msg = msg.split(' ')[1]
+                # websocket send
+                wsSend(msg)
+            elif msg.startswith('upload'):
                 msg = msg.split(' ')[1]
                 # websocket send
                 wsSend(msg)
