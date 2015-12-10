@@ -322,14 +322,12 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                         for key in minutes
                     }
 
-                    logging.error(result)
-                                        
-                    # return the clean version of the data
-                    self.finish({
-                        'records': result, 
-                        'minutes': minutes
-                    })
-
+                    self.finish(
+                        json.dumps({
+                            'records': result, 
+                            'minutes': minutes
+                        })
+                    )
                     return
             
             result = frame['records'].sum()
@@ -405,37 +403,36 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                 lapse = lapse.rstrip('/')
 
                 logging.info('time lapse on summaries: %s' % lapse)
-            
+
                 if 'hours' in lapse:
                     # pandas data-frames
                     frame['minutes'] = frame['seconds'] / 60
-                    
+
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
-                    
+
                     # get a dict of results from the data-frame
                     result =  dict(hours['records'])
                     minutes = dict(hours['minutes'])
-                    
+
                     result = {         
                         int(time.mktime(key.timetuple())): int(result[key]) 
                         for key in result
                     }            
-                    
+
                     minutes = {
                         int(time.mktime(key.timetuple())): int(minutes[key])
                         for key in minutes
                     }
 
-                    logging.error(result)
-                                        
-                    # return the clean version of the data
-                    self.finish({
-                        'records': result, 
-                        'minutes': minutes
-                    })
+                    self.finish(
+                        json.dumps({
+                            'records': result, 
+                            'minutes': minutes
+                        })
+                    )
                     return
-            
+
             result = frame['result'].sum()
             seconds = frame['seconds'].sum()
             average = frame['average'].sum()
