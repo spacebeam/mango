@@ -416,12 +416,12 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                     minutes = dict(hours['minutes'])
                     
                     result = {         
-                        time.mktime(key.timetuple()): int(result[key]) 
+                        int(time.mktime(key.timetuple())): int(result[key]) 
                         for key in result
                     }            
                     
                     minutes = {
-                        time.mktime(key.timetuple()): int(minutes[key])
+                        int(time.mktime(key.timetuple())): int(minutes[key])
                         for key in minutes
                     }
 
