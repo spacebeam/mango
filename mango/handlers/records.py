@@ -321,6 +321,8 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                         int(time.mktime(key.timetuple())): int(minutes[key])
                         for key in minutes
                     }
+
+                    logging.error(result)
                                         
                     # return the clean version of the data
                     self.finish({
@@ -425,9 +427,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                         for key in minutes
                     }
 
-
-                    # missing seconds ???
-
+                    logging.error(result)
                                         
                     # return the clean version of the data
                     self.finish({
