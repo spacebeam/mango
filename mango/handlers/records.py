@@ -251,7 +251,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Summary requests handler 
     '''
-    @web.authenticated
+    #@web.authenticated
     @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse='hours', page_num=0):
         '''
