@@ -106,12 +106,15 @@ def wsSend(message):
     '''
         Websocket send message
     '''
-    logging.warning('Sending information messages to {0} websocket connections'.format(len(iofun)))
+    # Check and logg a warning if there is some fun on I/O (=
+    if iofun:
+        logging.warning('Sending information messages to {0} websocket connections'.format(len(iofun)))
     for ws in iofun:
         if not ws.ws_connection.stream.socket:
             logging.error("Web socket does not exist anymore!!!")
             iofun.remove(ws)
         else:
+            logging.warning(message)
             ws.write_message(message)
 
 @gen.coroutine
@@ -138,8 +141,6 @@ def subscriber(port=8899):
             message = yield sub.recv()
 
             # See if make sense to add the command patter in here.
-            logging.warning('See if make sense to add the command pattern in here')
-            logging.warning(message)
 
             if message.startswith('heartbeat'):
                 message = message.split(' ')[1]
