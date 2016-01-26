@@ -106,6 +106,7 @@ def wsSend(message):
     '''
         Websocket send message
     '''
+    logging.warning(len(iofun))
     for ws in iofun:
         if not ws.ws_connection.stream.socket:
             logging.error("Web socket does not exist anymore!!!")
