@@ -135,6 +135,11 @@ def subscriber(port=8899):
         if sub in dict(events):
 
             message = yield sub.recv()
+
+            # See if make sense to add the command patter in here.
+            logging.warning('See if make sense to add the command pattern in here')
+            logging.warning(message)
+
             if message.startswith('heartbeat'):
                 message = message.split(' ')[1]
                 wsSend({'message':message})
