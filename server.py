@@ -18,7 +18,7 @@ import zmq
 import sys
 import uuid
 import itertools
-import ujson as json
+
 import logging
 
 import motor
@@ -155,6 +155,8 @@ def periodic_ws_send():
     '''
         Periodic websocket send
     '''
+    import ujson as json
+    # please my man clean this shit out
     message = {'message':'heartbeat'}
     message = json.dumps(message)
     wsSend(message)
