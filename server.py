@@ -392,7 +392,6 @@ def main():
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
     
     loop = ioloop.IOLoop.instance()
-    loop.add_callback(subscriber)
     loop.add_callback(publisher)
     loop.start()
 
