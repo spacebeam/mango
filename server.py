@@ -63,9 +63,6 @@ from zmq.eventloop.future import Context, Poller
 # ioloop
 ioloop.install()
 
-# iofun testing box
-iofun = []
-
 # e_tag
 e_tag = False
 
@@ -84,89 +81,6 @@ cache = False
 # external logger handler
 logger = False
 
-
-class MangoWSHandler(websocket.WebSocketHandler):
-    '''
-        Websocket Handler
-    '''
-
-    def get_compression_options(self):
-        # Non-None enables compression with default options.
-        return {}
-    
-    def open(self):
-        if self not in iofun:
-            iofun.append(self)
-
-    def on_close(self):
-        if self in iofun:
-            iofun.remove(self)
-
-def wsSend(message):
-    '''
-        Websocket send message
-    '''
-    # Check and logg a warning if there is some fun on I/O (=
-    if iofun:
-        logging.warning('Sending information messages to {0} websocket connections'.format(len(iofun)))
-    for ws in iofun:
-        if not ws.ws_connection.stream.socket:
-            logging.error("Web socket does not exist anymore!!!")
-            iofun.remove(ws)
-        else:
-            logging.warning(message)
-            ws.write_message(message)
-
-@gen.coroutine
-def subscriber(port=8899):
-    '''
-        ZMQ Subscriber
-    '''
-    logging.warning("Binding SUB socket on port: {0}".format(port))
-    context = Context()
-    sub = context.socket(zmq.SUB)
-    sub.bind("tcp://*:%s" % port)
-
-    sub.setsockopt(zmq.SUBSCRIBE, "heartbeat")
-    sub.setsockopt(zmq.SUBSCRIBE, "asterisk")
-    sub.setsockopt(zmq.SUBSCRIBE, "logging")
-    sub.setsockopt(zmq.SUBSCRIBE, "upload")
-
-    poller = Poller()
-    poller.register(sub, zmq.POLLIN)
-    while True:
-        events = yield poller.poll(timeout=500)
-        if sub in dict(events):
-
-            message = yield sub.recv()
-
-            # See if make sense to add the command patter in here.
-
-            if message.startswith('heartbeat'):
-                message = message.split(' ')[1]
-                wsSend({'message':message})
-            elif message.startswith('asterisk'):
-                message = message.split(' ')[1]
-                wsSend(message)
-            elif message.startswith('upload'):
-                message = message.split(' ')[1]
-                wsSend(message)
-            elif message.startswith('logging'):
-                pass
-        else:
-            #logging.info('nothing to recv')
-            pass
-
-@gen.coroutine
-def periodic_ws_send():
-    '''
-        Periodic websocket send
-    '''
-    import ujson as json
-    # please my man clean this shit out
-    message = {'message':'heartbeat'}
-    message = json.dumps(message)
-    wsSend(message)
 
 @gen.coroutine
 def periodic_get_records():
