@@ -292,9 +292,6 @@ def main():
     application = web.Application(
 
         [
-            # experiment with WS
-            (r'/ws/alerts', MangoWSHandler),
-
             # Mango system knowledge (quotes) and realtime events.
             (r'/system/?', MangoHandler),
 
