@@ -32,8 +32,6 @@ from tornado import web
 
 from mango.system.client import publisher
 
-from tornado import websocket
-
 from mango.system import records as record_tools
 
 from mango.tools import options
