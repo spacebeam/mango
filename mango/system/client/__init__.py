@@ -35,7 +35,7 @@ def publisher(port=8899):
 
     while True:
         topic = 'heartbeat'
-        data = 'heartbeat'
+        data = 'heartbeax'
         message = '{0} {1}'.format(topic, data)
         yield pub.send(message)
         yield gen.sleep(1)
