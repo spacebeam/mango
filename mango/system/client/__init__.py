@@ -13,7 +13,7 @@ __author__ = 'Jean Chassoul'
 
 import logging
 import zmq
-
+import arrow
 from tornado import gen
 
 from zmq.eventloop.future import Context, Poller
@@ -34,8 +34,11 @@ def publisher(port=8899):
     poller.register(pub, zmq.POLLOUT)
 
     while True:
+
         topic = 'heartbeat'
-        data = 'heartbeax'
+        hb_time = arrow.utcnow()
+        data = json.dumps({"heartbeat":{"time":hb_time.timestamp, "info": "mango_uuid"}})
         message = '{0} {1}'.format(topic, data)
+
         yield pub.send(message)
         yield gen.sleep(1)
