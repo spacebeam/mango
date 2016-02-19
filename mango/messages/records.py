@@ -93,9 +93,8 @@ class Record(models.Model):
 
     #details = compound.ModelType(Log)
     #comments = compound.ModelType(Comment)
-    
-    created = types.DateTimeType(default=arrow.utcnow().naive)
-    #created_at = types.DateTimeType()
+
+    created_at = types.DateTimeType(default=arrow.utcnow().naive)
     last_modified = types.DateTimeType()
     updated_by = types.DateTimeType()
     updated_at = types.DateTimeType()

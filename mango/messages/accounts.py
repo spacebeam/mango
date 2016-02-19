@@ -11,6 +11,7 @@
 __author__ = 'Jean Chassoul'
 
 
+import arrow
 import uuid
 
 from schematics import models
@@ -55,6 +56,7 @@ class RequiredBase(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     is_admin = types.BooleanType(default=False)
+    domain = types.StringType()
     phone_number = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
@@ -67,6 +69,8 @@ class RequiredBase(models.Model):
 
     url = types.URLType(required=False)
     max_channels = types.IntType()
+
+    created_at = types.DateTimeType(default=arrow.utcnow().naive)
 
 
 class CleanBase(models.Model):
