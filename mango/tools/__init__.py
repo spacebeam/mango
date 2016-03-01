@@ -25,10 +25,6 @@ from mango import errors
 from mango.messages import accounts
 from mango.messages import reports
 
-import zmq
-
-from zmq.log.handlers import PUBHandler
-
 
 @gen.coroutine
 def check_json(struct):
