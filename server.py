@@ -38,7 +38,7 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
-from mango.tools import new_resource, zmq_external_logger
+from mango.tools import new_resource
 
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
@@ -194,11 +194,6 @@ def main():
     cache_enabled = opts.cache_enabled
     if cache_enabled:
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
-
-    external_log = opts.external_log
-    if external_log:
-        global logger
-        logger = zmq_external_logger()
 
     # mango web application daemon
     application = web.Application(
