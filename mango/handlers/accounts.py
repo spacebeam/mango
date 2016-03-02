@@ -238,7 +238,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         struct = yield check_json(self.request.body)
         
-        format_pass = (True if struct else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
@@ -305,7 +305,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         logging.info('patch received struct {0}'.format(struct))
 
-        format_pass = (True if struct else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
@@ -480,7 +480,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
 
         org = struct['account']
         
-        format_pass = (True if struct else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
@@ -633,7 +633,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         struct = yield check_json(self.request.body)
         db = self.settings['db']
 
-        format_pass = (True if struct else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})

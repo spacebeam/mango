@@ -147,7 +147,7 @@ class Handler(addresses.Addresses, accounts.Accounts, BaseHandler):
         struct = yield check_json(self.request.body)
         db = self.settings['db']
         
-        format_pass = (True if struct else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
