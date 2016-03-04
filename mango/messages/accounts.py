@@ -64,12 +64,9 @@ class RequiredBase(models.Model):
     location = types.StringType()
     resources = compound.ModelType(Resource)
     routes = compound.ListType(compound.ModelType(Route))
-
     emails = compound.ListType(compound.ModelType(Email))
-
     url = types.URLType(required=False)
     max_channels = types.IntType()
-
     created_at = types.DateTimeType(default=arrow.utcnow().naive)
 
 
@@ -93,6 +90,7 @@ class CleanBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType()
     max_channels = types.IntType()
+    created_at = types.DateTimeType()
 
 
 class BaseAccount(RequiredBase):
