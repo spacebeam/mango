@@ -10,7 +10,7 @@
 
 __author__ = 'Jean Chassoul'
 
-
+import ujson as json
 import logging
 import zmq
 import arrow
