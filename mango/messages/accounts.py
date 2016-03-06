@@ -30,7 +30,7 @@ class Membership(models.Model):
     status = types.StringType(default='pending')
     role = types.StringType(required=True)
     org = types.StringType(required=True)
-    created = types.UTCDateTimeType(default=arrow.utcnow().naive)
+    created = types.DateTimeType(default=arrow.utcnow().naive)
 
 
 class ModifyMembership(models.Model):
@@ -50,7 +50,7 @@ class ModifyMembership(models.Model):
     status = types.StringType()
     role = types.StringType()
     org = types.StringType()
-    created = types.UTCDateTimeType()
+    created = types.DateTimeType()
 
 
 class Route(models.Model):
