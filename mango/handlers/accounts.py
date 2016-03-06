@@ -629,6 +629,8 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
 
         new_membership = yield self.new_membership(struct)
 
+        new_membership.pop('created', None)
+
         if not new_membership:
 
 
