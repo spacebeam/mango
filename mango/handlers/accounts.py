@@ -572,27 +572,19 @@ class MembersHandler(accounts.Orgs, BaseHandler):
         '''
         logging.warning('get member')
 
-    @gen.coroutine
-    def post(self, account):
-        '''
-            Create member
-        '''
-        logging.warning('create member')
-
-    @gen.coroutine
-    def delete(self, account, page_num=0):
-        '''
-            Delete member
-        '''
-        logging.warning('delete member')
-
 
 @content_type_validation
 class MembershipsHandler(accounts.Orgs, BaseHandler):
     '''
         Memberships resource handlers
     '''
-    pass
+
+    @gen.coroutine
+    def put(self, account):
+        '''
+            Add or update organization membership
+        '''
+        logging.warning('add or update member')
 
 
 @content_type_validation
