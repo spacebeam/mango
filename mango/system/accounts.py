@@ -274,13 +274,12 @@ class Orgs(MangoAccounts):
             raise e
 
         try:
-            logging.info(member)
             message = yield self.new_member(member.get('org'), member.get('username'))
         except Exception, e:
             logging.error(e)
             message = str(e)
 
-        raise gen.Return(message)
+        raise gen.Return(str(message))
 
     @gen.coroutine
     def new_member(self, org, user):
