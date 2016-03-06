@@ -579,12 +579,30 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         Memberships resource handlers
     '''
 
+     @gen.coroutine
+    def get(self, account, page_num=0):
+        '''
+            Get organization membership/s.
+        '''
+        logging.info(
+            'account %s page num %s.' % (account, page_num)
+        )
+
     @gen.coroutine
     def put(self, account):
         '''
             Add or update organization membership
         '''
         logging.warning('add or update member')
+
+    @gen.coroutine
+    def delete(self, account):
+        '''
+            Delete organization membership
+        '''
+        logging.warning('add or update member')
+
+
 
 
 @content_type_validation
