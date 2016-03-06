@@ -275,7 +275,7 @@ class Orgs(MangoAccounts):
 
         try:
             waka, kaka = yield self.new_member(member.get('org'), member.get('username'))
-            logging('info on waka {0} and kaka {1}'.format(waka, kaka))
+            logging.info('info on waka {0} and kaka {1}'.format(waka, kaka))
             message = member
         except Exception, e:
             logging.error(e)
