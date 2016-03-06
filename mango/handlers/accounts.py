@@ -631,12 +631,12 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
 
         if not new_membership:
 
-            model = 'membership'
-            reason = {'duplicates': [(model, 'account')]} # why duplicates and stuff?
 
-            message = yield self.let_it_crash(struct, model, new_membership, reason)
+            # model = 'membership'
+            # reason = {'duplicates': [(model, 'account')]} # why duplicates and stuff?
+            # message = yield self.let_it_crash(struct, model, new_membership, reason)
+            # logging.warning(message)
 
-            logging.warning(message)
             self.set_status(400)
             return
 

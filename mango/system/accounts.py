@@ -274,8 +274,8 @@ class Orgs(MangoAccounts):
             raise e
 
         try:
-            result = yield self.new_member(member.get('org'), member.get('username'))
-            logging.info(result)
+            logging.info(member)
+            message = yield self.new_member(member.get('org'), member.get('username'))
         except Exception, e:
             logging.error(e)
             message = str(e)
