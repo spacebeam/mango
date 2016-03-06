@@ -640,13 +640,38 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         self.finish(new_membership)
 
     @gen.coroutine
-    def delete(self, account):
+    def delete(self):
         '''
-            Delete organization membership
+            Delete membership
         '''
-        logging.warning('add or update member')
+        struct = yield check_json(self.request.body)
 
+        format_pass = (True if struct and not struct.get('errors') else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
 
+        logging.info(struct)
+
+        query_args = self.request.arguments
+
+        account = query_args.get('account', [None])[0]
+
+        result = yield self.remove_member(org, user)
+
+        # again with the result['n'] stuff... what is this shit?
+        logging.info('check for n stuff %s' % (result))
+        
+        if not result['n']:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('org', org)
+            self.finish(error)
+            return
+
+        self.set_status(204)
+        self.finish()
 
 
 @content_type_validation
