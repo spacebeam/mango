@@ -579,7 +579,7 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         Memberships resource handlers
     '''
 
-     @gen.coroutine
+    @gen.coroutine
     def get(self, account, page_num=0):
         '''
             Get organization membership/s.
