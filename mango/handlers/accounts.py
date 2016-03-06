@@ -623,6 +623,22 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         if not struct.get('account'):
             struct['account'] = account
 
+        new_membership = yield self.new_membership(struct)
+
+        if not new_membership:
+
+            model = 'membership'
+            reason = {'duplicates': [(model, 'account')]} # why duplicates and stuff?
+
+            message = yield self.let_it_crash(struct, model, new_membership, reason)
+
+            logging.warning(message)
+            self.set_status(400)
+            return
+
+        self.set_status(201)
+        self.finish(new_membership)
+
     @gen.coroutine
     def delete(self, account):
         '''
