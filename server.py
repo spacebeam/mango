@@ -226,7 +226,7 @@ def main():
             # ORG memberships
             (r'/orgs/(?P<account>.+)/memberships/page/(?P<page_num>\d+)/?', accounts.MembershipsHandler),
             (r'/orgs/(?P<account>.+)/memberships/(?P<user>.+)/?', accounts.MembershipsHandler),
-            (r'/orgs/(?P<account>.+)/memberships/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/memberships/?', accounts.MembershipsHandler),
 
             # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),
