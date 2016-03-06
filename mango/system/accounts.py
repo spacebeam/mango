@@ -261,6 +261,45 @@ class Orgs(MangoAccounts):
         raise gen.Return(account_uuid)
 
     @gen.coroutine
+    def new_membership(self, struct):
+        '''
+            New membership
+        '''
+        try:
+            member = accounts.Membership(struct)
+            member.validate()
+            member = clean_structure(member)
+        except Exception, e:
+            raise e
+
+        try:
+            logging.warning(member)
+            # message = event.get('uuid')
+
+            # result = StochasticMap(
+            #     self.kvalue,
+            #     'stochastics',
+            #     str(event.get('uuid')),
+            #     str(event.get('account')),
+            #     str(event.get('nodetype')),
+            #     str(event.get('subtype')),
+            #     str(event.get('title')),
+            #     str(event.get('descripcion')),
+            #     str(event.get('content')),
+            #     [str(x) for x in event.get('keywords')],
+            #     str(event.get('start')),
+            #     str(event.get('end')),
+            #     str(event.get('url')),
+            #     str(event.get('created')),
+            #     event.get('checked')
+            # )
+        except Exception, e:
+            logging.error(e)
+            message = str(e)
+
+        raise gen.Return(message)
+
+    @gen.coroutine
     def new_member(self, org, user):
         '''
             New member
