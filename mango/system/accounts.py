@@ -265,6 +265,7 @@ class Orgs(MangoAccounts):
         '''
             New membership
         '''
+        message = None
         try:
             member = accounts.Membership(struct)
             member.validate()
