@@ -162,6 +162,11 @@ def new_resource(db, struct, collection=None, scheme=None):
     '''
         New resource function
     '''
+
+    # and now for something completely different
+    # we're moving the complete new_structure stuff
+    # to the treehouse structure.
+
     import uuid as _uuid
     from schematics import models as _models
     from schematics import types as _types

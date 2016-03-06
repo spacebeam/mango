@@ -223,6 +223,11 @@ def main():
             (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
 
+            # ORG memberships
+            (r'/orgs/(?P<account>.+)/memberships/page/(?P<page_num>\d+)/?', accounts.MembershipsHandler),
+            (r'/orgs/(?P<account>.+)/memberships/(?P<user>.+)/?', accounts.MembershipsHandler),
+            (r'/orgs/(?P<account>.+)/memberships/?', accounts.MembersHandler),
+
             # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
@@ -234,7 +239,6 @@ def main():
             # Users addresses 
             (r'/users/(?P<account>.+)/addresses/?', accounts.AddressesHandler),
             (r'/users/(?P<account>.+)/addresses/page/(?P<page_num>\d+)/?', accounts.AddressesHandler),
-
 
             # Users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
@@ -277,11 +281,8 @@ def main():
 
             # Records summary
             (r'/records/summary/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
-            
             (r'/records/summary/start/(?P<start>.*)/?', records.SummaryHandler),
-            
             (r'/records/summary/end/(?P<end>.*)/?', records.SummaryHandler),
-
             (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
             (r'/records/summary/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummaryHandler),
             (r'/records/summary/(?P<lapse>.*)/end/(?P<end>.*)/?', records.SummaryHandler),
@@ -296,11 +297,9 @@ def main():
             (r'/records/summaries/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
             (r'/records/summaries/start/(?P<start>.*)/?', records.SummariesHandler),
             (r'/records/summaries/end/(?P<end>.*)/?', records.SummariesHandler),
-
             (r'/records/summaries/(?P<lapse>.*)/start/(?P<start>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
             (r'/records/summaries/(?P<lapse>.*)/start/(?P<start>.*)/?', records.SummariesHandler),
             (r'/records/summaries/(?P<lapse>.*)/end/(?P<end>.*)/?', records.SummariesHandler),
-
             (r'/records/summaries/(?P<lapse>.*)/?', records.SummariesHandler),
             (r'/records/summaries/?', records.SummariesHandler),
 

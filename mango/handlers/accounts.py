@@ -15,15 +15,11 @@ import time
 import ujson as json
 import motor
 
-# import numpy as np
-# import pandas as pd
-
 from tornado import gen
 from tornado import web
 
 import logging
 
-# Mango system
 from mango.system import accounts
 from mango.system import records
 
@@ -33,7 +29,6 @@ from mango.tools import new_resource
 
 from mango import errors
 
-# system handlers
 from mango.handlers import BaseHandler
 
 
@@ -583,6 +578,14 @@ class TeamsHandler(accounts.Orgs, BaseHandler):
 class MembersHandler(accounts.Orgs, BaseHandler):
     '''
         Members resource handlers
+    '''
+    pass
+
+
+@content_type_validation
+class MembershipsHandler(accounts.Orgs, BaseHandler):
+    '''
+        Memberships resource handlers
     '''
     pass
 
