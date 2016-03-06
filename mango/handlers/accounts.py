@@ -595,6 +595,36 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         '''
         logging.warning('add or update member')
 
+        struct = yield check_json(self.request.body)
+
+        format_pass = (True if struct and not struct.get('errors') else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+
+        # setting database
+        db = self.settings.get('db')
+
+        # logging new contact structure
+        logging.info('new stochastic event structure {0}'.format(format_pass))
+
+        # request query arguments
+        query_args = self.request.arguments
+
+        # get account from struct
+        account = struct.get('account', None)
+
+        # get the current gui username
+        username = self.get_current_username()
+
+        # if the user don't provide an account we use the username as last resort
+        account = (query_args.get('account', [username])[0] if not account else account)
+
+        # we use the front-end username as last resort
+        if not struct.get('account'):
+            struct['account'] = account
+
     @gen.coroutine
     def delete(self, account):
         '''
