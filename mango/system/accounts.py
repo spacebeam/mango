@@ -274,27 +274,8 @@ class Orgs(MangoAccounts):
             raise e
 
         try:
-            logging.warning(member)
-            message = member
-            # message = event.get('uuid')
-
-            # result = StochasticMap(
-            #     self.kvalue,
-            #     'stochastics',
-            #     str(event.get('uuid')),
-            #     str(event.get('account')),
-            #     str(event.get('nodetype')),
-            #     str(event.get('subtype')),
-            #     str(event.get('title')),
-            #     str(event.get('descripcion')),
-            #     str(event.get('content')),
-            #     [str(x) for x in event.get('keywords')],
-            #     str(event.get('start')),
-            #     str(event.get('end')),
-            #     str(event.get('url')),
-            #     str(event.get('created')),
-            #     event.get('checked')
-            # )
+            result = yield self.new_member(member.get('org'), member.get('username'))
+            logging.info(result)
         except Exception, e:
             logging.error(e)
             message = str(e)
