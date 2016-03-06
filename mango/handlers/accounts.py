@@ -593,8 +593,6 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         '''
             Add or update organization membership
         '''
-        logging.warning('add or update member')
-
         struct = yield check_json(self.request.body)
 
         format_pass = (True if struct and not struct.get('errors') else False)
@@ -607,7 +605,7 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         db = self.settings.get('db')
 
         # logging new contact structure
-        logging.info('new stochastic event structure {0}'.format(format_pass))
+        logging.info('put organization membership structure {0}'.format(format_pass))
 
         # request query arguments
         query_args = self.request.arguments
