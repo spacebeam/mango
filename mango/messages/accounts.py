@@ -21,13 +21,12 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-
 class Membership(models.Model):
     '''
         Org membership
     '''
     username = types.StringType(required=True)
-    status = types.StringType(default='pending')
+    status = types.StringType(default='pending') # yeah aqui poner la vara con la lista de validas shits and shit
     role = types.StringType(required=True)
     org = types.StringType(required=True)
     created = types.DateTimeType(default=arrow.utcnow().naive)
