@@ -168,15 +168,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':record})
 
-    ##@web.authenticated
-    @gen.coroutine
-    def put(self):
-        '''
-            Put records handler
-        '''
-        pass
-
-    ##@web.authenticated
     @gen.coroutine
     def delete(self, record_uuid):
         '''
@@ -194,14 +185,6 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
 
         self.set_status(204)
         self.finish()
-
-    ##@web.authenticated
-    @gen.coroutine
-    def patch(self):
-        '''
-            Patch records handler
-        '''
-        pass
 
 
 @content_type_validation
@@ -251,13 +234,13 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Summary requests handler 
     '''
-    #@web.authenticated
+
     @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse='hours', page_num=0):
         '''
-            Get record summary
+            Get summary
 
-            arguments: account, start, end, lapse, page.
+            arguments: account, start, end, lapse, page_num.
 
             - account or list of accounts
             - start timestamp
@@ -350,7 +333,6 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
        Summaries requests handler.
     '''
     
-    ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, start=None, end=None, lapse=None, page_num=0):
         '''

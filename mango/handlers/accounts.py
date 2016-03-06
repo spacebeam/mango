@@ -39,13 +39,6 @@ class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, page_num=0):
-        '''
-            Head stuff
-        '''
-        pass
-
-    @gen.coroutine
     def get(self, page_num=0):
         '''
             Get user accounts
@@ -67,13 +60,11 @@ class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
 
         # status
         status = 'all'
-        
 
         users = yield self.get_account_list(account_type, status, page_num)
 
         self.set_status(200)
         self.finish({'users':users})
-        
 
 
 @content_type_validation
@@ -162,7 +153,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 self.set_status(200)
                 self.finish(result)
 
-    ###@web.authenticated
     @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
@@ -323,7 +313,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         self.finish({'message': message})
 
-    ##@web.authenticated
     @gen.coroutine
     def delete(self, account):
         '''
@@ -351,7 +340,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         Organization account resource handlers
     '''
 
-    # @web.authenticated
     @gen.coroutine
     def head(self, account=None, page_num=0):
         '''
@@ -408,9 +396,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             else:
                 self.set_status(200)
                 self.finish(result)
-                
 
-    # @web.authenticated
     @gen.coroutine
     def get(self, account=None, page_num=0):
         '''
@@ -531,7 +517,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':new_org})
 
-    ##@web.authenticated
     @gen.coroutine
     def delete(self, account):
         '''       
@@ -579,7 +564,27 @@ class MembersHandler(accounts.Orgs, BaseHandler):
     '''
         Members resource handlers
     '''
-    pass
+    
+    @gen.coroutine
+    def get(self, account, page_num=0):
+        '''
+            Get members
+        '''
+        logging.warning('get member')
+
+    @gen.coroutine
+    def post(self, account):
+        '''
+            Create member
+        '''
+        logging.warning('create member')
+
+    @gen.coroutine
+    def delete(self, account, page_num=0):
+        '''
+            Delete member
+        '''
+        logging.warning('delete member')
 
 
 @content_type_validation
@@ -596,7 +601,6 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         Records resource handlers
     '''
 
-    ##@web.authenticated
     @gen.coroutine
     def get(self, account, page_num=0):
         '''
@@ -626,8 +630,7 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         )
 
         self.finish(result)
-        
-    ##@web.authenticated
+
     @gen.coroutine
     def post(self, account):
         '''
@@ -685,30 +688,6 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
 
         self.set_status(201)
         self.finish({'uuid':record})
-    
-    ##@web.authenticated
-    @gen.coroutine
-    def delete(self, account, record=None, page_num=0):
-        '''
-            Delete
-        '''
-        pass
-    
-    ##@web.authenticated
-    @gen.coroutine
-    def put(self, account, record=None, page_num=0):
-        '''
-            Put
-        '''
-        pass
-    
-    ##@web.authenticated
-    @gen.coroutine
-    def patch(self, account, record=None, page_num=0):
-        '''
-            Patch
-        '''
-        pass
 
 
 @content_type_validation
@@ -717,15 +696,12 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         Routes resource handlers
     '''
     
-    ##@web.authenticated
     @gen.coroutine
     def get(self, account):
         # get account the record billing routes from the database
         routes = yield self.get_route_list(account)
         self.finish(routes)
-        
-        
-    ###@web.authenticated
+
     @gen.coroutine
     def post(self, account):
         '''
