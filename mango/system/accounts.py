@@ -274,6 +274,7 @@ class Orgs(MangoAccounts):
 
         try:
             logging.warning(member)
+            message = member
             # message = event.get('uuid')
 
             # result = StochasticMap(
