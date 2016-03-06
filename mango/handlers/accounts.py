@@ -623,6 +623,10 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         if not struct.get('account'):
             struct['account'] = account
 
+        logging.warning('confirm permission for this account {0}'.format(struct.get('account')))
+
+        struct.pop('account', None)
+
         new_membership = yield self.new_membership(struct)
 
         if not new_membership:
