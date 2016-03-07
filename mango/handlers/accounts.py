@@ -640,12 +640,14 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         self.finish(new_membership)
 
     @gen.coroutine
-    def delete(self, user):
+    def delete(self, account, user):
         '''
             Delete membership
         '''
 
         logging.info(user)
+
+        logging.info(account)
 
 
         logging.info(self.request.uri)
