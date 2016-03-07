@@ -647,6 +647,9 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
 
         logging.info(user)
 
+
+        logging.info(self.request.uri)
+
         # struct = yield check_json(self.request.body)
 
         # format_pass = (True if struct and not struct.get('errors') else False)
