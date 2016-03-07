@@ -657,8 +657,6 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
 
         # logging.info(struct)
 
-        logging.info(self.request.body)
-
         query_args = self.request.arguments
 
         account = query_args.get('account', [None])[0]
