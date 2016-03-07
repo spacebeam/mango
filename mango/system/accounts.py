@@ -337,6 +337,11 @@ class Orgs(MangoAccounts):
                             {'$pull':{'members':user}})
 
         result = yield [update_user, update_org]
+
+
+        logging.warning(result)
+
+
         message = [n.get(n) for n in result]
         raise gen.Return(message)
 
