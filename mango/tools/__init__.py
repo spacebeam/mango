@@ -26,6 +26,19 @@ from mango.messages import accounts
 from mango.messages import reports
 
 
+def get_average(total, marks):
+    '''
+        Get average from signals
+    '''
+    return float(total) / len(marks)
+
+def get_percentage(shit, stuff):
+    '''
+        Get percentage of shit and stuff.
+
+    '''
+    return "{:.0%}".format(shit/stuff)
+
 @gen.coroutine
 def check_json(struct):
     '''
