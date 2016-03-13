@@ -136,7 +136,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
                 try:
-                    if self.cache.add('users:{0}'.format(account), data, 60):
+                    if self.cache.add('users:{0}'.format(account), data, 1):
                         logging.info('new cache entry {0}'.format(str(data)))
                 except Exception, e:
                     logging.exception(e)
@@ -199,7 +199,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
                 try:
-                    if self.cache.add('users:{0}'.format(account), data, 60):
+                    if self.cache.add('users:{0}'.format(account), data, 1):
                         logging.info('new cache entry {0}'.format(str(data)))
                 except Exception, e:
                     logging.exception(e)
@@ -381,7 +381,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 result = data
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
-                if self.cache.add('orgs:{0}'.format(account), data, 60):
+                if self.cache.add('orgs:{0}'.format(account), data, 1):
                     logging.info('new cache entry {0}'.format(str(data)))
                     result = data
 
@@ -436,7 +436,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 result = data
             else:
                 data = yield self.get_account(account.rstrip('/'), account_type)
-                if self.cache.add('orgs:{0}'.format(account), data, 60):
+                if self.cache.add('orgs:{0}'.format(account), data, 1):
                     logging.info('new cache entry {0}'.format(str(data)))
                     result = data
 
