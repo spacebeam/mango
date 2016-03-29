@@ -100,7 +100,7 @@ class Tasks(object):
             raise e
 
         try:
-            struct = {'results': task_list}
+            struct = {'results': task_list, 'page': page_num, 'count': 666}
 
             # reports BaseGoal? da faq??
             

@@ -45,7 +45,7 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+    def get(self, task_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get not tasks handler
         '''
@@ -70,7 +70,7 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+    def get(self, task_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get not tasks handler
         '''
@@ -96,7 +96,7 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+    def get(self, task_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get not tasks handler
         '''
@@ -122,7 +122,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
 
     @gen.coroutine
-    def get(self, task_uuid=None, start=None, end=None, page_num=0, lapse='hours'):
+    def get(self, task_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get tasks handler
         '''
