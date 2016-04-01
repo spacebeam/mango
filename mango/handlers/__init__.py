@@ -34,15 +34,13 @@ from mango.tools.quotes import PeopleQuotes
 import logging
 
 
-# msg means message
-
 # dht means distributed hash table
 
 # share hash table missing. cebus integration? 
 
-# cebus missing completetly.
+# cebus is only handling stochastic events for now
 
-# but on the other hand overlords start to make sense.
+# overlords make no sense meaning a state machine is missing for different channels on subscribe.
 
 
 class BaseHandler(web.RequestHandler):

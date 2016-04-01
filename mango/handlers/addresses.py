@@ -3,6 +3,16 @@
     Mango HTTP addresses handlers.
 '''
 
+
+
+
+
+# how come we don't need addresses any more ? where are my DHT powers people?
+
+
+
+
+
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
