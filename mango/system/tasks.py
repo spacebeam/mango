@@ -96,10 +96,8 @@ class Tasks(object):
             logging.exception(e)
             raise e
         
-        
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-        #query_result = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-        
+                
         try:
             
             while (yield query.fetch_next):
@@ -114,8 +112,8 @@ class Tasks(object):
             struct = {'results': task_list, 'page': page_num, 'count': von_count}
 
             # reports BaseGoal? da faq??
-            
             message = reports.BaseGoal(struct)
+            
             # this is coming from our datastorage, we can gain those milliseconds and avoid validation.
             # from shit that is in good theory already validated.
 
