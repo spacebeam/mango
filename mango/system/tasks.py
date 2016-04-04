@@ -67,6 +67,7 @@ class Tasks(object):
             Get detail tasks 
         '''
         page_num = int(page_num)
+        von_count = 0
         page_size = self.settings['page_size']
         task_list = []
         message = None
@@ -86,8 +87,18 @@ class Tasks(object):
             query = self.db.tasks.find({'accountcode':account,
                                         'assigned':True},
                                        {'_id':0, 'comments':0})
+
+        try:
+            
+            von_count = yield query.count()
+
+        except Exception, e:
+            logging.exception(e)
+            raise e
+        
         
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
+        #query_result = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
         try:
             
@@ -100,7 +111,7 @@ class Tasks(object):
             raise e
 
         try:
-            struct = {'results': task_list, 'page': page_num, 'count': 666}
+            struct = {'results': task_list, 'page': page_num, 'count': von_count}
 
             # reports BaseGoal? da faq??
             
