@@ -246,7 +246,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.set_status(201)
         self.finish({'uuid':task})
 
-    ##@web.authenticated
     @gen.coroutine
     def patch(self, task_uuid):
         '''
@@ -281,7 +280,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.set_status(200)
         self.finish({'message': 'update completed successfully'})
 
-    ##@web.authenticated
     @gen.coroutine
     def put(self):
         '''
@@ -289,7 +287,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         '''
         pass
 
-    ##@web.authenticated
     @gen.coroutine
     def delete(self, task_uuid):
         '''
