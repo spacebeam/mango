@@ -31,6 +31,15 @@ from mango.tools import clean_structure
 from mango.tools import check_times
 
 
+class TasksResult(reports.BaseResult):
+    '''
+        List result
+    '''
+    results = compound.ListType(compound.ModelType(tasks.Task))
+
+
+
+
 class Tasks(object):
     '''
         Tasks resources
@@ -118,17 +127,11 @@ class Tasks(object):
             raise e
 
         try:
+            logging.warning('if this shit works remove this comment')
             struct = {'results': task_list, 'page': page_num, 'count': von_count}
 
-
-            logging.warning(struct)
-
-            message = reports.BaseResult(struct)
-            
-            # this is coming from our datastorage, we can gain those milliseconds and avoid validation.
-            # from shit that is in good theory already validated.
-            # message.validate()
-            
+            message = TasksResult(struct)
+                        
             message = message.to_primitive()
 
         except Exception, e:
