@@ -105,8 +105,16 @@ class Tasks(object):
             # reports BaseGoal? da faq??
             
             message = reports.BaseGoal(struct)
-            message.validate()
-            message = clean_results(message)
+            # this is coming from our datastorage, we can gain those milliseconds and avoid validation.
+            # from shit that is in good theory already validated.
+
+            #message.validate()
+            
+            message = message.to_primitive()
+            
+            # DA FUQ!!! What the fuck is this clean_results doing to my shit???
+
+            #message = clean_results(message)
 
         except Exception, e:
             logging.exception(e)
