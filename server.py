@@ -316,6 +316,8 @@ def main():
             # Tasks done
             (r'/tasks/done/?', tasks.DoneHandler),
 
+            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
+
             # Tasks
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
