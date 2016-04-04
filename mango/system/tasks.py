@@ -120,6 +120,9 @@ class Tasks(object):
         try:
             struct = {'results': task_list, 'page': page_num, 'count': von_count}
 
+
+            logging.warning(struct)
+
             message = reports.BaseResult(struct)
             
             # this is coming from our datastorage, we can gain those milliseconds and avoid validation.
