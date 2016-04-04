@@ -62,6 +62,13 @@ def options():
                            help=('Server hostname'))
     tornado.options.define('port', default=8888, type=int,
                            help=('Server port'))
+
+    # Overlord node settings
+    tornado.options.define('overlord_host', default='127.0.0.1', type=str,
+                            help=('Overlord hostname or ip address'))
+
+    tornado.options.define('overlord_port', default=8899, type=int,
+                            help=('Overlord port'))
     
     # MongoDB database settings
     tornado.options.define('mongo_host', type=str,
