@@ -60,7 +60,10 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           end=end,
                                           status='now',
                                           page_num=page_num)
-        result = json.dumps(result)
+
+        message = {'page_num': page_num, 'result':result}
+
+        result = json.dumps(message)
         self.finish(result)
 
 @content_type_validation
