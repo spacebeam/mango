@@ -28,7 +28,7 @@ from mango.messages import records
 from mango.messages import reports
 
 from mango.tools import clean_structure, clean_message
-from mango.tools import clean_results
+#from mango.tools import clean_results
 from mango.tools import check_times, check_times_get_datetime
 
 
@@ -70,14 +70,19 @@ class Records(object):
             raise gen.Return(record)
 
     @gen.coroutine
-    def get_record_list(self, account, start, end, lapse, page_num):
+    def get_record_list(self, account, start, end, status, lapse, page_num):
         '''
             Get detail records 
         '''
-        
         page_num = int(page_num)
+        von_count = 0
         page_size = self.settings['page_size']
         record_list = []
+        message = None
+        query = {'public':False}
+
+        if status != 'all':
+            query['status'] = status        
 
         times = yield check_times_get_datetime(start, end)
         
@@ -93,6 +98,12 @@ class Records(object):
                 'accountcode':account,
                 'start':{'$gte':times.get('start'), '$lt':times.get('end')},
                 'assigned':True})
+
+        try:
+            von_count = yield query.count()
+        except Exception, e:
+            logging.exception(e)
+            raise e
         
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
         
@@ -107,45 +118,18 @@ class Records(object):
             raise e
 
         try:
-            struct = {'results': record_list}
+            struct = {'results': record_list, 'page': page_num, 'count': von_count}
+
             message = reports.BaseResult(struct)
-            message.validate()
-            message = clean_results(message)
+
+            #message.validate()
+
+            message = message.to_primitive()
         except Exception, e:
             logging.exception(e)
             raise e
         finally:
             raise gen.Return(message)
-    
-    @gen.coroutine
-    def get_unassigned_records(self, start, end, lapse, page_num):
-        '''
-            Get unassigned record detail records
-        '''
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        result = []
-        
-        # or $exist = false ?
-
-        query = self.db.records.find({'assigned':False})
-        query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-        
-        try:
-            for record in (yield query.to_list()):
-                result.append(records.Record(record))
-            
-            struct = {'results':result}
-
-            results = reports.BaseResult(struct)
-            results.validate()
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        results = clean_results(results)        
-        raise gen.Return(results)
-
 
     @gen.coroutine
     def get_summaries(self, account, start, end, lapse, page_num):

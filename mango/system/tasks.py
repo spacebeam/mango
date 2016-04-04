@@ -27,7 +27,7 @@ from mango.messages import tasks
 from mango.messages import reports
 
 from mango.tools import clean_structure
-from mango.tools import clean_results
+#from mango.tools import clean_results
 from mango.tools import check_times
 
 
@@ -66,6 +66,15 @@ class Tasks(object):
         '''
             Get detail tasks 
         '''
+
+        # Note how the status come after the lapse meaning the complete time values.
+
+        # time arguments: [start, end, lapse]
+
+        # status argument, first rage against the finite-state machine.
+
+        # Notes on pagination: every get list function returns the resource count, current page and results.
+
         page_num = int(page_num)
         von_count = 0
         page_size = self.settings['page_size']
@@ -111,54 +120,19 @@ class Tasks(object):
         try:
             struct = {'results': task_list, 'page': page_num, 'count': von_count}
 
-            # reports BaseGoal? da faq??
-            message = reports.BaseGoal(struct)
+            message = reports.BaseResult(struct)
             
             # this is coming from our datastorage, we can gain those milliseconds and avoid validation.
             # from shit that is in good theory already validated.
-
-            #message.validate()
+            # message.validate()
             
             message = message.to_primitive()
-            
-            # DA FUQ!!! What the fuck is this clean_results doing to my shit???
-
-            #message = clean_results(message)
 
         except Exception, e:
             logging.exception(e)
             raise e
         finally:
             raise gen.Return(message)
-    
-    @gen.coroutine
-    def get_unassigned_tasks(self, start, end, lapse, page_num):
-        '''
-            Get unassigned tasks
-        '''
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        result = []
-        
-        # or $exist = false ?
-
-        query = self.db.tasks.find({'assigned':False})
-        query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-        
-        try:
-            for task in (yield query.to_list()):
-                result.append(tasks.Task(task))
-            
-            struct = {'results':result}
-
-            results = reports.BaseResult(struct)
-            results.validate()
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        results = clean_results(results)        
-        raise gen.Return(results)
 
 
     @gen.coroutine

@@ -27,7 +27,7 @@ from mango.messages import addresses
 from mango.messages import reports
 
 from mango.tools import clean_structure
-from mango.tools import clean_results
+
 from mango.tools import check_times
 
 
@@ -102,49 +102,22 @@ class Addresses(object):
             raise e
 
         try:
+
+            # missing count and shit pagination remember?
+
             struct = {'results': address_list}
 
-            # reports BaseGoal? da faq??
-            
-            message = reports.BaseGoal(struct)
-            message.validate()
-            message = clean_results(message)
+            message = reports.BaseResult(struct)
+            #message.validate()
+
+            #message = clean_results(message)
+            message = message.to_primitive()
 
         except Exception, e:
             logging.exception(e)
             raise e
         finally:
             raise gen.Return(message)
-    
-    @gen.coroutine
-    def get_unassigned_addresses(self, start, end, lapse, page_num):
-        '''
-            Get unassigned addresses
-        '''
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        result = []
-        
-        # or $exist = false ?
-
-        query = self.db.addresses.find({'assigned':False})
-        query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-        
-        try:
-            for address in (yield query.to_list()):
-                result.append(addresses.Address(address))
-            
-            struct = {'results':result}
-
-            results = reports.BaseResult(struct)
-            results.validate()
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        results = clean_results(results)        
-        raise gen.Return(results)
-
 
     @gen.coroutine
     def new_address(self, struct):

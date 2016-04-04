@@ -25,16 +25,9 @@ class BaseResult(models.Model):
     '''
         base result
     '''
-    results = compound.ListType(compound.ModelType(records.Record))
-
-
-class BaseGoal(models.Model): # why the fuck this shit is call goal? are you mean something with heuristics and shit?
-    '''
-        base goal
-    '''
-    results = compound.ListType(compound.ModelType(tasks.Task))
     count = types.IntType()
     page = types.IntType()
+    results = compound.ListType(compound.ModelType(records.Record))
 
 
 class BaseHistory(models.Model):
