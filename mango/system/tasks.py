@@ -29,9 +29,7 @@ from mango.messages import tasks
 from mango.messages import reports
 
 from mango.tools import clean_structure
-#from mango.tools import clean_results
 from mango.tools import check_times
-
 
 
 class TasksResult(reports.BaseResult):
