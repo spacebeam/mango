@@ -215,7 +215,7 @@ class MangoAccounts(Accounts):
             raise e
 
         try:
-            result = yield self.db.accounts.update(
+            message = yield self.db.accounts.update(
                 {'account':account},
                 # 'uuid':account_uuid},      read the note!
                 {'$set':schema}
@@ -225,7 +225,7 @@ class MangoAccounts(Accounts):
             logging.error(e)
             message = str(e)
 
-        raise gen.Return(bool(result.get('n')))
+        raise gen.Return(message)
 
     @gen.coroutine
     def remove_account(self, account):
