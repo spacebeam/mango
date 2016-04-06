@@ -220,7 +220,7 @@ class MangoAccounts(Accounts):
                 # 'uuid':account_uuid},      read the note!
                 {'$set':schema}
             )
-            logging.warning(result)
+            logging.warning(message)
         except Exception, e:
             logging.error(e)
             message = str(e)

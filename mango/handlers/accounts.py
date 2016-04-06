@@ -304,7 +304,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         result = yield self.modify_account(account, MISSING_ACCOUNT_UUID, struct)
 
-        logging.info(result);
+        logging.info(result)
 
         if not result:
             message = 'update failed something is bananas'
