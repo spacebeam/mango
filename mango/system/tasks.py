@@ -74,25 +74,15 @@ class Tasks(object):
         '''
             Get detail tasks 
         '''
-
-        # Note how the status come after the lapse meaning the complete time values.
-
-        # time arguments: [start, end, lapse]
-
-        # status argument, first rage against the finite-state machine.
-
-        # Notes on pagination: every get list function returns the resource count, current page and results.
-
         page_num = int(page_num)
         von_count = 0
         page_size = self.settings['page_size']
         task_list = []
         message = None
         query = {'public':False}
-
+        # process query parameters
         if status != 'all':
             query['status'] = status
-        
         if not account:
             query = self.db.tasks.find(query,
                                        {'_id':0, 'comments':0})
@@ -104,35 +94,27 @@ class Tasks(object):
             query = self.db.tasks.find({'accountcode':account,
                                         'assigned':True},
                                        {'_id':0, 'comments':0})
-
+        # count the amount of item on return by the query
         try:
-            
             von_count = yield query.count()
-
         except Exception, e:
             logging.exception(e)
             raise e
-        
+        # get selected page from data source
         query = query.sort([('uuid', -1)]).skip(page_num * page_size).limit(page_size)
-                
+        # query data storage
         try:
-            
             while (yield query.fetch_next):
                 result = query.next_object()
                 task_list.append(tasks.Task(result))
-
         except Exception, e:
             logging.exception(e)
             raise e
-
+        # work on final message structure and return
         try:
-            logging.warning('if this shit works remove this comment')
             struct = {'results': task_list, 'page': page_num, 'count': von_count}
-
             message = TasksResult(struct)
-                        
             message = message.to_primitive()
-
         except Exception, e:
             logging.exception(e)
             raise e
