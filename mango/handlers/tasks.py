@@ -130,9 +130,15 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             Get tasks handler
         '''
         status = 'all'
-        # -- logging info
+        
+        # request query arguments
+        query_args = self.request.arguments
 
-        #logging.info(self.request.arguments)
+        if query_args:
+            query_page = query_args.get('page', False)
+
+        if query_page:
+            page_num = int(query_page)
 
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
 
@@ -181,6 +187,9 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                         end=end,
                                         page_num=page_num)
         else:
+
+            # where is the query string?
+
             result = yield self.get_task_list(
                                     account=None,
                                     lapse=lapse,
