@@ -135,7 +135,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         query_args = self.request.arguments
 
         if query_args:
-            page_num = int(query_args.get('page', page_num))
+            page_num = int(query_args.get('page', [page_num])[0])
 
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
 
