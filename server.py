@@ -2,7 +2,7 @@
 '''
     Manage Asynchronous Number General ORGs
 
-    Organizations of Random Generality (ORGs)
+    Organizations of Restricted Generality (ORGs)
 '''
 
 # This file is part of mango.
@@ -54,7 +54,11 @@ from zmq.eventloop.future import Context, Poller
 
 
 '''
+
 # todo: remove global variables
+
+# dudes we can start using some queues instead of global variables for some shit right?
+
 '''
 
 
