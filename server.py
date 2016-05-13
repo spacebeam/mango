@@ -133,7 +133,7 @@ def main():
     '''
         Manage Asynchronous Number General ORGs
 
-        Organizations of Random Generality.
+        Organizations of Restricted Generality.
     '''
     # daemon options
     opts = options.options()
@@ -160,7 +160,7 @@ def main():
         password=None
     )
 
-    # TODO: remove global variables!!!
+    # TODO: HOW THE FUCK ARE WE GOING TO remove global variables!!!
 
     # Set kvalue database
     global kvalue
