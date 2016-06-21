@@ -11,7 +11,7 @@ The goals are used in two ways.
 
 The fist is to determine the relative success or failure of the organization.
 
-If it meets it goals, such as winning a id tech 3 cpma mod cpm game mode style capture the flag match, it is a successful organization; if not, it is to that degree unsuccessful.
+If it meets it goals, such as winning a id tech 3 cpma mod cpm game style capture the flag match, it is a successful organization; if not, it is to that degree unsuccessful.
 
 Goals function as the starting point of means-ends analysis which leads to a hierarchy of goals and to a definition of organizational sub-units, such as departments, divisions, and positions.
 
