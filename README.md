@@ -1,7 +1,8 @@
 mango
 =====
 
-#The goal model
+The goal model
+--------------
 These are models of organizations which have as a central focus goals, deterministic goals.
 
 The goals are used in two ways.
@@ -12,7 +13,8 @@ If it meets it goals, such as winning a id tech 3 cpma cpm capture the flag matc
 
 Goals function as the starting point of means-ends analysis which leads to a hierarchy of goals and to a definition of organizational sub-units, such as departments, divisions, and positions.
 
-#The Systems model
+The Systems model
+-----------------
 The systems model focuses on an organizations general properties and processes.
 
 Such an approach does not give prime attention to organizational objectives but to those attributes of an organization which are relevant to the achievement of any goal.
@@ -63,7 +65,8 @@ Any organization comprises a great many systems; An organization is a system com
 
 Not only are systems. such as organizations, made up of interconnected parts and systems, they are also always in a state of movement either responding to a change in one part of the organization or adjusting to the effects of this response.
 
-
+Mango trees
+------------
 
 Growing mango trees in the home landscape will give you a lifetime of fresh pungent fruit from an attractive shade tree.
 
