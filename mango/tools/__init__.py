@@ -27,6 +27,13 @@ from mango.messages import accounts
 from mango.messages import reports
 
 
+def also_become(struct):
+    '''
+        exit function, also become not for this run for the next one.
+    '''
+    # Geras
+    pass
+
 def get_average(total, marks):
     '''
         Get average from signals
