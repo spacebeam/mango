@@ -1,5 +1,7 @@
-mango
-=====
+Mango trees
+===========
+Growing mango trees in the home landscape will give you a lifetime of fresh pungent fruit from an attractive shade tree.
+
 
 The goal model
 --------------
@@ -12,6 +14,7 @@ The fist is to determine the relative success or failure of the organization.
 If it meets it goals, such as winning a id tech 3 cpma mod cpm game mode style capture the flag match, it is a successful organization; if not, it is to that degree unsuccessful.
 
 Goals function as the starting point of means-ends analysis which leads to a hierarchy of goals and to a definition of organizational sub-units, such as departments, divisions, and positions.
+
 
 The Systems model
 -----------------
@@ -38,6 +41,7 @@ The two approaches are thus not divorced; more important, they are not in oposit
 These are by no means the only functions found in organizations.
 
 The systems model requires us to consider the organization as receiving inputs from the environment and, in torun delivering outputs to the environment.
+
 
 Network flows
 -------------
@@ -68,15 +72,12 @@ Any organization comprises a great many systems; An organization is a system com
 
 Not only are systems. such as organizations, made up of interconnected parts and systems, they are also always in a state of movement either responding to a change in one part of the organization or adjusting to the effects of this response.
 
-Mango trees
-------------
-
-Growing mango trees in the home landscape will give you a lifetime of fresh pungent fruit from an attractive shade tree.
 
 Contribution process
 --------------------
 
 * ZeroMQ [RFC 22 C4.1](http://rfc.zeromq.org/spec:22)
+
 
 License
 -------
