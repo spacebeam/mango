@@ -32,7 +32,7 @@ Among these are:
 
 3. adaptation of the organization to both the environment and its own internal requirements add, to some degree, the adaptation of the environment itself;
 
-4. The acquiring and maintaining of necessary resources in the form of personnel, machanery, technical knowledge, etc.
+4. acquiring and maintaining of necessary resources in the form of personnel, machinery, technical knowledge, etc.
 
 The fist of these functions is the concern of goal models; all of them are the concern of systems models.
 
