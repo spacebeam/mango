@@ -39,6 +39,9 @@ These are by no means the only functions found in organizations.
 
 The systems model requires us to consider the organization as receiving inputs from the environment and, in torun delivering outputs to the environment.
 
+Network flows
+-------------
+
 In shot, we tend to think in "flows".
 
 One flow might be that of human effort entering the company and products or services leaving.
