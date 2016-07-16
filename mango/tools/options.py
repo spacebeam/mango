@@ -53,7 +53,7 @@ def options():
          'Location of logging (if debug mode is off)'))
 
     # Application domain
-    tornado.options.define('domain', default='iofun.io', type=str,
+    tornado.options.define('domain', default='nonsense.ws', type=str,
                             help=('Application domain, e.g. "example.com"')
     )
 
