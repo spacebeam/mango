@@ -77,7 +77,7 @@ sql = False
 # kvalue global variable
 kvalue = False
 
-# cache glogbal variable
+# cache global variable
 cache = False
 
 # external logger handler
