@@ -57,7 +57,9 @@ from zmq.eventloop.future import Context, Poller
 
 # todo: remove global variables
 
-# dudes we can start using some queues instead of global variables for some shit right?
+# dudes we can start using some queues instead of global variables for some shit right?\
+
+# como un helado derritiendose como un helado... 
 
 '''
 
