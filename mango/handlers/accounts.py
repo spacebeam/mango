@@ -793,15 +793,16 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
 
         self.finish()
 
+# after the taste of some new mangos clean this shit out
 
-@content_type_validation
-class AddressesHandler(accounts.Accounts, BaseHandler):
-    '''
-        Addresses resource handlers
-    '''
+# @content_type_validation
+# class AddressesHandler(accounts.Accounts, BaseHandler):
+#     '''
+#         Addresses resource handlers
+#     '''
 
-    @gen.coroutine
-    def get(self, account):
-        darq = yield self.get_address_list(account)
-        self.finish(darq)
-    
+#     @gen.coroutine
+#     def get(self, account):
+#         darq = yield self.get_address_list(account)
+#         self.finish(darq)
+#     

@@ -43,8 +43,6 @@ from mango.tools import new_resource
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
 from mango.handlers import accounts
-from mango.handlers import addresses
-from mango.handlers import billings
 from mango.handlers import tasks
 from mango.handlers import records
 
@@ -57,7 +55,7 @@ from zmq.eventloop.future import Context, Poller
 
 # todo: remove global variables
 
-# dudes we can start using some queues instead of global variables for some shit right?\
+# dudes we can start using some queues instead of global variables for some shit right?
 
 # como un helado derritiendose como un helado... 
 
@@ -329,21 +327,21 @@ def main():
             (r'/tasks/?', tasks.Handler),
 
             # Addresses primary
-            (r'/addresses/primary/?', addresses.PrimaryHandler),
+            #(r'/addresses/primary/?', addresses.PrimaryHandler),
 
             # Addresses
-            (r'/addresses/(?P<address_uuid>.+)/?', addresses.Handler),
-            (r'/addresses/?', addresses.Handler),
+            #(r'/addresses/(?P<address_uuid>.+)/?', addresses.Handler),
+            #(r'/addresses/?', addresses.Handler),
 
             # Billings
-            (r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
-            (r'/billings/?', billings.RecordsHandler),
+            #(r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
+            #(r'/billings/?', billings.RecordsHandler),
 
             # Billings records
-            (r'/billings/records/start/(?P<start>.*)/end/(?P<end>.*)/?', billings.RecordsHandler),
-            (r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
-            (r'/billings/records/end/(?P<end>.*)/?', billings.RecordsHandler),
-            (r'/billings/records/?', billings.RecordsHandler)
+            #(r'/billings/records/start/(?P<start>.*)/end/(?P<end>.*)/?', billings.RecordsHandler),
+            #(r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
+            #(r'/billings/records/end/(?P<end>.*)/?', billings.RecordsHandler),
+            #(r'/billings/records/?', billings.RecordsHandler)
         ],
 
         # system database

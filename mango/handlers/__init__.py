@@ -22,7 +22,8 @@ from zmq.eventloop import ioloop
 
 from mango.system import basic_authentication
 
-from mango.messages import addresses as _addresses
+# after some mangos, please move addresses or remove it completely
+# from mango.messages import addresses as _addresses
 from mango.messages import tasks as _tasks
 
 from mango.tools import clean_structure
@@ -293,23 +294,23 @@ class BaseHandler(web.RequestHandler):
 
         raise gen.Return(task.get('uuid'))
 
-    @gen.coroutine
-    def new_address(self, struct):
-        '''
-            New address
-        '''
-        try:
-            address = _addresses.Address(struct)
-            address.validate()
-        except Exception, e:
-            logging.exception(e)
-            raise e
+    #@gen.coroutine
+    #def new_address(self, struct):
+    #    '''
+    #        New address
+    #    '''
+    #    try:
+    #        address = _addresses.Address(struct)
+    #        address.validate()
+    #    except Exception, e:
+    #        logging.exception(e)
+    #        raise e
 
-        address = clean_structure(address)
+    #    address = clean_structure(address)
 
-        result = yield self.db.addresses.insert(address)
+    #    result = yield self.db.addresses.insert(address)
 
-        raise gen.Return(address.get('uuid'))
+    #    raise gen.Return(address.get('uuid'))
 
 
 @basic_authentication
