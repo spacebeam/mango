@@ -269,7 +269,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             }
             # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
-            new_address = yield self.new_address(address_struct)
+
+            # clean find and remove this shit you computer bitch
+
+            #new_address = yield self.new_address(address_struct)
             # log result to see whats up
             logging.info(coturn_account, new_address)
 
