@@ -241,8 +241,8 @@ def main():
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
             # Users addresses 
-            (r'/users/(?P<account>.+)/addresses/?', accounts.AddressesHandler),
-            (r'/users/(?P<account>.+)/addresses/page/(?P<page_num>\d+)/?', accounts.AddressesHandler),
+            #(r'/users/(?P<account>.+)/addresses/?', accounts.AddressesHandler),
+            #(r'/users/(?P<account>.+)/addresses/page/(?P<page_num>\d+)/?', accounts.AddressesHandler),
 
             # Users billing routes
             (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
