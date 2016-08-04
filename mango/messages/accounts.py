@@ -127,7 +127,7 @@ class CleanBase(models.Model):
     active = types.BooleanType()
     status = types.StringType()
     account = types.StringType()
-    name = types.StringType()
+    name = types.StringType()           # is this fucker really needed???????
     email = types.EmailType()
     is_admin = types.BooleanType()
     phone_number = types.StringType()
@@ -166,7 +166,7 @@ class User(BaseAccount):
     '''
     first_name = types.StringType()
     second_name = types.StringType()
-    middle name = types.StringType()
+    middle_name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
@@ -179,7 +179,7 @@ class ModifyUser(CleanBaseAccount):
     '''
     first_name = types.StringType()
     second_name = types.StringType()
-    middle name = types.StringType()
+    middle_name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
