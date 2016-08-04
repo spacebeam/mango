@@ -59,12 +59,9 @@ class Route(models.Model):
     # default '*' means all destinations
     dst = types.StringType(default='*')
     destination = types.StringType(default='*') 
-
     channel = types.StringType(required=True)
-
     dstchannel = types.StringType(required=True)
     destination_channel = types.StringType(required=True)
-
     cost = types.FloatType(required=True)
 
 
@@ -72,7 +69,18 @@ class Email(models.Model):
     '''
         Email
     '''
+    title = types.StringType()
     address = types.EmailType()
+    validated = types.BooleanType(default=False)
+    primary = types.BooleanType(default=False)
+
+
+class Phone(models.Model):
+    '''
+        Phone
+    '''
+    title = types.StringType()
+    number = types.StringType()
     validated = types.BooleanType(default=False)
     primary = types.BooleanType(default=False)
 
