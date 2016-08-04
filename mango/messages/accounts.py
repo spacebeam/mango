@@ -65,6 +65,14 @@ class Route(models.Model):
     cost = types.FloatType(required=True)
 
 
+class MailGun(models.Model):
+    '''
+        Mailgun
+    '''
+    domain = types.StringType()
+    apikey = types.StringType()
+
+
 class Email(models.Model):
     '''
         Email
@@ -81,6 +89,7 @@ class Phone(models.Model):
     '''
     title = types.StringType()
     number = types.StringType()
+    extension = types.StringType()
     validated = types.BooleanType(default=False)
     primary = types.BooleanType(default=False)
 
@@ -95,7 +104,6 @@ class RequiredBase(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     is_admin = types.BooleanType(default=False)
-    domain = types.StringType()
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -103,6 +111,8 @@ class RequiredBase(models.Model):
     company = types.StringType()
     location = types.StringType()
     resources = compound.ModelType(Resource)
+    phones = compound.ListType(compound.ModelType(Phone))
+    mailgun_conf = compound.ListType(compound.ModelType(MailGun))
     routes = compound.ListType(compound.ModelType(Route))
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType(required=False)
@@ -127,6 +137,8 @@ class CleanBase(models.Model):
     company = types.StringType()
     location = types.StringType()
     resources = compound.ModelType(Resource)
+    phones = compound.ListType(compound.ModelType(Phone))
+    mailgun_conf = compound.ListType(compound.ModelType(MailGun))
     routes = compound.ListType(compound.ModelType(Route))
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType()
@@ -153,32 +165,25 @@ class User(BaseAccount):
         User account
     '''
     first_name = types.StringType()
+    second_name = types.StringType()
+    middle name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
     
-    # move company to baseAccount class?
-    company = types.StringType()
-
-    # clx stuff, please move this to another place that makes more sense.
-    UserId = types.IntType()
-    AccountNum = types.StringType()
-
 
 class ModifyUser(CleanBaseAccount):
     '''
         Modify account
     '''
     first_name = types.StringType()
+    second_name = types.StringType()
+    middle name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
-
-    # clx stuff, please move this to another place that makes more sense.
-    UserId = types.IntType()
-    AccountNum = types.StringType()
 
 
 class Team(models.Model):
