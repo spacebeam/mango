@@ -22,8 +22,6 @@ from zmq.eventloop import ioloop
 
 from mango.system import basic_authentication
 
-# after some mangos, please move addresses or remove it completely
-# from mango.messages import addresses as _addresses
 from mango.messages import tasks as _tasks
 
 from mango.tools import clean_structure
@@ -35,25 +33,12 @@ from mango.tools.quotes import PeopleQuotes
 import logging
 
 
-# dht means distributed hash table
-
-# share hash table missing. cebus integration? 
-
-# cebus is only handling stochastic events for now
-
-# overlords make no sense meaning a state machine is missing for different channels on subscribe.
-
-
 class BaseHandler(web.RequestHandler):
     '''
         System application request handler
 
         gente d'armi e ganti
     '''
-
-#    @gen.coroutine
-#    def prepare(self):
-#        yield super().prepare() or gen.moment
 
     @property
     def sql(self):
@@ -102,6 +87,8 @@ class BaseHandler(web.RequestHandler):
             Mango default headers
         '''
         # if debug set allow all if not set settings domain
+        # all means fucking all the multiverse and stuff 
+        # this shit is for CORS support, thanks!.
         self.set_header("Access-Control-Allow-Origin", '*')
         # self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
@@ -122,7 +109,10 @@ class BaseHandler(web.RequestHandler):
         '''
             Let it crash
         '''
+
         # missing zmq sub topic
+        # if something fucking happens we need to report the error
+        # to the fucking overlord supervisor
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
@@ -154,63 +144,6 @@ class BaseHandler(web.RequestHandler):
                 'status': 200,
                 'message': quotes.get()
             }
-        raise gen.Return(message)
-
-    @gen.coroutine
-    def remove_sip_account(self, struct):
-        '''
-            Remove sip account
-        '''
-        try:
-            # Get SQL database from system settings
-            sql = self.settings.get('sql')
-            # PostgreSQL remove delete sip account query
-            query = '''
-                delete 
-            '''
-            message = query
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        raise gen.Return(message)
-
-    @gen.coroutine
-    def remove_asterisk_queue(self, struct):
-        '''
-            Remove asterisk queue
-        '''
-        pass
-
-    @gen.coroutine
-    def new_asterisk_queue(self, struct):
-        '''
-            New asterisk queue
-        '''
-        try:
-            # Get SQL database from system settings
-            sql = self.settings.get('sql')
-            query = '''
-                insert into queues () values ();
-            '''.format(
-                struct.get('account'),
-                struct.get('account'),
-                struct.get('account'),
-                struct.get('domain', self.settings.get('domain')),
-                struct.get('password')
-            )
-            result = yield sql.query(query)
-            if result:
-                message = {'ack': True}
-            else:
-                message = {'ack': False}
-            result.free()
-            logging.warning('new asterisk queue spawned on PostgreSQL {0}'.format(message))
-        
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
         raise gen.Return(message)
 
     @gen.coroutine
@@ -294,24 +227,6 @@ class BaseHandler(web.RequestHandler):
 
         raise gen.Return(task.get('uuid'))
 
-    #@gen.coroutine
-    #def new_address(self, struct):
-    #    '''
-    #        New address
-    #    '''
-    #    try:
-    #        address = _addresses.Address(struct)
-    #        address.validate()
-    #    except Exception, e:
-    #        logging.exception(e)
-    #        raise e
-
-    #    address = clean_structure(address)
-
-    #    result = yield self.db.addresses.insert(address)
-
-    #    raise gen.Return(address.get('uuid'))
-
 
 @basic_authentication
 class LoginHandler(BaseHandler):
@@ -335,6 +250,7 @@ class LoginHandler(BaseHandler):
             # 401 status code?
             self.set_status(403)
             # dude! get realm from options.
+            # why you fucker? are you fucking sure and stuff ???
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
         else:
