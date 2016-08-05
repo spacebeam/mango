@@ -30,7 +30,7 @@ from tornado.ioloop import PeriodicCallback as PeriodicCast
 from tornado import gen
 from tornado import web
 
-from mango.system.client import publisher
+from mango.system.clients import publisher
 
 from mango.system import records as record_tools
 
