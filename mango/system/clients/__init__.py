@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango client logic
+    Mango clients logic
 '''
 
 # This file is part of overlord.
@@ -9,6 +9,7 @@
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Jean Chassoul'
+
 
 import ujson as json
 import logging

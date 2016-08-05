@@ -12,23 +12,17 @@ __author__ = 'Jean Chassoul'
 
 
 import time
-import ujson as json
 import motor
-
+import logging
+import ujson as json
 from tornado import gen
 from tornado import web
-
-import logging
-
+from mango import errors
 from mango.system import accounts
 from mango.system import records
-
 from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import new_resource
-
-from mango import errors
-
 from mango.handlers import BaseHandler
 
 
@@ -247,7 +241,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.finish(message)
             return
 
-
         # -- handle SIP account creation out-of-band
 
         # postgresql insert sip account
@@ -269,13 +262,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             }
             # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
-
-            # clean find and remove this shit you computer bitch
-
-            #new_address = yield self.new_address(address_struct)
-            # log result to see whats up
-            #logging.info(coturn_account, new_address)
-            logging.info(coturn_account)                # <!------- ver esta mierda con mi amigo anthony.
+            logging.info(coturn_account)
 
 
         self.set_status(201)
@@ -799,17 +786,3 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         result = yield self.new_route(struct)
 
         self.finish()
-
-# after the taste of some new mangos clean this shit out
-
-# @content_type_validation
-# class AddressesHandler(accounts.Accounts, BaseHandler):
-#     '''
-#         Addresses resource handlers
-#     '''
-
-#     @gen.coroutine
-#     def get(self, account):
-#         darq = yield self.get_address_list(account)
-#         self.finish(darq)
-#     

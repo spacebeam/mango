@@ -20,7 +20,7 @@ __author__ = 'Jean Chassoul'
 
     Monit and supervisord watch each other in addition to the system process(es).
 
-    Inside our system overlords have monitor capabilities.
+    Inside our system overlords have monitor capabilities, of course overlords are build with Erlang.
 '''
 
 
