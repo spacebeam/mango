@@ -14,22 +14,15 @@ __author__ = 'Jean Chassoul'
 import time
 import motor
 import queries
-
 from tornado import gen
 from tornado import web
-
 from zmq.eventloop import ioloop
-
 from mango.system import basic_authentication
-
 from mango.messages import tasks as _tasks
-
 from mango.tools import clean_structure
 from mango.tools import check_account_authorization
 from mango import errors
-
 from mango.tools.quotes import PeopleQuotes
-
 import logging
 
 
@@ -73,12 +66,9 @@ class BaseHandler(web.RequestHandler):
             Initialize the Base Handler
         '''
         super(BaseHandler, self).initialize(**kwargs)
-
         self.etag = None
-
         # System database
         self.db = self.settings['db']
-
         # Page settings
         self.page_size = self.settings['page_size']
 
@@ -109,14 +99,17 @@ class BaseHandler(web.RequestHandler):
         '''
             Let it crash
         '''
-
         # missing zmq sub topic
         # if something fucking happens we need to report the error
         # to the fucking overlord supervisor
+        # yep the name is inspired directly on erlang
+        # but sure this is not the beam and we're not saying that
+        # the entire system is made to work toguether with erlang.
+
+        # of course we're not totally there yet. )=
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
-
         if error and 'Model' in str_error:
             message = error_handler.model(scheme)
         elif error and 'duplicate' in str_error:
@@ -135,8 +128,8 @@ class BaseHandler(web.RequestHandler):
             logging.warning(str_error)
             logging.error(struct, scheme, error, reason)
             message = {
-                'error': u'nonsense',
-                'message': u'there is no error'
+                'error': u'https://nonsense.ws/help',
+                'message': u"there is no error, stuff don't make sense... but that's life right?"
             }
         else:
             quotes = PeopleQuotes()
@@ -249,8 +242,9 @@ class LoginHandler(BaseHandler):
         if not account:
             # 401 status code?
             self.set_status(403)
-            # dude! get realm from options.
+            # mae! get realm from options.
             # why you fucker? are you fucking sure and stuff ???
+            # well probably to be more customizable and shit right?
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
         else:

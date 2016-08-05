@@ -23,7 +23,7 @@ import logging
 
 import motor
 import queries
-import pylibmc as mc
+import pylibmc as mc    # <----- memcache thats what this is for cache and shit.
 
 from tornado.ioloop import PeriodicCallback as PeriodicCast
 
@@ -38,7 +38,7 @@ from mango.tools import options
 from mango.tools import indexes
 from mango.tools import periodic
 
-from mango.tools import new_resource
+from mango.tools import new_resource # <----- hey dude!!! this is importan for some random shit.
 
 from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
 
@@ -53,11 +53,9 @@ from zmq.eventloop.future import Context, Poller
 
 '''
 
-# todo: remove global variables
+# todo: remove global variables using treehouse resources...
 
-# dudes we can start using some queues instead of global variables for some shit right?
-
-# como un helado derritiendose como un helado... 
+# simon and betty can start using some queues instead of global variables for some shit right?
 
 '''
 
@@ -85,7 +83,7 @@ logger = False
 
 
 @gen.coroutine
-def periodic_get_records():
+def periodic_get_records():             # <!---------- Please fix this shit out.
     '''
         periodic_get_records callback function
     '''
@@ -160,7 +158,6 @@ def main():
         password=None
     )
 
-    # TODO: HOW THE FUCK ARE WE GOING TO remove global variables!!!
 
     # Set kvalue database
     global kvalue
@@ -178,8 +175,8 @@ def main():
     global db
     db = document
 
-    # logging system spawned
-    logging.info('Mango system {0} spawned'.format(uuid.uuid4()))
+    # logging system spawned uuid
+    logging.info('Mango system uuid {0} spawned'.format(uuid.uuid4()))
 
     # logging database hosts
     logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
@@ -240,12 +237,8 @@ def main():
             (r'/users/(?P<account>.+)/records/?', accounts.RecordsHandler),
             (r'/users/(?P<account>.+)/records/page/(?P<page_num>\d+)/?', accounts.RecordsHandler),
 
-            # Users addresses 
-            #(r'/users/(?P<account>.+)/addresses/?', accounts.AddressesHandler),
-            #(r'/users/(?P<account>.+)/addresses/page/(?P<page_num>\d+)/?', accounts.AddressesHandler),
-
             # Users billing routes
-            (r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
+            #(r'/users/(?P<account>.+)/routes/?', accounts.RoutesHandler),
 
             # Users suspended
             (r'/users/suspended/?', accounts.UsersSuspendedHandler),
@@ -325,23 +318,6 @@ def main():
             # Tasks
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
-
-            # Addresses primary
-            #(r'/addresses/primary/?', addresses.PrimaryHandler),
-
-            # Addresses
-            #(r'/addresses/(?P<address_uuid>.+)/?', addresses.Handler),
-            #(r'/addresses/?', addresses.Handler),
-
-            # Billings
-            #(r'/billings/(?P<billing_uuid>.+)/?', billings.RecordsHandler),
-            #(r'/billings/?', billings.RecordsHandler),
-
-            # Billings records
-            #(r'/billings/records/start/(?P<start>.*)/end/(?P<end>.*)/?', billings.RecordsHandler),
-            #(r'/billings/records/start/(?P<start>.*)/?', billings.RecordsHandler),
-            #(r'/billings/records/end/(?P<end>.*)/?', billings.RecordsHandler),
-            #(r'/billings/records/?', billings.RecordsHandler)
         ],
 
         # system database
