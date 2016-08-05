@@ -463,6 +463,9 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         logging.info('hola hola hola hola')
 
         struct = yield check_json(self.request.body)
+
+        logging.error(struct)
+
         struct['account_type'] = 'org'
 
         org = struct['account']
