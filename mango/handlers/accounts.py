@@ -282,11 +282,10 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 'https://iofun.io/fire/', 
                 headers={"Content-Type": "application/json"},
                 method='POST',
-                body=json.dumps(data),
+                body=json.dumps({'username': struct['account'], 'password': struct['password']}),
                 callback=handle_response
             )
 
-            # aqui que mae?
             logging.info(coturn_account)
 
 
