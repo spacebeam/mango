@@ -268,11 +268,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 'title': 'confirm coturn account',
                 'data': json.dumps(data)
             }
-            # generate address struct
-            address_struct = {
-                'account': struct['account'],
-                'email': struct['email']
-            }
+            
             # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
 
