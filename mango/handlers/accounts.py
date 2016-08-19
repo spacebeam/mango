@@ -26,6 +26,9 @@ from mango.tools import new_resource
 from mango.handlers import BaseHandler
 
 
+httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+
+
 @content_type_validation
 class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
     '''
@@ -241,6 +244,15 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             self.finish(message)
             return
 
+        def handle_response(response):
+            '''
+                Handle response
+            '''
+            if response.error:
+                logging.error(response.error)
+            else:
+                logging.info(response.body)
+
         # -- handle SIP account creation out-of-band
 
         # postgresql insert sip account
@@ -252,7 +264,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             coturn_struct = {
                 'account': struct['account'],
                 'label': 'coturn',
-                'title': 'new coturn account',
+                'title': 'confirm coturn account',
                 'data': json.dumps(data)
             }
             # generate address struct
@@ -262,6 +274,18 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             }
             # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
+
+            http_client = httpclient.AsyncHTTPClient()
+
+            http_client.fetch(
+                'https://iofun.io/fire/', 
+                headers={"Content-Type": "application/json"},
+                method='POST',
+                body=json.dumps(data),
+                callback=handle_response
+            )
+
+            # aqui que mae?
             logging.info(coturn_account)
 
 
