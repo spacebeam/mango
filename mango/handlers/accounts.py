@@ -25,6 +25,7 @@ from mango.tools import check_json
 from mango.tools import new_resource
 from mango.handlers import BaseHandler
 
+from tornado import httpclient
 
 httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
 
