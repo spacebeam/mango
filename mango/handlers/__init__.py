@@ -169,11 +169,11 @@ class BaseHandler(web.RequestHandler):
                     '{3}',
                     'dynamic',
                     '{4}',
-                    'ulaw,alaw,g729,gsm',
+                    'opus,vp8,ulaw,alaw,g729',
                     'fun-accounts',
                     'force_rport,comedia',
                     'yes',
-                    'no',
+                    'yes',
                     'no'
                 );
             '''.format(
