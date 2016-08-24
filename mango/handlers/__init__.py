@@ -162,7 +162,8 @@ class BaseHandler(web.RequestHandler):
                     nat,
                     qualify,
                     avpf,
-                    encryption
+                    encryption,
+                    icesupport
                 ) values (
                     '{0}',
                     '{1}',
@@ -174,6 +175,7 @@ class BaseHandler(web.RequestHandler):
                     'opus,vp8,ulaw,alaw,g729',
                     'fun-accounts',
                     'force_rport,comedia',
+                    'yes',
                     'yes',
                     'yes',
                     'yes'
