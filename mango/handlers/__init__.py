@@ -174,7 +174,7 @@ class BaseHandler(web.RequestHandler):
                     'force_rport,comedia',
                     'yes',
                     'yes',
-                    'no'
+                    'yes'
                 );
             '''.format(
                 struct.get('account'),
