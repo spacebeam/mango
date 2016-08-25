@@ -172,7 +172,7 @@ class BaseHandler(web.RequestHandler):
                     'dynamic',
                     '{4}',
                     'no',
-                    'opus,vp8,ulaw,alaw,g729',
+                    'opus,ulaw,alaw,g729,vp8',
                     'fun-accounts',
                     'force_rport,comedia',
                     'yes',
