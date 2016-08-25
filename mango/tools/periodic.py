@@ -18,8 +18,6 @@ import urllib
 import motor
 import queries
 
-#import address
-
 from contextlib import contextmanager
 from tornado import gen
 
