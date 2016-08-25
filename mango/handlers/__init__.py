@@ -264,16 +264,12 @@ class LoginHandler(BaseHandler):
 
     @gen.coroutine
     def options(self):
-        # redirect next url
-        next_url = '/'
-        args = self.get_arguments('next')
-        if args:
-            next_url = args[0]
-
         self.set_header('Access-Control-Allow-Origin','*')
         # self.set_header('Access-Control-Allow-Methods','POST, GET, OPTIONS, DELETE, PATCH, PUT, HEAD')
-        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
+        self.set_header('Access-Control-Allow-Methods','GET')
+        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+        self.set_header('Access-Control-Allow-Credentials': 'true')
+        self.data = ''
         self.set_status(200)
         self.finish()
 
