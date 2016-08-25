@@ -263,7 +263,7 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Origin','*')
         # self.set_header('Access-Control-Allow-Methods','POST, GET, OPTIONS, DELETE, PATCH, PUT, HEAD')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers','Content-Type')
+        self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
         self.set_status(200)
         self.finish()
 
