@@ -235,7 +235,6 @@ class BaseHandler(web.RequestHandler):
             raise e
 
         task = clean_structure(task)
-
         result = yield self.db.tasks.insert(task)
 
         raise gen.Return(task.get('uuid'))
