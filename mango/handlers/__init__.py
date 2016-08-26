@@ -183,7 +183,7 @@ class BaseHandler(web.RequestHandler):
                     'no',
                     'no',
                     'udp,wss',
-                    'opus,ulaw,alaw,g729,vp8',
+                    'opus,ulaw,alaw',
                     'fun-accounts',
                     'force_rport,comedia',
                     'yes',
