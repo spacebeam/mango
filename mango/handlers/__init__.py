@@ -266,15 +266,12 @@ class LoginHandler(BaseHandler):
             # mae! get realm from options.
             # why you fucker? are you fucking sure and stuff ???
             # well probably to be more customizable and shit right?
-            self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
             self.finish()
         else:
             self.set_header('Access-Control-Allow-Origin','*')
             # self.set_header('Access-Control-Allow-Methods','POST, GET, OPTIONS, DELETE, PATCH, PUT, HEAD')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS, POST')
             self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
             self.set_secure_cookie('username', self.username)
             self.username, self.password = (None, None)
@@ -292,6 +289,39 @@ class LoginHandler(BaseHandler):
         self.data = ''
         self.set_status(200)
         self.finish()
+
+
+    @gen.coroutine
+    def post(self):
+        # redirect next url
+        next_url = '/'
+        args = self.get_arguments('next')
+        if args:
+            next_url = args[0]
+
+        account = yield check_account_authorization(self.db,
+                            self.username,
+                            self.password)
+
+        self.set_header('Access-Control-Allow-Origin','*')
+        if not account:
+            # 401 status code?
+            self.set_status(403)
+            # mae! get realm from options.
+            # why you fucker? are you fucking sure and stuff ???
+            # well probably to be more customizable and shit right?
+            self.set_header('WWW-Authenticate', 'Basic realm=mango')
+            self.finish()
+        else:
+            self.set_header('Access-Control-Allow-Origin','*')
+            # self.set_header('Access-Control-Allow-Methods','POST, GET, OPTIONS, DELETE, PATCH, PUT, HEAD')
+            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS, POST')
+            self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
+            self.set_secure_cookie('username', self.username)
+            self.username, self.password = (None, None)
+            # self.redirect(next_url)
+            self.set_status(200)
+            self.finish()
 
 
 class LogoutHandler(BaseHandler):
