@@ -168,6 +168,7 @@ class BaseHandler(web.RequestHandler):
                     force_avp,
                     dtlsenable,
                     dtlsverify,
+                    dtlscertfile,
                     dtlsprivatekey,
                     dtlssetup,
                     directrtpsetup,
