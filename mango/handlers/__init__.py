@@ -266,7 +266,10 @@ class LoginHandler(BaseHandler):
             # mae! get realm from options.
             # why you fucker? are you fucking sure and stuff ???
             # well probably to be more customizable and shit right?
+            self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
+            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+            self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
             self.finish()
         else:
             self.set_header('Access-Control-Allow-Origin','*')
