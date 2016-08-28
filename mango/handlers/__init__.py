@@ -189,7 +189,7 @@ class BaseHandler(web.RequestHandler):
                     'yes',
                     'yes',
                     'yes',
-                    'no',
+                    'yes',
                     'yes',
                     'no',
                     '/etc/asterisk/keys/asterisk.pem',
