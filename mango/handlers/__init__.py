@@ -45,14 +45,14 @@ class BaseHandler(web.RequestHandler):
         '''
             Document database
         '''
-        return self.application.document
+        return self.settings['document']
 
     @property
     def kvalue(self):
         '''
             Key-value database
         '''
-        return self.application.kvalue
+        return self.settings['kvalue']
 
     @property
     def cache(self):
@@ -72,7 +72,7 @@ class BaseHandler(web.RequestHandler):
         # Page settings
         self.page_size = self.settings['page_size']
 
-    def set_default_headers(self):
+    def set_default_headers(self): # <!--------------------- MAE ALEX, MAE ALEX, MAE ALEX.
         '''
             Mango default headers
         '''
@@ -100,6 +100,9 @@ class BaseHandler(web.RequestHandler):
             Let it crash
         '''
         # missing zmq sub topic
+
+        # msg.nonsense.ws ????
+
         # if something fucking happens we need to report the error
         # to the fucking overlord supervisor
         # yep the name is inspired directly on erlang
@@ -107,6 +110,10 @@ class BaseHandler(web.RequestHandler):
         # the entire system is made to work toguether with erlang.
 
         # of course we're not totally there yet. )=
+
+        # but we have beam powers now, not for this crazy shit but for
+        # the treehouse message infrastructure that stuff run erlang 
+        # and luerl so you can run lua and erlang code.
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
