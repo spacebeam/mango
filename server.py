@@ -49,39 +49,28 @@ from zmq.eventloop import ioloop
 from zmq.eventloop.future import Context, Poller
 
 
-'''
-
-# todo: remove global variables using treehouse resources...
-
-# simon and betty can start using some queues instead of global variables for some shit right?
-
-'''
-
-
 # ioloop
 ioloop.install()
 
-# e_tag
+
+# e_tag                                     # <!---------------- So, e_tags, ...
 e_tag = False
-
 # db global variable
+
 db = False
-
 # sql global variable
-sql = False
 
+sql = False
 # kvalue global variable
 kvalue = False
-
 # cache global variable
 cache = False
-
-# external logger handler
-logger = False
+# document global variable
+document = False
 
 
 @gen.coroutine
-def periodic_get_records():             # <!---------- Please fix this shit out.
+def periodic_get_records():                 # <!---------- Please fix this shit out.
     '''
         periodic_get_records callback function
     '''
@@ -362,6 +351,9 @@ def main():
     # Setting up mango processor
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
+
+    loop = ioloop.IOLoop.instance()
+    loop.start()
 
 if __name__ == '__main__':
     main()
