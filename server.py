@@ -30,8 +30,6 @@ from tornado.ioloop import PeriodicCallback as PeriodicCast
 from tornado import gen
 from tornado import web
 
-from mango.system.clients import publisher
-
 from mango.system import records as record_tools
 
 from mango.tools import options
@@ -364,11 +362,6 @@ def main():
     # Setting up mango processor
     application.listen(opts.port)
     logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
-    
-    loop = ioloop.IOLoop.instance()
-    loop.add_callback(publisher, opts.overlord_host)
-    loop.start()
-
 
 if __name__ == '__main__':
     main()
