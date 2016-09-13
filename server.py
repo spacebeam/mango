@@ -52,14 +52,11 @@ from zmq.eventloop.future import Context, Poller
 # ioloop
 ioloop.install()
 
-
 # e_tag                                     # <!---------------- So, e_tags, ...
 e_tag = False
 # db global variable
-
 db = False
 # sql global variable
-
 sql = False
 # kvalue global variable
 kvalue = False
@@ -149,15 +146,12 @@ def main():
     # Set kvalue database
     global kvalue
     kvalue = kvalue
-
     # Set default cache
     global cache
     cache = memcache
-
     # Set SQL session
     global sql
     sql = queries.TornadoSession(uri=postgresql_uri)
-
     # Set default database
     global db
     db = document
@@ -306,40 +300,28 @@ def main():
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
         ],
-
         # system database
         db=db,
-
         # system cache
         cache=cache,
-
         # cache enabled flag
         cache_enabled=cache_enabled,
-
         # document datastorage
         document=document,
-
         # kvalue datastorage
         kvalue=kvalue,
-
         # sql datastorage
         sql=sql,
-
         # debug mode
         debug=opts.debug,
-
         # application domain
         domain=opts.domain,
-
         # application timezone
         timezone=opts.timezone,
-
         # pagination page size
         page_size=opts.page_size,
-
         # cookie settings
         cookie_secret=opts.cookie_secret,
-
         # login url
         login_url='/login/'
     )
