@@ -26,13 +26,13 @@ from schematics.types import compound
 from tornado import gen
 
 from mango.messages import tasks
-from mango.messages import reports
+from mango.messages import records
 
 from mango.tools import clean_structure
 from mango.tools import check_times
 
 
-class TasksResult(reports.BaseResult):
+class TasksResult(records.BaseResult):
     '''
         List result
     '''

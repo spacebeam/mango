@@ -24,7 +24,7 @@ from tornado import gen
 from mango import errors
 
 from mango.messages import accounts
-from mango.messages import reports
+from mango.messages import records
 
 
 def get_average(total, marks):
@@ -100,7 +100,7 @@ def check_aggregation_pipeline(struct):
         Return mongodb aggregation report
     '''
     try:
-        aggregation = reports.Aggregate(**struct).validate()
+        aggregation = records.Aggregate(**struct).validate()
     except Exception, e:
         logging.exception(e)
         raise e

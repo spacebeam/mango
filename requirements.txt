@@ -1,4 +1,5 @@
 tornado
+cython
 futures
 riak
 motor
