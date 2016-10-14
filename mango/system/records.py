@@ -24,7 +24,7 @@ import pandas as pd
 
 from tornado import gen
 
-from mango.messages import records
+from mango.messages import records, BaseResult
 
 from mango.tools import clean_structure, clean_message
 #from mango.tools import clean_results
@@ -119,7 +119,7 @@ class Records(object):
         try:
             struct = {'results': record_list, 'page': page_num, 'count': von_count}
 
-            message = records.BaseResult(struct)
+            message = BaseResult(struct)
 
             #message.validate()
 

@@ -22,14 +22,6 @@ from mango.messages import tasks
 from mango.messages import records
 
 
-class BaseResult(models.Model):
-    '''
-        base result
-    '''
-    count = types.IntType()
-    page = types.IntType()
-
-
 class SimpleResource(models.Model):
     '''
         Simple resource
