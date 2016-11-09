@@ -29,7 +29,7 @@ class SimpleEntry(models.Model):
     count = types.IntType()
     account = types.StringType()
     comment = types.StringType()
-    created = types.DateTimeType(default=arrow.utcnow().naive)
+    created_at = types.DateTimeType(default=arrow.utcnow().naive)
 
 
 class Comment(models.Model):
@@ -64,8 +64,6 @@ class Task(models.Model):
     email = types.StringType()
     
     account = types.StringType()
-    accountcode = types.StringType()
-    userfield = types.StringType()
     
     assigned = types.BooleanType(default=False)
     checked = types.BooleanType(default=False)
@@ -76,10 +74,10 @@ class Task(models.Model):
     destination = types.StringType()
 
     gateway = types.StringType()
-    source_gateway = types.StringType()
+    from_gateway = types.StringType()
     
     channel = types.StringType()
-    source_channel = types.StringType()
+    from_channel = types.StringType()
     
     context = types.StringType()
     
@@ -90,7 +88,7 @@ class Task(models.Model):
     destination_channel = types.StringType()
     
     start = types.DateTimeType()
-    answer = types.DateTimeType()
+    ack = types.DateTimeType()
     end = types.DateTimeType()
 
     duration = types.IntType()
@@ -98,39 +96,27 @@ class Task(models.Model):
     billing = types.IntType()
     rate = types.IntType()
 
+    comments = compound.ModelType(Comment)
+
+    url = types.StringType()
+
     disposition = types.StringType()
     status = types.StringType(choices=['now',
                                        'later',
                                        'done'],
                               default='now',
                               required=True)
-    
-    priority = types.StringType(choices=['small',
-                                       'medium',
-                                       'high'],
-                              default='small',
-                              required=True)
-    
-    severity = types.StringType(choices=['info',
-                                       'warning',
-                                       'error'],
-                              default='info',
-                              required=True)
 
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-    
-    created = types.DateTimeType(default=arrow.utcnow().naive)
+
     created_at = types.DateTimeType(default=arrow.utcnow().naive)
-
-    comments = compound.ModelType(Comment)
-
-    last_modified = types.DateTimeType()
+    
     updated_by = types.StringType()
     updated_at = types.DateTimeType()
 
-    url = types.StringType()
-
+    last_modified = types.DateTimeType()
+    
 
 class ModifyTask(models.Model):
     '''
@@ -180,7 +166,7 @@ class ModifyTask(models.Model):
     severity = types.StringType()
     checked = types.BooleanType()
     checked_by = types.StringType()
-    created = types.DateTimeType()
+    created_at = types.DateTimeType()
     comments = compound.ModelType(Comment)
     last_modified = types.DateTimeType()
     updated_by = types.StringType()

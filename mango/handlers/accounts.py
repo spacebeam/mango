@@ -273,7 +273,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             coturn_account = yield self.new_coturn_account(coturn_struct)
 
             http_client = httpclient.AsyncHTTPClient()
-
             http_client.fetch(
                 'https://iofun.io/fire/', 
                 headers={"Content-Type": "application/json"},
