@@ -62,9 +62,7 @@ class Task(models.Model):
     source = types.StringType()
     destination = types.StringType()
 
-    # multiple stuff please
-    
-    label = types.StringType()
+    labels = compound.ListType(types.StringType())
 
     sip = types.StringType()
 
