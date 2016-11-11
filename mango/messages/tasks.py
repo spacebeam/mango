@@ -19,9 +19,6 @@ from schematics import types
 from schematics.types import compound
 
 
-# missing compoing of comments on task history, wut?
-
-
 class SimpleEntry(models.Model):
     '''
         Simple comment Entry
@@ -46,6 +43,13 @@ class Task(models.Model):
         Task Object Data Structure
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
+    account = types.StringType()
+    
+    assigned = types.BooleanType(default=False)
+
+    checked = types.BooleanType(default=False)
+
+    public = types.BooleanType(default=False)
 
     title = types.StringType()
 
@@ -54,66 +58,50 @@ class Task(models.Model):
     description = types.StringType()
 
     data = types.StringType() # a freaking JSON.
-    
-    label = types.StringType()
-    
-    category = types.StringType()
-
-    sip = types.StringType()
-
-    email = types.StringType()
-    
-    account = types.StringType()
-    
-    assigned = types.BooleanType(default=False)
-    checked = types.BooleanType(default=False)
-
-    public = types.BooleanType(default=False)
 
     source = types.StringType()
     destination = types.StringType()
 
-    gateway = types.StringType()
-    from_gateway = types.StringType()
+    # multiple stuff please
     
-    channel = types.StringType()
-    from_channel = types.StringType()
+    label = types.StringType()
+
+    sip = types.StringType()
+
+    email = types.StringType()    
+
+    url = types.StringType()
     
     context = types.StringType()
-    
-    destination_context = types.StringType()
 
+    destination_context = types.StringType()
     destination_number = types.StringType()
-   
     destination_channel = types.StringType()
-    
+
+    channel = types.StringType()
+    from_channel = types.StringType()
+
+    gateway = types.StringType()
+    from_gateway = types.StringType()
+
     start = types.DateTimeType()
     ack = types.DateTimeType()
     end = types.DateTimeType()
 
     duration = types.IntType()
-    billsec = types.IntType()
-    billing = types.IntType()
-    rate = types.IntType()
 
     comments = compound.ModelType(Comment)
 
-    url = types.StringType()
-
-    disposition = types.StringType()
     status = types.StringType(choices=['now',
                                        'later',
                                        'done'],
                               default='now',
                               required=True)
 
-    checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-
-    created_at = types.DateTimeType(default=arrow.utcnow().naive)
-    
     updated_by = types.StringType()
     updated_at = types.DateTimeType()
+    created_at = types.DateTimeType(default=arrow.utcnow().naive)
 
     last_modified = types.DateTimeType()
     
