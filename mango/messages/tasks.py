@@ -47,8 +47,6 @@ class Task(models.Model):
     
     assigned = types.BooleanType(default=False)
 
-    checked = types.BooleanType(default=False)
-
     public = types.BooleanType(default=False)
 
     title = types.StringType()
@@ -95,6 +93,8 @@ class Task(models.Model):
                                        'done'],
                               default='now',
                               required=True)
+
+    checked = types.BooleanType(default=False)
 
     checked_by = types.StringType()
     updated_by = types.StringType()
