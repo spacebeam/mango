@@ -264,7 +264,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             # generate coturn struct
             coturn_struct = {
                 'account': struct['account'],
-                'label': 'coturn',
+                'labels': ['coturn',],
                 'title': 'confirm coturn account',
                 'data': json.dumps(data)
             }
