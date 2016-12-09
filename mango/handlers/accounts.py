@@ -254,13 +254,14 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             else:
                 logging.info(response.body)
 
-        # -- handle SIP account creation out-of-band
+        # -- handle SIP account creation out-of-band <--------------------------------------- refactor this shit kind of thing.
 
         # postgresql insert sip account
         if result:
             data = {'password': struct['password'], 'account': struct['account']}
             # generate sip struct
             sip_account = yield self.new_sip_account(struct)
+            
             # generate coturn struct
             coturn_struct = {
                 'account': struct['account'],
