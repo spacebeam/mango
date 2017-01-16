@@ -52,27 +52,6 @@ class ModifyMembership(models.Model):
     created = types.DateTimeType()
 
 
-class Route(models.Model):
-    '''
-        Route
-    '''
-    # default '*' means all destinations
-    dst = types.StringType(default='*')
-    destination = types.StringType(default='*') 
-    channel = types.StringType(required=True)
-    dstchannel = types.StringType(required=True)
-    destination_channel = types.StringType(required=True)
-    cost = types.FloatType(required=True)
-
-
-class MailGun(models.Model):
-    '''
-        Mailgun
-    '''
-    domain = types.StringType()
-    apikey = types.StringType()
-
-
 class Email(models.Model):
     '''
         Email
@@ -113,8 +92,6 @@ class RequiredBase(models.Model):
     membership = types.StringType()
     resources = compound.ModelType(Resource)
     phones = compound.ListType(compound.ModelType(Phone))
-    mailgun_conf = compound.ListType(compound.ModelType(MailGun))
-    routes = compound.ListType(compound.ModelType(Route))
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType(required=False)
     max_channels = types.IntType()
@@ -140,8 +117,6 @@ class CleanBase(models.Model):
     membership = types.StringType()
     resources = compound.ModelType(Resource)
     phones = compound.ListType(compound.ModelType(Phone))
-    mailgun_conf = compound.ListType(compound.ModelType(MailGun))
-    routes = compound.ListType(compound.ModelType(Route))
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType()
     max_channels = types.IntType()
