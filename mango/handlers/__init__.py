@@ -277,6 +277,9 @@ class BaseHandler(web.RequestHandler):
                 message = {'ack': False}
             result.free()
 
+            # log some shit to the environment
+            logging.warning('new pjsip real-time account for asterisk 13 spawned on postgresql {0}'.format(message))
+
         except Exception, e:
             logging.error(e)
             
