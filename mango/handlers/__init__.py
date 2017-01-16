@@ -146,6 +146,9 @@ class BaseHandler(web.RequestHandler):
             }
         raise gen.Return(message)
 
+
+    # TODO: MAE! please refactor into smaller independent functions (=
+
     @gen.coroutine
     def new_sip_account(self, struct):
         '''
@@ -226,12 +229,9 @@ class BaseHandler(web.RequestHandler):
 
         # let's support asterisk 13 and the beast that pjsip chaims the be!
         try:
-
             # Get SQL database from system settings
             sql = self.settings.get('sql')
             # PostgreSQL insert new sip account
-
-            # first query (1/3)
             query = '''
                 insert into ps_aors(id, max_contacts)
                 values ('{0}', 1);
@@ -244,8 +244,7 @@ class BaseHandler(web.RequestHandler):
             else:
                 message = {'ack': False}
             result.free()
-
-            # second query (2/3)
+            logging.warning('new pjsip account (1/3)')
             query = '''
                 insert into ps_auths(id, auth_type, password, username)
                 values ('{0}', 'userpass', '{1}', '{2}');
@@ -260,11 +259,10 @@ class BaseHandler(web.RequestHandler):
             else:
                 message = {'ack': False}
             result.free()
-
-            # last query (3/3)
+            logging.warning('new pjsip account (2/3)')
             query = '''
                 insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media)
-                values ({0}, 'transport-udp', '{1}', '{2}', 'fun-accounts', 'all', 'g722,ulaw,alaw,gsm', 'no');
+                values ('{0}', 'transport-udp', '{1}', '{2}', 'fun-accounts', 'all', 'g722,ulaw,alaw,gsm', 'no');
             '''.format(
                 struct.get('account'),
                 struct.get('account'),
@@ -276,13 +274,11 @@ class BaseHandler(web.RequestHandler):
             else:
                 message = {'ack': False}
             result.free()
-
-            # log some shit to the environment
+            logging.warning('new pjsip account (3/3)')
+            # additional ack information.
             logging.warning('new pjsip real-time account for asterisk 13 spawned on postgresql {0}'.format(message))
-
         except Exception, e:
             logging.error(e)
-            
 
         raise gen.Return(message)
 
