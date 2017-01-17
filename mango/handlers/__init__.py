@@ -72,15 +72,18 @@ class BaseHandler(web.RequestHandler):
         # Page settings
         self.page_size = self.settings['page_size']
 
-    def set_default_headers(self): # <!--------------------- MAE ALEX, MAE ALEX, MAE ALEX.
+    def set_default_headers(self):
         '''
             Mango default headers
         '''
         # if debug set allow all if not set settings domain
         # all means fucking all the multiverse and stuff 
         # this shit is for CORS support, thanks!.
-        self.set_header("Access-Control-Allow-Origin", '*')
+
         # self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+
+        self.set_header("Access-Control-Allow-Origin", '*')
+        
 
     def get_current_username(self):
         '''
@@ -99,21 +102,8 @@ class BaseHandler(web.RequestHandler):
         '''
             Let it crash
         '''
-        # missing zmq sub topic
+        # treehouse integration for error goes at this function
 
-        # msg.nonsense.ws ????
-
-        # if something fucking happens we need to report the error
-        # to the fucking overlord supervisor
-        # yep the name is inspired directly on erlang
-        # but sure this is not the beam and we're not saying that
-        # the entire system is made to work toguether with erlang.
-
-        # of course we're not totally there yet. )=
-
-        # but we have beam powers now, not for this crazy shit but for
-        # the treehouse message infrastructure that stuff run erlang 
-        # and luerl so you can run lua and erlang code.
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
