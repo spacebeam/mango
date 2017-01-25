@@ -142,7 +142,6 @@ class User(BaseAccount):
         User account
     '''
     first_name = types.StringType()
-    second_name = types.StringType()
     middle_name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')
@@ -155,7 +154,6 @@ class ModifyUser(CleanBaseAccount):
         Modify account
     '''
     first_name = types.StringType()
-    second_name = types.StringType()
     middle_name = types.StringType()
     last_name = types.StringType()
     account_type = types.StringType(default='user')

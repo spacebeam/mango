@@ -45,7 +45,7 @@ class Task(models.Model):
     account = types.StringType()
     title = types.StringType()
     description = types.StringType()
-    data = types.StringType() # a freaking JSON.
+    payload = types.StringType() # a freaking JSON.
     assignees = compound.ListType(types.StringType())
     public = types.BooleanType(default=False)
     source = types.StringType()
@@ -89,7 +89,7 @@ class ModifyTask(models.Model):
     account = types.StringType()
     title = types.StringType()
     description = types.StringType()
-    data = types.StringType() # a freaking JSON.
+    payload = types.StringType() # a freaking JSON.
     assignees = compound.ListType(types.StringType())
     public = types.BooleanType()
     source = types.StringType()
