@@ -39,38 +39,28 @@ class Comment(models.Model):
 
 class Task(models.Model):
     '''
-        Task Object Data Structure
+        Task Data Structure
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType()
-    assigned = types.BooleanType(default=False)
-    public = types.BooleanType(default=False)
     title = types.StringType()
-    first_name = types.StringType()
-    last_name = types.StringType()
     description = types.StringType()
     data = types.StringType() # a freaking JSON.
+    assignees = compound.ListType(types.StringType())
+    public = types.BooleanType(default=False)
     source = types.StringType()
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
-    sip = types.StringType()
-    email = types.StringType()    
     url = types.StringType()
-    context = types.StringType()
-    destination_context = types.StringType()
-    destination_number = types.StringType()
-    destination_channel = types.StringType()
-    channel = types.StringType()
-    from_channel = types.StringType()
-    gateway = types.StringType()
-    from_gateway = types.StringType()
     start = types.DateTimeType()
     ack = types.DateTimeType()
-    end = types.DateTimeType()
-    duration = types.IntType()
+    stop = types.DateTimeType()
+    deadline = types.DateTimeType()
+    duration = types.StringType()
     comments = compound.ModelType(Comment)
     status = types.StringType(choices=['now',
                                        'later',
+                                       'overdue',
                                        'done'],
                               default='now',
                               required=True)
@@ -80,7 +70,7 @@ class Task(models.Model):
     updated_at = types.DateTimeType()
     created_at = types.DateTimeType(default=arrow.utcnow().naive)
     last_modified = types.DateTimeType()
-    
+
 
 class ModifyTask(models.Model):
     '''
@@ -97,36 +87,26 @@ class ModifyTask(models.Model):
     '''
     uuid = types.UUIDType()
     account = types.StringType()
-    assigned = types.BooleanType()
-    public = types.BooleanType()
     title = types.StringType()
-    first_name = types.StringType()
-    last_name = types.StringType()
     description = types.StringType()
     data = types.StringType() # a freaking JSON.
+    assignees = compound.ListType(types.StringType())
+    public = types.BooleanType()
     source = types.StringType()
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
-    sip = types.StringType()
-    email = types.StringType()    
     url = types.StringType()
-    context = types.StringType()
-    destination_context = types.StringType()
-    destination_number = types.StringType()
-    destination_channel = types.StringType()
-    channel = types.StringType()
-    from_channel = types.StringType()
-    gateway = types.StringType()
-    from_gateway = types.StringType()
     start = types.DateTimeType()
     ack = types.DateTimeType()
-    end = types.DateTimeType()
-    duration = types.IntType()
+    stop = types.DateTimeType()
+    deadline = types.DateTimeType()
+    duration = types.StringType()
     comments = compound.ModelType(Comment)
     status = types.StringType(choices=['now',
                                        'later',
+                                       'overdue',
                                        'done'],
-                              default='now')
+                              required=True)
     checked = types.BooleanType()
     checked_by = types.StringType()
     updated_by = types.StringType()
