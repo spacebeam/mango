@@ -267,7 +267,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 'account': struct['account'],
                 'labels': ['coturn',],
                 'title': 'confirm coturn account',
-                'data': json.dumps(data)
+                'payload': json.dumps(data)
             }
             
             # yield the new stuff up

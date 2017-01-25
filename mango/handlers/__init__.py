@@ -335,7 +335,6 @@ class LoginHandler(BaseHandler):
         # self.set_header('Access-Control-Allow-Methods','GET')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         # self.set_header('Access-Control-Allow-Credentials', 'true')
-        # self.data = ''
         self.set_status(200)
         self.finish()
 
