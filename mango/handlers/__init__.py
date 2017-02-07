@@ -385,19 +385,3 @@ class LogoutHandler(BaseHandler):
         self.clear_cookie('username')
         self.set_status(200)
         self.finish()
-
-
-class MangoHandler(BaseHandler):
-    '''
-        Mango Handler Quote experiment
-    '''
-
-    @gen.coroutine
-    def get(self):
-        '''
-            Get some quotes
-        '''
-        quotes = PeopleQuotes()
-        self.finish(
-            {'quote': quotes.get()}
-        )

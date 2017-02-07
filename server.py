@@ -21,11 +21,12 @@ import itertools
 
 import logging
 
+import riak
 import motor
 import queries
-import pylibmc as mc    # <----- memcache thats what this is for cache and shit.
+import pylibmc as mc
 
-from tornado.ioloop import PeriodicCallback as PeriodicCast
+from tornado.ioloop import PeriodicCallback as Cast
 
 from tornado import gen
 from tornado import web
@@ -38,7 +39,7 @@ from mango.tools import periodic
 
 from mango.tools import new_resource # <----- hey dude!!! this is importan for some random shit.
 
-from mango.handlers import MangoHandler, LoginHandler, LogoutHandler
+from mango.handlers import LoginHandler, LogoutHandler
 
 from mango.handlers import accounts
 from mango.handlers import tasks
@@ -64,7 +65,8 @@ kvalue = False
 cache = False
 # document global variable
 document = False
-
+# system uuid
+system_uuid = uuid.uuid4()
 
 @gen.coroutine
 def periodic_get_records():                 # <!---------- Please fix this shit out.
@@ -157,7 +159,7 @@ def main():
     db = document
 
     # logging system spawned uuid
-    logging.info('Mango system uuid {0} spawned'.format(uuid.uuid4()))
+    logging.info('Mango system uuid {0} spawned'.format(system_uuid))
 
     # logging database hosts
     logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
@@ -181,10 +183,7 @@ def main():
     application = web.Application(
 
         [
-            # Mango system knowledge (quotes) and realtime events.
-            (r'/system/?', MangoHandler),
-
-            # Basic-Auth session
+            # Mango Basic-Auth session
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
@@ -316,8 +315,6 @@ def main():
         debug=opts.debug,
         # application domain
         domain=opts.domain,
-        # application timezone
-        timezone=opts.timezone,
         # pagination page size
         page_size=opts.page_size,
         # cookie settings
@@ -326,13 +323,13 @@ def main():
         login_url='/login/'
     )
 
-    # Mango periodic cast callbacks
-    periodic_records = PeriodicCast(periodic_get_records, 5000)
+    # Mango periodic cast functions
+    periodic_records = Cast(periodic_get_records, 5000)
     periodic_records.start()
 
     # Setting up mango processor
     application.listen(opts.port)
-    logging.info('Listening on http://%s:%s' % (opts.host, opts.port))
+    logging.info('System %s Listening on http://%s:%s' % (system_uuid, opts.host, opts.port))
 
     loop = ioloop.IOLoop.instance()
     loop.start()
