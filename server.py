@@ -55,6 +55,10 @@ ioloop.install()
 
 # e_tag                                     # <!---------------- So, e_tags, ...
 e_tag = False
+# standard db
+db = False
+# sql database
+sql False 
 
 
 @gen.coroutine
@@ -137,8 +141,10 @@ def main():
     # memcached
     cache = memcache
     # sql
+    global sql
     sql = queries.TornadoSession(uri=postgresql_uri)
     # current db
+    global db
     db = document
     # system uuid
     system_uuid = uuid.uuid4()
