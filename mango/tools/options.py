@@ -139,7 +139,7 @@ def options():
     result = tornado.options.options
 
     for required in (
-        'domain', 'host', 'port', 'timezone', 'base_url',
+        'domain', 'host', 'port',
     ):
         if not result[required]:
             raise Exception('%s required' % required)
