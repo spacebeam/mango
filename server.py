@@ -57,8 +57,8 @@ ioloop.install()
 e_tag = False
 # standard db
 db = False
-# sql database
-sql False 
+# sql flag
+sql = False
 
 
 @gen.coroutine
