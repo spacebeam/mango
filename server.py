@@ -55,18 +55,7 @@ ioloop.install()
 
 # e_tag                                     # <!---------------- So, e_tags, ...
 e_tag = False
-# db global variable
-db = False
-# sql global variable
-sql = False
-# kvalue global variable
-kvalue = False
-# cache global variable
-cache = False
-# document global variable
-document = False
-# system uuid
-system_uuid = uuid.uuid4()
+
 
 @gen.coroutine
 def periodic_get_records():                 # <!---------- Please fix this shit out.
@@ -143,20 +132,14 @@ def main():
         user=opts.sql_user,
         password=None
     )
-
-
-    # Set kvalue database
-    global kvalue
-    kvalue = kvalue
-    # Set default cache
-    global cache
+    # memcached
     cache = memcache
-    # Set SQL session
-    global sql
+    # sql
     sql = queries.TornadoSession(uri=postgresql_uri)
-    # Set default database
-    global db
+    # current db
     db = document
+    # system uuid
+    system_uuid = uuid.uuid4()
 
     # logging system spawned uuid
     logging.info('Mango system uuid {0} spawned'.format(system_uuid))
