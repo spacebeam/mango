@@ -154,9 +154,6 @@ def main():
         indexes.ensure_indexes(db)
         logging.info('DONE.')
 
-    # base url
-    base_url = opts.base_url
-
     # system cache
     cache_enabled = opts.cache_enabled
     if cache_enabled:

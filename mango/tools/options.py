@@ -117,12 +117,6 @@ def options():
     tornado.options.define('cache_enabled',
         default=False, type=bool,
         help=('Enable cache'))
-    
-    # Base url and timezone
-    tornado.options.define('base_url', default='api', type=str,
-                           help=('Base url, e.g. "api"'))
-    tornado.options.define('timezone', type=str, default='America/Costa_Rica',
-                           help=('Timezone'))
 
     # Requests with return settings
     # Pagination - Requests that return multiple items will be paginated
