@@ -132,6 +132,8 @@ def main():
         user=opts.sql_user,
         password=None
     )
+    # key-value
+    kvalue=False
     # memcached
     cache = memcache
     # sql
