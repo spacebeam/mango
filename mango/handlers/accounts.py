@@ -81,7 +81,7 @@ class UsersSuspendedHandler(accounts.MangoAccounts, BaseHandler):
     pass
 
 
-@content_type_validation
+# @content_type_validation <----------------------------------- NO!
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User accounts HTTP request handlers
