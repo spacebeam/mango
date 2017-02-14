@@ -346,6 +346,37 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.set_status(204)
         self.finish()
 
+    @gen.coroutine
+    def options(self, email_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Allow', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_status(200)
+
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create account",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not email_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.finish(message)
+
 
 @content_type_validation
 class OrgsHandler(accounts.Orgs, BaseHandler):
