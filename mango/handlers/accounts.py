@@ -31,41 +31,6 @@ httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClien
 
 
 @content_type_validation
-class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
-    '''
-        User active accounts HTTP request handlers
-    '''
-
-    @gen.coroutine
-    def get(self, page_num=0):
-        '''
-            Get user accounts
-        '''
-        # logging request query arguments
-        logging.info('request query arguments {0}'.format(self.request.arguments))
-
-        # request query arguments
-        query_args = self.request.arguments
-
-        # get the current frontend logged username
-        username = self.get_current_username()
-
-        # if the user don't provide an account we use the frontend username as last resort
-        account = (query_args.get('account', [username])[0] if not account else None)
-
-        # account type flag
-        account_type = 'user'
-
-        # status
-        status = 'all'
-
-        users = yield self.get_account_list(account_type, status, page_num)
-
-        self.set_status(200)
-        self.finish({'users':users})
-
-
-@content_type_validation
 class UsersDisableHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User disable accounts HTTP request handlers
@@ -81,7 +46,34 @@ class UsersSuspendedHandler(accounts.MangoAccounts, BaseHandler):
     pass
 
 
-# @content_type_validation <----------------------------------- NO!
+@content_type_validation
+class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
+    '''
+        User active accounts HTTP request handlers
+    '''
+
+    @gen.coroutine
+    def get(self, page_num=0):
+        '''
+            Get user accounts
+        '''
+        # logging request query arguments
+        logging.info('request query arguments {0}'.format(self.request.arguments))
+        # request query arguments
+        query_args = self.request.arguments
+        # get the current frontend logged username
+        username = self.get_current_username()
+        # if the user don't provide an account we use the frontend username as last resort
+        account = (query_args.get('account', [username])[0] if not account else None)
+        # account type flag
+        account_type = 'user'
+        # status
+        status = 'all'
+        users = yield self.get_account_list(account_type, status, page_num)
+        self.set_status(200)
+        self.finish({'users':users})
+
+
 class UsersHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User accounts HTTP request handlers
@@ -94,40 +86,30 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         # logging request query arguments
         logging.info('request query arguments {0}'.format(self.request.arguments))
-
         # request query arguments
         query_args = self.request.arguments
-
         # get the current frontend logged username
         username = self.get_current_username()
-
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
-
         # account type flag
         account_type = 'user'
-
         # status
         status = 'all'
-
         # cache data
         data = None
-
         # return result message
         result = None
-
         if not account:
             users = yield self.get_account_list(account_type, status, page_num)
             self.finish({'users':users})
         else:
             # try to get stuff from cache first
             logging.info('getting users:{0} from cache'.format(account))
-
             try:
                 data = self.cache.get('users:{0}'.format(account))
             except Exception, e:
                 logging.exception(e)
-
             if data is not None:
                 logging.info('users:{0} done retrieving!'.format(account))
                 result = data
@@ -138,13 +120,9 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                         logging.info('new cache entry {0}'.format(str(data)))
                 except Exception, e:
                     logging.exception(e)
-            
             result = (data if data else None)
-
             if not result:
-
                 # -- nead moar info
-
                 self.set_status(400)
                 self.finish({'missing':account.rstrip('/')})
             else:
@@ -158,40 +136,30 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         # logging request query arguments
         logging.info('request query arguments {0}'.format(self.request.arguments))
-
         # request query arguments
         query_args = self.request.arguments
-
         # get the current frontend logged username
         username = self.get_current_username()
-
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
-
         # account type flag
         account_type = 'user'
-
         # status
         status = 'all'
-
         # cache data
         data = None
-
         # return result message
         result = None
-        
         if not account:
             users = yield self.get_account_list(account_type, status, page_num)
             self.finish({'users':users})
         else:
             # try to get stuff from cache first
             logging.info('getting users:{0} from cache'.format(account))
-
             try:
                 data = self.cache.get('users:{0}'.format(account))
             except Exception, e:
                 logging.exception(e)
-
             if data is not None:
                 logging.info('users:{0} done retrieving!'.format(account))
             else:
@@ -201,11 +169,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                         logging.info('new cache entry {0}'.format(str(data)))
                 except Exception, e:
                     logging.exception(e)
-
             result = (data if data else None)
-            
-            #result = yield self.get_account(account.rstrip('/'), account_type)
-
             if not result:
                 # -- need more info
                 self.set_status(400)
@@ -220,31 +184,22 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Create user account
         '''
         struct = yield check_json(self.request.body)
-        
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-
         struct['account_type'] = 'user'
-
         logging.info('new account structure %s' % str(struct))
-
         result = yield self.new_account(struct)
-
         if 'error' in result:
             model = 'User'
             reason = {'duplicates': [(model, 'account'), (model, 'email')]}
-
             message = yield self.let_it_crash(struct, model, result, reason)
-
             logging.warning(message)
-
             self.set_status(400)
             self.finish(message)
             return
-
         def handle_response(response):
             '''
                 Handle response
@@ -253,9 +208,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 logging.error(response.error)
             else:
                 logging.info(response.body)
-
         # -- handle SIP account creation out-of-band <--------------------------------------- refactor this shit kind of thing.
-
         # postgresql insert sip account
         if result:
             data = {'password': struct['password'], 'account': struct['account']}
@@ -269,10 +222,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 'title': 'confirm coturn account',
                 'payload': json.dumps(data)
             }
-            
             # yield the new stuff up
             coturn_account = yield self.new_coturn_account(coturn_struct)
-
             http_client = httpclient.AsyncHTTPClient()
             http_client.fetch(
                 'https://iofun.io/fire/', 
@@ -281,10 +232,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 body=json.dumps({'username': struct['account'], 'password': struct['password']}),
                 callback=handle_response
             )
-
             logging.info(coturn_account)
-
-
         self.set_status(201)
         self.finish({'uuid':result})
 
@@ -352,6 +300,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Resource options
         '''
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers', 'Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range')
         self.set_header('Access-Control-Allow-Origin', '*')
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
@@ -720,19 +669,8 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
         logging.info(
             'accounts records handler account %s member of %s orgs.' % (account, orgs)
-        )
-        # check_type account with organizations
-        #account_type = yield self.check_type(account, 'user')
-        
+        )        
         orgs = yield self.get_orgs_list(account)
-                
-        #if not account_type:
-        #    system_error = errors.Error('invalid')
-        #    self.set_status(400)
-        #    error = system_error.invalid('user', account)
-        #    self.finish(error)
-        #    return
-
         result = yield self.get_record_list( 
             account=account, 
             page_num=page_num,
