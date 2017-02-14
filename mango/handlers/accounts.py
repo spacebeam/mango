@@ -351,10 +351,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
             Resource options
         '''
-        self.set_header('Allow', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
         self.set_header('Access-Control-Allow-Origin', '*')
-        self.set_status(200)
-
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
@@ -375,6 +373,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             message['Allow'].remove('POST')
             message['Allow'].append('PATCH')
             message['Allow'].append('DELETE')
+        self.set_status(200)
         self.finish(message)
 
 
