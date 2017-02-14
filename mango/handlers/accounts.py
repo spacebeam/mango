@@ -244,34 +244,24 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
 
         logging.info('request.arguments {0}'.format(self.request.arguments))
         logging.info('request.body {0}'.format(self.request.body))
-
         struct = yield check_json(self.request.body)
-
         logging.info('patch received struct {0}'.format(struct))
-
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-
         struct['account_type'] = 'user'
-
         logging.info('new update on account structure %s' % str(struct))
-
         MISSING_ACCOUNT_UUID = None
-
         result = yield self.modify_account(account, MISSING_ACCOUNT_UUID, struct)
-
         logging.info(result)
-
         if not result:
             message = 'update failed something is bananas'
             self.set_status(400)
         else:
             message = 'update completed successfully'
             self.set_status(200)
-
         self.finish({'message': message})
 
     @gen.coroutine
@@ -281,16 +271,13 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
         account = account.rstrip('/')
         result = yield self.remove_account(account)
-
         logging.info("why result['n'] ? %s" % str(result))
-
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('user', account)
             self.finish(error)
             return
-
         self.set_status(204)
         self.finish()
 
@@ -300,7 +287,8 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             Resource options
         '''
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         self.set_header('Access-Control-Allow-Origin', '*')
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
@@ -340,34 +328,24 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         # logging request query arguments
         logging.info('request query arguments {0}'.format(self.request.arguments))
-
         # request query arguments
         query_args = self.request.arguments
-
         # get the current frontend logged username
         username = self.get_current_username()
-
         # status
         status = 'all'
-
         # get the current frontend context account
         #organization = self.get_current_org()
-
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
-
         account_type = 'org'
-
         if not account:
             orgs = yield self.get_account_list(account_type, status, page_num) 
             self.finish({'orgs':orgs})
         else:
-
             # try to get stuff from cache first
             logging.info('getting orgs:{0} from cache'.format(account))
-
             data = self.cache.get('orgs:{0}'.format(account))
-
             if data is not None:
                 logging.info('orgs:{0} done retrieving!'.format(account))
                 result = data
@@ -376,13 +354,9 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 if self.cache.add('orgs:{0}'.format(account), data, 1):
                     logging.info('new cache entry {0}'.format(str(data)))
                     result = data
-
             #result = yield self.get_account(account, account_type)
-            
             if not result:
-                
                 # -- need moar info
-
                 self.set_status(400)
                 self.finish({'missing':account})
             else:
@@ -396,33 +370,24 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         # logging request query arguments
         logging.info('request query arguments {0}'.format(self.request.arguments))
-
         # request query arguments
         query_args = self.request.arguments
-
         # get the current frontend logged username
         username = self.get_current_username()
-
         # get the current frontend context account
         #organization = self.get_current_org()
-
         #status
         status = 'all'
-
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
-
         account_type = 'org'
-
         if not account:
             orgs = yield self.get_account_list(account_type, status, page_num) 
             self.finish({'orgs':orgs})
         else:
             # try to get stuff from cache first
             logging.info('getting orgs:{0} from cache'.format(account))
-
             data = self.cache.get('orgs:{0}'.format(account))
-
             if data is not None:
                 logging.info('orgs:{0} done retrieving!'.format(account))
                 result = data
@@ -431,9 +396,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 if self.cache.add('orgs:{0}'.format(account), data, 1):
                     logging.info('new cache entry {0}'.format(str(data)))
                     result = data
-
             #result = yield self.get_account(account, account_type)
-            
             if not result:
                 self.set_status(400)
                 self.finish({'missing':account})
@@ -447,45 +410,31 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             Create organization accounts
         '''
         logging.info('hola hola hola hola')
-
         struct = yield check_json(self.request.body)
-
         logging.error(struct)
-
         struct['account_type'] = 'org'
-
         org = struct['account']
-        
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-
         # logging new contact structure
         logging.info('new contact structure {0}'.format(str(struct)))
-
         # logging request query arguments
         logging.info(self.request.arguments)
-
         # request query arguments
         query_args = self.request.arguments
-
         # get owner account from new org struct
         owner_user = struct.get('owner', None)
-
         # get the current frontend logged username
         username = self.get_current_username()
-
         # last but not least, we check query_args for owner
         owner_user = (query_args.get('owner', [username])[0] if not owner_user else owner_user)
-        
         # we use the front-end username as last resort
         #if not struct.get('owner'):
         #    struct['owner'] = owner_user
-
         new_org = yield self.new_account(struct)
-        
         if 'error' in new_org:
             scheme = 'org'
             reason = {'duplicates':[
@@ -497,18 +446,15 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             self.set_status(400)
             self.finish(message)
             return
-
         team = {
             'name': 'owners',
             'permission': 'admin',
             'members': [owner_user]
         }
-
         check_member, check_team = yield [
             self.new_member(org, owner_user),
             self.new_team(org, team)
         ]
-
         self.set_status(201)
         self.finish({'uuid':new_org})
 
@@ -518,30 +464,22 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             Delete organization account
         '''
         org = account.rstrip('/')
-        
         # for each member in members remove member.
         members = yield self.get_members(org)
         members = (members['members'] if members['members'] else False)
-        
         # clean this hack
-        
         for user in members:
             rmx = yield self.remove_member(org, user)
-            
         # check_member = yield self.remove_member(org_id, current_user)
-        
         result = yield self.remove_account(org)
-
         # again with the result['n'] stuff... what is this shit?
         logging.info('check for n stuff %s' % (result))
-        
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('org', org)
             self.finish(error)
             return
-
         self.set_status(204)
         self.finish()
 
@@ -589,48 +527,33 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
             Add or update organization membership
         '''
         struct = yield check_json(self.request.body)
-
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-
         # setting database
         db = self.settings.get('db')
-
         # logging new contact structure
         logging.info('put organization membership structure {0}'.format(format_pass))
-
         # request query arguments
         query_args = self.request.arguments
-
         # get account from struct
         account = struct.get('account', None)
-
         # get the current gui username
         username = self.get_current_username()
-
         # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
-
         # we use the front-end username as last resort
         if not struct.get('account'):
             struct['account'] = account
-
         logging.warning('confirm permission for this account {0}'.format(struct.get('account')))
-
         struct.pop('account', None)
-
         new_membership = yield self.new_membership(struct)
-
         new_membership.pop('created', None)
-
         if not new_membership:
-
             self.set_status(400)
             return
-
         self.set_status(201)
         self.finish(new_membership)
 
@@ -639,19 +562,15 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         '''
             Delete membership
         '''
-
         result = yield self.remove_member(account, user)
-
         # again with the result['n'] stuff... what is this shit?
         logging.info('check for n stuff %s' % (result))
-        
         if not result['n']:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('org', org)
             self.finish(error)
             return
-
         self.set_status(204)
         self.finish()
 
@@ -688,54 +607,40 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         '''
         struct = yield check_json(self.request.body)
         db = self.settings['db']
-
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-        
         if account == self.get_current_user():
             struct['account'] = account
-        
         # check if ORGs follows same pattern.
-        
         else:
             self.set_status(404)
             self.finish({'WARNING':'Pre-Access patterns research'})
             return
-        
         record = yield self.new_detail_record(struct)
-
         if not record:
             model = 'Records'
             error = {'record':False}
             reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
-
             message = yield self.let_it_crash(struct, model, error, reason)
-
             self.set_status(400)
             self.finish(message)
             return
-
         # -- handle this out-of-band.
-
         resource = {
             'account': account,
             'resource': 'records',
             'uuid': record
         }
-
         update = yield new_resource(db, resource)
-
         # logging new resource update
         logging.info('update %s' % update)
-
         if not update:
             logging.warning(
                 'account: %s new_resource record: %s update.' % (account, record)
             )
-
         self.set_status(201)
         self.finish({'uuid':record})
 
@@ -757,20 +662,13 @@ class RoutesHandler(accounts.Accounts, BaseHandler):
         '''
             Create new record billing route
         '''
-        
         struct = yield check_json(self.request.body)
-        
         # where is the error msg?
-
         if not struct:
             self.set_status(400)
             self.finish(error)
             return
-        
         struct['account'] = account
-
-        logging.info('routes handler struct? %s' % (struct))
-                
+        logging.info('routes handler struct? %s' % (struct)) 
         result = yield self.new_route(struct)
-
         self.finish()
