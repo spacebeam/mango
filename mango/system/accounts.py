@@ -12,14 +12,10 @@ __author__ = 'Team Machine'
 
 
 import logging
-
 import motor
 import uuid
-
 from tornado import gen
-
 from mango.messages import accounts
-
 from mango.tools import clean_structure, clean_results
 
 
