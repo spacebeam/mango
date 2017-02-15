@@ -22,8 +22,6 @@ from mango.messages import accounts
 
 from mango.tools import clean_structure, clean_results
 
-# Systems are distribute applications build with organisational programming principles.
-
 
 class Accounts(object):
     '''

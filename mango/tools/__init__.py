@@ -367,7 +367,7 @@ def content_type_validation(handler_class):
                 Content-Type checker implementation
             '''
             content_type = handler.request.headers.get("Content-Type", "")
-            if content_type is None or not content_type.startswith('application/json'):
+            if content_type is not None and not content_type.startswith('application/json'):
                 handler.set_status(415)
                 handler._transforms = []
                 handler.finish({
