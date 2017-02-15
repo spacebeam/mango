@@ -278,7 +278,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.finish()
 
     @gen.coroutine
-    def options(self, email_uuid=None):
+    def options(self, account_uuid=None):
         '''
             Resource options
         '''
@@ -300,7 +300,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 },
             }
         }
-        if not email_uuid:
+        if not account_uuid:
             message['POST'] = POST
         else:
             message['Allow'].remove('POST')

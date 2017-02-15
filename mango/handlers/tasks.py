@@ -324,7 +324,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 },
             }
         }
-        if not email_uuid:
+        if not task_uuid:
             message['POST'] = POST
         else:
             message['Allow'].remove('POST')
