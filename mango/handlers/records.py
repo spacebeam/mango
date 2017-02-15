@@ -14,24 +14,17 @@ __author__ = 'Team Machine'
 import time
 import arrow
 import motor
-
 import logging
-
 import pandas as pd
-
 import ujson as json
-
 from tornado import gen
 from tornado import web
-
 from mango.system import accounts
 from mango.system import records
-
 from mango.tools import check_json
 from mango.tools import check_times
 from mango import errors
 from mango.tools import new_resource
-
 from mango.handlers import BaseHandler
 
 
@@ -313,10 +306,8 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                 if 'hours' in lapse:
                     # pandas data-frames
                     frame['minutes'] = frame['seconds'] / 60
-                    
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
-                    
                     # get a dict of results from the data-frame
                     result =  dict(hours['records'])
                     minutes = dict(hours['minutes'])
@@ -325,12 +316,10 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                         int(time.mktime(key.timetuple())): int(result[key])
                         for key in result
                     }            
-                    
                     minutes = {
                         int(time.mktime(key.timetuple())): int(minutes[key])
                         for key in minutes
                     }
-
                     self.finish(
                         json.dumps({
                             'records': result, 
@@ -338,11 +327,9 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                         })
                     )
                     return
-            
             result = frame['records'].sum()
             seconds = frame['seconds'].sum()
             average = frame['average'].sum()
-        
             minutes = seconds / 60
             min_avg = average / 60
             
@@ -368,19 +355,13 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         seconds = 0
         minutes = 0
         record_avg = 0
-
         times = yield check_times(start, end)
-
         logging.info('Start {0} and {1} end times\n'.format(start, end))
-
         if not account:
             account = self.current_user
-
         orgs = yield self.get_orgs_list(account)
         account_list = (orgs['orgs'] if orgs else False)
-
         logging.info('Get summary for {0} or {1} lapse {2}\n'.format(account, account_list, lapse))
-
         if account_list:
             account_list.append(account)
             summary = yield self.get_summary(
@@ -395,43 +376,31 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                                              start=times['start'],
                                              end=times['end'])
         if summary:
-
             logging.warning("Remove record.get('_id') {0} from query\n".format(record.get('_id')))
-            
             dates = [record['_id'] for record in summary]
-            
             for x in summary:
                 del x['_id']
-            
             frame = pd.DataFrame(summary)
             frame = frame.join(pd.DataFrame(dates))
-        
             if lapse:
                 lapse = lapse.rstrip('/')
-
                 logging.info('time lapse on summaries: %s' % lapse)
-
                 if 'hours' in lapse:
                     # pandas data-frames
                     frame['minutes'] = frame['seconds'] / 60
-
                     # research pandas dataframe set_index
                     hours = frame[['records', 'minutes', 'start']].groupby('start').sum()
-
                     # get a dict of results from the data-frame
                     result =  dict(hours['records'])
                     minutes = dict(hours['minutes'])
-
                     result = {         
                         int(time.mktime(key.timetuple())): int(result[key]) 
                         for key in result
                     }            
-
                     minutes = {
                         int(time.mktime(key.timetuple())): int(minutes[key])
                         for key in minutes
                     }
-
                     self.finish(
                         json.dumps({
                             'records': result, 
@@ -439,16 +408,12 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                         })
                     )
                     return
-
             result = frame['result'].sum()
             seconds = frame['seconds'].sum()
             average = frame['average'].sum()
-        
             minutes = seconds / 60
             min_avg = average / 60
-            
             record_avg = round(min_avg / result)
-        
         self.finish({'records': int(result),
                      'minutes': int(minutes),
                      'seconds': int(seconds),

@@ -124,41 +124,31 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             Get tasks handler
         '''
         status = 'all'
-        
         # request query arguments
         query_args = self.request.arguments
-
         if query_args:
             page_num = int(query_args.get('page', [page_num])[0])
-
         #account = (self.request.arguments.get('account', [None])[0] if not account else account)
-
         # query string checked from string to boolean
         #checked = str2bool(str(self.request.arguments.get('checked', [False])[0]))
-
         if task_uuid:
             task_uuid = task_uuid.rstrip('/')
-
             if self.current_user:
                 user = self.current_user
                 task = yield self.get_task(user, task_uuid)
             else:
                 task = yield self.get_task(None, task_uuid)
-
             if not task:
                 self.set_status(400)
                 system_error = errors.Error('missing')
                 error = system_error.missing('task', task_uuid)
                 self.finish(error)
                 return
-
             self.finish(clean_structure(task))
             return
-
         if self.current_user:
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
-            
             account_list = (orgs['orgs'] if orgs else False)
             if not account_list:
                 result = yield self.get_task_list(
@@ -178,9 +168,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                         end=end,
                                         page_num=page_num)
         else:
-
             # where is the query string?
-
             result = yield self.get_task_list(
                                     account=None,
                                     lapse=lapse,
@@ -188,12 +176,8 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                     start=start,
                                     end=end,
                                     page_num=page_num)
-
-
         logging.info(result)
-
         result = json.dumps(result)
-
         self.finish(result)
 
     @gen.coroutine
@@ -306,10 +290,10 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         '''
             Resource options
         '''
+        self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
-        self.set_header('Access-Control-Allow-Origin', '*')
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
@@ -357,6 +341,38 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         
         self.finish({'results': result})
 
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not task_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
+
 
 class UnassignedHandler(tasks.Tasks, BaseHandler):
     '''
@@ -373,3 +389,35 @@ class UnassignedHandler(tasks.Tasks, BaseHandler):
                                                    end=None,
                                                    page_num=page_num)
         self.finish(result)
+
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not task_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
