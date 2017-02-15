@@ -14,25 +14,18 @@ __author__ = 'Team Machine'
 import time
 import arrow
 import motor
-
 import logging
-
 import pandas as pd
-
 import ujson as json
-
 from tornado import gen
 from tornado import web
-
 from mango.system import accounts
 from mango.system import tasks
-
 from mango.tools import check_json
 from mango.tools import check_times
 from mango import errors
 from mango.tools import new_resource
 from mango.tools import clean_structure
-
 from mango.handlers import BaseHandler
 
 
@@ -63,6 +56,38 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         result = json.dumps(message)
         self.finish(result)
 
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not task_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
+
 class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -86,6 +111,38 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           page_num=page_num)
         result = json.dumps(result)
         self.finish(result)
+
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not task_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
 
 
 class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
@@ -111,6 +168,38 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
                                           page_num=page_num)
         result = json.dumps(result)
         self.finish(result)
+
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not task_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
 
 
 class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
