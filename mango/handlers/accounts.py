@@ -287,18 +287,16 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         self.set_header('Access-Control-Allow-Origin', '*')
         message = {
-            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         POST = {
-            "POST": {
-                "description": "Create account",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create account",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
         }
         if not account_uuid:
             message['POST'] = POST
