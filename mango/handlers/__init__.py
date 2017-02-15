@@ -16,13 +16,11 @@ import motor
 import queries
 from tornado import gen
 from tornado import web
-from zmq.eventloop import ioloop
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
 from mango.tools import clean_structure
 from mango.tools import check_account_authorization
 from mango import errors
-from mango.tools.quotes import PeopleQuotes
 import logging
 
 

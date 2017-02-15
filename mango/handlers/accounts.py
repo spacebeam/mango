@@ -20,7 +20,6 @@ from tornado import web
 from mango import errors
 from mango.system import accounts
 from mango.system import records
-from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import new_resource
 from mango.handlers import BaseHandler
@@ -30,7 +29,6 @@ from tornado import httpclient
 httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
 
 
-@content_type_validation
 class UsersDisableHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User disable accounts HTTP request handlers
@@ -38,7 +36,6 @@ class UsersDisableHandler(accounts.MangoAccounts, BaseHandler):
     pass
 
 
-@content_type_validation
 class UsersSuspendedHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User suspended accounts HTTP request handlers
@@ -46,7 +43,6 @@ class UsersSuspendedHandler(accounts.MangoAccounts, BaseHandler):
     pass
 
 
-@content_type_validation
 class UsersActiveHandler(accounts.MangoAccounts, BaseHandler):
     '''
         User active accounts HTTP request handlers
@@ -314,7 +310,6 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         self.finish(message)
 
 
-@content_type_validation
 class OrgsHandler(accounts.Orgs, BaseHandler):
     '''
         Organization account resource handlers
@@ -484,7 +479,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         self.finish()
 
 
-@content_type_validation
 class TeamsHandler(accounts.Orgs, BaseHandler):
     '''
         Teams resource handlers
@@ -492,7 +486,6 @@ class TeamsHandler(accounts.Orgs, BaseHandler):
     pass
 
 
-@content_type_validation
 class MembersHandler(accounts.Orgs, BaseHandler):
     '''
         Members resource handlers
@@ -506,7 +499,6 @@ class MembersHandler(accounts.Orgs, BaseHandler):
         logging.warning('get member')
 
 
-@content_type_validation
 class MembershipsHandler(accounts.Orgs, BaseHandler):
     '''
         Memberships resource handlers
@@ -575,7 +567,6 @@ class MembershipsHandler(accounts.Orgs, BaseHandler):
         self.finish()
 
 
-@content_type_validation
 class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
     '''
         Records resource handlers
@@ -645,7 +636,6 @@ class RecordsHandler(accounts.Accounts, records.Records, BaseHandler):
         self.finish({'uuid':record})
 
 
-@content_type_validation
 class RoutesHandler(accounts.Accounts, BaseHandler):
     '''
         Routes resource handlers

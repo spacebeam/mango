@@ -17,7 +17,6 @@ import motor
 
 import logging
 
-# import numpy as np
 import pandas as pd
 
 import ujson as json
@@ -28,7 +27,6 @@ from tornado import web
 from mango.system import accounts
 from mango.system import tasks
 
-from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import check_times
 from mango import errors
@@ -38,7 +36,6 @@ from mango.tools import clean_structure
 from mango.handlers import BaseHandler
 
 
-@content_type_validation
 class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -66,7 +63,6 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         result = json.dumps(message)
         self.finish(result)
 
-@content_type_validation
 class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -92,7 +88,6 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.finish(result)
 
 
-@content_type_validation
 class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -118,7 +113,6 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.finish(result)
 
 
-@content_type_validation
 class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
     '''
         Tasks HTTP request handlers
@@ -290,13 +284,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.finish({'message': 'update completed successfully'})
 
     @gen.coroutine
-    def put(self):
-        '''
-            Put tasks handler
-        '''
-        pass
-
-    @gen.coroutine
     def delete(self, task_uuid):
         '''
             Delete tasks handler
@@ -314,8 +301,39 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         self.set_status(204)
         self.finish()
 
+    @gen.coroutine
+    def options(self, task_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Origin', '*')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create task",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not email_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
 
-@content_type_validation
+
 class PublicHandler(tasks.Tasks, BaseHandler):
     '''
         Mango public tasks handler
@@ -340,7 +358,6 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         self.finish({'results': result})
 
 
-@content_type_validation
 class UnassignedHandler(tasks.Tasks, BaseHandler):
     '''
         Unassigned requests handler

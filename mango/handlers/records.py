@@ -17,7 +17,6 @@ import motor
 
 import logging
 
-# import numpy as np
 import pandas as pd
 
 import ujson as json
@@ -28,7 +27,6 @@ from tornado import web
 from mango.system import accounts
 from mango.system import records
 
-from mango.tools import content_type_validation
 from mango.tools import check_json
 from mango.tools import check_times
 from mango import errors
@@ -37,7 +35,6 @@ from mango.tools import new_resource
 from mango.handlers import BaseHandler
 
 
-@content_type_validation
 class Handler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Records HTTP request handlers
@@ -186,8 +183,39 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.set_status(204)
         self.finish()
 
+    @gen.coroutine
+    def options(self, record_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Origin', '*')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "POST": {
+                "description": "Create account",
+                "parameters": {
+                    "labels": {
+                        "type": "array/string",
+                        "description": "Labels to associate with."
+                    }
+                },
+            }
+        }
+        if not email_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
 
-@content_type_validation
+
 class PublicHandler(records.Records, BaseHandler):
     '''
         Mango public records handler
@@ -211,7 +239,6 @@ class PublicHandler(records.Records, BaseHandler):
         self.finish({'results': result})
 
 
-@content_type_validation
 class UnassignedHandler(records.Records, BaseHandler):
     '''
         Unassigned requests handler
@@ -229,7 +256,6 @@ class UnassignedHandler(records.Records, BaseHandler):
         self.finish(result)
 
 
-@content_type_validation
 class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
         Summary requests handler 
@@ -327,7 +353,6 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                      'record_avg': int(record_avg)})
 
 
-@content_type_validation
 class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
        Summaries requests handler.

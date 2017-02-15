@@ -13,7 +13,6 @@ __author__ = 'Team Machine'
 
 import time
 import arrow
-import datetime
 import ujson as json
 import motor
 
@@ -234,76 +233,6 @@ def new_resource(db, struct, collection=None, scheme=None):
 
     raise gen.Return(message)
 
-@gen.coroutine
-def resource_exists(db, struct):
-    '''
-        resource_exists
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def last_modified(db, struct):
-    '''
-        last_modified
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def moved_permanently(db, struct):
-    '''
-        moved_permanently
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def moved_temporarily(db, struct):
-    '''
-        moved_temporarily
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def previously_existed(db, struct):
-    '''
-        previosly_existed
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def resource_exists(db, struct):
-    '''
-        resource_exists
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def forbidden_resource(db, struct):
-    '''
-        forbidden_resource
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def delete_resource(db, struct):
-    '''
-        delete_resource
-
-        exist, exists, existed
-    '''
-
-@gen.coroutine
-def delete_completed(db, struct):
-    '''
-        delete_resource
-    '''
-
 def clean_message(struct):
     '''
         clean message structure
@@ -348,91 +277,3 @@ def clean_results(results):
     ]
 
     return {'results': results}
-
-def content_type_validation(handler_class):
-    '''
-        Content type validation
-    
-        @decorator
-    '''
-
-    def wrap_execute(handler_execute):
-        '''
-            Content-Type checker
-
-            Wrapper execute function
-        '''
-        def ctype_checker(handler, kwargs):
-            '''
-                Content-Type checker implementation
-            '''
-            content_type = handler.request.headers.get("Content-Type", "")
-            if content_type is not None and not content_type.startswith('application/json'):
-                handler.set_status(415)
-                handler._transforms = []
-                handler.finish({
-                    'status': 415,
-                    'reason': 'Unsupported Media Type',
-                    'message': 'Must ACCEPT application/json: '\
-                    '[\"%s\"]' % content_type 
-                })
-                return False
-            return True
-
-        def _execute(self, transforms, *args, **kwargs):
-            '''
-                Execute the wrapped function
-            '''
-            if not ctype_checker(self, kwargs):
-                return False
-            return handler_execute(self, transforms, *args, **kwargs)
-
-        return _execute
-
-    handler_class._execute = wrap_execute(handler_class._execute)
-    return handler_class
-
-def content_type_msgpack_validation(handler_class):
-    '''
-        Content-Type validation
-        type: application/msgpack
-        
-        This function is a @decorator.
-    '''
-
-    def wrap_execute(handler_execute):
-        '''
-            Content-Type checker
-
-            Wrapper execute function
-        '''
-
-        def content_type_checker(handler, kwargs):
-            '''
-                Content-Type checker implementation
-            '''
-            content_type = handler.request.headers.get('Content-Type', "")
-            if content_type is None or not content_type.startswith('application/msgpack'):
-                handler.set_status(415)
-                handler._transforms = []
-                handler.finish({
-                    'status': 415,
-                    'reason': 'Unsupported Media Type',
-                    'message': 'Must ACCEPT application/msgpack: '\
-                               '[\"%s\"]' % content_type
-                })
-                return False
-            return True
-
-        def _execute(self, transforms, *args, **kwargs):
-            '''
-                Execute the wrapped function
-            '''
-            if not content_type_checker(self, kwargs):
-                return False
-            return handler_execute(self, transforms, *args, **kwargs)
-
-        return _execute
-
-    handler_class._execute = wrap_execute(handler_class._execute)
-    return handler_class
