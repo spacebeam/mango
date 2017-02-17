@@ -28,12 +28,12 @@ class TaskMap(object):
         struct
     ):
         '''
-            Task structure from your mango.
+            Task map structure
         '''
         bucket = client.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
         bucket.set_properties({'search_index': search_index})
         self.map = Map(bucket, None)
-
+        # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
         self.map.registers['account'].assign(struct.get('account', ''))
         self.map.registers['hello_message'].assign(struct.get('hello_message', ''))
@@ -80,7 +80,6 @@ class TaskMap(object):
         self.map.registers['description'].assign(struct.get('description', ''))
         self.map.registers['created_by'].assign(struct.get('created_by', ''))
         self.map.registers['modified_by'].assign(struct.get('modified_by', ''))
-        
         # end of the map stuff
         self.map.store()
 

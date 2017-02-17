@@ -11,9 +11,8 @@
 __author__ = 'Team Machine'
 
 
-import arrow
 import uuid
-
+import arrow
 from schematics import models
 from schematics import types
 from schematics.types import compound
@@ -37,66 +36,40 @@ class Record(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     uniqueid = types.StringType()
-
     callerid = types.StringType()
-
     account = types.StringType()
+    labels = compound.ListType(types.StringType())
     accountcode = types.StringType()
-    userfield = types.StringType()
-
     queue = compound.ModelType(FromQueue)
-    
     assigned = types.BooleanType(default=False)
     checked = types.BooleanType(default=False)
-
     public = types.BooleanType(default=False)
-
     source = types.StringType()
     destination = types.StringType()
-    
     channel = types.StringType()
     source_channel = types.StringType()
-    
     context = types.StringType()
-
     destination_context = types.StringType()
-
     destination_number = types.StringType()
-    
     destination_channel = types.StringType()
-
-    strdate = types.StringType()
-    
     start = types.DateTimeType()
     answer = types.DateTimeType()
     end = types.DateTimeType()
-
     duration = types.IntType()
     seconds = types.IntType()
     minutes = types.IntType()
     billsec = types.IntType()
     billing = types.IntType()
-
     disposition = types.StringType()
     status = types.StringType()
-
-    amaflags = types.StringType()
-
     lastapp = types.StringType()
     lastdata = types.StringType()
-
     recorded = types.BooleanType(default=False)
     record_uri = types.StringType()
-
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-
-    #details = compound.ModelType(Log)
-    #comments = compound.ModelType(Comment)
-
     created_at = types.DateTimeType(default=arrow.utcnow().naive)
     last_modified = types.DateTimeType()
     updated_by = types.DateTimeType()
     updated_at = types.DateTimeType()
-
     uri = types.StringType()

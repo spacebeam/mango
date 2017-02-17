@@ -11,23 +11,19 @@
 __author__ = 'Team Machine'
 
 
-import uuid
-import uuid as _id
-
+import uuid as _uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-
 from mango.messages import tasks
 from mango.messages import records
 
 
 class SimpleResource(models.Model):
     '''
-        Simple resource
+        Simple Resource
     '''
     contains = compound.ListType(types.UUIDType())
-
     total = types.IntType()
 
 
@@ -38,13 +34,12 @@ class Resource(models.Model):
     records = compound.ModelType(SimpleResource)
     tasks = compound.ModelType(SimpleResource)
     addresses = compound.ModelType(SimpleResource)
-
     total = types.IntType()
 
 
 class BaseResult(models.Model):
     '''
-        base result
+        Base result
     '''
     count = types.IntType()
     page = types.IntType()
@@ -53,19 +48,19 @@ class BaseResult(models.Model):
 
 class BaseHistory(models.Model):
     '''
-        base history
+        Base History
 
         Scopes: accounts, numbers
     '''
-    uuid = types.UUIDType(default=_id.uuid4)
-    record_uuid = types.UUIDType(default=_id.uuid4)
-    ban =  types.UUIDType(default=_id.uuid4) # 'billing account number'
+    uuid = types.UUIDType(default=_uuid.uuid4)
+    record_uuid = types.UUIDType(default=_uuid.uuid4)
+    ban =  types.UUIDType(default=_uuid.uuid4) # 'billing account number'
     country_number = types.IntType()
     number = types.StringType()
-    campaign_uuid = types.UUIDType(default=_id.uuid4)
+    campaign_uuid = types.UUIDType(default=_uuid.uuid4)
     start_time = types.DateTimeType()
-    caller_id = types.StringType()
-    caller_id_name = types.StringType()
+    caller_uuid = types.StringType()
+    caller_uuid_name = types.StringType()
     origin_number = types.StringType()
     origin_city = types.StringType()
     origin_state = types.StringType()
@@ -85,24 +80,24 @@ class BaseHistory(models.Model):
 
 class ConectedDuration(models.Model):
     '''
-        connected duration
+        Connected Duration
     '''
-    uuid = types.UUIDType(default=_id.uuid4)
-    customer_uuid = types.UUIDType(default=_id.uuid4)
+    uuid = types.UUIDType(default=_uuid.uuid4)
+    customer_uuid = types.UUIDType(default=_uuid.uuid4)
     phone_1 = types.StringType()
     first_name = types.StringType()
     rep_phone = types.StringType()
     keyword = types.StringType()
     duration_unrounded = types.IntType()
-    record_uuid = types.UUIDType(default=_id.uuid4)
+    record_uuid = types.UUIDType(default=_uuid.uuid4)
 
 
 class VoiceCall(models.Model):
     '''
-        voice call
+        Voice Call
     '''
-    uuid = types.UUIDType(default=_id.uuid4)
-    account_uuid = types.UUIDType(default=_id.uuid4)
+    uuid = types.UUIDType(default=_uuid.uuid4)
+    account_uuid = types.UUIDType(default=_uuid.uuid4)
     phone_1 = types.StringType()
     first_name = types.StringType()
     last_name = types.StringType()

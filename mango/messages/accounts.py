@@ -13,11 +13,9 @@ __author__ = 'Team Machine'
 
 import arrow
 import uuid
-
 from schematics import models
 from schematics import types
 from schematics.types import compound
-
 from mango.messages import Resource
 
 
@@ -26,7 +24,7 @@ class Membership(models.Model):
         Org membership
     '''
     username = types.StringType(required=True)
-    status = types.StringType(default='pending') # yeah aqui poner la vara con la lista de validas shits and shit
+    status = types.StringType(default='pending')
     role = types.StringType(required=True)
     org = types.StringType(required=True)
     created = types.DateTimeType(default=arrow.utcnow().naive)
@@ -105,7 +103,6 @@ class CleanBase(models.Model):
     active = types.BooleanType()
     status = types.StringType()
     account = types.StringType()
-    name = types.StringType()           # is this fucker really needed???????
     email = types.EmailType()
     is_admin = types.BooleanType()
     phone_number = types.StringType()
@@ -178,8 +175,5 @@ class Org(BaseAccount):
         Org account
     '''
     account_type = types.StringType(default='org')
-    
-    # tests for members and teams.
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
-    description = types.StringType()
