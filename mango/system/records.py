@@ -15,7 +15,7 @@ import logging
 import arrow
 import datetime
 import motor
-import uui
+import uuid
 import numpy as np
 import pandas as pd
 from tornado import gen
