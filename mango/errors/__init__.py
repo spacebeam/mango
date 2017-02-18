@@ -11,19 +11,6 @@
 __author__ = 'Team Machine'
 
 
-'''
-    A supervisor is created to watch the servers and the servers 
-    itself acts as monitors for the supervisor daemon.
-
-    Most watchdog/supervisor type systems start two processes 
-    that watch each other in addition to the target process(es).
-
-    Monit and supervisord watch each other in addition to the system process(es).
-
-    Inside our system overlords have monitor capabilities, of course overlords are build with Erlang.
-'''
-
-
 class Error(object):
     '''
         Mango custom error class

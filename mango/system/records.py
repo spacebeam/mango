@@ -12,22 +12,15 @@ __author__ = 'Team Machine'
 
 
 import logging
-
 import arrow
 import datetime
 import motor
-
-import uuid
-
-# import numpy as np
+import uui
+import numpy as np
 import pandas as pd
-
 from tornado import gen
-
 from mango.messages import records, BaseResult
-
 from mango.tools import clean_structure, clean_message
-#from mango.tools import clean_results
 from mango.tools import check_times, check_times_get_datetime
 
 

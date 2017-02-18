@@ -12,21 +12,14 @@ __author__ = 'Team Machine'
 
 
 import logging
-
 import arrow
 import motor
-
 import uuid
-
-# import numpy as np
+import numpy as np
 import pandas as pd
-
 from schematics.types import compound
-
 from tornado import gen
-
 from mango.messages import tasks, BaseResult
-
 from mango.tools import clean_structure
 from mango.tools import check_times
 

@@ -13,7 +13,6 @@ __author__ = 'Team Machine'
 
 import time
 import random
-
 import logging
 import base64
 

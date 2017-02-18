@@ -181,23 +181,21 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
             Resource options
         '''
+        self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
-        self.set_header('Access-Control-Allow-Origin', '*')
         message = {
-            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         POST = {
-            "POST": {
-                "description": "Create account",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create contact",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
         }
         if not record_uuid:
             message['POST'] = POST
@@ -231,6 +229,36 @@ class PublicHandler(records.Records, BaseHandler):
         
         self.finish({'results': result})
 
+    @gen.coroutine
+    def options(self, record_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "description": "Create contact",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
+        }
+        if not record_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
+
 
 class UnassignedHandler(records.Records, BaseHandler):
     '''
@@ -247,6 +275,36 @@ class UnassignedHandler(records.Records, BaseHandler):
                                                    end=None,
                                                    page_num=page_num)
         self.finish(result)
+
+    @gen.coroutine
+    def options(self, record_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "description": "Create contact",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
+        }
+        if not record_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
 
 
 class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
@@ -339,6 +397,36 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
                      'minutes': int(minutes),
                      'record_avg': int(record_avg)})
 
+    @gen.coroutine
+    def options(self, record_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "description": "Create contact",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
+        }
+        if not record_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
+
 
 class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
     '''
@@ -418,3 +506,34 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
                      'minutes': int(minutes),
                      'seconds': int(seconds),
                      'record_avg': int(record_avg)})
+
+
+    @gen.coroutine
+    def options(self, record_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        POST = {
+            "description": "Create contact",
+            "parameters": {
+                "labels": {
+                    "type": "array/string",
+                    "description": "Labels to associate with."
+                }
+            },
+        }
+        if not record_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
