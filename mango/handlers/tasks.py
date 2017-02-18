@@ -435,19 +435,19 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                         "description": "url to associate with."
                     },
                     "start": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Started task"
                     },
                     "ack": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Ack task"
                     },
                     "stop": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Ended task"
                     },
                     "deadline": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Deadline task value"
                     },
                     "duration": {
@@ -475,15 +475,15 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                         "description": "Updated by to associate with."
                     },
                     "updated_at": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Updated date to associate with."
                     },
                     "created_at": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Created date to associate with."
                     },
                     "last_modified": {
-                        "type": "string",
+                        "type": "datetime/string",
                         "description": "Last modified date to associate with."
                     }
                 },
