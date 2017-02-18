@@ -390,7 +390,10 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             "POST": {
                 "description": "Create task",
                 "parameters": {
-                    #uuid
+                    "uuid": {
+                        "type": "string",
+                        "description": "uuid to associate task with."
+                    },
                     "account": {
                         "type": "string",
                         "description": "Account to associate with."
@@ -404,7 +407,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                         "description": "Description to associate with."
                     },
                     "payload": {
-                        "type": "array/string", #not sure
+                        "type": "string", #not sure
                         "description": "Payload to associate with."
                     },
                     "assignees": {
@@ -432,27 +435,33 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                         "description": "url to associate with."
                     },
                     "start": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Started task"
                     },
                     "ack": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Ack task"
                     },
                     "stop": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Ended task"
                     },
                     "deadline": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Deadline task value"
                     },
                     "duration": {
                         "type": "string",
                         "description": "Duration to associate task with."
                     },
-                    #comments
-                    #status
+                    "comments": {
+                        "type": "string",
+                        "description": "Comments to associate task with."
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status to associate task with."
+                    },
                     "checked": {
                         "type": "boolean",
                         "description": "Checked status to associate with."
@@ -466,15 +475,15 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                         "description": "Updated by to associate with."
                     },
                     "updated_at": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Updated date to associate with."
                     },
                     "created_at": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Created date to associate with."
                     },
                     "last_modified": {
-                        "type": "datetime",
+                        "type": "string",
                         "description": "Last modified date to associate with."
                     }
                 },
