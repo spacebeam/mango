@@ -390,13 +390,92 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             "POST": {
                 "description": "Create task",
                 "parameters": {
+                    #uuid
                     "account": {
-                        "type": "array/string",
+                        "type": "string",
                         "description": "Account to associate with."
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Title to associate with."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description to associate with."
+                    },
+                    "payload": {
+                        "type": "array/string", #not sure
+                        "description": "Payload to associate with."
+                    },
+                    "assignees": {
+                        "type": "array/string",
+                        "description": "Assignees to associate with."
+                    },
+                    "public": {
+                        "type": "boolean",
+                        "description": "Public true/false"
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Source to associate with."
+                    },
+                    "destination": {
+                        "type": "string",
+                        "description": "Destination to associate with."
                     },
                     "labels": {
                         "type": "array/string",
                         "description": "Labels to associate with."
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "url to associate with."
+                    },
+                    "start": {
+                        "type": "datetime",
+                        "description": "Started task"
+                    },
+                    "ack": {
+                        "type": "datetime",
+                        "description": "Ack task"
+                    },
+                    "stop": {
+                        "type": "datetime",
+                        "description": "Ended task"
+                    },
+                    "deadline": {
+                        "type": "datetime",
+                        "description": "Deadline task value"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "description": "Duration to associate task with."
+                    },
+                    #comments
+                    #status
+                    "checked": {
+                        "type": "boolean",
+                        "description": "Checked status to associate with."
+                    },
+                    "checked_by": {
+                        "type": "string",
+                        "description": "Checked by to associate with."
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "description": "Updated by to associate with."
+                    },
+                    "updated_at": {
+                        "type": "datetime",
+                        "description": "Updated date to associate with."
+                    },
+                    "created_at": {
+                        "type": "datetime",
+                        "description": "Created date to associate with."
+                    },
+                    "last_modified": {
+                        "type": "datetime",
+                        "description": "Last modified date to associate with."
                     }
                 },
             }
