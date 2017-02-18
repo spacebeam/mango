@@ -390,6 +390,10 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             "POST": {
                 "description": "Create task",
                 "parameters": {
+                    "account": {
+                        "type": "array/string",
+                        "description": "Account to associate with."
+                    },
                     "labels": {
                         "type": "array/string",
                         "description": "Labels to associate with."
