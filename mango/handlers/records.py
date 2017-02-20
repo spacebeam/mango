@@ -19,6 +19,7 @@ import pandas as pd
 import ujson as json
 from tornado import gen
 from tornado import web
+from mango.messages import records as record_models
 from mango.system import accounts
 from mango.system import records
 from mango.tools import check_json
@@ -186,17 +187,28 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = records_models.Record.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create contact",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not record_uuid:
             message['POST'] = POST
         else:
@@ -239,17 +251,28 @@ class PublicHandler(records.Records, BaseHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = records_models.Record.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create contact",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not record_uuid:
             message['POST'] = POST
         else:
@@ -286,17 +309,28 @@ class UnassignedHandler(records.Records, BaseHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = records_models.Record.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create contact",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not record_uuid:
             message['POST'] = POST
         else:
@@ -407,17 +441,28 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = records_models.Record.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create contact",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not record_uuid:
             message['POST'] = POST
         else:
@@ -518,17 +563,28 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = records_models.Record.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create contact",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not record_uuid:
             message['POST'] = POST
         else:

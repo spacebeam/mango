@@ -18,6 +18,7 @@ import ujson as json
 from tornado import gen
 from tornado import web
 from mango import errors
+from mango.messages import accounts as account_models
 from mango.system import accounts
 from mango.system import records
 from mango.tools import check_json
@@ -241,22 +242,33 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         '''
             Resource options
         '''
+        self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
         self.set_header('Access-Control-Allow-Headers',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
-        self.set_header('Access-Control-Allow-Origin', '*')
         message = {
-            'Allow Methods': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = account_models.User.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "description": "Create account",
-            "parameters": {
-                "labels": {
-                    "type": "array/string",
-                    "description": "Labels to associate with."
-                }
-            },
+            "description": "Create record",
+            "parameters": parameters
         }
+        # filter single resource
         if not account_uuid:
             message['POST'] = POST
         else:
@@ -434,3 +446,45 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
             return
         self.set_status(204)
         self.finish()
+
+    @gen.coroutine
+    def options(self, account_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        message = {
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+        }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = account_models.Org.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
+        POST = {
+            "description": "Create record",
+            "parameters": parameters
+        }
+        # filter single resource
+        if not account_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
+        self.set_status(200)
+        self.finish(message)
+
