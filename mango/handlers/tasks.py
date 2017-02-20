@@ -399,6 +399,9 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             else:
                 parameters[x] = str(type(k))
         # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
             "description": "Create task",
             "parameters": parameters
