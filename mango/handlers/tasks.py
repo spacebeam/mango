@@ -393,11 +393,11 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         stuff = tasks_models.Task.get_mock_object().to_primitive()
         for x, k in stuff.items():
             if k is None:
-                parameters[x] = {'type':str(type('none'))}
+                parameters[x] = str(type('none'))
             elif isinstance(k, unicode):
-                parameters[x] = {'type':str(type('unicode'))}
+                parameters[x] = str(type('unicode'))
             else:
-                parameters[x] = {'type':str(type(k))}
+                parameters[x] = str(type(k))
         # after automatic madness return description and parameters
         POST = {
             "description": "Create task",
