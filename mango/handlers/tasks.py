@@ -387,84 +387,83 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "uuid": {
-                        "type": "string",
-                    },
-                    "account": {
-                        "type": "string",
-                    },
-                    "title": {
-                        "type": "string",
-                    },
-                    "description": {
-                        "type": "string",
-                    },
-                    "payload": {
-                        "type": "string",
-                    },
-                    "assignees": {
-                        "type": "array/string",
-                    },
-                    "public": {
-                        "type": "boolean",
-                    },
-                    "source": {
-                        "type": "string",
-                    },
-                    "destination": {
-                        "type": "string",
-                    },
-                    "labels": {
-                        "type": "array/string",
-                    },
-                    "url": {
-                        "type": "string",
-                    },
-                    "start": {
-                        "type": "datetime/string",
-                    },
-                    "ack": {
-                        "type": "datetime/string",
-                    },
-                    "stop": {
-                        "type": "datetime/string",
-                    },
-                    "deadline": {
-                        "type": "datetime/string",
-                    },
-                    "duration": {
-                        "type": "string",
-                    },
-                    "comments": {
-                        "type": "string",
-                    },
-                    "status": {
-                        "type": "string",
-                    },
-                    "checked": {
-                        "type": "boolean",
-                    },
-                    "checked_by": {
-                        "type": "string",
-                    },
-                    "updated_by": {
-                        "type": "string",
-                    },
-                    "updated_at": {
-                        "type": "datetime/string",
-                    },
-                    "created_at": {
-                        "type": "datetime/string",
-                    },
-                    "last_modified": {
-                        "type": "datetime/string",
-                    }
+            "description": "Create task",
+            "parameters": {
+                "uuid": {
+                    "type": "string",
                 },
-            }
+                "account": {
+                    "type": "string",
+                },
+                "title": {
+                    "type": "string",
+                },
+                "description": {
+                    "type": "string",
+                },
+                "payload": {
+                    "type": "string",
+                },
+                "assignees": {
+                    "type": "array/string",
+                },
+                "public": {
+                    "type": "boolean",
+                },
+                "source": {
+                    "type": "string",
+                },
+                "destination": {
+                    "type": "string",
+                },
+                "labels": {
+                    "type": "array/string",
+                },
+                "url": {
+                    "type": "string",
+                },
+                "start": {
+                    "type": "datetime/string",
+                },
+                "ack": {
+                    "type": "datetime/string",
+                },
+                "stop": {
+                    "type": "datetime/string",
+                },
+                "deadline": {
+                    "type": "datetime/string",
+                },
+                "duration": {
+                    "type": "string",
+                },
+                "comments": {
+                    "type": "string",
+                },
+                "status": {
+                    "type": "string",
+                },
+                "checked": {
+                    "type": "boolean",
+                },
+                "checked_by": {
+                    "type": "string",
+                },
+                "updated_by": {
+                    "type": "string",
+                },
+                "updated_at": {
+                    "type": "datetime/string",
+                },
+                "created_at": {
+                    "type": "datetime/string",
+                },
+                "last_modified": {
+                    "type": "datetime/string",
+                }
+            },
         }
+        
         if not task_uuid:
             message['POST'] = POST
         else:
