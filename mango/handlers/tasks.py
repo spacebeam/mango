@@ -69,17 +69,26 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create task",
+            "parameters": parameters
         }
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
@@ -125,17 +134,26 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create task",
+            "parameters": parameters
         }
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
@@ -182,17 +200,26 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create task",
+            "parameters": parameters
         }
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
@@ -452,17 +479,26 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create task",
+            "parameters": parameters
         }
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
@@ -501,17 +537,26 @@ class UnassignedHandler(tasks.Tasks, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = str(type('none'))
+            elif isinstance(k, unicode):
+                parameters[x] = str(type('unicode'))
+            else:
+                parameters[x] = str(type(k))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
         POST = {
-            "POST": {
-                "description": "Create task",
-                "parameters": {
-                    "labels": {
-                        "type": "array/string",
-                        "description": "Labels to associate with."
-                    }
-                },
-            }
+            "description": "Create task",
+            "parameters": parameters
         }
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
