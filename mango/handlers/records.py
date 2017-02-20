@@ -192,7 +192,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = records_models.Record.get_mock_object().to_primitive()
+        stuff = record_models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -256,7 +256,7 @@ class PublicHandler(records.Records, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = records_models.Record.get_mock_object().to_primitive()
+        stuff = record_models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -314,7 +314,7 @@ class UnassignedHandler(records.Records, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = records_models.Record.get_mock_object().to_primitive()
+        stuff = record_models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -446,7 +446,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = records_models.Record.get_mock_object().to_primitive()
+        stuff = record_models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -568,7 +568,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = records_models.Record.get_mock_object().to_primitive()
+        stuff = record_models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))

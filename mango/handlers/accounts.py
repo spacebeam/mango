@@ -164,7 +164,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 logging.error(response.error)
             else:
                 logging.info(response.body)
-        # -- handle SIP account creation out-of-band <--------------------------------------- refactor this shit kind of thing.
+        # -- handle SIP account creation out-of-band <------------------- refactor this shit kind of thing.
         # postgresql insert sip account
         if result:
             data = {'password': struct['password'], 'account': struct['account']}
@@ -265,7 +265,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Create record",
+            "description": "Create user",
             "parameters": parameters
         }
         # filter single resource
@@ -474,7 +474,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Create record",
+            "description": "Create org",
             "parameters": parameters
         }
         # filter single resource
