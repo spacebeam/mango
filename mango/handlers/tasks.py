@@ -393,11 +393,11 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         stuff = tasks_models.Task.get_mock_object().to_primitive()
         for x, k in stuff.items():
             if k is None:
-                parameters[x] = {'type':type('none')}
+                parameters[x] = {'type':str(type('none'))}
             elif isinstance(k, unicode):
-                parameters[x] = {'type':type('unicode')}
+                parameters[x] = {'type':str(type('unicode'))}
             else:
-                parameters[x] = {'type':type(k)}
+                parameters[x] = {'type':str(type(k))}
         # after automatic madness return description and parameters
         POST = {
             "description": "Create task",
@@ -411,9 +411,6 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             message['Allow'].append('PATCH')
             message['Allow'].append('DELETE')
         self.set_status(200)
-
-        logging.error(message)
-
         self.finish(message)
 
 
