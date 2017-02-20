@@ -411,6 +411,9 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
             message['Allow'].append('PATCH')
             message['Allow'].append('DELETE')
         self.set_status(200)
+
+        logging.error(message)
+
         self.finish(message)
 
 
