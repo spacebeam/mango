@@ -19,6 +19,7 @@ import pandas as pd
 import ujson as json
 from tornado import gen
 from tornado import web
+from mango.messages import tasks as tasks_models
 from mango.system import accounts
 from mango.system import tasks
 from mango.tools import check_json
@@ -386,84 +387,23 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
+        parameters = {}
+        # mock stuff
+        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        for x, k in stuff.items():
+            if k is None:
+                parameters[x] = {'type':type('none')}
+            elif isinstance(k, unicode):
+                parameters[x] = {'type':type('unicode')}
+            else:
+                parameters[x] = {'type':type(k)}
+        # after automatic madness return description and parameters
         POST = {
             "description": "Create task",
-            "parameters": {
-                "uuid": {
-                    "type": "string",
-                },
-                "account": {
-                    "type": "string",
-                },
-                "title": {
-                    "type": "string",
-                },
-                "description": {
-                    "type": "string",
-                },
-                "payload": {
-                    "type": "string",
-                },
-                "assignees": {
-                    "type": "array/string",
-                },
-                "public": {
-                    "type": "boolean",
-                },
-                "source": {
-                    "type": "string",
-                },
-                "destination": {
-                    "type": "string",
-                },
-                "labels": {
-                    "type": "array/string",
-                },
-                "url": {
-                    "type": "string",
-                },
-                "start": {
-                    "type": "datetime/string",
-                },
-                "ack": {
-                    "type": "datetime/string",
-                },
-                "stop": {
-                    "type": "datetime/string",
-                },
-                "deadline": {
-                    "type": "datetime/string",
-                },
-                "duration": {
-                    "type": "string",
-                },
-                "comments": {
-                    "type": "string",
-                },
-                "status": {
-                    "type": "string",
-                },
-                "checked": {
-                    "type": "boolean",
-                },
-                "checked_by": {
-                    "type": "string",
-                },
-                "updated_by": {
-                    "type": "string",
-                },
-                "updated_at": {
-                    "type": "datetime/string",
-                },
-                "created_at": {
-                    "type": "datetime/string",
-                },
-                "last_modified": {
-                    "type": "datetime/string",
-                }
-            },
+            "parameters": parameters
         }
-        
+        # filter single resource
         if not task_uuid:
             message['POST'] = POST
         else:
