@@ -193,13 +193,13 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         parameters = {}
         # mock stuff
         stuff = records_models.Record.get_mock_object().to_primitive()
-        for x, k in stuff.items():
-            if k is None:
-                parameters[x] = str(type('none'))
-            elif isinstance(k, unicode):
-                parameters[x] = str(type('unicode'))
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
             else:
-                parameters[x] = str(type(k))
+                parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
@@ -257,13 +257,13 @@ class PublicHandler(records.Records, BaseHandler):
         parameters = {}
         # mock stuff
         stuff = records_models.Record.get_mock_object().to_primitive()
-        for x, k in stuff.items():
-            if k is None:
-                parameters[x] = str(type('none'))
-            elif isinstance(k, unicode):
-                parameters[x] = str(type('unicode'))
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
             else:
-                parameters[x] = str(type(k))
+                parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
@@ -315,13 +315,13 @@ class UnassignedHandler(records.Records, BaseHandler):
         parameters = {}
         # mock stuff
         stuff = records_models.Record.get_mock_object().to_primitive()
-        for x, k in stuff.items():
-            if k is None:
-                parameters[x] = str(type('none'))
-            elif isinstance(k, unicode):
-                parameters[x] = str(type('unicode'))
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
             else:
-                parameters[x] = str(type(k))
+                parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
@@ -447,13 +447,13 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         parameters = {}
         # mock stuff
         stuff = records_models.Record.get_mock_object().to_primitive()
-        for x, k in stuff.items():
-            if k is None:
-                parameters[x] = str(type('none'))
-            elif isinstance(k, unicode):
-                parameters[x] = str(type('unicode'))
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
             else:
-                parameters[x] = str(type(k))
+                parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
@@ -569,13 +569,13 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         parameters = {}
         # mock stuff
         stuff = records_models.Record.get_mock_object().to_primitive()
-        for x, k in stuff.items():
-            if k is None:
-                parameters[x] = str(type('none'))
-            elif isinstance(k, unicode):
-                parameters[x] = str(type('unicode'))
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
             else:
-                parameters[x] = str(type(k))
+                parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
