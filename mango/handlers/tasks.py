@@ -392,99 +392,75 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
                 "parameters": {
                     "uuid": {
                         "type": "string",
-                        "description": "uuid to associate task with."
                     },
                     "account": {
                         "type": "string",
-                        "description": "Account to associate with."
                     },
                     "title": {
                         "type": "string",
-                        "description": "Title to associate with."
                     },
                     "description": {
                         "type": "string",
-                        "description": "Description to associate with."
                     },
                     "payload": {
-                        "type": "string", #not sure
-                        "description": "Payload to associate with."
+                        "type": "string",
                     },
                     "assignees": {
                         "type": "array/string",
-                        "description": "Assignees to associate with."
                     },
                     "public": {
                         "type": "boolean",
-                        "description": "Public true/false"
                     },
                     "source": {
                         "type": "string",
-                        "description": "Source to associate with."
                     },
                     "destination": {
                         "type": "string",
-                        "description": "Destination to associate with."
                     },
                     "labels": {
                         "type": "array/string",
-                        "description": "Labels to associate with."
                     },
                     "url": {
                         "type": "string",
-                        "description": "url to associate with."
                     },
                     "start": {
                         "type": "datetime/string",
-                        "description": "Started task"
                     },
                     "ack": {
                         "type": "datetime/string",
-                        "description": "Ack task"
                     },
                     "stop": {
                         "type": "datetime/string",
-                        "description": "Ended task"
                     },
                     "deadline": {
                         "type": "datetime/string",
-                        "description": "Deadline task value"
                     },
                     "duration": {
                         "type": "string",
-                        "description": "Duration to associate task with."
                     },
                     "comments": {
                         "type": "string",
-                        "description": "Comments to associate task with."
                     },
                     "status": {
                         "type": "string",
-                        "description": "Status to associate task with."
                     },
                     "checked": {
                         "type": "boolean",
-                        "description": "Checked status to associate with."
                     },
                     "checked_by": {
                         "type": "string",
-                        "description": "Checked by to associate with."
                     },
                     "updated_by": {
                         "type": "string",
-                        "description": "Updated by to associate with."
                     },
                     "updated_at": {
                         "type": "datetime/string",
-                        "description": "Updated date to associate with."
                     },
                     "created_at": {
                         "type": "datetime/string",
-                        "description": "Created date to associate with."
                     },
                     "last_modified": {
                         "type": "datetime/string",
-                        "description": "Last modified date to associate with."
                     }
                 },
             }
