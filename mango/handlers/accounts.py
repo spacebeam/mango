@@ -340,7 +340,6 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         username = self.get_current_username()
         # get the current frontend context account
         #organization = self.get_current_org()
-        #status
         status = 'all'
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
