@@ -19,7 +19,7 @@ import pandas as pd
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.messages import tasks as tasks_models
+from mango.messages import tasks as models
 from mango.system import accounts
 from mango.system import tasks
 from mango.tools import check_json
@@ -72,7 +72,7 @@ class NowHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -137,7 +137,7 @@ class LaterHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -203,7 +203,7 @@ class DoneHandler(tasks.Tasks, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -417,7 +417,7 @@ class Handler(tasks.Tasks, accounts.Accounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -482,7 +482,7 @@ class PublicHandler(tasks.Tasks, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -540,7 +540,7 @@ class UnassignedHandler(tasks.Tasks, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = tasks_models.Task.get_mock_object().to_primitive()
+        stuff = models.Task.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))

@@ -18,7 +18,7 @@ import ujson as json
 from tornado import gen
 from tornado import web
 from mango import errors
-from mango.messages import accounts as account_models
+from mango.messages import accounts as models
 from mango.system import accounts
 from mango.system import records
 from mango.tools import check_json
@@ -252,7 +252,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = account_models.User.get_mock_object().to_primitive()
+        stuff = models.User.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -461,7 +461,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = account_models.Org.get_mock_object().to_primitive()
+        stuff = models.Org.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))

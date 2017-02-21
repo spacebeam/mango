@@ -19,7 +19,7 @@ import pandas as pd
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.messages import records as record_models
+from mango.messages import records as models
 from mango.system import accounts
 from mango.system import records
 from mango.tools import check_json
@@ -39,43 +39,28 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
             Get records handler
         '''
-
         logging.info('Get records handler, request arguments {0}'.format(
             self.request.arguments
         ))
-
-        #account = (self.request.arguments.get('account', [None])[0] if not account else account)
-
-        # query string checked from string to boolean
-        #checked = str2bool(str(self.request.arguments.get('checked', [False])[0]))
-
         if record_uuid:
             record_uuid = record_uuid.rstrip('/')
-
             if self.current_user:
                 user = self.current_user
                 record = yield self.get_record(user, record_uuid)
             else:
                 record = yield self.get_record(None, record_uuid)
-
             if not record:
                 self.set_status(400)
                 system_error = errors.Error('missing')
                 error = system_error.missing('record', record_uuid)
                 self.finish(error)
                 return
-
             self.finish(record)
             return
-
-        # where is this self.current_user??? it's use on the system?
         if self.current_user:
-
             logging.warning('exec on if self.current_user')
-
             user = self.current_user
             orgs = yield self.get_orgs_list(user)
-            
             account_list = (orgs['orgs'] if orgs else False)
             if not account_list:
                 result = yield self.get_record_list(
@@ -94,16 +79,13 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
                                         page_num=page_num)
         else:
             logging.warning('exec stuff on final else get records')
-
             result = yield self.get_record_list(
                                     account=None,
                                     lapse=lapse,
                                     start=start,
                                     end=end,
                                     page_num=page_num)
-
         result = json.dumps(result)
-
         self.finish(result)
 
     @gen.coroutine
@@ -113,49 +95,34 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
         struct = yield check_json(self.request.body)
         db = self.settings['db']
-        
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-
         record = yield self.new_detail_record(struct)
- 
         if not record:
             model = 'Records'
             error = {'record':False}
             reason = {'duplicates':[('Record', 'uniqueid'), (model, 'uuid')]}
-
             message = yield self.let_it_crash(struct, model, error, reason)
-
             self.set_status(400)
             self.finish(message)
             return
-        
         if 'accountcode' in struct:
-
             account = struct.get('accountcode')
-
             resource = {
                 'account': account,
                 'resource':'records',
                 'uuid':record
             }
-
             exist = yield self.check_exist(account)
-
             logging.info('check if exist %s ' % exist)
-
             if exist:
                 update = yield new_resource(db, resource)
-
                 logging.info('update %s' % update)
-
                 flag = yield self.set_assigned_flag(account, record)
-
         logging.info('new spawned record %s ' % record)
-
         self.set_status(201)
         self.finish({'uuid':record})
 
@@ -184,15 +151,18 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join((
+                        'DNT,Keep-Alive,User-Agent',
+                        'X-Requested-With,If-Modified-Since',
+                        'Cache-Control,Content-Type',
+                        'Content-Range,Range,Date,Etag')))
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = record_models.Record.get_mock_object().to_primitive()
+        stuff = models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -248,15 +218,18 @@ class PublicHandler(records.Records, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join((
+                        'DNT,Keep-Alive,User-Agent',
+                        'X-Requested-With,If-Modified-Since',
+                        'Cache-Control,Content-Type',
+                        'Content-Range,Range,Date,Etag')))
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = record_models.Record.get_mock_object().to_primitive()
+        stuff = models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -306,15 +279,17 @@ class UnassignedHandler(records.Records, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join((
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With',
+                        'If-Modified-Since,Cache-Control',
+                        'Content-Type,Content-Range,Range,Date,Etag')))
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = record_models.Record.get_mock_object().to_primitive()
+        stuff = models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -438,15 +413,17 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join((
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With',
+                        'If-Modified-Since,Cache-Control',
+                        'Content-Type,Content-Range,Range,Date,Etag')))
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = record_models.Record.get_mock_object().to_primitive()
+        stuff = models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -560,15 +537,17 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join((
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With',
+                        'If-Modified-Since,Cache-Control',
+                        'Content-Type,Content-Range,Range,Date,Etag')))
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
         # mock stuff
-        stuff = record_models.Record.get_mock_object().to_primitive()
+        stuff = models.Record.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
