@@ -104,8 +104,7 @@ class ModifyTask(models.Model):
     status = types.StringType(choices=['now',
                                        'later',
                                        'overdue',
-                                       'done'],
-                              required=True)
+                                       'done'])
     checked = types.BooleanType()
     checked_by = types.StringType()
     updated_by = types.StringType()

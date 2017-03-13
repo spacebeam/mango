@@ -19,7 +19,6 @@ import motor
 import queries
 from contextlib import contextmanager
 from tornado import gen
-# from mango.messages import accounts
 from mango.system import records
 from bson import objectid
 
