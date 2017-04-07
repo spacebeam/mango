@@ -40,6 +40,7 @@ class AccountMap(object):
         self.map.registers['last_name'].assign(struct.get('last_name', ''))
         self.map.registers['type'].assign(struct.get('type', ''))
         self.map.registers['account_type'].assign(struct.get('account_type', ''))
+        self.map.registers['access_control'].assign(struct.get('access_control', ''))
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
         self.map.registers['password'].assign(struct.get('password', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
@@ -85,6 +86,7 @@ class AccountMap(object):
             "last_name": event.registers['last_name'].value,
             "type": event.registers['type'].value,
             "account_type": event.registers['account_type'].value,
+            "access_control": event.registers['access_control'].value,
             "orgs": event.registers['orgs'].value,
             "password": event.registers['password'].value,
             "members": event.registers['members'].value,
@@ -122,6 +124,7 @@ class AccountMap(object):
             "last_name": event.registers['last_name'].value,
             "type": event.registers['type'].value,
             "account_type": event.registers['account_type'].value,
+            "access_control": event.registers['access_control'].value,
             "orgs": event.registers['orgs'].value,
             "password": event.registers['password'].value,
             "members": event.registers['members'].value,

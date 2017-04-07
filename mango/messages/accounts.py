@@ -81,6 +81,7 @@ class RequiredBase(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     is_admin = types.BooleanType(default=False)
+    access_control = types.StringType()
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()

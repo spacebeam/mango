@@ -151,7 +151,7 @@ class Handler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join((
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent',
                         'X-Requested-With,If-Modified-Since',
                         'Cache-Control,Content-Type',
@@ -279,7 +279,7 @@ class UnassignedHandler(records.Records, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join((
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With',
                         'If-Modified-Since,Cache-Control',
                         'Content-Type,Content-Range,Range,Date,Etag')))
@@ -413,7 +413,7 @@ class SummaryHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join((
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With',
                         'If-Modified-Since,Cache-Control',
                         'Content-Type,Content-Range,Range,Date,Etag')))
@@ -537,7 +537,7 @@ class SummariesHandler(records.Records, accounts.Accounts, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join((
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With',
                         'If-Modified-Since,Cache-Control',
                         'Content-Type,Content-Range,Range,Date,Etag')))
