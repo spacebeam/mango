@@ -19,8 +19,6 @@ import motor
 import queries
 from contextlib import contextmanager
 from tornado import gen
-from mango.system import records
-from bson import objectid
 
 
 httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')

@@ -20,7 +20,6 @@ from tornado import web
 from mango import errors
 from mango.messages import accounts as models
 from mango.system import accounts
-from mango.system import records
 from mango.tools import check_json
 from mango.tools import new_resource
 from mango.handlers import BaseHandler

@@ -2,7 +2,7 @@
 '''
     Manage Asynchronous Number General ORGs
 
-    Organizations of Random Generality (ORGs)
+    Organizations of Random Generality (ORG)
 '''
 
 # This file is part of mango.
@@ -24,7 +24,7 @@ import queries
 import pylibmc as mc
 from tornado import gen
 from tornado import web
-from mango.tools import options, periodic, new_resource
+from mango.tools import options, new_resource
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts
 from mango.handlers import tasks
