@@ -120,7 +120,7 @@ def main():
         user=opts.sql_user,
         password=None
     )
-    # riak key-value
+    # riak key-value storage
     kvalue = riak.RiakClient(host=opts.riak_host, pb_port=8087)
     # memcached
     cache = memcache
