@@ -62,6 +62,14 @@ def options():
         type=int,
         help=('Server port')
     )
+    # Riak kvalue datastorage settings
+    tornado.options.define('riak_host', 
+        default='127.0.0.1', type=str,
+        help=('Riak cluster node'))
+    # riak port
+    tornado.options.define('riak_port',
+        default=8087, type=int,
+        help=('Riak cluster port'))
     # MongoDB database settings
     tornado.options.define('mongo_host',
         type=str,
