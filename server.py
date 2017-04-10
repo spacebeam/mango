@@ -128,13 +128,17 @@ def main():
             # Users resources
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
+            
             # Tasks now 
             (r'/tasks/now/?', tasks.NowHandler),
+            
             # Tasks later 
             (r'/tasks/later/?', tasks.LaterHandler),
+            
             # Tasks done
             (r'/tasks/done/?', tasks.DoneHandler),
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
+            
             # Tasks
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
