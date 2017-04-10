@@ -134,7 +134,9 @@ def main():
     system_uuid = uuid.uuid4()
     # logging system spawned uuid
     logging.info('Mango system uuid {0} spawned'.format(system_uuid))
-    # logging database hosts
+    # logging riak settings
+    logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
+    # logging old database hosts
     logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
     logging.info('PostgreSQL server: {0}:{1}'.format(opts.sql_host, opts.sql_port))
     # system cache
