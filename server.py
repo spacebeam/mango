@@ -104,11 +104,6 @@ def main():
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-    
-            # ORG memberships
-            #(r'/orgs/(?P<account>.+)/memberships/page/(?P<page_num>\d+)/?', accounts.MembershipsHandler),
-            #(r'/orgs/(?P<account>.+)/memberships/(?P<user>.+)/?', accounts.MembershipsHandler),
-            #(r'/orgs/(?P<account>.+)/memberships/?', accounts.MembershipsHandler),
             
             # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),

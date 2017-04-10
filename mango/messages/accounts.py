@@ -16,7 +16,7 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-from mango.messages import Resource
+from mango.messages import Resource, Phone, Email
 
 
 class RequiredBase(models.Model):
@@ -36,7 +36,6 @@ class RequiredBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    membership = types.StringType()
     resources = compound.ModelType(Resource)
     phones = compound.ListType(compound.ModelType(Phone))
     emails = compound.ListType(compound.ModelType(Email))
@@ -60,7 +59,6 @@ class CleanBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    membership = types.StringType()
     resources = compound.ModelType(Resource)
     phones = compound.ListType(compound.ModelType(Phone))
     emails = compound.ListType(compound.ModelType(Email))
@@ -112,37 +110,6 @@ class Org(BaseAccount):
     account_type = types.StringType(default='org')
     members = compound.ListType(types.StringType())
     teams = compound.ListType(compound.ModelType(Team))
-
-
-class Membership(models.Model):
-    '''
-        Org membership
-    '''
-    username = types.StringType(required=True)
-    status = types.StringType(default='pending')
-    role = types.StringType(required=True)
-    org = types.StringType(required=True)
-    created = types.DateTimeType(default=arrow.utcnow().naive)
-
-
-class ModifyMembership(models.Model):
-    '''
-        Modify membership
-
-        This model is similar to membership.
-
-        It lacks of require and default values on it's fields.
-
-        The reason of it existence is that we need to validate
-        every input data that came from outside the system, with 
-        this we prevent users from using PATCH to create fields 
-        outside the scope of the resource.
-    '''
-    username = types.StringType()
-    status = types.StringType()
-    role = types.StringType()
-    org = types.StringType()
-    created = types.DateTimeType()
 
 
 class Team(models.Model):

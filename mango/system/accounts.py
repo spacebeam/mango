@@ -255,29 +255,6 @@ class Orgs(MangoAccounts):
         raise gen.Return(account_uuid)
 
     @gen.coroutine
-    def new_membership(self, struct):
-        '''
-            New membership
-        '''
-        message = None
-        try:
-            member = accounts.Membership(struct)
-            member.validate()
-            member = clean_structure(member)
-        except Exception, e:
-            raise e
-
-        try:
-            waka, kaka = yield self.new_member(member.get('org'), member.get('username'))
-            logging.info('info on waka {0} and kaka {1}'.format(waka, kaka))
-            message = member
-        except Exception, e:
-            logging.error(e)
-            message = str(e)
-
-        raise gen.Return(message)
-
-    @gen.coroutine
     def new_member(self, org, user):
         '''
             New member
