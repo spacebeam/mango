@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
     Manage Asynchronous Number General ORGs
-
-    Organizations of Random Generality (ORG)
 '''
 
 # This file is part of mango.
