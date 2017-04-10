@@ -64,7 +64,9 @@ class AccountMap(object):
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
         self.map.registers['updated_by'].assign(struct.get('updated_by', ''))
         self.map.registers['updated_at'].assign(struct.get('updated_at', ''))
-        self.map.registers['created_at'].assign(struct.get('created_by', ''))
+        self.map.registers['created_at'].assign(struct.get('created_at', ''))
+        self.map.registers['login_at'].assign(struct.get('login_at', ''))
+        self.map.registers['logout_at'].assign(struct.get('logout_at', ''))
         self.map.registers['url'].assign(struct.get('url', ''))
         # end of the map stuff
         self.map.store()
@@ -111,6 +113,8 @@ class AccountMap(object):
             "updated_by": event.registers['updated_by'].value,
             "updated_at": event.registers['updated_at'].value,
             "created_at": event.registers['created_at'].value,
+            "login_at": event.registers['login_at'].value,
+            "logout_at": event.registers['logout_at'].value,
             "url": event.registers['url'].value,
         }
         return json.dumps(struct)
@@ -149,6 +153,8 @@ class AccountMap(object):
             "updated_by": event.registers['updated_by'].value,
             "updated_at": event.registers['updated_at'].value,
             "created_at": event.registers['created_at'].value,
+            "login_at": event.registers['login_at'].value,
+            "logout_at": event.registers['logout_at'].value,
             "url": event.registers['url'].value,
         }
         return struct

@@ -19,58 +19,6 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-class Membership(models.Model):
-    '''
-        Org membership
-    '''
-    username = types.StringType(required=True)
-    status = types.StringType(default='pending')
-    role = types.StringType(required=True)
-    org = types.StringType(required=True)
-    created = types.DateTimeType(default=arrow.utcnow().naive)
-
-
-class ModifyMembership(models.Model):
-    '''
-        Modify membership
-
-        This model is similar to membership.
-
-        It lacks of require and default values on it's fields.
-
-        The reason of it existence is that we need to validate
-        every input data that came from outside the system, with 
-        this we prevent users from using PATCH to create fields 
-        outside the scope of the resource.
-    '''
-    username = types.StringType()
-    status = types.StringType()
-    role = types.StringType()
-    org = types.StringType()
-    created = types.DateTimeType()
-
-
-class Email(models.Model):
-    '''
-        Email
-    '''
-    title = types.StringType()
-    address = types.EmailType()
-    validated = types.BooleanType(default=False)
-    primary = types.BooleanType(default=False)
-
-
-class Phone(models.Model):
-    '''
-        Phone
-    '''
-    title = types.StringType()
-    number = types.StringType()
-    extension = types.StringType()
-    validated = types.BooleanType(default=False)
-    primary = types.BooleanType(default=False)
-
-
 class RequiredBase(models.Model):
     '''
         Required base class
@@ -157,6 +105,46 @@ class ModifyUser(CleanBaseAccount):
     password = types.StringType()
 
 
+class Org(BaseAccount):
+    '''
+        Org account
+    '''
+    account_type = types.StringType(default='org')
+    members = compound.ListType(types.StringType())
+    teams = compound.ListType(compound.ModelType(Team))
+
+
+class Membership(models.Model):
+    '''
+        Org membership
+    '''
+    username = types.StringType(required=True)
+    status = types.StringType(default='pending')
+    role = types.StringType(required=True)
+    org = types.StringType(required=True)
+    created = types.DateTimeType(default=arrow.utcnow().naive)
+
+
+class ModifyMembership(models.Model):
+    '''
+        Modify membership
+
+        This model is similar to membership.
+
+        It lacks of require and default values on it's fields.
+
+        The reason of it existence is that we need to validate
+        every input data that came from outside the system, with 
+        this we prevent users from using PATCH to create fields 
+        outside the scope of the resource.
+    '''
+    username = types.StringType()
+    status = types.StringType()
+    role = types.StringType()
+    org = types.StringType()
+    created = types.DateTimeType()
+
+
 class Team(models.Model):
     '''
         Org team
@@ -167,12 +155,3 @@ class Team(models.Model):
                                            'admin'], required=True)
     members = compound.ListType(types.StringType())
     resources = compound.ModelType(Resource)
-
-
-class Org(BaseAccount):
-    '''
-        Org account
-    '''
-    account_type = types.StringType(default='org')
-    members = compound.ListType(types.StringType())
-    teams = compound.ListType(compound.ModelType(Team))
