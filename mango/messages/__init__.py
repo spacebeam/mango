@@ -16,7 +16,6 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 from mango.messages import tasks
-from mango.messages import records
 
 
 class SimpleResource(models.Model):
@@ -43,7 +42,8 @@ class BaseResult(models.Model):
     '''
     count = types.IntType()
     page = types.IntType()
-    results = compound.ListType(compound.ModelType(records.Record))
+    results = compound.ListType(types.StringType())
+    #results = compound.ListType(compound.ModelType(records.Record))
 
 
 class Email(models.Model):
