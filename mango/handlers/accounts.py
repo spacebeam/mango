@@ -350,7 +350,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 self.finish(result)
 
     @gen.coroutine
-    def get(self, account=None, page_num=0):
+    def get(self, account_uuid=None, page_num=0):
         '''
             Get organization accounts
         '''
@@ -377,7 +377,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 logging.info('orgs:{0} done retrieving!'.format(account))
                 result = data
             else:
-                data = yield self.get_account(account.rstrip('/'), account_type)
+                data = yield self.get_account_uuid(account.rstrip('/'), account_type)
                 if self.cache.add('orgs:{0}'.format(account), data, 1):
                     logging.info('new cache entry {0}'.format(str(data)))
                     result = data
