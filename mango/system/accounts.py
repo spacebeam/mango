@@ -162,6 +162,32 @@ class MangoAccounts(Accounts):
             raise gen.Return(message)
 
     @gen.coroutine
+    def get_account_uuid(self, account_uuid, account_type):
+        '''
+            Get mango account uuid
+        '''
+        message = None
+        result = yield self.db.accounts.find_one(
+                                {'uuid':account_uuid,
+                                 'account_type':account_type},
+                                 {'_id':0, 'password':0})
+        if result:
+            if 'user' in account_type:
+                message = accounts.ModifyUser(result)
+            elif 'org' in account_type:
+                message = accounts.Org(result)
+                
+        try:
+            if message:
+                message.validate()
+                message = clean_structure(message)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+        finally:
+            raise gen.Return(message)
+
+    @gen.coroutine
     def new_account(self, struct):
         '''
             New mango account

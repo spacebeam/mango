@@ -105,26 +105,27 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         data = None
         # return result message
         result = None
+        
+
         # are we donde yet?
-        done = False
+        #done = False
 
-
-        if not done and account_uuid:
-            account_uuid = account_uuid.rstrip('/')
-            # get cache data
-            message = self.cache.get('accounts:{0}'.format(account_uuid))
-            if message is not None:
-                logging.info('accounts:{0} done retrieving from cache!'.format(account_uuid))
-                self.set_status(200)
-            else:
-                data = yield self.get_account_uuid(account, account_uuid)
-                if self.cache.add('accounts:{0}'.format(account_uuid), data, 1):
-                    logging.info('new cache entry {0}'.format(str(account_uuid)))
-                    self.set_status(200)
-            if not message:
-                self.set_status(400)
-                message = {'missing account {0} account_uuid {1}'.format(
-                    account, email_uuid):message}
+        # if not done and account_uuid:
+        #     account_uuid = account_uuid.rstrip('/')
+        #     # get cache data
+        #     message = self.cache.get('accounts:{0}'.format(account_uuid))
+        #     if message is not None:
+        #         logging.info('accounts:{0} done retrieving from cache!'.format(account_uuid))
+        #         self.set_status(200)
+        #     else:
+        #         data = yield self.get_account_uuid(account, account_uuid)
+        #         if self.cache.add('accounts:{0}'.format(account_uuid), data, 1):
+        #             logging.info('new cache entry {0}'.format(str(account_uuid)))
+        #             self.set_status(200)
+        #     if not message:
+        #         self.set_status(400)
+        #         message = {'missing account {0} account_uuid {1}'.format(
+        #             account, email_uuid):message}
 
 
         if not account:
@@ -140,7 +141,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             if data is not None:
                 logging.info('users:{0} done retrieving!'.format(account))
             else:
-                data = yield self.get_account(account.rstrip('/'), account_type)
+                data = yield self.get_account_uuid(account.rstrip('/'), account_type)
                 try:
                     if self.cache.add('users:{0}'.format(account), data, 1):
                         logging.info('new cache entry {0}'.format(str(data)))
