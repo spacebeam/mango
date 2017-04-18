@@ -163,6 +163,7 @@ def main():
             # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<account_uuid>.+)/?', accounts.OrgsHandler),
 
             # Users suspended
             #(r'/users/suspended/?', accounts.UsersSuspendedHandler),
@@ -176,7 +177,8 @@ def main():
             # Users resources
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
-            
+            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
+
             # Tasks now 
             (r'/tasks/now/?', tasks.NowHandler),
             
