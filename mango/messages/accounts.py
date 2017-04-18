@@ -32,6 +32,7 @@ class RequiredBase(models.Model):
     access_control = types.StringType()
     phone_number = types.StringType()
     extension = types.StringType()
+    labes =  compound.ListType(types.StringType())
     country_code = types.StringType()
     timezone = types.StringType()
     company = types.StringType()
