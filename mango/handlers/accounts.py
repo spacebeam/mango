@@ -350,7 +350,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
                 self.finish(result)
 
     @gen.coroutine
-    def get(self, account_uuid=None, page_num=0):
+    def get(self, account=None, page_num=0):
         '''
             Get organization accounts
         '''
