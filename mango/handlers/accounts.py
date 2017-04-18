@@ -85,7 +85,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
                 self.finish(result)
 
     @gen.coroutine
-    def get(self, account=None, page_num=0):
+    def get(self, account=None, account_uuid=None, page_num=0):
         '''
             Get user accounts
         '''
@@ -105,6 +105,28 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
         data = None
         # return result message
         result = None
+        # are we donde yet?
+        done = False
+
+
+        if not done and account_uuid:
+            account_uuid = account_uuid.rstrip('/')
+            # get cache data
+            message = self.cache.get('accounts:{0}'.format(account_uuid))
+            if message is not None:
+                logging.info('accounts:{0} done retrieving from cache!'.format(account_uuid))
+                self.set_status(200)
+            else:
+                data = yield self.get_account_uuid(account, account_uuid)
+                if self.cache.add('accounts:{0}'.format(account_uuid), data, 1):
+                    logging.info('new cache entry {0}'.format(str(account_uuid)))
+                    self.set_status(200)
+            if not message:
+                self.set_status(400)
+                message = {'missing account {0} account_uuid {1}'.format(
+                    account, email_uuid):message}
+
+
         if not account:
             users = yield self.get_account_list(account_type, status, page_num)
             self.finish({'users':users})
