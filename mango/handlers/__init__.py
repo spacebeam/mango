@@ -302,8 +302,6 @@ class LoginHandler(BaseHandler):
                             self.username,
                             self.password)
 
-        logging.warning(self.username, self.password)
-
         logging.warning(account)
 
         if not account:
