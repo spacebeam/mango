@@ -302,16 +302,19 @@ class LoginHandler(BaseHandler):
                             self.username,
                             self.password)
 
+        logging.warning(self.username, self.password)
+
+        logging.warning(account)
+
         if not account:
             # 401 status code?
             self.set_status(403)
-            # mae! get realm from options.
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
         else:
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, authorization')
+            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
             self.username, self.password = (None, None)
             # self.redirect(next_url)
