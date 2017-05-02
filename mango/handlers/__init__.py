@@ -305,10 +305,6 @@ class LoginHandler(BaseHandler):
 
         labels = yield get_account_labels(self.db, self.username)
 
-        logging.warning(account)
-
-        logging.warning(labels)
-
         if not account:
             # 401 status code?
             self.set_status(403)
@@ -319,10 +315,11 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
+            self.set_secure_cookie('labels', labels['labels'])
             self.username, self.password = (None, None)
             # self.redirect(next_url)
             self.set_status(200)
-            self.finish(labels)
+            self.finish(labels['labels'])
 
     @gen.coroutine
     def options(self):
