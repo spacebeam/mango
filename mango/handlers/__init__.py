@@ -20,6 +20,7 @@ from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
 from mango.tools import clean_structure
 from mango.tools import check_account_authorization
+from mango.tools import get_account_labels
 from mango import errors
 import logging
 
@@ -302,7 +303,11 @@ class LoginHandler(BaseHandler):
                             self.username,
                             self.password)
 
+        labels = yield get_account_labels(self.db, self.username)
+
         logging.warning(account)
+
+        logging.warning(labels)
 
         if not account:
             # 401 status code?
@@ -317,7 +322,7 @@ class LoginHandler(BaseHandler):
             self.username, self.password = (None, None)
             # self.redirect(next_url)
             self.set_status(200)
-            self.finish()
+            self.finish(labels)
 
     @gen.coroutine
     def options(self):

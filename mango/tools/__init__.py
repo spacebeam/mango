@@ -85,6 +85,22 @@ def check_account_authorization(db, account, password):
         return
 
     raise gen.Return(message)
+
+@gen.coroutine
+def get_account_labels(db, account):
+    '''
+        Get account labels
+    '''
+    try:
+        message = yield db.accounts.find_one({'account': account},
+                                             {'labels':1, '_id':0})
+    except Exception, e:
+        logging.exception(e)
+        raise e
+        # retun exception/error e
+        return
+
+    raise gen.Return(message)
     
 @gen.coroutine
 def check_times(start, end):
