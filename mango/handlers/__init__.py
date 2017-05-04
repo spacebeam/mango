@@ -299,6 +299,8 @@ class LoginHandler(BaseHandler):
         if args:
             next_url = args[0]
 
+        logging.warning(self.request.headers)
+
         account = yield check_account_authorization(self.db,
                             self.username,
                             self.password)
