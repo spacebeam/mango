@@ -294,11 +294,7 @@ class LoginHandler(BaseHandler):
 
     @gen.coroutine
     def get(self):
-        # redirect next url
-        next_url = '/'
-        args = self.get_arguments('next')
-        if args:
-            next_url = args[0]
+        logging.warning(self.request.headers)
 
         account = yield check_account_authorization(self.db,
                             self.username,
@@ -321,12 +317,13 @@ class LoginHandler(BaseHandler):
             # labels, labels, labels
             self.set_secure_cookie('labels', labels)
             self.username, self.password = (None, None)
-            # self.redirect(next_url)
+
             self.set_status(200)
             self.finish(labels)
 
     @gen.coroutine
     def options(self):
+        logging.warning(self.request.headers)
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
