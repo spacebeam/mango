@@ -139,6 +139,7 @@ class BaseHandler(web.RequestHandler):
             New sip account for asterisk real-time
         '''
         # let's still support asterisk 11 for now!
+        message = 'nothing to see here'
         try:
             # Get SQL database from system settings
             sql = self.settings.get('sql')
@@ -209,7 +210,7 @@ class BaseHandler(web.RequestHandler):
             logging.warning('new sip real-time account for asterisk 11 spawned on postgresql {0}'.format(message))
         
         except Exception, e:
-            logging.error(e)
+            message = str(e)
 
         # let's support asterisk 13 and the beast that pjsip chaims the be!
         try:
@@ -262,7 +263,7 @@ class BaseHandler(web.RequestHandler):
             # additional ack information.
             logging.warning('new pjsip real-time account for asterisk 13 spawned on postgresql {0}'.format(message))
         except Exception, e:
-            logging.error(e)
+            message = str(e)
 
         raise gen.Return(message)
 
