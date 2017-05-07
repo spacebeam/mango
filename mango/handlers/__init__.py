@@ -300,6 +300,8 @@ class LoginHandler(BaseHandler):
                             self.username,
                             self.password)
 
+        labels = 'unsupervised'
+
         labels = yield get_account_labels(self.db, self.username)
 
         if not account:
@@ -314,6 +316,7 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie('username', self.username)
             # if labels we make some fucking labels
             labels = str(labels['labels'])
+
             # labels, labels, labels
             self.set_secure_cookie('labels', labels)
             self.username, self.password = (None, None)
