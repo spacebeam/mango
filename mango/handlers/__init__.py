@@ -75,9 +75,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Mango default headers
         '''
-        # self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
-        self.set_header("Access-Control-Allow-Origin", '*')
-        
+        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
     def get_current_username(self):
         '''
@@ -299,11 +297,12 @@ class LoginHandler(BaseHandler):
         account = yield check_account_authorization(self.db,
                             self.username,
                             self.password)
-
-        labels = 'unsupervised'
-
-        labels = yield get_account_labels(self.db, self.username)
-
+        # labels stuff if stuff labels
+        labels = {'labels':'unsupervised'}
+        stuff = yield get_account_labels(self.db, self.username)
+        if stuff:
+            labels = stuff
+        # if not account something was wrong!
         if not account:
             # 401 status code?
             self.set_status(403)
@@ -316,11 +315,10 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie('username', self.username)
             # if labels we make some fucking labels
             labels = str(labels['labels'])
-
             # labels, labels, labels
             self.set_secure_cookie('labels', labels)
+            # secure cookie for labels
             self.username, self.password = (None, None)
-
             self.set_status(200)
             self.finish(labels)
 
