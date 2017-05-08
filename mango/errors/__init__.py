@@ -29,7 +29,6 @@ class Error(object):
         '''
         self.message = 'Invalid JSON Object'
         self.data = self.error
-
         return {
             'message': self.message,
             'errors': self.data
@@ -41,7 +40,6 @@ class Error(object):
         '''
         self.message = 'Invalid Binary Object'
         self.data = self.error
-
         return {
             'message': self.message,
             'errors': self.data
@@ -53,7 +51,6 @@ class Error(object):
         '''
         self.message = 'Value Error'
         self.data = self.error
-
         return {
             'message': self.message,
             'errors': self.data
@@ -71,7 +68,6 @@ class Error(object):
         self.data = ''.join(
             self.error.split('-')[1:]).replace(
             '  ', ' - ')
-
         return {
             'message': self.message,
             'errors': self.data
@@ -83,7 +79,6 @@ class Error(object):
         '''
         self.message = 'Missing %s resource [\"%s\"].' % (resource, name)
         self.data = self.error
-        
         return {
             'message': self.message,
             'errors': self.data
@@ -95,7 +90,6 @@ class Error(object):
         '''
         self.message = 'Invalid %s resource [\"%s\"].' % (resource, name)
         self.data = self.error
-
         return {
             'message': self.message,
             'errors': self.data
@@ -110,7 +104,6 @@ class Error(object):
             field, ' ["', value, '"] invalid or already taken.'
         ))
         self.data = self.error
-
         return {
             'message': self.message,
             'errors': self.data

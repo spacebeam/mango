@@ -16,8 +16,28 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-from mango.messages import Resource, Phone, Email
+from mango.messages import Resource
 
+
+class Email(models.Model):
+    '''
+        Email
+    '''
+    title = types.StringType()
+    address = types.EmailType()
+    validated = types.BooleanType(default=False)
+    primary = types.BooleanType(default=False)
+
+
+class Phone(models.Model):
+    '''
+        Phone
+    '''
+    title = types.StringType()
+    number = types.StringType()
+    extension = types.StringType()
+    validated = types.BooleanType(default=False)
+    primary = types.BooleanType(default=False)
 
 class RequiredBase(models.Model):
     '''

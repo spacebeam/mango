@@ -11,8 +11,6 @@
 __author__ = 'Team Machine'
 
 
-import time
-import motor
 import logging
 import ujson as json
 from tornado import gen

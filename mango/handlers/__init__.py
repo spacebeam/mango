@@ -11,15 +11,11 @@
 __author__ = 'Team Machine'
 
 
-import time
-import motor
-import queries
 from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
 from mango.tools import clean_structure
-from mango.tools import check_account_authorization
 from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
 import logging
@@ -75,20 +71,13 @@ class BaseHandler(web.RequestHandler):
         '''
             Mango default headers
         '''
-        #self.set_header("Access-Control-Allow-Origin", 'self.settings['domain']')
-        self.set_header("Access-Control-Allow-Origin", '*')
-
+        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+        
     def get_current_username(self):
         '''
             Return the username from a secure cookie
         '''
         return self.get_secure_cookie('username')
-
-    def get_current_account(self):
-        '''
-            Return the account from a secure cookie
-        '''
-        return self.get_secure_cookie('account')
 
     @gen.coroutine
     def let_it_crash(self, struct, scheme, error, reason):
@@ -128,7 +117,6 @@ class BaseHandler(web.RequestHandler):
                 'message': quotes.get()
             }
         raise gen.Return(message)
-
 
     # TODO: MAE! please refactor into smaller independent functions (=
 
@@ -265,7 +253,6 @@ class BaseHandler(web.RequestHandler):
             message = str(e)
 
         raise gen.Return(message)
-
         
     @gen.coroutine
     def new_coturn_account(self, struct):
@@ -295,10 +282,10 @@ class LoginHandler(BaseHandler):
         account = yield get_account_uuid(self.db,
                             self.username,
                             self.password)
-        labels = {'labels':'unsupervised'}
+        message = {'labels':'unsupervised'}
         stuff = yield get_account_labels(self.db, self.username)
         if stuff:
-            labels = stuff
+            message['labels'] = stuff
         # if not account something was wrong!
         if not account:
             # 401 status code?
@@ -311,13 +298,13 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
             # if labels we make some fucking labels
-            labels = str(labels['labels'])
+            labels = str(message['labels'])
             # labels, labels, labels
             self.set_secure_cookie('labels', labels)
-            # secure cookie for labels
+            message['uuid'] = account
             self.username, self.password = (None, None)
             self.set_status(200)
-            self.finish(labels)
+            self.finish(message)
 
     @gen.coroutine
     def options(self):

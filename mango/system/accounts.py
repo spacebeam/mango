@@ -27,15 +27,6 @@ class Accounts(object):
     '''
 
     @gen.coroutine
-    def get_usernames(self):
-        '''
-            Get all the usernames
-        '''
-        accounts = yield self.db.accounts.find({}, {'account':1, '_id':0})
-        
-        raise gen.Return(accounts)
-
-    @gen.coroutine
     def check_exist(self, account):
         '''
             Check if a given account exist
@@ -57,40 +48,6 @@ class Accounts(object):
                                         {'type':1,'_id':0})
         
         raise gen.Return(a_type)
-
-    @gen.coroutine
-    def new_route(self, struct):
-        '''
-            New account billing route
-        '''
-        account = struct['account']
-        try:
-            route = accounts.Route(struct)
-            route.validate()
-            route = route.to_primitive()
-        except Exception, e:
-            logging.exception(e)
-            raise e
-
-        result = yield self.db.accounts.update(
-                            {'account':account},
-                            {'$addToSet':{'routes':route}})
-
-        raise gen.Return(result)
-
-    @gen.coroutine
-    def get_route_list(self, account):
-        '''
-            Get account billing routes
-        '''
-
-        # Support for multiple routes missing
-
-        result = yield self.db.accounts.find_one(
-                            {'account': account},
-                            {'routes':1, '_id':0})
-
-        raise gen.Return(result)
 
     @gen.coroutine
     def get_orgs_list(self, account):

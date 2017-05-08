@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango daemon configuration options.
+    Mango configuration server options.
 '''
 
 # This file is part of mango.
@@ -38,15 +38,9 @@ def options():
         type=bool, 
         help=('Turn on autoreload and log to stderr only')
     )
-    # logging dir
-    tornado.options.define('logdir',
-        type=str,
-        default='log',
-        help=('Location of logging (if debug mode is off)')
-    )
     # Application domain
     tornado.options.define('domain',
-        default='iofun.io',
+        default='*',
         type=str,
         help=('Application domain, e.g. "example.com"')
     )
