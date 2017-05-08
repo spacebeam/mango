@@ -87,6 +87,21 @@ def check_account_authorization(db, account, password):
     raise gen.Return(message)
 
 @gen.coroutine
+def get_account_uuid(db, account, password):
+    '''
+        Check account authorization
+    '''
+    try:
+        message = yield db.accounts.find_one({'account': account,
+                                              'password': password},
+                                             {'uuid':1, '_id':0})
+    except Exception, e:
+        logging.exception(e)
+        raise e
+        return
+    raise gen.Return(message)
+
+@gen.coroutine
 def get_account_labels(db, account):
     '''
         Get account labels

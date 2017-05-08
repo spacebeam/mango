@@ -290,15 +290,11 @@ class LoginHandler(BaseHandler):
     '''
         BasicAuth login
     '''
-
     @gen.coroutine
     def get(self):
-        logging.warning(self.request.headers)
-
-        account = yield check_account_authorization(self.db,
+        account = yield get_account_uuid(self.db,
                             self.username,
                             self.password)
-        # labels stuff if stuff labels
         labels = {'labels':'unsupervised'}
         stuff = yield get_account_labels(self.db, self.username)
         if stuff:
@@ -344,5 +340,6 @@ class LogoutHandler(BaseHandler):
             Clear secure cookie
         '''
         self.clear_cookie('username')
+        self.clear_cookie('labels')
         self.set_status(200)
         self.finish()
