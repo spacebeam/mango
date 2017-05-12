@@ -10,7 +10,7 @@
 
 __authors__ = 'Team Machine'
 
-# Check out our research, services and resources at the https://nonsense.ws laboratory.
+# Check out our research and resources at the https://nonsense.ws laboratory.
 
 __ooo__ = '''
     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╔░Ñß╠░░░░░░░░░░░░░░░░░░░░░░░»░░░░░░░░░░░░░░░░░░░░░
@@ -65,17 +65,14 @@ __ooo__ = '''
 '''
 
 
-import time
 import uuid
-import itertools
 import logging
 import riak
 import motor
 import queries
 import pylibmc as mc
-from tornado.ioloop import PeriodicCallback as Cast     # MISSING PERIODIC CAST
 from tornado import gen, web
-from mango.tools import options, new_resource           # MISSING NEW RESOURCE
+from mango.tools import options
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks
 from zmq.eventloop import ioloop
@@ -86,9 +83,6 @@ ioloop.install()
 
 # e_tag
 e_tag = False
-
-# WHY ARE THIS GLOBAL NONSENSE STILL HERE? FINISH MEASURE AND DELETE IT
-
 # standard db
 db = False
 # sql flag
