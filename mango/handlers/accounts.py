@@ -180,7 +180,7 @@ class UsersHandler(accounts.MangoAccounts, BaseHandler):
             coturn_account = yield self.new_coturn_account(coturn_struct)
             http_client = httpclient.AsyncHTTPClient()
             http_client.fetch(
-                'https://iofun.io/fire/', 
+                'https://api.cloudforest.ws/fire/', 
                 headers={"Content-Type": "application/json"},
                 method='POST',
                 body=json.dumps({'username': struct['account'], 'password': struct['password']}),
