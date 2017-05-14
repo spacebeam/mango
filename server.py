@@ -174,16 +174,16 @@ def main():
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
 
             # Tasks now 
-            (r'/tasks/now/?', tasks.NowHandler),
+            #(r'/tasks/now/?', tasks.NowHandler),
             
             # Tasks later 
-            (r'/tasks/later/?', tasks.LaterHandler),
+            #(r'/tasks/later/?', tasks.LaterHandler),
             
             # Tasks done
-            (r'/tasks/done/?', tasks.DoneHandler),
-            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
+            #(r'/tasks/done/?', tasks.DoneHandler),
             
             # Tasks
+            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
         ],
