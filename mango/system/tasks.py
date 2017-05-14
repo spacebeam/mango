@@ -91,7 +91,7 @@ class Tasks(object):
         '''
             Get unique list from Solr
         '''
-        search_index = 'cas_email_index'
+        search_index = 'mango_task_index'
         query = 'uuid_register:*'
         filter_query = 'uuid_register:*'
         unique_list = []
@@ -147,12 +147,12 @@ class Tasks(object):
             raise gen.Return(unique_list)
 
     @gen.coroutine
-    def get_email(self, account, email_uuid):
+    def get_task(self, account, task_uuid):
         '''
-            Get email
+            Get task
         '''
-        search_index = 'cas_email_index'
-        query = 'uuid_register:{0}'.format(email_uuid)
+        search_index = 'mango_task_index'
+        query = 'uuid_register:{0}'.format(task_uuid)
         filter_query = 'account_register:{0}'.format(account)
         # build the url
         url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
@@ -194,11 +194,11 @@ class Tasks(object):
             raise gen.Return(message)
 
     @gen.coroutine
-    def get_email_list(self, account, start, end, lapse, status, page_num):
+    def get_task_list(self, account, start, end, lapse, status, page_num):
         '''
-            Get email list
+            Get task list
         '''
-        search_index = 'cas_email_index'
+        search_index = 'mango_task_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
         page_num = int(page_num)
@@ -232,15 +232,15 @@ class Tasks(object):
             raise gen.Return(got_response[0])
 
     @gen.coroutine
-    def new_email(self, struct):
+    def new_task(self, struct):
         '''
-            New email event
+            New task event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
-        search_index = 'cas_email_index'
+        search_index = 'mango_task_index'
         # on the riak database with riak-admin bucket-type create `bucket_type`
         # remember to activate it with riak-admin bucket-type activate
-        bucket_type = 'cas_email'
+        bucket_type = 'mango_task'
         # the bucket name can be dynamic
         bucket_name = 'tasks'
         try:
@@ -336,18 +336,18 @@ class Tasks(object):
         raise gen.Return(message)
 
     @gen.coroutine
-    def modify_email(self, account, email_uuid, struct):
+    def modify_task(self, account, task_uuid, struct):
         '''
-            Modify email
+            Modify task
         '''
         # riak search index
-        search_index = 'cas_email_index'
+        search_index = 'mango_task_index'
         # riak bucket type
-        bucket_type = 'cas_email'
+        bucket_type = 'mango_task'
         # riak bucket name
         bucket_name = 'tasks'
         # solr query
-        query = 'uuid_register:{0}'.format(email_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(task_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
@@ -393,15 +393,15 @@ class Tasks(object):
             raise gen.Return(update_complete)
 
     @gen.coroutine
-    def replace_email(self, account, email_uuid, struct):
+    def replace_task(self, account, task_uuid, struct):
         '''
-            Replace email
+            Replace task
         '''
         pass
 
     @gen.coroutine
-    def remove_email(self, account, email_uuid):
+    def remove_task(self, account, task_uuid):
         '''
-            Remove email
+            Remove task
         '''
         pass
