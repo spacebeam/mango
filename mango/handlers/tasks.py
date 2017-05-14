@@ -17,11 +17,11 @@ import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-from cas.messages import tasks as models
+from mango.messages import tasks as models
 from tornado import httpclient
-from cas.system import tasks
-from cas.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE 
-from cas.handlers import BaseHandler
+from mango.system import tasks
+from mango.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE 
+from mango.handlers import BaseHandler
 
 
 class Handler(tasks.Tasks, BaseHandler):
