@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
-    Cas tasks system logic.
+    Tasks system logic.
 '''
 
-# This file is part of cas.
+# This file is part of mango.
 
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
@@ -18,11 +18,11 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from cas.messages import tasks
-from cas.messages import BaseResult
-from cas.structures.tasks import TaskMap
+from mango.messages import tasks
+from mango.messages import BaseResult
+from mango.structures.tasks import TaskMap
 from riak.datatypes import Map
-from cas.tools import clean_structure, clean_results
+from mango.tools import clean_structure, clean_results
 from tornado import httpclient as _http_client
 
 
