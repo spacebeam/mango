@@ -228,3 +228,9 @@ def clean_results(results):
         } for dic in results 
     ]
     return {'results': results}
+
+def str2bool(boo):
+    '''
+        String to boolean
+    '''
+    return boo.lower() in ('yes', 'true', 't', '1')
