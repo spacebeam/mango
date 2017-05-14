@@ -3,7 +3,7 @@ cython
 futures
 riak
 motor
-schematics
+schematics==2.0.0a1
 psycopg2
 queries
 numpy

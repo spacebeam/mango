@@ -25,7 +25,7 @@ class SimpleEntry(models.Model):
     count = types.IntType()
     account = types.StringType()
     comment = types.StringType()
-    created_at = types.DateTimeType(default=arrow.utcnow().naive)
+    created_at = types.TimestampType(default=arrow.utcnow().naive)
 
 
 class Comment(models.Model):
@@ -51,10 +51,10 @@ class Task(models.Model):
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
     url = types.StringType()
-    start = types.DateTimeType()
-    ack = types.DateTimeType()
-    stop = types.DateTimeType()
-    deadline = types.DateTimeType()
+    start = types.TimestampType()
+    ack = types.TimestampType()
+    stop = types.TimestampType()
+    deadline = types.TimestampType()
     duration = types.StringType()
     comments = compound.ModelType(Comment)
     status = types.StringType(choices=['now',
@@ -66,9 +66,9 @@ class Task(models.Model):
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     updated_by = types.StringType()
-    updated_at = types.DateTimeType()
-    created_at = types.DateTimeType(default=arrow.utcnow().naive)
-    last_modified = types.DateTimeType()
+    updated_at = types.TimestampType()
+    created_at = types.TimestampType(default=arrow.utcnow().naive)
+    last_modified = types.TimestampType()
 
 
 class ModifyTask(models.Model):
@@ -95,10 +95,10 @@ class ModifyTask(models.Model):
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
     url = types.StringType()
-    start = types.DateTimeType()
-    ack = types.DateTimeType()
-    stop = types.DateTimeType()
-    deadline = types.DateTimeType()
+    start = types.TimestampType()
+    ack = types.TimestampType()
+    stop = types.TimestampType()
+    deadline = types.TimestampType()
     duration = types.StringType()
     comments = compound.ModelType(Comment)
     status = types.StringType(choices=['now',
@@ -108,6 +108,6 @@ class ModifyTask(models.Model):
     checked = types.BooleanType()
     checked_by = types.StringType()
     updated_by = types.StringType()
-    updated_at = types.DateTimeType()
-    created_at = types.DateTimeType()
-    last_modified = types.DateTimeType()
+    updated_at = types.TimestampType()
+    created_at = types.TimestampType()
+    last_modified = types.TimestampType()
