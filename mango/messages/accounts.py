@@ -62,7 +62,7 @@ class RequiredBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType(required=False)
     max_channels = types.IntType()
-    created_at = types.DateTimeType(default=arrow.utcnow().naive)
+    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
 
 
 class CleanBase(models.Model):
@@ -86,7 +86,7 @@ class CleanBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     url = types.URLType()
     max_channels = types.IntType()
-    created_at = types.DateTimeType()
+    created_at = types.TimestampType()
 
 
 class BaseAccount(RequiredBase):
