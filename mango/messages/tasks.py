@@ -25,7 +25,7 @@ class SimpleEntry(models.Model):
     count = types.IntType()
     account = types.StringType()
     comment = types.StringType()
-    created_at = types.TimestampType(default=arrow.utcnow().naive)
+    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
 
 
 class Comment(models.Model):
@@ -67,7 +67,7 @@ class Task(models.Model):
     checked_by = types.StringType()
     updated_by = types.StringType()
     updated_at = types.TimestampType()
-    created_at = types.TimestampType(default=arrow.utcnow().naive)
+    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_modified = types.TimestampType()
 
 
