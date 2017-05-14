@@ -36,52 +36,58 @@ class TaskMap(object):
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
         self.map.registers['account'].assign(struct.get('account', ''))
-        self.map.registers['hello_message'].assign(struct.get('hello_message', ''))
-        self.map.registers['saludation'].assign(struct.get('saludation', ''))
-        self.map.registers['labels'].assign(struct.get('labels', ''))
-        self.map.registers['number_type'].assign(struct.get('number_type', ''))
-        self.map.registers['first_name'].assign(struct.get('first_name', ''))
-        self.map.registers['last_name'].assign(struct.get('last_name', ''))
-        self.map.registers['vendor_name'].assign(struct.get('vendor_name', ''))
-        self.map.registers['reports_to'].assign(struct.get('reports_to', ''))
-        self.map.registers['skype_id'].assign(struct.get('skype_id', ''))
-        self.map.registers['mobile'].assign(struct.get('mobile', ''))
-        self.map.registers['home_phone'].assign(struct.get('home_phone', ''))
-        self.map.registers['other_phone'].assign(struct.get('other_phone', ''))
-        self.map.registers['fax'].assign(struct.get('fax', ''))
-        self.map.registers['campaign_source'].assign(struct.get('campaign_source', ''))
-        self.map.registers['lead_source'].assign(struct.get('lead_source', ''))
         self.map.registers['title'].assign(struct.get('title', ''))
-        self.map.registers['department'].assign(struct.get('department', ''))
-        self.map.registers['phone_number'].assign(struct.get('phone_number', ''))
-        self.map.registers['phone'].assign(struct.get('phone', ''))
-        self.map.registers['cel_phone'].assign(struct.get('cel_phone', ''))
-        self.map.registers['phone_numbers'].assign(struct.get('phone_numbers', ''))
-        self.map.registers['country'].assign(struct.get('country', ''))
-        self.map.registers['location'].assign(struct.get('location', ''))
-        self.map.registers['timezone'].assign(struct.get('timezone', ''))
+        self.map.registers['description'].assign(struct.get('description', ''))
+        self.map.registers['payload'].assign(struct.get('payload', ''))
+        self.map.registers['assignees'].assign(struct.get('assignees', ''))
+        self.map.registers['public'].assign(struct.get('public', ''))
+        self.map.registers['source'].assign(struct.get('source', ''))
+        self.map.registers['destination'].assign(struct.get('destination', ''))
+        self.map.registers['labels'].assign(struct.get('labels', ''))
+        self.map.registers['url'].assign(struct.get('url', ''))
+        self.map.registers['start'].assign(struct.get('start', ''))
+        self.map.registers['ack'].assign(struct.get('ack', ''))
+        self.map.registers['stop'].assign(struct.get('stop', ''))
+        self.map.registers['deadline'].assign(struct.get('deadline', ''))
+        self.map.registers['duration'].assign(struct.get('duration', ''))
         self.map.registers['comments'].assign(struct.get('comments', ''))
         self.map.registers['status'].assign(struct.get('status', ''))
-        self.map.registers['city'].assign(struct.get('city', ''))
-        self.map.registers['state'].assign(struct.get('state', ''))
-        self.map.registers['zip_code'].assign(struct.get('zip_code', ''))
-        self.map.registers['date_of_birth'].assign(struct.get('date_of_birth', ''))
-        self.map.registers['checked'].assign(struct.get('checked', ''))
-        self.map.registers['do_not_disturb'].assign(struct.get('do_not_disturb', ''))
-        self.map.registers['secondary_email'].assign(struct.get('secondary_email', ''))
-        self.map.registers['assistant'].assign(struct.get('assistant', ''))
-        self.map.registers['asst_phone'].assign(struct.get('asst_phone', ''))
-        self.map.registers['address'].assign(struct.get('address', ''))
-        self.map.registers['email'].assign(struct.get('email', ''))
-        self.map.registers['email_opt_out'].assign(struct.get('email_opt_out', ''))
-        self.map.registers['phone_opt_out'].assign(struct.get('phone_opt_out', ''))
-        self.map.registers['deleted'].assign(struct.get('deleted', ''))
-        self.map.registers['disabled'].assign(struct.get('disabled', ''))
-        self.map.registers['description'].assign(struct.get('description', ''))
+        self.map.registers['checked'].assign(struct.get('checked', ''))      
+        self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
+        self.map.registers['updated_by'].assign(struct.get('updated_by', ''))
         self.map.registers['created_by'].assign(struct.get('created_by', ''))
-        self.map.registers['modified_by'].assign(struct.get('modified_by', ''))
+        self.map.registers['updated_at'].assign(struct.get('updated_at', ''))
+        self.map.registers['created_at'].assign(struct.get('created_at', ''))
+        self.map.registers['last_modified'].assign(struct.get('last_modified', ''))
         # end of the map stuff
         self.map.store()
+
+
+        "uuid": event.registers['uuid'].value,
+        "account": event.registers['title'].value,
+        "title": event.registers['title'].value,
+        "description": event.registers['description'].value,
+        "payload": event.registers['payload'].value,
+        "assignees": event.registers['assignees'].value,
+        "public",
+        "source",
+        "destination",
+        "labels",
+        "url",
+        "start",
+        "ack",
+        "stop",
+        "deadline",
+        "duration",
+        "comments",
+        "status",
+        "checked",
+        "checked_by",
+        "updated_by",
+        "created_by",
+        "updated_at",
+        "created_at",
+        "last_modified"
 
     @property
     def uuid(self):
