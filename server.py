@@ -68,7 +68,6 @@ __ooo__ = '''
 import uuid
 import logging
 import riak
-import motor
 import queries
 import pylibmc as mc
 from tornado import gen, web
@@ -95,8 +94,6 @@ def main():
     '''
     # daemon options
     opts = options.options()
-    # Set document database
-    document = motor.MotorClient(opts.mongo_host, opts.mongo_port).mango
     # Set memcached backend
     memcache = mc.Client(
         [opts.memcached_host],
@@ -123,15 +120,14 @@ def main():
     sql = queries.TornadoSession(uri=postgresql_uri)
     # current db
     global db
-    db = document
+    db = kvalue
     # system uuid
     system_uuid = uuid.uuid4()
     # logging system spawned uuid
     logging.info('Mango system uuid {0} spawned'.format(system_uuid))
     # logging riak settings
     logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
-    # logging old database hosts
-    logging.info('MongoDB server: {0}:{1}'.format(opts.mongo_host, opts.mongo_port))
+    # logging sql database hosts
     logging.info('PostgreSQL server: {0}:{1}'.format(opts.sql_host, opts.sql_port))
     # system cache
     cache_enabled = opts.cache_enabled
@@ -193,8 +189,6 @@ def main():
         cache=cache,
         # cache enabled flag
         cache_enabled=cache_enabled,
-        # document datastorage
-        document=document,
         # kvalue datastorage
         kvalue=kvalue,
         # sql datastorage

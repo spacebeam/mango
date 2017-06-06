@@ -2,7 +2,6 @@ tornado
 cython
 futures
 riak
-motor
 schematics==2.0.0a1
 psycopg2
 queries
