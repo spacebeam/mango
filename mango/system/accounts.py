@@ -1,173 +1,279 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango accounts system logic functions.
+    Mango accounts system logic.
 '''
-# 
-# This file is part of mango.
 
-# Distributed under the terms of the last AGPL License.
+# This file is part of cas.
+
+# Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Team Machine'
 
 
-import logging
-import motor
+import arrow
 import uuid
+import logging
+import ujson as json
 from tornado import gen
-from mango.messages import accounts
-from mango.tools import clean_structure, clean_results
+from schematics.types import compound
+from cas.messages import accounts
+from cas.messages import BaseResult
+from cas.structures.accounts import AccountMap
+from riak.datatypes import Map
+from cas.tools import clean_structure, clean_results
+from tornado.httputil import url_concat
+from tornado import httpclient as _http_client
 
 
-class Accounts(object):
+_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+http_client = _http_client.AsyncHTTPClient()
+
+
+class SecretsResult(BaseResult):
     '''
-        Accounts main class
-
-        Organisational programming class
+        List result
     '''
-
-    @gen.coroutine
-    def check_exist(self, account):
-        '''
-            Check if a given account exist
-        '''
-        exist = yield self.db.accounts.find_one(
-                                {'account': account},
-                                {'account':1, '_id':0})
-        raise gen.Return(exist)
-
-    @gen.coroutine
-    def check_type(self, account, account_type):
-        '''
-            Check the type of a given account
-        '''
-
-        a_type = yield self.db.accounts.find_one(
-                                        {'account': account,
-                                         'account_type': account_type},
-                                        {'type':1,'_id':0})
-        
-        raise gen.Return(a_type)
-
-    @gen.coroutine
-    def get_orgs_list(self, account):
-        '''
-            Get account orgs
-        '''
-        result = yield self.db.accounts.find_one(
-                            {'account': account},
-                            {'orgs':1, '_id':0})
-
-        raise gen.Return(result)
+    results = compound.ListType(compound.ModelType(accounts.Secret))
 
 
-class MangoAccounts(Accounts):
+class Secrets(object):
     '''
-        Mango accounts
+        Secrets
     '''
 
     @gen.coroutine
-    def get_account_list(self, account_type, status, page_num):
+    def get_query_values(self, urls):
         '''
-            Get the mango accounts
+            Process grouped values from Solr
         '''
-        account_list = []
-        page_size = self.settings['page_size']
-
-        query = {'account_type':account_type}
-        if status != 'all':
-            query['status'] = status
-        query = self.db.accounts.find(query, {'_id':0})
-        query = query.sort([('_id', -1)]).skip(int(page_num) * page_size).limit(page_size)
-    
+        process_list = []
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+            else:
+                result = json.loads(response.body)
+                content = {}
+                options = []
+                # gunter grass penguin powers
+                for stuff in result['grouped']:
+                    content['value'] = stuff[0:-9]
+                    for g in result['grouped'][stuff]['groups']:
+                        options.append(g['groupValue'])
+                    content['options'] = options
+                # append the final content
+                process_list.append(content)
         try:
-        
-            while (yield query.fetch_next):
-                account = query.next_object()
-                account_list.append(account)
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while True:
+                # this probably make no sense
+                # we're just trying to sleep for a nano second in here...
+                # or maybe just a millisecond?, I don't know man.
+                yield gen.sleep(0.0001)
+                if len(process_list) == len(urls):
+                    break
+                # who fucking cares.. 
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-
         finally:
-            raise gen.Return(account_list)
+            raise gen.Return(process_list)
+
 
     @gen.coroutine
-    def get_account(self, account, account_type):
+    def get_unique_queries(self, struct):
         '''
-            Get mango account
+            Get unique list from Solr
         '''
-        message = None
-        result = yield self.db.accounts.find_one(
-                                {'account':account,
-                                 'account_type':account_type},
-                                 {'_id':0, 'password':0})
-        if result:
-            if 'user' in account_type:
-                message = accounts.ModifyUser(result)
-            elif 'org' in account_type:
-                message = accounts.Org(result)
-                
+        search_index = 'cas_account_index'
+        query = 'uuid_register:*'
+        filter_query = 'uuid_register:*'
+        unique_list = []
+        if 'unique' in struct.keys():
+            del struct['unique']
         try:
-            if message:
-                message.validate()
-                message = clean_structure(message)
+            if len(struct.keys()) == 1:
+                for key in struct.keys():
+                    field_list = key
+                    group_field = key
+                    params = {
+                        'wt': 'json',
+                        'q': query,
+                        'fl': field_list,
+                        'fq':filter_query,
+                        'group':'true',
+                        'group.field':group_field,
+                    }
+                    url = ''.join((
+                        self.solr,
+                        '/query/',
+                        search_index,
+                        '?wt=json&q=uuid_register:*&fl=',
+                        key,
+                        '_register&fq=uuid_register:*&group=true&group.field=',
+                        key,
+                        '_register'))
+                    unique_list.append(url)
+            else:
+                for key in struct.keys():
+                    field_list = key
+                    group_field = key
+                    params = {
+                        'wt': 'json',
+                        'q': query,
+                        'fl': field_list,
+                        'fq':filter_query,
+                        'group':'true',
+                        'group.field':group_field,
+                    }
+                    url = ''.join((
+                        self.solr,
+                        '/query/',
+                        search_index,
+                        '?wt=json&q=uuid_register:*&fl=',
+                        key,
+                        '_register&fq=uuid_register:*&group=true&group.field=',
+                        key,
+                        '_register'))
+                    unique_list.append(url)
         except Exception, e:
             logging.exception(e)
-            raise e
+            raise gen.Return(e)
+        finally:
+            raise gen.Return(unique_list)
+
+    @gen.coroutine
+    def get_account(self, account, account_uuid):
+        '''
+            Get account
+        '''
+        search_index = 'cas_account_index'
+        query = 'uuid_register:{0}'.format(account_uuid)
+        filter_query = 'account_register:{0}'.format(account)
+        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        got_response = []
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response_doc = stuff['response']['docs'][0]
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message = dict(
+                    # key, value
+                    (key.split('_register')[0], value) 
+                    for (key, value) in response_doc.items()
+                    if key not in IGNORE_ME
+                )
+            else:
+                message = {'message': 'not found'}
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
         finally:
             raise gen.Return(message)
 
     @gen.coroutine
-    def get_account_uuid(self, account_uuid, account_type):
+    def get_account_list(self, account, start, end, lapse, status, page_num):
         '''
-            Get mango account uuid
+            Get account list
         '''
-        message = None
-        result = yield self.db.accounts.find_one(
-                                {'uuid':account_uuid,
-                                 'account_type':account_type},
-                                 {'_id':0, 'password':0})
-        if result:
-            if 'user' in account_type:
-                message = accounts.ModifyUser(result)
-            elif 'org' in account_type:
-                message = accounts.Org(result)
-                
+        search_index = 'cas_account_index'
+        query = 'uuid_register:*'
+        filter_query = 'account_register:{0}'.format(account)
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        von_count = 0
+        got_response = []
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
         try:
-            if message:
-                message.validate()
-                message = clean_structure(message)
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
         except Exception, e:
             logging.exception(e)
-            raise e
+            raise gen.Return(e)
         finally:
-            raise gen.Return(message)
+            raise gen.Return(got_response[0])
 
     @gen.coroutine
     def new_account(self, struct):
         '''
-            New mango account
+            New account event
         '''
-        account_type = struct['account_type']
-
+        # currently we are changing this in two steps, first create de index with a structure file
+        search_index = 'cas_account_index'
+        # on the riak database with riak-admin bucket-type create `bucket_type`
+        # remember to activate it with riak-admin bucket-type activate
+        bucket_type = 'cas_account'
+        # the bucket name can be dynamic
+        bucket_name = 'accounts'
         try:
-            if 'user' in account_type:
-                account = accounts.User(struct)
-
-            if 'org' in account_type:
-                account = accounts.Org(struct)
-
-            account.validate()
-            account = clean_structure(account)
-
+            event = accounts.Secret(struct)
+            event.validate()
+            event = clean_structure(event)
         except Exception, e:
-            logging.error(e)
             raise e
-
         try:
-            result = yield self.db.accounts.insert(account)
-            message = account.get('uuid')
+            message = event.get('uuid')
+            structure = {
+                "uuid": str(event.get('uuid', str(uuid.uuid4()))),
+                "account": str(event.get('account', 'pebkac')),
+                "name": str(event.get('name', '')),
+                "content":str(event.get('content', '')),
+                "status":str(event.get('status', '')),
+                "labels":str(event.get('labels', '')),
+                "public":str(event.get('public', '')),
+                "checked":str(event.get('checked', '')),
+                "checked_by":str(event.get('checked_by', '')),
+                "created_at":str(event.get('created_at', '')),
+                "updated_at":str(event.get('updated_at', '')),
+                "updated_by":str(event.get('updated_by', '')),
+                "url":str(event.get('url', '')),
+            }
+            result = SecretMap(
+                self.kvalue,
+                bucket_name,
+                bucket_type,
+                search_index,
+                structure
+            )
         except Exception, e:
             logging.error(e)
             message = str(e)
@@ -177,170 +283,72 @@ class MangoAccounts(Accounts):
     @gen.coroutine
     def modify_account(self, account, account_uuid, struct):
         '''
-            Modify task
+            Modify account
         '''
-        # note: yes is kind of crappy and stuff but we're doing it
-        # the account unique query stuff instead of uuid.
-        # uuid's are the answer, but...! there is no but, and this is nonsense.
-        logging.warning('warning account_uuid not used on modify_account')
+        # riak search index
+        search_index = 'cas_account_index'
+        # riak bucket type
+        bucket_type = 'cas'
+        # riak bucket name
+        bucket_name = 'accounts'
+        # solr query
+        query = 'uuid_register:{0}'.format(account_uuid.rstrip('/'))
+        # filter query
+        filter_query = 'account_register:{0}'.format(account)
+        # search query url
+        #url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
+            #search_index, query, filter_query
+        #)
+        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )    
+        # pretty please, ignore this list of fields from database.
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
+        got_response = []
+        update_complete = False
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
         try:
-            schema = accounts.ModifyUser(struct)
-            schema.validate()
-            schema = clean_structure(schema)
-        except Exception, e:
-            logging.error(e)
-            raise e
-
-        try:
-            result = yield self.db.accounts.update(
-                {'account':account},
-                # 'uuid':account_uuid},      read the note!
-                {'$set':schema}
+            http_client.fetch(
+                url,
+                callback=handle_request
             )
-            logging.warning(result)
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010) 
+            response_doc = got_response[0].get('response')['docs'][0]
+            riak_key = str(response_doc['_yz_rk'])
+            bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
+            bucket.set_properties({'search_index': search_index})
+            contact = Map(bucket, riak_key)
+            for key in struct:
+                if key not in IGNORE_ME:
+                    contact.registers['{0}'.format(key)].assign(str(struct.get(key)))
+            contact.update()
+            update_complete = True
         except Exception, e:
-            logging.error(e)
-            message = str(e)
-
-        raise gen.Return(bool(result.get('n')))
-
-    @gen.coroutine
-    def remove_account(self, account):
-        '''
-            Remove mango account
-        '''
-        result = yield self.db.accounts.remove({'account':account})
-
-        raise gen.Return(result)
-
-
-class Orgs(MangoAccounts):
-    '''
-        Mango orgs accounts
-    '''
+            logging.exception(e)
+            raise gen.Return(e)
+        finally:
+            raise gen.Return(update_complete)
 
     @gen.coroutine
-    def get_bson_objectid(self, account):
+    def replace_account(self, account, account_uuid, struct):
         '''
-            Get BSON _id
-        '''
-        result = yield self.db.accounts.find_one(
-                    {'account':account}, {'_id':1})
-        raise gen.Return(result)
-
-    @gen.coroutine
-    def get_uuid(self, account):
-        '''
-            Get uuid
-        '''
-        account_uuid = yield self.db.accounts.find_one(
-                        {'account':account}, {'uuid':1})
-        raise gen.Return(account_uuid)
-
-    @gen.coroutine
-    def new_member(self, org, user):
-        '''
-            New member
-        '''
-        update_user = self.db.accounts.update(
-                            {'account':user},
-                            {'$addToSet':{'orgs':org}})
-        update_org = self.db.accounts.update(
-                            {'account':org},
-                            {'$addToSet':{'members':user}})
-
-        result = yield [update_user, update_org]
-        message = [bool(n.get('n')) for n in result]
-        raise gen.Return(message)
-
-    @gen.coroutine
-    def get_member(self):
-        '''
-            Get member
+            Replace account
         '''
         pass
 
     @gen.coroutine
-    def check_member(self):
+    def remove_account(self, account, account_uuid):
         '''
-            Check member exist
-        '''
-        pass
-
-    @gen.coroutine
-    def get_members_list(self, org):
-        '''
-            Get members
-        '''
-        result = yield self.db.accounts.find_one(
-                    {'account':org},
-                    {'members':1, '_id':0})
-
-        raise gen.Return(result)
-
-    @gen.coroutine
-    def remove_member(self, org, user):
-        '''
-            Remove member
-        '''
-        update_user = self.db.accounts.update(
-                            {'account':user},
-                            {'$pull':{'orgs':org}})
-        update_org = self.db.accounts.update(
-                            {'account': org},
-                            {'$pull':{'members':user}})
-
-        result = yield [update_user, update_org]
-
-
-        logging.warning(result)
-
-
-        message = [n.get(n) for n in result]
-        raise gen.Return(message)
-
-    @gen.coroutine
-    def new_team(self, org, team):
-        '''
-            New team
-        '''
-        # team validate and clean structure return team 
-        # or log crash errors; variable assigned to team variable.
-        try:
-            team = accounts.Team(team) 
-            team.validate()
-            team = clean_structure(team)
-        except Exception, e:
-            logging.error(e)
-            raise e
-        try:
-            message = yield self.db.accounts.update(
-                {'account':org},
-                {'$addToSet':{'teams':team}}
-            )
-        except Exception, e:
-            logging.error(e)
-            raise e
-
-        raise gen.Return(bool(message.get('n')))
-
-    @gen.coroutine
-    def get_team(self):
-        '''
-            Get team
-        '''
-        pass
-
-    @gen.coroutine
-    def get_teams(self):
-        '''
-            Get teams
-        '''
-        pass
-
-    @gen.coroutine
-    def remove_team(self):
-        '''
-            Remove team
+            Remove account
         '''
         pass

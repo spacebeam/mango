@@ -139,46 +139,34 @@ def main():
             # Mango Basic-Auth session
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-    
             # ORGs teams
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
-    
             # ORGs members
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-            
             # Organizations of Random Generality.
             (r'/orgs/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<account_uuid>.+)/?', accounts.OrgsHandler),
-
             # Users suspended
             #(r'/users/suspended/?', accounts.UsersSuspendedHandler),
-            
             # Users disable
             #(r'/users/disable/?', accounts.UsersDisableHandler),
-    
             # Users active
             #(r'/users/active/?', accounts.UsersActiveHandler),
-            
             # Users resources
             (r'/users/?', accounts.UsersHandler),
             (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
-
             # Tasks now 
             #(r'/tasks/now/?', tasks.NowHandler),
-            
             # Tasks later 
             #(r'/tasks/later/?', tasks.LaterHandler),
-            
             # Tasks done
             #(r'/tasks/done/?', tasks.DoneHandler),
-            
-            # Tasks
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
