@@ -1,4 +1,4 @@
-Goal:  Management tool for actor-based systems.
+Goal:  Plug and play management tool for actor-based systems.
 
 Description: Growing mango trees in the landscape will give you a lifetime of fresh pungent fruit from an attractive shade tree.
 
