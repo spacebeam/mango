@@ -19,7 +19,7 @@ from tornado import gen
 from schematics.types import compound
 from mango.messages import accounts
 from mango.messages import BaseResult
-from mango.structures.teams import AccountMap
+from mango.structures.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results
 from tornado.httputil import url_concat
