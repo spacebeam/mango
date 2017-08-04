@@ -315,7 +315,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(200)
         self.finish(message)
 
-class TeamsHandler(teams.Team, BaseHandler):
+class TeamHandler(teams.Team, BaseHandler):
     '''
         HTTP request handlers
     '''
@@ -602,7 +602,7 @@ class TeamsHandler(teams.Team, BaseHandler):
         self.set_status(200)
         self.finish(message)
 
-class OrgsHandler(orgs.Org, BaseHandler):
+class OrgHandler(orgs.Org, BaseHandler):
     '''
         HTTP request handlers
     '''
