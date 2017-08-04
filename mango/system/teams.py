@@ -34,7 +34,7 @@ class TeamResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(account.Team))
+    results = compound.ListType(compound.ModelType(accounts.Team))
 
 
 class Team(object):
