@@ -87,7 +87,7 @@ def main():
             #(r'/tasks/?', tasks.Handler),
 
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
-            (r'/users/(?P<account_uuid>.+)/?', accounts.UserHandler),
+            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
             
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
