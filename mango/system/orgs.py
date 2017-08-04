@@ -34,7 +34,7 @@ class OrgResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(orgs.Org))
+    results = compound.ListType(compound.ModelType(account.Org))
 
 
 class Org(object):

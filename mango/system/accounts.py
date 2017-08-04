@@ -30,12 +30,12 @@ _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPCli
 http_client = _http_client.AsyncHTTPClient()
 
 
-class SecretsResult(BaseResult):
+class UserResult(BaseResult):
     '''
         List result
     '''
-    #results = compound.ListType(compound.ModelType(accounts.Account))
-    results = compound.ListType(compound.ModelType(accounts.Secret))
+    results = compound.ListType(compound.ModelType(accounts.User))
+
 
 class Account(object):
     '''
