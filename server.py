@@ -90,9 +90,9 @@ def main():
             (r'/users/(?P<account_uuid>.+)/?', accounts.UserHandler),
             (r'/users/?', accounts.UsersHandler),
             
-            #(r'/orgs/page/(?P<page_num>\d+)/?', orgs.OrgsHandler),
-            #(r'/orgs/(?P<org_uuid>.+)/?', orgs.OrgsHandler),
-            #(r'/orgs/?', orgs.OrgsHandler),
+            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/?', accounts.OrgsHandler),
 
             (r'/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             (r'/teams/(?P<team_uuid>.+)/?', accounts.Teamsandler),
