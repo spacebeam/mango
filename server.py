@@ -6,7 +6,7 @@ import pylibmc as mc
 from tornado.web import RequestHandler
 from tornado import gen, web
 #from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, tasks
+from mango.handlers import accounts, tasks, teams, orgs
 from mango.tools import options
 from zmq.eventloop import ioloop
 
@@ -63,9 +63,9 @@ def main():
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
             # Organizations of Random Generality.
-            #(r'/orgs/?', accounts.OrgsHandler),
-            #(r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
-            #(r'/orgs/(?P<account_uuid>.+)/?', accounts.OrgsHandler),
+            #(r'/orgs/?', orgs.OrgsHandler),
+            #(r'/orgs/(?P<org>.+)/?', orgs.OrgsHandler),
+            #(r'/orgs/(?P<org_uuid>.+)/?', orgs.OrgsHandler),
             # Users suspended
             #(r'/users/suspended/?', accounts.UsersSuspendedHandler),
             # Users disable
@@ -73,9 +73,9 @@ def main():
             # Users active
             #(r'/users/active/?', accounts.UsersActiveHandler),
             # Users resources
-            (r'/users/?', accounts.Handler),
-            (r'/users/(?P<account>.+)/?', accounts.Handler),
-            (r'/users/(?P<account_uuid>.+)/?', accounts.Handler),
+            #(r'/users/?', accounts.UsersHandler),
+            #(r'/users/(?P<account>.+)/?', accounts.UsersHandler),
+            #(r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             # Tasks now 
             #(r'/tasks/now/?', tasks.NowHandler),
             # Tasks later 
@@ -85,6 +85,18 @@ def main():
             #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
             #(r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             #(r'/tasks/?', tasks.Handler),
+
+            (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
+            (r'/users/(?P<account_uuid>.+)/?', accounts.UserHandler),
+            (r'/users/?', accounts.UsersHandler),
+            
+            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/?', accounts.OrgsHandler),
+
+            (r'/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
+            (r'/teams/(?P<team_uuid>.+)/?', accounts.Teamsandler),
+            (r'/teams/?', accounts.TeamsHandler),
         ],
         db = db,
         cache = cache,
