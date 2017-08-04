@@ -218,25 +218,6 @@ class Orgs(MangoAccounts):
     '''
         Mango orgs accounts
     '''
-
-    @gen.coroutine
-    def get_bson_objectid(self, account):
-        '''
-            Get BSON _id
-        '''
-        result = yield self.db.accounts.find_one(
-                    {'account':account}, {'_id':1})
-        raise gen.Return(result)
-
-    @gen.coroutine
-    def get_uuid(self, account):
-        '''
-            Get uuid
-        '''
-        account_uuid = yield self.db.accounts.find_one(
-                        {'account':account}, {'uuid':1})
-        raise gen.Return(account_uuid)
-
     @gen.coroutine
     def new_member(self, org, user):
         '''
@@ -298,49 +279,4 @@ class Orgs(MangoAccounts):
 
         message = [n.get(n) for n in result]
         raise gen.Return(message)
-
-    @gen.coroutine
-    def new_team(self, org, team):
-        '''
-            New team
-        '''
-        # team validate and clean structure return team 
-        # or log crash errors; variable assigned to team variable.
-        try:
-            team = accounts.Team(team) 
-            team.validate()
-            team = clean_structure(team)
-        except Exception, e:
-            logging.error(e)
-            raise e
-        try:
-            message = yield self.db.accounts.update(
-                {'account':org},
-                {'$addToSet':{'teams':team}}
-            )
-        except Exception, e:
-            logging.error(e)
-            raise e
-
-        raise gen.Return(bool(message.get('n')))
-
-    @gen.coroutine
-    def get_team(self):
-        '''
-            Get team
-        '''
-        pass
-
-    @gen.coroutine
-    def get_teams(self):
-        '''
-            Get teams
-        '''
-        pass
-
-    @gen.coroutine
-    def remove_team(self):
-        '''
-            Remove team
-        '''
-        pass
+      # timestam
