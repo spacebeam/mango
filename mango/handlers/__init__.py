@@ -20,28 +20,10 @@ from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
 import logging
 
-
 class BaseHandler(web.RequestHandler):
     '''
-        System application request handler
-
         gente d'armi e ganti
     '''
-
-    @property
-    def sql(self):
-        '''
-            SQL database
-        '''
-        return self.settings['sql']
-
-    @property
-    def document(self):
-        '''
-            Document database
-        '''
-        return self.settings['document']
-
     @property
     def kvalue(self):
         '''
@@ -49,43 +31,38 @@ class BaseHandler(web.RequestHandler):
         '''
         return self.settings['kvalue']
 
-    @property
-    def cache(self):
-        '''
-            Cache backend
-        '''
-        return self.settings['cache']
-
     def initialize(self, **kwargs):
         '''
             Initialize the Base Handler
         '''
         super(BaseHandler, self).initialize(**kwargs)
-        self.etag = None
         # System database
-        self.db = self.settings['db']
+        self.db = self.settings.get('db')
+        # System cache
+        self.cache = self.settings.get('cache')
         # Page settings
-        self.page_size = self.settings['page_size']
+        self.page_size = self.settings.get('page_size')
+        # solr riak
+        self.solr = self.settings.get('solr')
 
     def set_default_headers(self):
         '''
-            Mango default headers
+            mango default headers
         '''
-        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
-        
+        self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
+
     def get_current_username(self):
         '''
-            Return the username from a secure cookie
+            Return the username from a secure cookie (require cookie_secret)
         '''
-        return self.get_secure_cookie('username')
+        #return self.get_secure_cookie('username')
+        return False
 
     @gen.coroutine
     def let_it_crash(self, struct, scheme, error, reason):
         '''
-            Let it crash
+            Let it crash.
         '''
-        # treehouse integration for error goes at this function
-
         str_error = str(error)
         error_handler = errors.Error(error)
         messages = []
@@ -105,17 +82,11 @@ class BaseHandler(web.RequestHandler):
             message = error_handler.value()
         elif error is not None:
             logging.warning(str_error)
-            logging.error(struct, scheme, error, reason)
             message = {
-                'error': u'https://nonsense.ws/help',
-                'message': u"there is no error, stuff don't make sense... but that's life right?"
+                'error': u'nonsense',
+                'message': u'there is no error'
             }
-        else:
-            quotes = PeopleQuotes()
-            message = {
-                'status': 200,
-                'message': quotes.get()
-            }
+        # return message
         raise gen.Return(message)
 
     # TODO: MAE! please refactor into smaller independent functions (=
