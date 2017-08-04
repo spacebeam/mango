@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango accounts system logic.
+    Accounts system logic.
 '''
 
-# This file is part of cas.
+# This file is part of grapex.
 
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
@@ -13,16 +13,16 @@ __author__ = 'Team Machine'
 
 import arrow
 import uuid
+import urllib
 import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from cas.messages import accounts
-from cas.messages import BaseResult
-from cas.structures.accounts import AccountMap
+from mango.messages import accounts
+from mango.messages import BaseResult
+from mango.structures.accounts import AccountMap
 from riak.datatypes import Map
-from cas.tools import clean_structure, clean_results
-from tornado.httputil import url_concat
+from mango.tools import clean_structure, clean_results
 from tornado import httpclient as _http_client
 
 
@@ -30,16 +30,16 @@ _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPCli
 http_client = _http_client.AsyncHTTPClient()
 
 
-class SecretsResult(BaseResult):
+class AccountResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(accounts.Secret))
+    results = compound.ListType(compound.ModelType(accounts.Account))
 
 
-class Secrets(object):
+class Account(object):
     '''
-        Secrets
+        Account
     '''
 
     @gen.coroutine
@@ -86,13 +86,12 @@ class Secrets(object):
         finally:
             raise gen.Return(process_list)
 
-
     @gen.coroutine
-    def get_unique_queries(self, struct):
+    def get_unique_querys(self, struct):
         '''
             Get unique list from Solr
         '''
-        search_index = 'cas_account_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'uuid_register:*'
         unique_list = []
@@ -149,18 +148,24 @@ class Secrets(object):
         finally:
             raise gen.Return(unique_list)
 
+
     @gen.coroutine
     def get_account(self, account, account_uuid):
         '''
             Get account
         '''
-        search_index = 'cas_account_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(account_uuid)
         filter_query = 'account_register:{0}'.format(account)
-        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
+        # url building
+        
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
+
         got_response = []
+        # response message
+        message = {'message': 'not found'}
         def handle_request(response):
             '''
                 Request Async Handler
@@ -182,32 +187,35 @@ class Secrets(object):
                 response_doc = stuff['response']['docs'][0]
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
-                    # key, value
                     (key.split('_register')[0], value) 
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-            else:
-                message = {'message': 'not found'}
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        finally:
-            raise gen.Return(message)
+        raise gen.Return(message)
 
     @gen.coroutine
     def get_account_list(self, account, start, end, lapse, status, page_num):
         '''
             Get account list
         '''
-        search_index = 'cas_account_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
+        
         page_num = int(page_num)
         page_size = self.settings['page_size']
-        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
-            self.solr, search_index, query, filter_query
+        start_num = page_size * (page_num - 1)
+
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
+            self.solr, search_index, query, filter_query, start_num, page_size
         )
+
+        logging.warning('check this url')
+        logging.warning(url)
+
         von_count = 0
         got_response = []
         def handle_request(response):
@@ -219,6 +227,7 @@ class Secrets(object):
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
+
         try:
             http_client.fetch(
                 url,
@@ -235,17 +244,17 @@ class Secrets(object):
     @gen.coroutine
     def new_account(self, struct):
         '''
-            New account event
+            New query event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
-        search_index = 'cas_account_index'
+        search_index = 'mango_account_index'
         # on the riak database with riak-admin bucket-type create `bucket_type`
         # remember to activate it with riak-admin bucket-type activate
-        bucket_type = 'cas_account'
+        bucket_type = 'mango_account'
         # the bucket name can be dynamic
         bucket_name = 'accounts'
         try:
-            event = accounts.Secret(struct)
+            event = accounts.Account(struct)
             event.validate()
             event = clean_structure(event)
         except Exception, e:
@@ -255,19 +264,17 @@ class Secrets(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
-                "name": str(event.get('name', '')),
-                "content":str(event.get('content', '')),
-                "status":str(event.get('status', '')),
-                "labels":str(event.get('labels', '')),
-                "public":str(event.get('public', '')),
-                "checked":str(event.get('checked', '')),
-                "checked_by":str(event.get('checked_by', '')),
-                "created_at":str(event.get('created_at', '')),
-                "updated_at":str(event.get('updated_at', '')),
-                "updated_by":str(event.get('updated_by', '')),
-                "url":str(event.get('url', '')),
+                "status": str(event.get('status', '')),
+                "created_at": str(event.get('created_at', '')),
+                "created_by": str(event.get('created_by', '')),
+                "updated_by": str(event.get('updated_by', '')),
+                "updated_at": str(event.get('updated_at', '')),
+                "change_history ": str(event.get('change_history', '')),
+                "tags": str(event.get('tags', '')),
+                "snapshots": str(event.get('snapshots', '')),
+                "addresses": str(event.get('addresses', '')),
             }
-            result = SecretMap(
+            result = AccountMap(
                 self.kvalue,
                 bucket_name,
                 bucket_type,
@@ -277,18 +284,17 @@ class Secrets(object):
         except Exception, e:
             logging.error(e)
             message = str(e)
-
         raise gen.Return(message)
 
     @gen.coroutine
     def modify_account(self, account, account_uuid, struct):
         '''
-            Modify account
+            Modify query
         '''
         # riak search index
-        search_index = 'cas_account_index'
+        search_index = 'mango_account_index'
         # riak bucket type
-        bucket_type = 'cas'
+        bucket_type = 'mango_account'
         # riak bucket name
         bucket_name = 'accounts'
         # solr query
@@ -296,12 +302,10 @@ class Secrets(object):
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
-        #url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
-            #search_index, query, filter_query
-        #)
-        url = "{0}/query/{1}?wt=json&q={2}&fq={3}".format(
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
-        )    
+        )
+
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
         got_response = []

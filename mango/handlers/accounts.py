@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango HTTP accounts handlers.
+    Starfruit HTTP event handlers.
 '''
 
 # This file is part of mango.
@@ -10,434 +10,262 @@
 
 __author__ = 'Team Machine'
 
-
+import time
+import arrow
+import uuid
 import logging
+import urlparse
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango import errors
 from mango.messages import accounts as models
 from mango.system import accounts
-from mango.tools import check_json
-from mango.tools import new_resource
+from tornado import httpclient
+from mango.tools import errors, str2bool, check_json, new_resource
 from mango.handlers import BaseHandler
 
-from tornado import httpclient
 
-httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+# on account and just on account because of the natural stuff in the resource
+# we're disable this @content_type_validation decorator
 
-
-class UsersHandler(accounts.MangoAccounts, BaseHandler):
+class Handler(accounts.Account, BaseHandler):
     '''
-        User accounts HTTP request handlers
+        HTTP request handlers
     '''
 
     @gen.coroutine
-    def head(self, account=None, page_num=0):
+    def head(self, account=None, account_uuid=None, page_num=0):
         '''
-            Head users
+            Head accounts
         '''
-        # logging request query arguments
-        logging.info('request query arguments {0}'.format(self.request.arguments))
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
         username = self.get_current_username()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
-        # account type flag
-        account_type = 'user'
-        # status
+        # query string checked from string to boolean
+        checked = str2bool(str(query_args.get('checked', [False])[0]))
+        # getting pagination ready
+        page_num = int(query_args.get('page', [page_num])[0])
+        # not unique
+        unique = query_args.get('unique', False)
+        # rage against the finite state machine
         status = 'all'
-        # cache data
-        data = None
-        # return result message
-        result = None
-        if not account:
-            users = yield self.get_account_list(account_type, status, page_num)
-            self.finish({'users':users})
-        else:
-            # try to get stuff from cache first
-            logging.info('getting users:{0} from cache'.format(account))
-            try:
-                data = self.cache.get('users:{0}'.format(account))
-            except Exception, e:
-                logging.exception(e)
-            if data is not None:
-                logging.info('users:{0} done retrieving!'.format(account))
-                result = data
-            else:
-                data = yield self.get_account(account.rstrip('/'), account_type)
-                try:
-                    if self.cache.add('users:{0}'.format(account), data, 1):
-                        logging.info('new cache entry {0}'.format(str(data)))
-                except Exception, e:
-                    logging.exception(e)
-            result = (data if data else None)
-            if not result:
-                # -- nead moar info
-                self.set_status(400)
-                self.finish({'missing':account.rstrip('/')})
-            else:
-                self.set_status(200)
-                self.finish(result)
-
-    @gen.coroutine
-    def get(self, account=None, account_uuid=None, page_num=0):
-        '''
-            Get user accounts
-        '''
-        # logging request query arguments
-        logging.info('request query arguments {0}'.format(self.request.arguments))
-        # request query arguments
-        query_args = self.request.arguments
-        # get the current frontend logged username
-        username = self.get_current_username()
-        # if the user don't provide an account we use the frontend username as last resort
-        account = (query_args.get('account', [username])[0] if not account else account)
-        # account type flag
-        account_type = 'user'
-        # status
-        status = 'all'
-        # cache data
-        data = None
-        # return result message
-        result = None
-        # check for account or process resource list
-        if not account:
-            users = yield self.get_account_list(account_type, status, page_num)
-            self.finish({'users':users})
-        else:
-            # try to get stuff from cache first
-            logging.info('getting users:{0} from cache'.format(account))
-            try:
-                data = self.cache.get('users:{0}'.format(account))
-            except Exception, e:
-                logging.exception(e)
-            if data is not None:
-                logging.info('users:{0} done retrieving!'.format(account))
-            else:
-                data = yield self.get_account_uuid(account.rstrip('/'), account_type)
-                try:
-                    if self.cache.add('users:{0}'.format(account), data, 1):
-                        logging.info('new cache entry {0}'.format(str(data)))
-                except Exception, e:
-                    logging.exception(e)
-            result = (data if data else None)
-            if not result:
-                # -- need more info
-                self.set_status(400)
-                self.finish({'missing':account.rstrip('/')})
-            else:
-                self.set_status(200)
-                self.finish(result)
-                
-    @gen.coroutine
-    def post(self):
-        '''
-            Create user account
-        '''
-        struct = yield check_json(self.request.body)
-        format_pass = (True if struct and not struct.get('errors') else False)
-        if not format_pass:
-            self.set_status(400)
-            self.finish({'JSON':format_pass})
-            return
-        struct['account_type'] = 'user'
-        logging.info('new account structure %s' % str(struct))
-        result = yield self.new_account(struct)
-        if 'error' in result:
-            model = 'User'
-            reason = {'duplicates': [(model, 'account'), (model, 'email')]}
-            message = yield self.let_it_crash(struct, model, result, reason)
-            logging.warning(message)
-            self.set_status(400)
-            self.finish(message)
-            return
-        def handle_response(response):
-            '''
-                Handle response
-            '''
-            if response.error:
-                logging.error(response.error)
-            else:
-                logging.info(response.body)
-        # -- handle SIP account creation out-of-band <------------------- refactor this shit kind of thing.
-        # postgresql insert sip account
-        if result:
-            data = {'password': struct['password'], 'account': struct['account']}
-            # generate sip struct
-            sip_account = yield self.new_sip_account(struct)
-            
-            # generate coturn struct
-            coturn_struct = {
-                'account': struct['account'],
-                'labels': ['coturn',],
-                'title': 'confirm coturn account',
-                'payload': json.dumps(data)
-            }
-            # yield the new stuff up
-            coturn_account = yield self.new_coturn_account(coturn_struct)
-            http_client = httpclient.AsyncHTTPClient()
-            http_client.fetch(
-                'https://api.cloudforest.ws/fire/', 
-                headers={"Content-Type": "application/json"},
-                method='POST',
-                body=json.dumps({'username': struct['account'], 'password': struct['password']}),
-                callback=handle_response
-            )
-            logging.info(coturn_account)
-        self.set_status(201)
-        self.finish({'uuid':result})
-
-    @gen.coroutine
-    def patch(self, account):
-        '''
-            Update user account
-        '''
-
-        logging.info('request.arguments {0}'.format(self.request.arguments))
-        logging.info('request.body {0}'.format(self.request.body))
-        struct = yield check_json(self.request.body)
-        logging.info('patch received struct {0}'.format(struct))
-        format_pass = (True if struct and not struct.get('errors') else False)
-        if not format_pass:
-            self.set_status(400)
-            self.finish({'JSON':format_pass})
-            return
-        struct['account_type'] = 'user'
-        logging.info('new update on account structure %s' % str(struct))
-        MISSING_ACCOUNT_UUID = None
-        result = yield self.modify_account(account, MISSING_ACCOUNT_UUID, struct)
-        logging.info(result)
-        if not result:
-            message = 'update failed something is bananas'
-            self.set_status(400)
-        else:
-            message = 'update completed successfully'
+        # are we done yet?
+        done = False
+        # some random that crash this shit
+        message = {'crashing': True}
+        # unique flag activated
+        if unique:
+            unique_stuff = {key:query_args[key][0] for key in query_args}
+            account_list = yield self.get_unique_queries(unique_stuff)
+            unique_list = yield self.get_query_values(account_list)
+            done = True
+            message = {'accounts':unique_list}
             self.set_status(200)
-        self.finish({'message': message})
-
-    @gen.coroutine
-    def delete(self, account):
-        '''
-            Delete a user account
-        '''
-        account = account.rstrip('/')
-        result = yield self.remove_account(account)
-        logging.info("why result['n'] ? %s" % str(result))
-        if not result['n']:
-            self.set_status(400)
-            system_error = errors.Error('missing')
-            error = system_error.missing('user', account)
-            self.finish(error)
-            return
-        self.set_status(204)
-        self.finish()
-
-    @gen.coroutine
-    def options(self, account_uuid=None):
-        '''
-            Resource options
-        '''
-        self.set_header('Access-Control-Allow-Origin', '*')
-        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
-        message = {
-            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
-        }
-        # resource parameters
-        parameters = {}
-        # mock stuff
-        stuff = models.User.get_mock_object().to_primitive()
-        for k, v in stuff.items():
-            if v is None:
-                parameters[k] = str(type('none'))
-            elif isinstance(v, unicode):
-                parameters[k] = str(type('unicode'))
+        # get account list
+        if not done and not account_uuid:
+            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = {
+                'count': account_list.get('response')['numFound'],
+                'page': page_num,
+                'results': []
+            }
+            for doc in account_list.get('response')['docs']:
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message['results'].append(
+                    dict((key.split('_register')[0], value) 
+                    for (key, value) in doc.items() if key not in IGNORE_ME)
+                )
+            self.set_status(200)
+        # single account received
+        if not done and account_uuid:
+            # try to get stuff from cache first
+            account_uuid = account_uuid.rstrip('/')
+            # get cache data
+            message = self.cache.get('accounts:{0}'.format(account_uuid))
+            if message is not None:
+                logging.info('accounts:{0} done retrieving!'.format(account_uuid))
+                #result = data
+                self.set_status(200)
             else:
-                parameters[k] = str(type(v))
-        # after automatic madness return description and parameters
-        # we now have the option to clean a little bit.
-        parameters['labels'] = 'array/string'
-        # end of manual cleaning
-        POST = {
-            "description": "Create user",
-            "parameters": parameters
-        }
-        # filter single resource
-        if not account_uuid:
-            message['POST'] = POST
-        else:
-            message['Allow'].remove('POST')
-            message['Allow'].append('PATCH')
-            message['Allow'].append('DELETE')
-        self.set_status(200)
+                #data = yield self.get_account(account, account_uuid.rstrip('/'))
+                message = yield self.get_query(account, account_uuid)
+                if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(account_uuid)))
+                    self.set_status(200)
+            if not message:
+                self.set_status(400)
+                message = {'missing account {0} account_uuid {1} page_num {2} checked {3}'.format(
+                    account, account_uuid.rstrip('/'), page_num, checked):result}
+        # thanks for all the fish
         self.finish(message)
 
-
-class OrgsHandler(accounts.Orgs, BaseHandler):
-    '''
-        Organization account resource handlers
-    '''
-
     @gen.coroutine
-    def head(self, account=None, page_num=0):
+    def get(self, account=None, account_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
-            Organization accounts head
-
+            Get accounts
         '''
-        # logging request query arguments
-        logging.info('request query arguments {0}'.format(self.request.arguments))
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
         username = self.get_current_username()
-        # status
-        status = 'all'
-        # get the current frontend context account
-        #organization = self.get_current_org()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
-        account_type = 'org'
-        if not account:
-            orgs = yield self.get_account_list(account_type, status, page_num) 
-            self.finish({'orgs':orgs})
-        else:
-            # try to get stuff from cache first
-            logging.info('getting orgs:{0} from cache'.format(account))
-            data = self.cache.get('orgs:{0}'.format(account))
-            if data is not None:
-                logging.info('orgs:{0} done retrieving!'.format(account))
-                result = data
-            else:
-                data = yield self.get_account(account.rstrip('/'), account_type)
-                if self.cache.add('orgs:{0}'.format(account), data, 1):
-                    logging.info('new cache entry {0}'.format(str(data)))
-                    result = data
-            #result = yield self.get_account(account, account_type)
-            if not result:
-                # -- need moar info
-                self.set_status(400)
-                self.finish({'missing':account})
-            else:
-                self.set_status(200)
-                self.finish(result)
+        # query string checked from string to boolean
+        checked = str2bool(str(query_args.get('checked', [False])[0]))
+        # getting pagination ready
+        page_num = int(query_args.get('page', [page_num])[0])
+        # not unique
+        unique = query_args.get('unique', False)
+        # rage against the finite state machine
+        status = 'all'
+        # are we done yet?
+        done = False
+        # some random that crash this shit
+        message = {'crashing': True}
+        # unique flag activated
+        if unique:
+            unique_stuff = {key:query_args[key][0] for key in query_args}
+            account_list = yield self.get_unique_querys(unique_stuff)
+            unique_list = yield self.get_query_values(account_list)
+            done = True
+            message = {'accounts':unique_list}
+            self.set_status(200)
 
-    @gen.coroutine
-    def get(self, account=None, page_num=0):
-        '''
-            Get organization accounts
-        '''
-        # logging request query arguments
-        logging.info('request query arguments {0}'.format(self.request.arguments))
-        # request query arguments
-        query_args = self.request.arguments
-        # get the current frontend logged username
-        username = self.get_current_username()
-        # get the current frontend context account
-        #organization = self.get_current_org()
-        status = 'all'
-        # if the user don't provide an account we use the frontend username as last resort
-        account = (query_args.get('account', [username])[0] if not account else account)
-        account_type = 'org'
-        if not account:
-            orgs = yield self.get_account_list(account_type, status, page_num) 
-            self.finish({'orgs':orgs})
-        else:
+        # get account list
+        if not done and not account_uuid:
+            account_list = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = {
+                'count': account_list.get('response')['numFound'],
+                'page': page_num,
+                'results': []
+            }
+            for doc in account_list.get('response')['docs']:
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message['results'].append(
+                    dict((key.split('_register')[0], value) 
+                    for (key, value) in doc.items() if key not in IGNORE_ME)
+                )
+            self.set_status(200)
+        # single account received
+        if not done and account_uuid:
             # try to get stuff from cache first
-            logging.info('getting orgs:{0} from cache'.format(account))
-            data = self.cache.get('orgs:{0}'.format(account))
-            if data is not None:
-                logging.info('orgs:{0} done retrieving!'.format(account))
-                result = data
-            else:
-                data = yield self.get_account_uuid(account.rstrip('/'), account_type)
-                if self.cache.add('orgs:{0}'.format(account), data, 1):
-                    logging.info('new cache entry {0}'.format(str(data)))
-                    result = data
-            #result = yield self.get_account(account, account_type)
-            if not result:
-                self.set_status(400)
-                self.finish({'missing':account})
-            else:
+            account_uuid = account_uuid.rstrip('/')
+            # get cache data
+            message = self.cache.get('accounts:{0}'.format(account_uuid))
+            if message is not None:
+                logging.info('accounts:{0} done retrieving!'.format(account_uuid))
+                #result = data
                 self.set_status(200)
-                self.finish(result)
+            else:
+                #data = yield self.get_account(account, account_uuid.rstrip('/'))
+                message = yield self.get_account(account, account_uuid)
+                if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(account_uuid)))
+                    self.set_status(200)
+            if not message:
+                self.set_status(400)
+                message = {'missing account {0} account_uuid {1} page_num {2} checked {3}'.format(
+                    account, account_uuid.rstrip('/'), page_num, checked):result}
+        # thanks for all the fish
+        self.finish(message)
 
     @gen.coroutine
     def post(self):
         '''
-            Create organization accounts
+            Create account
         '''
         struct = yield check_json(self.request.body)
-        logging.error(struct)
-        struct['account_type'] = 'org'
-        org = struct['account']
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
             self.finish({'JSON':format_pass})
             return
-        # logging new contact structure
-        logging.info('new contact structure {0}'.format(str(struct)))
-        # logging request query arguments
-        logging.info(self.request.arguments)
         # request query arguments
         query_args = self.request.arguments
-        # get owner account from new org struct
-        owner_user = struct.get('owner', None)
+        # get account from new account struct
+        account = struct.get('account', None)
         # get the current frontend logged username
         username = self.get_current_username()
-        # last but not least, we check query_args for owner
-        owner_user = (query_args.get('owner', [username])[0] if not owner_user else owner_user)
-        # we use the front-end username as last resort
-        #if not struct.get('owner'):
-        #    struct['owner'] = owner_user
-        new_org = yield self.new_account(struct)
-        if 'error' in new_org:
-            scheme = 'org'
-            reason = {'duplicates':[
+        # if the user don't provide an account we use the username
+        account = (query_args.get('account', [username])[0] if not account else account)
+        # execute new account struct
+        ack = yield self.new_account(struct)
+        # complete message with receive acknowledgment uuid.
+        message = {'uuid':ack}
+        if 'error' in message['uuid']:
+            scheme = 'account'
+            reason = {'duplicates': [
                 (scheme, 'account'),
-                (scheme, 'email')
+                (scheme, 'uuid')
             ]}
-            message = yield self.let_it_crash(struct, scheme, new_org, reason)
-            logging.warning(message)
+            message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
             self.set_status(400)
-            self.finish(message)
-            return
-        team = {
-            'name': 'owners',
-            'permission': 'admin',
-            'members': [owner_user]
-        }
-        check_member, check_team = yield [
-            self.new_member(org, owner_user),
-            self.new_team(org, team)
-        ]
-        self.set_status(201)
-        self.finish({'uuid':new_org})
+        else:
+            self.set_status(201)
+        self.finish(message)
 
     @gen.coroutine
-    def delete(self, account):
-        '''       
-            Delete organization account
+    def patch(self, account_uuid):
         '''
-        org = account.rstrip('/')
-        # for each member in members remove member.
-        members = yield self.get_members(org)
-        members = (members['members'] if members['members'] else False)
-        # clean this hack
-        for user in members:
-            rmx = yield self.remove_member(org, user)
-        # check_member = yield self.remove_member(org_id, current_user)
-        result = yield self.remove_account(org)
-        # again with the result['n'] stuff... what is this shit?
-        logging.info('check for n stuff %s' % (result))
-        if not result['n']:
+            Modify account
+        '''
+        struct = yield check_json(self.request.body)
+        format_pass = (True if not dict(struct).get('errors', False) else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+        account = self.request.arguments.get('account', [None])[0]
+        if not account:
+            # if not account we try to get the account from struct
+            account = struct.get('account', None)
+        result = yield self.modify_account(account, account_uuid, struct)
+        if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('org', org)
+            error = system_error.missing('account', account_uuid)
+            self.finish(error)
+            return
+        self.set_status(200)
+        self.finish({'message': 'update completed successfully'})
+
+    @gen.coroutine
+    def put(self, account_uuid):
+        '''
+            Replace account
+        '''
+        struct = yield check_json(self.request.body)
+        format_pass = (True if not struct.get('errors') else False)
+        if not format_pass:
+            self.set_status(400)
+            self.finish({'JSON':format_pass})
+            return
+        account = self.request.arguments.get('account', [None])[0]
+        result = yield self.replace_account(account, account_uuid, struct)
+        if not result:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('account', account_uuid)
+            self.finish(error)
+            return
+        self.set_status(200)
+        self.finish({'message': 'replace completed successfully'})
+
+    @gen.coroutine
+    def delete(self, account_uuid):
+        '''
+            Delete account
+        '''
+        query_args = self.request.arguments
+        account = query_args.get('account', [None])[0]
+        result = yield self.remove_account(account, account_uuid)
+        if not result:
+            self.set_status(400)
+            system_error = errors.Error('missing')
+            error = system_error.missing('account', account_uuid)
             self.finish(error)
             return
         self.set_status(204)
@@ -450,15 +278,18 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Date,Etag')
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
+                        'If-Modified-Since,Cache-Control,Content-Type,',
+                        'Content-Range,Range,Date,Etag')))
+        # allowed http methods
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
         # resource parameters
         parameters = {}
-        # mock stuff
-        stuff = models.Org.get_mock_object().to_primitive()
+        # mock your stuff
+        stuff = models.Account.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -471,7 +302,7 @@ class OrgsHandler(accounts.Orgs, BaseHandler):
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Create org",
+            "description": "Send account",
             "parameters": parameters
         }
         # filter single resource
