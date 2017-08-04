@@ -18,7 +18,7 @@ import urlparse
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.messages import accounts, orgs, terms as models
+from mango.messages import accounts, orgs, teams as models
 from mango.system import accounts
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json, new_resource
