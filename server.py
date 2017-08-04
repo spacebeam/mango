@@ -52,8 +52,8 @@ def main():
     application = web.Application(
         [
             # Mango Basic-Auth session
-            (r'/login/?', LoginHandler),
-            (r'/logout/?', LogoutHandler),
+            #(r'/login/?', LoginHandler),
+            #(r'/logout/?', LogoutHandler),
             # ORGs teams
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
@@ -63,9 +63,9 @@ def main():
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
             # Organizations of Random Generality.
-            (r'/orgs/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<account_uuid>.+)/?', accounts.OrgsHandler),
+            #(r'/orgs/?', accounts.OrgsHandler),
+            #(r'/orgs/(?P<account>.+)/?', accounts.OrgsHandler),
+            #(r'/orgs/(?P<account_uuid>.+)/?', accounts.OrgsHandler),
             # Users suspended
             #(r'/users/suspended/?', accounts.UsersSuspendedHandler),
             # Users disable
@@ -82,9 +82,9 @@ def main():
             #(r'/tasks/later/?', tasks.LaterHandler),
             # Tasks done
             #(r'/tasks/done/?', tasks.DoneHandler),
-            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
-            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
-            (r'/tasks/?', tasks.Handler),
+            #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
+            #(r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
+            #(r'/tasks/?', tasks.Handler),
         ],
         db = db,
         cache = cache,
