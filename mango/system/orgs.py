@@ -19,7 +19,7 @@ from tornado import gen
 from schematics.types import compound
 from mango.messages import accounts
 from mango.messages import BaseResult
-from mango.structures.orgs import OrgMap
+from mango.structures.orgs import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results
 from tornado.httputil import url_concat
@@ -278,7 +278,7 @@ class Org(object):
                 "addresses": str(event.get('addresses', '')),
                 "status": str(event.get('status', '')),
             }
-            result = OrgMap(
+            result = AccountMap(
                 self.kvalue,
                 bucket_name,
                 bucket_type,
