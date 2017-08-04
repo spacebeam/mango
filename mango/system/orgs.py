@@ -17,7 +17,7 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.messages import orgs
+from mango.messages import accounts
 from mango.messages import BaseResult
 from mango.structures.orgs import OrgMap
 from riak.datatypes import Map
