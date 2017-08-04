@@ -73,9 +73,9 @@ def main():
             # Users active
             #(r'/users/active/?', accounts.UsersActiveHandler),
             # Users resources
-            (r'/users/?', accounts.UsersHandler),
-            (r'/users/(?P<account>.+)/?', accounts.UsersHandler),
-            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
+            (r'/users/?', accounts.Handler),
+            (r'/users/(?P<account>.+)/?', accounts.Handler),
+            (r'/users/(?P<account_uuid>.+)/?', accounts.Handler),
             # Tasks now 
             #(r'/tasks/now/?', tasks.NowHandler),
             # Tasks later 
