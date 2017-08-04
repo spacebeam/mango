@@ -37,7 +37,7 @@ class TeamResult(BaseResult):
     results = compound.ListType(compound.ModelType(teams.Team))
 
 
-class TeamHandler(object):
+class Team(object):
     '''
         Team
     '''

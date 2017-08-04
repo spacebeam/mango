@@ -37,7 +37,7 @@ class OrgResult(BaseResult):
     results = compound.ListType(compound.ModelType(orgs.Org))
 
 
-class OrgHandler(object):
+class Org(object):
     '''
         Org
     '''
