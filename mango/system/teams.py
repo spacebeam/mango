@@ -253,7 +253,7 @@ class Team(object):
         # the bucket name can be dynamic
         bucket_name = 'accounts'
         try:
-            event = teams.Team(struct)
+            event = accounts.Team(struct)
             event.validate()
             event = clean_structure(event)
         except Exception, e:
