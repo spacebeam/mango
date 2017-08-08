@@ -289,7 +289,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.Account.get_mock_object().to_primitive()
+        stuff = models.User.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
