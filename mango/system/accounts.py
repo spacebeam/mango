@@ -254,7 +254,7 @@ class Account(object):
         # the bucket name can be dynamic
         bucket_name = 'accounts'
         try:
-            event = accounts.Account(struct)
+            event = accounts.User(struct)
             event.validate()
             event = clean_structure(event)
         except Exception, e:
