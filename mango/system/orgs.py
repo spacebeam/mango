@@ -90,7 +90,7 @@ class Org(object):
         '''
             Get unique list from Solr
         '''
-        search_index = 'mango_orgs_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'uuid_register:*'
         unique_list = []
@@ -153,7 +153,7 @@ class Org(object):
         '''
             Get org
         '''
-        search_index = 'mango_orgs_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account)
         # url building
@@ -200,7 +200,7 @@ class Org(object):
         '''
             Get org list
         '''
-        search_index = 'mango_orgs_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
         
@@ -246,12 +246,12 @@ class Org(object):
             New query event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
-        search_index = 'mango_orgs_index'
+        search_index = 'mango_account_index'
         # on the riak database with riak-admin bucket-type create `bucket_type`
         # remember to activate it with riak-admin bucket-type activate
-        bucket_type = 'mango_orgs'
+        bucket_type = 'mango_account'
         # the bucket name can be dynamic
-        bucket_name = 'orgs'
+        bucket_name = 'accounts'
         try:
             event = orgs.Org(struct)
             event.validate()
@@ -296,11 +296,11 @@ class Org(object):
             Modify query
         '''
         # riak search index
-        search_index = 'mango_orgs_index'
+        search_index = 'mango_account_index'
         # riak bucket type
-        bucket_type = 'mango_orgs'
+        bucket_type = 'mango_account'
         # riak bucket name
-        bucket_name = 'orgs'
+        bucket_name = 'accounts'
         # solr query
         query = 'uuid_register:{0}'.format(org_uuid.rstrip('/'))
         # filter query
