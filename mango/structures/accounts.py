@@ -35,7 +35,7 @@ class AccountMap(object):
         self.map = Map(bucket, None)
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
-        self.map.registers['account'].assign(struct.get('account', ''))
+#        self.map.registers['account'].assign(struct.get('account', ''))
         self.map.registers['first_name'].assign(struct.get('first_name', ''))
         self.map.registers['last_name'].assign(struct.get('last_name', ''))
         self.map.registers['type'].assign(struct.get('type', ''))

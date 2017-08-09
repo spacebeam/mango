@@ -262,7 +262,6 @@ class Team(object):
             message = event.get('uuid')
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
-                "account": str(event.get('account', 'pebkac')),
                 "name": str(event.get('name', '')),
                 "permission": str(event.get('permission', '')),
                 "members": str(event.get('members', '')),
