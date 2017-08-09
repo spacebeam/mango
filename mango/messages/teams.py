@@ -25,7 +25,7 @@ class Team(models.Model):
        Team
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    account = types.StringType(required=True)
+    account = types.StringType()
     name = types.StringType(required=True)
     permission = types.StringType(choices=['read',
                                            'write',
