@@ -264,7 +264,7 @@ class Team(object):
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
                 "source": str(event.get('source', '')),
-                "team": str(event.get('team', '')),
+                "teams": str(event.get('teams', '')),
                 "resource": str(event.get('resource', '')),
                 "sentiment": str(event.get('sentiment', '')),
                 "ranking": str(event.get('ranking', '')),
