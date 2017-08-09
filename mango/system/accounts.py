@@ -273,7 +273,6 @@ class Account(object):
                 "orgs": str(event.get('orgs', '')),
                 "password": str(event.get('password', '')),
                 "members": str(event.get('members', '')),
-                "teams": str(event.get('teams', '')),
                 "labels": str(event.get('labels', '')), 
                 "status": str(event.get('status', '')),
                 "email": str(event.get('email', '')),
