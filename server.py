@@ -6,7 +6,7 @@ import pylibmc as mc
 from tornado.web import RequestHandler
 from tornado import gen, web
 #from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts
+from mango.handlers import accounts teams
 from mango.tools import options
 from zmq.eventloop import ioloop
 
@@ -94,9 +94,9 @@ def main():
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
 
-            (r'/teams/page/(?P<page_num>\d+)/?', accounts.Handler),
-            (r'/teams/(?P<team_uuid>.+)/?', accounts.Handler),
-            (r'/teams/?', accounts.Handler),
+            (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/teams/?', teams.Handler),
         ],
         db = db,
         cache = cache,
