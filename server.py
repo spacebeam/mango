@@ -5,7 +5,7 @@ import uuid
 import pylibmc as mc
 from tornado.web import RequestHandler
 from tornado import gen, web
-#from mango.handlers import LoginHandler, LogoutHandler
+from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, teams
 from mango.tools import options
 from zmq.eventloop import ioloop
@@ -52,8 +52,8 @@ def main():
     application = web.Application(
         [
             # Mango Basic-Auth session
-            #(r'/login/?', LoginHandler),
-            #(r'/logout/?', LogoutHandler),
+            (r'/login/?', LoginHandler),
+            (r'/logout/?', LogoutHandler),
             # ORGs teams
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
