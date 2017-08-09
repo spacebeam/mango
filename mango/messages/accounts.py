@@ -129,6 +129,7 @@ class Team(models.Model):
     '''
         Org team
     '''
+    uuid = types.UUIDType(default=uuid.uuid4)
     name = types.StringType(required=True)
     permission = types.StringType(choices=['read',
                                            'write',
