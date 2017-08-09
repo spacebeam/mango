@@ -94,9 +94,9 @@ def main():
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
 
-            (r'/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
-            (r'/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
-            (r'/teams/?', accounts.TeamsHandler),
+            (r'/teams/page/(?P<page_num>\d+)/?', accounts.Handler),
+            (r'/teams/(?P<team_uuid>.+)/?', accounts.Handler),
+            (r'/teams/?', accounts.Handler),
         ],
         db = db,
         cache = cache,

@@ -17,9 +17,9 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.messages import accounts
+from mango.messages import teams
 from mango.messages import BaseResult
-from mango.structures.accounts import AccountMap
+from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results
 from tornado.httputil import url_concat
@@ -34,7 +34,7 @@ class TeamResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(accounts.Team))
+    results = compound.ListType(compound.ModelType(teams.Team))
 
 
 class Team(object):
@@ -90,7 +90,7 @@ class Team(object):
         '''
             Get unique list from Solr
         '''
-        search_index = 'mango_account_index'
+        search_index = 'mango_team_index'
         query = 'uuid_register:*'
         filter_query = 'uuid_register:*'
         unique_list = []
@@ -153,7 +153,7 @@ class Team(object):
         '''
             Get team
         '''
-        search_index = 'mango_account_index'
+        search_index = 'mango_team_index'
         query = 'uuid_register:{0}'.format(team_uuid)
         filter_query = 'account_register:{0}'.format(account)
         # url building
@@ -200,7 +200,7 @@ class Team(object):
         '''
             Get team list
         '''
-        search_index = 'mango_account_index'
+        search_index = 'mango_team_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
         
@@ -246,14 +246,14 @@ class Team(object):
             New query event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
-        search_index = 'mango_account_index'
+        search_index = 'mango_team_index'
         # on the riak database with riak-admin bucket-type create `bucket_type`
         # remember to activate it with riak-admin bucket-type activate
-        bucket_type = 'mango_account'
+        bucket_type = 'mango_team'
         # the bucket name can be dynamic
-        bucket_name = 'accounts'
+        bucket_name = 'teams'
         try:
-            event = accounts.Team(struct)
+            event = teams.Team(struct)
             event.validate()
             event = clean_structure(event)
         except Exception, e:
@@ -263,21 +263,21 @@ class Team(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
-                "permission": str(event.get('permission', '')),
                 "name": str(event.get('name', '')),
-                "resource": str(event.get('resource', '')),
+                "permission": str(event.get('permission', '')),
                 "members": str(event.get('members', '')),
+                "resources": str(event.get('resources', '')),
                 "created_by": str(event.get('created_by', '')),
                 "created_at": str(event.get('created_at', '')),
                 "updated_by": str(event.get('updated_by', '')),
                 "updated_at": str(event.get('updated_at', '')),
                 "change_history": str(event.get('change_history', '')),
-                "tags": str(event.get('tags', '')),
+                "labels": str(event.get('labels', '')),
                 "snapshots": str(event.get('snapshots', '')),
                 "addresses": str(event.get('addresses', '')),
                 "status": str(event.get('status', '')),
             }
-            result = AccountMap(
+            result = TeamMap(
                 self.kvalue,
                 bucket_name,
                 bucket_type,
@@ -295,11 +295,11 @@ class Team(object):
             Modify query
         '''
         # riak search index
-        search_index = 'mango_account_index'
+        search_index = 'mango_team_index'
         # riak bucket type
-        bucket_type = 'mango_account'
+        bucket_type = 'mango_team'
         # riak bucket name
-        bucket_name = 'accounts'
+        bucket_name = 'teams'
         # solr query
         query = 'uuid_register:{0}'.format(team_uuid.rstrip('/'))
         # filter query
