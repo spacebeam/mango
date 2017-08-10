@@ -35,6 +35,7 @@ class TeamMap(object):
         self.map = Map(bucket, None)
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
+        self.map.registers['account'].assign(struct.get('account', ''))
         self.map.registers['name'].assign(struct.get('name', ''))
         self.map.registers['permission'].assign(struct.get('permission', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
