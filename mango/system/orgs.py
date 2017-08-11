@@ -273,7 +273,7 @@ class Org(object):
                 "updated_by": str(event.get('updated_by', '')),
                 "updated_at": str(event.get('updated_at', '')),
                 "change_history": str(event.get('change_history', '')),
-                "tags": str(event.get('tags', '')),
+                "labels": str(event.get('labels', '')),
                 "snapshots": str(event.get('snapshots', '')),
                 "addresses": str(event.get('addresses', '')),
                 "status": str(event.get('status', '')),

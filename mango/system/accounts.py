@@ -298,7 +298,7 @@ class Account(object):
                 "url": str(event.get('url', '')),
                 "created_by": str(event.get('created_by', '')),
                 "change_history ": str(event.get('change_history', '')),
-                "tags": str(event.get('tags', '')),
+                "labels": str(event.get('labels', '')),
                 "snapshots": str(event.get('snapshots', '')),
                 "addresses": str(event.get('addresses', '')),
             }
