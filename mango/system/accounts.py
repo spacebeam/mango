@@ -301,6 +301,10 @@ class Account(object):
                 "labels": str(event.get('labels', '')),
                 "snapshots": str(event.get('snapshots', '')),
                 "addresses": str(event.get('addresses', '')),
+                "layout": str(event.get('layout', '')),
+                "powerdailer": str(event.get('powerdailer', '')),
+                "lead_access": str(event.get('lead_access', '')),
+                "phone_server": str(event.get('phone_server', '')),
             }
             result = AccountMap(
                 self.kvalue,
