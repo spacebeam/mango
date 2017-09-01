@@ -112,7 +112,10 @@ class User(BaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
-    
+    layout = types.StringType()
+    powerdailer = types.StringType()
+    lead_access = types.StringType()
+    phone_server_register = types.StringType()
 
 class ModifyUser(CleanBaseAccount):
     '''
