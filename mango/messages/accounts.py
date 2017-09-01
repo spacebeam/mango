@@ -126,6 +126,10 @@ class ModifyUser(CleanBaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
+    layout = types.StringType()
+    powerdailer = types.StringType()
+    lead_access = types.StringType()
+    phone_server_register = types.StringType()
 
 
 class Team(models.Model):
