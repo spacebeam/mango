@@ -51,7 +51,7 @@ def check_json(struct):
     raise gen.Return(struct)
 
 @gen.coroutine
-def check_account_type(db, account, account_type):
+def check_account_type(self, account, account_type):
     '''
         check account type
     '''
@@ -98,7 +98,7 @@ def check_account_type(db, account, account_type):
     raise gen.Return(message)
 
 @gen.coroutine
-def get_account_uuid(db, account, password):
+def get_account_uuid(self, account, password):
     '''
         Get valid account uuid
     '''
