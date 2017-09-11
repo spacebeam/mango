@@ -157,7 +157,7 @@ def get_account_labels(self, account):
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-
+    logging.info(url)
     got_response = []
     # response message
     message = {'message': 'not found'}
