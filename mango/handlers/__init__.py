@@ -248,35 +248,35 @@ class LoginHandler(BaseHandler):
     '''
         BasicAuth login
     '''
-    @gen.coroutine
-    def get(self):
-        logging.info(get)
-        account = yield get_account_uuid(self,
-                            self.username,
-                            self.password)
-        message = {'labels':'unsupervised'}
-        stuff = yield get_account_labels(self, self.username)
-        if stuff:
-            message['labels'] = stuff
+    logging.info('Mango system')
+#    @gen.coroutine
+#    def get(self):
+#        account = yield get_account_uuid(self.db,
+#                            self.username,
+#                            self.password)
+#        message = {'labels':'unsupervised'}
+#        stuff = yield get_account_labels(self, self.username)
+#        if stuff:
+#            message['labels'] = stuff
         # if not account something was wrong!
-        if not account:
+#        if not account:
             # 401 status code?
-            self.set_status(403)
-            self.set_header('WWW-Authenticate', 'Basic realm=mango')
-            self.finish()
-        else:
-            self.set_header('Access-Control-Allow-Origin','*')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            self.set_secure_cookie('username', self.username)
+#            self.set_status(403)
+#            self.set_header('WWW-Authenticate', 'Basic realm=mango')
+#            self.finish()
+#        else:
+#            self.set_header('Access-Control-Allow-Origin','*')
+#            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+#            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+#            self.set_secure_cookie('username', self.username)
             # if labels we make some fucking labels
-            labels = str(message['labels'])
+#            labels = str(message['labels'])
             # labels, labels, labels
-            self.set_secure_cookie('labels', labels)
-            message['uuid'] = account
-            self.username, self.password = (None, None)
-            self.set_status(200)
-            self.finish(message)
+#            self.set_secure_cookie('labels', labels)
+#            message['uuid'] = account
+#            self.username, self.password = (None, None)
+#            self.set_status(200)
+#            self.finish(message)
 
     @gen.coroutine
     def options(self):
