@@ -145,18 +145,50 @@ def get_account_uuid(self, account, password):
     raise gen.Return(message)
 
 @gen.coroutine
-def get_account_labels(db, account):
+def get_account_labels(self, account):
     '''
         Get account labels
     '''
+    search_index = 'mango_account_index'
+    query = 'labels_register:{0}'.format(password)
+    filter_query = 'uuid_register:{0}'.format(account)
+    # url building
+    
+    url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+        self.solr, search_index, query, filter_query
+    )
+
+    got_response = []
+    # response message
+    message = {'message': 'not found'}
+    def handle_request(response):
+        '''
+            Request Async Handler
+        '''
+        if response.error:
+            logging.error(response.error)
+            got_response.append({'error':True, 'message': response.error})
+        else:
+            got_response.append(json.loads(response.body))
     try:
-        message = yield db.accounts.find_one({'account': account},
-                                             {'labels':1, '_id':0})
+        http_client.fetch(
+            url,
+            callback=handle_request
+        )
+        while len(got_response) == 0:
+            yield gen.sleep(0.0020) # don't be careless with the time.
+        stuff = got_response[0]
+        if stuff['response']['numFound']:
+            response_doc = stuff['response']['docs'][0]
+            IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+            message = dict(
+                (key.split('_register')[0], value) 
+                for (key, value) in response_doc.items()
+                if key not in IGNORE_ME
+            )
     except Exception, e:
         logging.exception(e)
-        raise e
-        # retun exception/error e
-        return
+        raise gen.Return(e)
     raise gen.Return(message)
     
 @gen.coroutine
