@@ -250,10 +250,10 @@ class LoginHandler(BaseHandler):
     '''
     @gen.coroutine
     def get(self):
+        logging.info(get)
         account = yield get_account_uuid(self,
                             self.username,
                             self.password)
-        logging.info(account)
         message = {'labels':'unsupervised'}
         stuff = yield get_account_labels(self, self.username)
         if stuff:
