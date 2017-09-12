@@ -173,7 +173,7 @@ def get_account_labels(self, account):
     '''
     search_index = 'mango_account_index'
     query = 'account_register:{0}'.format(account)
-    filter_query = 'uuid_register:{0}'.format(account)
+    filter_query = 'account_register:{0}'.format(account)
     # url building
     
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
