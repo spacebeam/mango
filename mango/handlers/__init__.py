@@ -268,6 +268,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
+            logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
             labels = str(message['labels'])
             # labels, labels, labels
