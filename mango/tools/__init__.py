@@ -23,6 +23,9 @@ from mango import errors
 from mango.messages import accounts
 from tornado import httpclient as _http_client
 
+_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+http_client = _http_client.AsyncHTTPClient()
+
 def get_average(total, marks):
     '''
         Get average from signals
