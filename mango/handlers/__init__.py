@@ -260,16 +260,7 @@ class LoginHandler(BaseHandler):
         # if not uuid something was wrong!
         logging.info(uuid)
 
-        tomela = validate_uuid4(uuid)
-
-        logging.info(tomela)
-
-        if not uuid:
-            # 401 status code?
-            self.set_status(403)
-            self.set_header('WWW-Authenticate', 'Basic realm=mango')
-            self.finish()
-        else:
+        if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
@@ -283,6 +274,12 @@ class LoginHandler(BaseHandler):
             self.username, self.password = (None, None)
             self.set_status(200)
             self.finish(message)
+        else:
+            # 401 status code?
+            self.set_status(403)
+            self.set_header('WWW-Authenticate', 'Basic realm=mango')
+            self.finish()
+            
 
     @gen.coroutine
     def options(self):
