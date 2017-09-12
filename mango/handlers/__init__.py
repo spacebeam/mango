@@ -255,17 +255,14 @@ class LoginHandler(BaseHandler):
                             self.password)
         # clean message
         message = {}
-                
         message['labels'] = yield get_account_labels(self, self.username)
-
-        logging.info(uuid)
-
+        #logging.info(uuid)
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
-            logging.info("I've just generated a username secure cookie for {0}".format(self.username))
+            #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
             labels = str(message['labels'])
             # labels, labels, labels
@@ -280,7 +277,6 @@ class LoginHandler(BaseHandler):
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
             
-
     @gen.coroutine
     def options(self):
         logging.warning(self.request.headers)
@@ -289,7 +285,6 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
-
 
 class LogoutHandler(BaseHandler):
     '''
