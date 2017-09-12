@@ -108,7 +108,7 @@ def get_account_uuid(self, account, password):
     '''
     search_index = 'mango_account_index'
     query = 'password_register:{0}'.format(password)
-    filter_query = 'uuid_register:{0}'.format(account)
+    filter_query = 'account_register:{0}'.format(account)
     # url building
     
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
