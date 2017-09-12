@@ -26,6 +26,32 @@ from tornado import httpclient as _http_client
 _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
 http_client = _http_client.AsyncHTTPClient()
 
+
+def validate_uuid4(uuid_string):
+
+    """
+    Validate that a UUID string is in
+    fact a valid uuid4.
+
+    Happily, the uuid module does the actual
+    checking for us.
+
+    It is vital that the 'version' kwarg be passed
+    to the UUID() call, otherwise any 32-character
+    hex string is considered valid.
+    """
+    try:
+        val = uuid.UUID(uuid_string, version=4)
+    except ValueError:
+        # If it's a value error, then the string 
+        # is not a valid hex code for a UUID.
+        return False
+    # If the uuid_string is a valid hex code, 
+    # but an invalid uuid4,
+    # the UUID.__init__ will convert it to a 
+    # valid uuid4. This is bad for validation purposes.
+    return val.hex == uuid_string
+
 def get_average(total, marks):
     '''
         Get average from signals
@@ -109,16 +135,14 @@ def get_account_uuid(self, account, password):
     search_index = 'mango_account_index'
     query = 'password_register:{0}'.format(password)
     filter_query = 'account_register:{0}'.format(account)
-    # url building
-    
+    # yo! url building
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-    logging.info(url)
-
+    # got response?
     got_response = []
-    # response message
-    message = {'message': 'not found'}
+    # clean response message
+    message = {}
     def handle_request(response):
         '''
             Request Async Handler
@@ -147,8 +171,7 @@ def get_account_uuid(self, account, password):
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
-    logging.info(message)
-    raise gen.Return(message)
+    raise gen.Return(message.get('uuid', 'not found'))
 
 
 @gen.coroutine

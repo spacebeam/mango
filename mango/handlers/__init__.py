@@ -15,7 +15,7 @@ from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
-from mango.tools import clean_structure
+from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
 import logging
@@ -259,6 +259,11 @@ class LoginHandler(BaseHandler):
         #    message['labels'] = stuff
         # if not account something was wrong!
         logging.info(account)
+
+        tomela = validate_uuid4(account)
+
+        logging.info(tomela)
+
         if not account:
             # 401 status code?
             self.set_status(403)
