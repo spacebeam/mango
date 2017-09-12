@@ -105,6 +105,8 @@ def main():
         domain = opts.domain,
         page_size = opts.page_size,
         solr = opts.solr,
+        # cookie settings
+        cookie_secret=opts.cookie_secret,
     )  
     # Setting up the application server process
     application.listen(opts.port)
@@ -113,6 +115,6 @@ def main():
 
 if __name__ == '__main__':
     '''
-        Cas for monkey systems
+        Mango for monkey systems
     '''
     main()
