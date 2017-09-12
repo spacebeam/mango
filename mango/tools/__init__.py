@@ -180,9 +180,10 @@ def get_account_labels(self, account):
         self.solr, search_index, query, filter_query
     )
     logging.info(url)
+
     got_response = []
     # response message
-    message = {'message': 'not found'}
+    message = {}
     def handle_request(response):
         '''
             Request Async Handler
@@ -211,8 +212,8 @@ def get_account_labels(self, account):
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
-    raise gen.Return(message)
-    
+    raise gen.Return(message.get('labels', []))
+
 @gen.coroutine
 def check_times(start, end):
     '''
