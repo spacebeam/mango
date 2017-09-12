@@ -250,21 +250,21 @@ class LoginHandler(BaseHandler):
     '''
     @gen.coroutine
     def get(self):
-        account = yield get_account_uuid(self,
+        uuid = yield get_account_uuid(self,
                             self.username,
                             self.password)
         message = {'labels':'unsupervised'}
         #stuff = yield get_account_labels(self, self.username)
         #if stuff:
         #    message['labels'] = stuff
-        # if not account something was wrong!
-        logging.info(account)
+        # if not uuid something was wrong!
+        logging.info(uuid)
 
-        tomela = validate_uuid4(account)
+        tomela = validate_uuid4(uuid)
 
         logging.info(tomela)
 
-        if not account:
+        if not uuid:
             # 401 status code?
             self.set_status(403)
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
@@ -279,7 +279,7 @@ class LoginHandler(BaseHandler):
             labels = str(message['labels'])
             # labels, labels, labels
             self.set_secure_cookie('labels', labels)
-            message['uuid'] = account
+            message['uuid'] = uuid
             self.username, self.password = (None, None)
             self.set_status(200)
             self.finish(message)
