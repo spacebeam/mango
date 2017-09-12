@@ -150,7 +150,7 @@ def get_account_labels(self, account):
         Get account labels
     '''
     search_index = 'mango_account_index'
-    query = 'labels_register:{0}'.format(password)
+    query = 'account_register:{0}'.format(account)
     filter_query = 'uuid_register:{0}'.format(account)
     # url building
     

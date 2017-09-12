@@ -254,9 +254,9 @@ class LoginHandler(BaseHandler):
                             self.username,
                             self.password)
         message = {'labels':'unsupervised'}
-        stuff = yield get_account_labels(self, self.username)
-        if stuff:
-            message['labels'] = stuff
+        #stuff = yield get_account_labels(self, self.username)
+        #if stuff:
+        #    message['labels'] = stuff
         # if not account something was wrong!
         if not account:
             # 401 status code?
