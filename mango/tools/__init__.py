@@ -67,6 +67,7 @@ def check_account_type(self, account, account_type):
         self.solr, search_index, query, filter_query
     )
 
+
     got_response = []
     # response message
     message = {'message': 'not found'}
@@ -113,6 +114,7 @@ def get_account_uuid(self, account, password):
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
+    logging.info(url)
 
     got_response = []
     # response message
@@ -145,7 +147,9 @@ def get_account_uuid(self, account, password):
     except Exception, e:
         logging.exception(e)
         raise gen.Return(e)
+    logging.info(message)
     raise gen.Return(message)
+
 
 @gen.coroutine
 def get_account_labels(self, account):
