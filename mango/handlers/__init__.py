@@ -258,6 +258,7 @@ class LoginHandler(BaseHandler):
         #if stuff:
         #    message['labels'] = stuff
         # if not account something was wrong!
+        logging.info(account)
         if not account:
             # 401 status code?
             self.set_status(403)
