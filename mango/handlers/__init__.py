@@ -253,11 +253,11 @@ class LoginHandler(BaseHandler):
         uuid = yield get_account_uuid(self,
                             self.username,
                             self.password)
-        message = {'labels':'unsupervised'}
-        #stuff = yield get_account_labels(self, self.username)
-        #if stuff:
-        #    message['labels'] = stuff
-        # if not uuid something was wrong!
+        # clean message
+        message = {}
+                
+        message['labels'] = yield get_account_labels(self, self.username)
+
         logging.info(uuid)
 
         if validate_uuid4(uuid):
