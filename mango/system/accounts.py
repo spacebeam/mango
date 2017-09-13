@@ -387,4 +387,12 @@ class Account(object):
         '''
             Remove account
         '''
-        pass
+        struct = {}
+
+        struct['status'] = 'deleted'
+
+        test = yield self.modify_account(account, team_uuid, struct)
+
+        logging.info(test)
+        
+        raise gen.Return(test)
