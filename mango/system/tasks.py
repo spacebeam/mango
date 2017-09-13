@@ -403,4 +403,13 @@ class Tasks(object):
         '''
             Remove task
         '''
-        pass
+        # missing change_history
+        struct = {}
+
+        struct['status'] = 'deleted'
+
+        test = yield self.modify_task(account, task_uuid, struct)
+
+        logging.info(test)
+        
+        raise gen.Return(test)

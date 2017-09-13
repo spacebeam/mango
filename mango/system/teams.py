@@ -358,4 +358,12 @@ class Team(object):
         '''
             Remove team
         '''
-        pass
+        struct = {}
+
+        struct['status'] = 'deleted'
+
+        test = yield self.modify_task(account, team_uuid, struct)
+
+        logging.info(test)
+        
+        raise gen.Return(test)

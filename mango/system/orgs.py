@@ -348,15 +348,17 @@ class Org(object):
             raise gen.Return(update_complete)
 
     @gen.coroutine
-    def replace_org(self, account, org_uuid, struct):
-        '''
-            Replace org
-        '''
-        pass
-
-    @gen.coroutine
     def remove_org(self, account, org_uuid):
         '''
-            Remove org
+            Remove contac
         '''
-        pass
+        # missing change_history
+        struct = {}
+
+        struct['status'] = 'deleted'
+
+        test = yield self.modify_org(account, org_uuid, struct)
+
+        logging.info(test)
+        
+        raise gen.Return(test)
