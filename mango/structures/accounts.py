@@ -62,8 +62,8 @@ class AccountMap(object):
         self.map.registers['is_admin'].assign(struct.get('is_admin', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
-        self.map.registers['updated_by'].assign(struct.get('updated_by', ''))
-        self.map.registers['updated_at'].assign(struct.get('updated_at', ''))
+        self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
+        self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['login_at'].assign(struct.get('login_at', ''))
         self.map.registers['logout_at'].assign(struct.get('logout_at', ''))
@@ -114,8 +114,8 @@ class AccountMap(object):
             "is_admin": event.registers['is_admin'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
-            "updated_by": event.registers['updated_by'].value,
-            "updated_at": event.registers['updated_at'].value,
+            "last_update_by": event.registers['last_update_by'].value,
+            "last_update_at": event.registers['last_update_at'].value,
             "created_at": event.registers['created_at'].value,
             "login_at": event.registers['login_at'].value,
             "logout_at": event.registers['logout_at'].value,
@@ -158,8 +158,8 @@ class AccountMap(object):
             "is_admin": event.registers['is_admin'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
-            "updated_by": event.registers['updated_by'].value,
-            "updated_at": event.registers['updated_at'].value,
+            "last_update_by": event.registers['last_update_by'].value,
+            "last_update_at": event.registers['last_update_at'].value,
             "created_at": event.registers['created_at'].value,
             "login_at": event.registers['login_at'].value,
             "logout_at": event.registers['logout_at'].value,

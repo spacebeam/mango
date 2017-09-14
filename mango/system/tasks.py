@@ -265,8 +265,8 @@ class Tasks(object):
                 "checked":str(event.get('checked', '')),
                 "checked_by":str(event.get('checked_by', '')),
                 "created_at":str(event.get('created_at', '')),
-                "updated_at":str(event.get('updated_at', '')),
-                "updated_by":str(event.get('updated_by', '')),
+                "last_update_at":str(event.get('last_update_at', '')),
+                "last_update_by":str(event.get('last_update_by', '')),
                 "url":str(event.get('url', '')),
             }
             result = TaskMap(
@@ -403,7 +403,7 @@ class Tasks(object):
         '''
             Remove task
         '''
-        # missing change_history
+        # missing history
         struct = {}
 
         struct['status'] = 'deleted'
