@@ -273,8 +273,7 @@ class Team(object):
                 "last_update_at": str(event.get('last_update_at', '')),
                 "history": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),
-                "snapshots": str(event.get('snapshots', '')),
-                "addresses": str(event.get('addresses', '')),
+                "uri":str(event.get('uri', '')),
                 "status": str(event.get('status', '')),
             }
             result = TeamMap(

@@ -295,7 +295,7 @@ class Account(object):
                 "created_at": str(event.get('created_at', '')),
                 "login_at": str(event.get('login_at', '')),
                 "logout_at": str(event.get('logout_at', '')),
-                "url": str(event.get('url', '')),
+                "uri":str(event.get('uri', '')),
                 "created_by": str(event.get('created_by', '')),
                 "history ": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),

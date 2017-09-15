@@ -67,7 +67,7 @@ class AccountMap(object):
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['login_at'].assign(struct.get('login_at', ''))
         self.map.registers['logout_at'].assign(struct.get('logout_at', ''))
-        self.map.registers['url'].assign(struct.get('url', ''))
+        self.map.registers['uri'].assign(struct.get('uri', ''))
         self.map.registers['layout'].assign(struct.get('layout', ''))
         self.map.registers['powerdailer'].assign(struct.get('powerdailer', ''))
         self.map.registers['lead_access'].assign(struct.get('lead_access', ''))
@@ -119,7 +119,7 @@ class AccountMap(object):
             "created_at": event.registers['created_at'].value,
             "login_at": event.registers['login_at'].value,
             "logout_at": event.registers['logout_at'].value,
-            "url": event.registers['url'].value,
+            "uri": event.registers['uri'].value,
             "layout": event.registers['layout'].value,
             "powerdailer": event.registers['powerdailer'].value,
             "lead_access": event.registers['lead_access'].value,
@@ -163,7 +163,7 @@ class AccountMap(object):
             "created_at": event.registers['created_at'].value,
             "login_at": event.registers['login_at'].value,
             "logout_at": event.registers['logout_at'].value,
-            "url": event.registers['url'].value,
+            "uri": event.registers['uri'].value,
             "layout": event.registers['layout'].value,
             "powerdailer": event.registers['powerdailer'].value,
             "lead_access": event.registers['lead_access'].value,

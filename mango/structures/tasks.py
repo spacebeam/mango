@@ -44,7 +44,7 @@ class TaskMap(object):
         self.map.registers['source'].assign(struct.get('source', ''))
         self.map.registers['destination'].assign(struct.get('destination', ''))
         self.map.registers['labels'].assign(struct.get('labels', ''))
-        self.map.registers['url'].assign(struct.get('url', ''))
+        self.map.registers['uri'].assign(struct.get('uri', ''))
         self.map.registers['start'].assign(struct.get('start', ''))
         self.map.registers['ack'].assign(struct.get('ack', ''))
         self.map.registers['stop'].assign(struct.get('stop', ''))
@@ -83,7 +83,7 @@ class TaskMap(object):
             "source": event.registers['source'].value,
             "destination": event.registers['destination'].value,
             "labels": event.registers['labels'].value,
-            "url": event.registers['url'].value,
+            "uri": event.registers['uri'].value,
             "start": event.registers['start'].value,
             "ack": event.registers['ack'].value,
             "stop": event.registers['stop'].value,
@@ -114,7 +114,7 @@ class TaskMap(object):
             "source": event.registers['source'].value,
             "destination": event.registers['destination'].value,
             "labels": event.registers['labels'].value,
-            "url": event.registers['url'].value,
+            "uri": event.registers['uri'].value,
             "start": event.registers['start'].value,
             "ack": event.registers['ack'].value,
             "stop": event.registers['stop'].value,

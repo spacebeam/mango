@@ -267,7 +267,7 @@ class Tasks(object):
                 "created_at":str(event.get('created_at', '')),
                 "last_update_at":str(event.get('last_update_at', '')),
                 "last_update_by":str(event.get('last_update_by', '')),
-                "url":str(event.get('url', '')),
+                "uri":str(event.get('uri', '')),
             }
             result = TaskMap(
                 self.kvalue,

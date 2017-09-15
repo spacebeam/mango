@@ -38,8 +38,7 @@ class Team(models.Model):
     last_update_at = types.TimestampType()
     history = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
-    snapshots = compound.ListType(types.StringType())
-    addresses = compound.ListType(types.StringType())
+    uri = types.StringType()
     status = types.StringType()
 
 class ModifyTeam(models.Model):
@@ -58,6 +57,5 @@ class ModifyTeam(models.Model):
     last_update_at = types.TimestampType()
     history = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
-    snapshots = compound.ListType(types.StringType())
-    addresses = compound.ListType(types.StringType())
+    uri = types.StringType()
     status = types.StringType()
