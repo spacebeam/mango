@@ -96,6 +96,16 @@ class CleanBase(models.Model):
     uri = types.URLType()
     max_channels = types.IntType()
     created_at = types.TimestampType()
+    labels_total = types.IntType()
+    resources_total = types.IntType()
+    history = compound.ListType(types.StringType())
+    history_total = types.IntType()
+    checked_by = types.StringType()
+    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    created_by = types.StringType()
+    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    last_update_by = types.StringType()
+    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
 
 
 class BaseAccount(RequiredBase):
