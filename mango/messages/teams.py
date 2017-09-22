@@ -78,4 +78,5 @@ class ModifyTeam(models.Model):
     resources_total = types.IntType()
     labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
-    history = compound.ListType(types.S
+    history = compound.ListType(types.StringType())
+    history_total = types.IntType()
