@@ -62,8 +62,17 @@ class RequiredBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     uri = types.URLType(required=False)
     max_channels = types.IntType()
+    labels_total = types.IntType()
+    resources_total = types.IntType()
+    history = compound.ListType(types.StringType())
+    history_total = types.IntType()
+    checked = types.BooleanType(default=False)
+    checked_by = types.StringType()
+    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
-
+    last_update_by = types.StringType()
+    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
 
 class CleanBase(models.Model):
     '''
