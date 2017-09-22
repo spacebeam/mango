@@ -56,8 +56,6 @@ class RequiredBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    phones = compound.ListType(compound.ModelType(Phone))
-    emails = compound.ListType(compound.ModelType(Email))
     uri = types.URLType(required=False)
     max_channels = types.IntType()
     checksum = types.StringType()
@@ -68,6 +66,10 @@ class RequiredBase(models.Model):
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    phones = compound.ListType(compound.ModelType(Phone))
+    phones_total = types.IntType()
+    emails = compound.ListType(compound.ModelType(Email))
+    emails_total = types.IntType()
     labels =  compound.ListType(types.StringType())
     labels_total = types.IntType()
     resources = compound.ModelType(Resource)
@@ -94,8 +96,6 @@ class CleanBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    phones = compound.ListType(compound.ModelType(Phone))
-    emails = compound.ListType(compound.ModelType(Email))
     uri = types.URLType()
     max_channels = types.IntType()
     checksum = types.StringType()
@@ -106,9 +106,13 @@ class CleanBase(models.Model):
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    phones = compound.ListType(compound.ModelType(Phone))
+    phones_total = types.IntType()
+    emails = compound.ListType(compound.ModelType(Email))
+    emails_total = types.IntType()
     labels =  compound.ListType(types.StringType())
     labels_total = types.IntType()
-    resources = compound.ModelType(Resource)
+#    resources = compound.ModelType(Resource)
     resources_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
@@ -167,8 +171,8 @@ class Team(models.Model):
     permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
-    members = compound.ListType(types.StringType())
     resources = compound.ModelType(Resource)
+    members = compound.ListType(types.StringType())
 
 
 class Org(BaseAccount):
