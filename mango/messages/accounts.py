@@ -78,7 +78,8 @@ class RequiredBase(models.Model):
     history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
-
+    members_total = types.IntType()
+    
 class CleanBase(models.Model):
     '''
         Clean base class
@@ -112,13 +113,14 @@ class CleanBase(models.Model):
     emails_total = types.IntType()
     labels =  compound.ListType(types.StringType())
     labels_total = types.IntType()
-#    resources = compound.ModelType(Resource)
+    resources = compound.ModelType(Resource)
     resources_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
-
+    members_total = types.IntType()
+    
 class BaseAccount(RequiredBase):
     '''
         Base account
@@ -144,7 +146,7 @@ class User(BaseAccount):
     password = types.StringType(required=True)
     layout = types.StringType()
     powerdailer = types.StringType()
-    lead_access = types.StringType()
+    lead_access = compound.ListType(types.StringType())
     phone_server_register = types.StringType()
 
 class ModifyUser(CleanBaseAccount):
@@ -158,7 +160,7 @@ class ModifyUser(CleanBaseAccount):
     password = types.StringType()
     layout = types.StringType()
     powerdailer = types.StringType()
-    lead_access = types.StringType()
+    lead_access = compound.ListType(types.StringType())
     phone_server_register = types.StringType()
 
 
