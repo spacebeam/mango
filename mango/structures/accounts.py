@@ -62,10 +62,6 @@ class AccountMap(object):
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
-        self.map.registers['rights'].assign(struct.get('rights', '')) 
-        self.map.registers['power_dailer'].assign(struct.get('power_dailer', ''))
-        self.map.registers['lead_access'].assign(struct.get('lead_access', ''))
-        self.map.registers['phone_server'].assign(struct.get('phone_server', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
         self.map.registers['members_total'].assign(struct.get('members_total', ''))
         self.map.registers['phones'].assign(struct.get('phones', ''))
@@ -86,10 +82,10 @@ class AccountMap(object):
         self.map.registers['resources_total'].assign(struct.get('resources_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
         self.map.registers['hashs_total'].assign(struct.get('hashs_total', ''))
+        self.map.registers['permissions'].assign(struct.get('permissions', ''))
+        self.map.registers['permissions_total'].assign(struct.get('permissions_total', ''))
         # end of the map stuff
         self.map.store()
-
-
 
     @property
     def uuid(self):
@@ -130,10 +126,6 @@ class AccountMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
-            "rights": event.registers['rights'].value, 
-            "power_dailer": event.registers['power_dailer'].value,
-            "lead_access": event.registers['lead_access'].value,
-            "phone_server": event.registers['phone_server'].value,
             "members": event.registers['members'].value,
             "members_total": event.registers['members_total'].value,
             "phones": event.registers['phones'].value,
@@ -154,6 +146,8 @@ class AccountMap(object):
             "resources_total": event.registers['resources_total'].value,
             "hashs": event.registers['hashs'].value,
             "hashs_total": event.registers['hashs_total'].value,
+            "permissions": event.registers['permissions'].value,
+            "permissions_total": event.registers['permissions_total'].value,
         }
         return json.dumps(struct)
 
@@ -188,10 +182,6 @@ class AccountMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
-            "rights": event.registers['rights'].value, 
-            "power_dailer": event.registers['power_dailer'].value,
-            "lead_access": event.registers['lead_access'].value,
-            "phone_server": event.registers['phone_server'].value,
             "members": event.registers['members'].value,
             "members_total": event.registers['members_total'].value,
             "phones": event.registers['phones'].value,
@@ -212,5 +202,7 @@ class AccountMap(object):
             "resources_total": event.registers['resources_total'].value,
             "hashs": event.registers['hashs'].value,
             "hashs_total": event.registers['hashs_total'].value,
+            "permissions": event.registers['permissions'].value,
+            "permissions_total": event.registers['permissions_total'].value,
         }
         return struct

@@ -290,10 +290,6 @@ class Account(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_update_at": str(event.get('last_update_at', '')),
                 "last_update_by": str(event.get('last_update_by', '')),
-                "rights": str(event.get('rights', '')), 
-                "power_dailer": str(event.get('power_dailer', '')),
-                "lead_access": str(event.get('lead_access', '')),
-                "phone_server": str(event.get('phone_server', '')),
                 "members": str(event.get('members', '')),
                 "members_total": str(event.get('members_total', '')),
                 "phones": str(event.get('phones', '')),
@@ -314,6 +310,8 @@ class Account(object):
                 "resources_total": str(event.get('resources_total', '')),
                 "hashs": str(event.get('hashs', '')),
                 "hashs_total": str(event.get('hashs_total', '')),
+                "permissions": str(event.get('permissions', '')),
+                "permissions_total": str(event.get('permissions_total', '')),,
             }
             result = AccountMap(
                 self.kvalue,
