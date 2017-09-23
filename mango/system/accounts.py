@@ -311,7 +311,7 @@ class Account(object):
                 "hashs": str(event.get('hashs', '')),
                 "hashs_total": str(event.get('hashs_total', '')),
                 "permissions": str(event.get('permissions', '')),
-                "permissions_total": str(event.get('permissions_total', '')),,
+                "permissions_total": str(event.get('permissions_total', '')),
             }
             result = AccountMap(
                 self.kvalue,
