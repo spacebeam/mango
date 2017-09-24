@@ -20,6 +20,7 @@ from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
 import logging
 
+
 class BaseHandler(web.RequestHandler):
     '''
         gente d'armi e ganti

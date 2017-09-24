@@ -11,7 +11,6 @@
 __author__ = 'Team Nonsense'
 
 
-
 import uuid
 import arrow
 from schematics import models

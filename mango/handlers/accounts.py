@@ -10,6 +10,7 @@
 
 __author__ = 'Team Machine'
 
+
 import time
 import arrow
 import uuid
@@ -497,28 +498,6 @@ class OrgsHandler(orgs.Org, BaseHandler):
             return
         self.set_status(200)
         self.finish({'message': 'update completed successfully'})
-
-    @gen.coroutine
-    def put(self, org_uuid):
-        '''
-            Replace org
-        '''
-        struct = yield check_json(self.request.body)
-        format_pass = (True if not struct.get('errors') else False)
-        if not format_pass:
-            self.set_status(400)
-            self.finish({'JSON':format_pass})
-            return
-        account = self.request.arguments.get('account', [None])[0]
-        result = yield self.replace_org(account, org_uuid, struct)
-        if not result:
-            self.set_status(400)
-            system_error = errors.Error('missing')
-            error = system_error.missing('org', org_uuid)
-            self.finish(error)
-            return
-        self.set_status(200)
-        self.finish({'message': 'replace completed successfully'})
 
     @gen.coroutine
     def delete(self, org_uuid):
