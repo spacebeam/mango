@@ -14,7 +14,6 @@ __author__ = 'Team Machine'
 import time
 import arrow
 import ujson as json
-import motor
 import logging
 import uuid
 import urllib
@@ -28,14 +27,13 @@ http_client = _http_client.AsyncHTTPClient()
 
 
 def validate_uuid4(uuid_string):
-
-    """
+    '''
     Validate that a UUID string is in
     fact a valid uuid4.
 
     Happily, the uuid module does the actual
     checking for us.
-    """
+    '''
     try:
         val = uuid.UUID(uuid_string, version=4)
     except ValueError:
