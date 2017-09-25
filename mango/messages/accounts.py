@@ -25,7 +25,7 @@ class Permissions(models.Model):
     '''
     role = types.StringType()
     resources = compound.ListType(types.StringType())
-    permissions = types.StringType(choices=['read',
+    permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
 
@@ -181,7 +181,7 @@ class Team(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     name = types.StringType(required=True)
-    permissions = types.StringType(choices=['read',
+    permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
     resources = compound.ModelType(Resource)
