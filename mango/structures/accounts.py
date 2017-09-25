@@ -70,7 +70,7 @@ class AccountMap(object):
         self.map.counters['emails_total'].assign(struct.get('emails_total', ''))
         self.map.registers['history'].assign(struct.get('history', ''))
         self.map.counters['history_total'].assign(struct.get('history_total', ''))
-        self.map.sets['labels'].assign(struct.get('labels', ''))
+        self.map.sets['labels'].add(struct.get('labels'))
         self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
         self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
