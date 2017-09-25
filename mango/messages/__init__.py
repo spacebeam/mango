@@ -51,6 +51,7 @@ class Resource(models.Model):
     dids = compound.ModelType(SimpleResource)
     comments = compound.ModelType(SimpleResource)
 
+
 class BaseResult(models.Model):
     '''
         Base result

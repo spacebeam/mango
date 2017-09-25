@@ -39,6 +39,7 @@ class Phone(models.Model):
     validated = types.BooleanType(default=False)
     primary = types.BooleanType(default=False)
 
+
 class RequiredBase(models.Model):
     '''
         Required base class
@@ -79,7 +80,8 @@ class RequiredBase(models.Model):
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
     members_total = types.IntType()
-    
+
+
 class CleanBase(models.Model):
     '''
         Clean base class
@@ -120,7 +122,8 @@ class CleanBase(models.Model):
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
     members_total = types.IntType()
-    
+
+
 class BaseAccount(RequiredBase):
     '''
         Base account
@@ -146,6 +149,7 @@ class User(BaseAccount):
     password = types.StringType(required=True)
     permissions = compound.ListType(types.StringType())
     permissions_total = types.IntType()
+
 
 class ModifyUser(CleanBaseAccount):
     '''
