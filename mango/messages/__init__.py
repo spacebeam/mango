@@ -11,11 +11,9 @@
 __author__ = 'Team Machine'
 
 
-import uuid as _uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-from mango.messages import tasks
 
 
 class SimpleResource(models.Model):
