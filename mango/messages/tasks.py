@@ -44,7 +44,7 @@ class Task(models.Model):
     account = types.StringType()
     title = types.StringType()
     description = types.StringType()
-    payload = types.StringType() # a freaking JSON.
+    payload = types.StringType()
     assignees = compound.ListType(types.StringType())
     public = types.BooleanType(default=False)
     source = types.StringType()
@@ -57,11 +57,11 @@ class Task(models.Model):
     deadline = types.TimestampType()
     duration = types.StringType()
     comments = compound.ModelType(Comment)
-    status = types.StringType(choices=['now',
+    status = types.StringType(choices=['new',
+                                       'now',
                                        'later',
-                                       'overdue',
                                        'done'],
-                              default='now',
+                              default='new',
                               required=True)
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
@@ -88,7 +88,7 @@ class ModifyTask(models.Model):
     account = types.StringType()
     title = types.StringType()
     description = types.StringType()
-    payload = types.StringType() # a freaking JSON.
+    payload = types.StringType()
     assignees = compound.ListType(types.StringType())
     public = types.BooleanType()
     source = types.StringType()
@@ -101,9 +101,9 @@ class ModifyTask(models.Model):
     deadline = types.TimestampType()
     duration = types.StringType()
     comments = compound.ModelType(Comment)
-    status = types.StringType(choices=['now',
+    status = types.StringType(choices=['new',
+                                       'now',
                                        'later',
-                                       'overdue',
                                        'done'])
     checked = types.BooleanType()
     checked_by = types.StringType()
