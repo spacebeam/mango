@@ -43,7 +43,7 @@ class TaskMap(object):
         self.map.registers['public'].assign(struct.get('public', ''))
         self.map.registers['source '].assign(struct.get('source', ''))
         self.map.registers['destination'].assign(struct.get('destination', ''))
-        self.map.registers['labels'].assign(struct.get('labels', ''))
+        self.map.sets['labels'].add(struct.get('labels'))
         self.map.registers['uri'].assign(struct.get('uri', ''))
         self.map.registers['start'].assign(struct.get('start', ''))
         self.map.registers['ack'].assign(struct.get('ack', ''))
@@ -90,7 +90,7 @@ class TaskMap(object):
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
-            "labels": event.registers['labels'].value,
+            "labels": event.sets['labels'].value,
             "uri": event.registers['uri'].value,
             "start": event.registers['start'].value,
             "ack": event.registers['ack'].value,
@@ -107,13 +107,13 @@ class TaskMap(object):
             "created_at": event.registers['created_at'].value,
             "last_modified": event.registers['last_modified'].value,
             "checksum": event.registers['checksum'].value,
-            "'comments_total": event.registers['comments_total'].value,
+            #"comments_total": event.registers['comments_total'].value,
             "hashs": event.registers['hashs'].value,
-            "hashs_total": event.registers['hashs_total'].value,
-            "assignees_total": event.registers['assignees_total'].value,
+            #"hashs_total": event.registers['hashs_total'].value,
+            #"assignees_total": event.registers['assignees_total'].value,
             "history": event.registers['history'].value,
-            "history_total": event.registers['history_total'].value,
-            "labels_total": event.registers['labels_total'].value,
+            #"history_total": event.registers['history_total'].value,
+            #"labels_total": event.registers['labels_total'].value,
         }
 
         return json.dumps(struct)
@@ -130,7 +130,7 @@ class TaskMap(object):
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
-            "labels": event.registers['labels'].value,
+            "labels": event.sets['labels'].value,
             "uri": event.registers['uri'].value,
             "start": event.registers['start'].value,
             "ack": event.registers['ack'].value,
@@ -147,12 +147,12 @@ class TaskMap(object):
             "created_at": event.registers['created_at'].value,
             "last_modified": event.registers['last_modified'].value,
             "checksum": event.registers['checksum'].value,
-            "'comments_total": event.registers['comments_total'].value,
+            #"comments_total": event.registers['comments_total'].value,
             "hashs": event.registers['hashs'].value,
-            "hashs_total": event.registers['hashs_total'].value,
-            "assignees_total": event.registers['assignees_total'].value,
+            #"hashs_total": event.registers['hashs_total'].value,
+            #"assignees_total": event.registers['assignees_total'].value,
             "history": event.registers['history'].value,
-            "history_total": event.registers['history_total'].value,
-            "labels_total": event.registers['labels_total'].value,       
+            #"history_total": event.registers['history_total'].value,
+            #"labels_total": event.registers['labels_total'].value,     
         }
         return struct

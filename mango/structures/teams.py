@@ -49,15 +49,15 @@ class TeamMap(object):
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
         self.map.registers['checked_at'].assign(struct.get('checked_at', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
-        self.map.registers['members_total'].assign(struct.get('members_total', ''))
+        #self.map.registers['members_total'].assign(struct.get('members_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
-        self.map.registers['hashs_total'].assign(struct.get('hashs_total', ''))
+        #self.map.registers['hashs_total'].assign(struct.get('hashs_total', ''))
         self.map.registers['resources'].assign(struct.get('resources', ''))
-        self.map.registers['resources_total'].assign(struct.get('resources_total', ''))
+        #self.map.registers['resources_total'].assign(struct.get('resources_total', ''))
         self.map.sets['labels'].add(struct.get('labels'))
-        self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
+        #self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
         self.map.counters['history'].assign(struct.get('history', ''))
-        self.map.counters['history_total'].assign(struct.get('history_total', ''))
+        #self.map.counters['history_total'].assign(struct.get('history_total', ''))
         # end of the map stuff
         self.map.store()
 
@@ -87,15 +87,15 @@ class TeamMap(object):
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
             "members": event.registers['members'].value,
-            "members_total": event.counters['members_total'].value,
+            #"members_total": event.counters['members_total'].value,
             "hashs": event.registers['hashs'].value,
-            "hashs_total": event.counters['hashs_total'].value,
+            #"hashs_total": event.counters['hashs_total'].value,
             "resources": event.registers['resources'].value,
-            "resources_total": event.counters['resources_total'].value,
+            #"resources_total": event.counters['resources_total'].value,
             "labels": event.sets['labels'].value,
             "labels_total": event.counters['labels_total'].value,
             "history": event.registers['history'].value,
-            "history_total": event.counters['history_total'].value,
+            #"history_total": event.counters['history_total'].value,
         }
         return json.dumps(struct)
 
@@ -117,14 +117,14 @@ class TeamMap(object):
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
             "members": event.registers['members'].value,
-            "members_total": event.counters['members_total'].value,
+            #"members_total": event.counters['members_total'].value,
             "hashs": event.registers['hashs'].value,
-            "hashs_total": event.counters['hashs_total'].value,
+            #"hashs_total": event.counters['hashs_total'].value,
             "resources": event.registers['resources'].value,
-            "resources_total": event.counters['resources_total'].value,
+            #"resources_total": event.counters['resources_total'].value,
             "labels": event.sets['labels'].value,
-            "labels_total": event.counters['labels_total'].value,
+            #"labels_total": event.counters['labels_total'].value,
             "history": event.registers['history'].value,
-            "history_total": event.counters['history_total'].value,
+            #"history_total": event.counters['history_total'].value,
         }
         return struct
