@@ -25,10 +25,6 @@ from tornado import httpclient
 from mango.tools import errors, str2bool, check_json, new_resource
 from mango.handlers import BaseHandler
 
-# on team and just on team because of the natural stuff in the resource
-# we're disable this @content_type_validation decorator
-
-#@content_type_validation
 
 class Handler(teams.Team, BaseHandler):
     '''

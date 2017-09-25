@@ -26,9 +26,6 @@ from mango.tools import errors, str2bool, check_json, new_resource
 from mango.handlers import BaseHandler
 
 
-# on account and just on account because of the natural stuff in the resource
-# we're disable this @content_type_validation decorator
-
 class UsersHandler(accounts.Account, BaseHandler):
     '''
         HTTP request handlers
