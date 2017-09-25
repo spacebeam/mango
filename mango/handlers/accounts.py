@@ -36,7 +36,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -105,7 +105,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -183,7 +183,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # get account from new account struct
         account = struct.get('account', None)
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new account struct
@@ -302,7 +302,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -371,7 +371,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -449,7 +449,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
         # get account from new org struct
         account = struct.get('account', None)
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
