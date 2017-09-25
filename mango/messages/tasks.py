@@ -67,8 +67,17 @@ class Task(models.Model):
     checked_by = types.StringType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
+    created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_modified = types.TimestampType()
+    checksum = types.StringType()
+    comments_total = types.IntType()
+    hashs = compound.ListType(types.StringType())
+    hashs_total = types.IntType()
+    assignees_total = types.IntType()
+    history = compound.ListType(types.StringType())
+    history_total = types.IntType()
+    labels_total = types.IntType()
 
 
 class ModifyTask(models.Model):
@@ -84,13 +93,13 @@ class ModifyTask(models.Model):
         this we prevent users from using PATCH to create fields 
         outside the scope of the resource.
     '''
-    uuid = types.UUIDType()
+    uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType()
     title = types.StringType()
     description = types.StringType()
     payload = types.StringType()
     assignees = compound.ListType(types.StringType())
-    public = types.BooleanType()
+    public = types.BooleanType(default=False)
     source = types.StringType()
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
@@ -104,10 +113,21 @@ class ModifyTask(models.Model):
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
-                                       'done'])
-    checked = types.BooleanType()
+                                       'done'],
+                              default='new',
+                              required=True)
+    checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
-    created_at = types.TimestampType()
+    created_by = types.StringType()
+    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_modified = types.TimestampType()
+    checksum = types.StringType()
+    comments_total = types.IntType()
+    hashs = compound.ListType(types.StringType())
+    hashs_total = types.IntType()
+    assignees_total = types.IntType()
+    history = compound.ListType(types.StringType())
+    history_total = types.IntType()
+    labels_total = types.IntType()
