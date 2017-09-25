@@ -11,8 +11,8 @@
 __author__ = 'Team Nonsense'
 
 
-import uuid
 import arrow
+import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound

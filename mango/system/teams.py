@@ -11,7 +11,6 @@
 __author__ = 'Team Machine'
 
 
-import arrow
 import uuid
 import urllib
 import logging
@@ -23,7 +22,6 @@ from mango.messages import BaseResult
 from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results
-from tornado.httputil import url_concat
 from tornado import httpclient as _http_client
 
 
