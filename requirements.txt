@@ -13,5 +13,4 @@ arrow
 pycurl
 ujson
 pylibmc
-protobuf
 msgpack-python

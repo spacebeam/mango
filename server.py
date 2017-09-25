@@ -151,14 +151,16 @@ def main():
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
 
+            # Yo!, teams resource? really? 
+            # I think this needs to be called from /orgs/
+            (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/teams/?', teams.Handler),
+
             # Organization teams
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
-
-            (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
-            (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
-            (r'/teams/?', teams.Handler),
         ],
         db = db,
         cache = cache,
