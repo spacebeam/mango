@@ -63,25 +63,25 @@ class AccountMap(object):
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
-        self.map.counters['members_total'].assign(struct.get('members_total', ''))
+        #self.map.counters['members_total'].assign(struct.get('members_total', ''))
         self.map.registers['phones'].assign(struct.get('phones', ''))
-        self.map.counters['phones_total'].assign(struct.get('phones_total', ''))
+        #self.map.counters['phones_total'].assign(struct.get('phones_total', ''))
         self.map.registers['emails'].assign(struct.get('emails', ''))
-        self.map.counters['emails_total'].assign(struct.get('emails_total', ''))
+        #self.map.counters['emails_total'].assign(struct.get('emails_total', ''))
         self.map.registers['history'].assign(struct.get('history', ''))
-        self.map.counters['history_total'].assign(struct.get('history_total', ''))
-        self.map.sets['labels'].assign(struct.get('labels', ''))
-        self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
+        #self.map.counters['history_total'].assign(struct.get('history_total', ''))
+        self.map.sets['labels'].add(struct.get('labels'))
+        #self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
-        self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
+        #self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
         self.map.registers['teams'].assign(struct.get('teams', ''))
-        self.map.counters['teams_total'].assign(struct.get('teams_total', ''))
+        #self.map.counters['teams_total'].assign(struct.get('teams_total', ''))
         self.map.registers['resources'].assign(struct.get('resources', ''))
-        self.map.counters['resources_total'].assign(struct.get('resources_total', ''))
+        #self.map.counters['resources_total'].assign(struct.get('resources_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
-        self.map.counters['hashs_total'].assign(struct.get('hashs_total', ''))
+        #self.map.counters['hashs_total'].assign(struct.get('hashs_total', ''))
         self.map.registers['permissions'].assign(struct.get('permissions', ''))
-        self.map.counters['permissions_total'].assign(struct.get('permissions_total', ''))
+        #self.map.counters['permissions_total'].assign(struct.get('permissions_total', ''))
         # end of the map stuff
         self.map.store()
 
@@ -125,25 +125,25 @@ class AccountMap(object):
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "members": event.registers['members'].value,
-            "members_total": event.counters['members_total'].value,
+            #"members_total": event.counters['members_total'].value,
             "phones": event.registers['phones'].value,
-            "phones_total": event.counters['phones_total'].value,
+            #"phones_total": event.counters['phones_total'].value,
             "emails": event.registers['emails'].value,
-            "emails_total": event.counters['emails_total'].value,
+            #"emails_total": event.counters['emails_total'].value,
             "history": event.registers['history'].value,
-            "history_total": event.counters['history_total'].value,
+            #"history_total": event.counters['history_total'].value,
             "labels": event.sets['labels'].value,
-            "labels_total": event.counters['labels_total'].value,
+            #"labels_total": event.counters['labels_total'].value,
             "orgs": event.registers['orgs'].value,
-            "orgs_total": event.counters['orgs_total'].value,
+            #"orgs_total": event.counters['orgs_total'].value,
             "teams": event.registers['teams'].value,
-            "teams_total": event.counters['teams_total'].value,
+            #"teams_total": event.counters['teams_total'].value,
             "resources": event.registers['resources'].value,
-            "resources_total": event.counters['resources_total'].value,
+            #"resources_total": event.counters['resources_total'].value,
             "hashs": event.registers['hashs'].value,
-            "hashs_total": event.counters['hashs_total'].value,
+            #"hashs_total": event.counters['hashs_total'].value,
             "permissions": event.registers['permissions'].value,
-            "permissions_total": event.counters['permissions_total'].value,
+            #"permissions_total": event.counters['permissions_total'].value,
         }
         return json.dumps(struct)
 
