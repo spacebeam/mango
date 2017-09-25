@@ -92,7 +92,7 @@ class CleanBase(models.Model):
     name = types.StringType()
     email = types.EmailType()
     is_admin = types.BooleanType()
-    permission = compound.ListType(types.StringType())
+    permissions = compound.ListType(types.StringType())
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -170,7 +170,7 @@ class Team(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     name = types.StringType(required=True)
-    permission = types.StringType(choices=['read',
+    permissions = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
     resources = compound.ModelType(Resource)
