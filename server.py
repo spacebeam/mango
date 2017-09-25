@@ -1,3 +1,73 @@
+# -*- coding: utf-8 -*-
+'''
+    Growing mango trees in the landscape will give you a lifetime of fresh 
+
+    pungent fruit from an attractive shade tree enabling asynchronous 
+    
+    communication and control structures as patterns of passing messages.
+'''
+
+# This file is part of mango.
+
+# Distributed under the terms of the last AGPL License.
+# The full license is in the file LICENCE, distributed as part of this software.
+
+__author__ = 'Team Machine'
+
+# Check our research and resources at the https://nonsense.ws laboratory.
+
+__ooo__ = '''
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╔░Ñß╠░░░░░░░░░░░░░░░░░░░░░░░»░░░░░░░░░░░░░░░░░░░░░
+    ░░µ▄▄▄»░╔▄░░▄▄▄▄▄▄▄▄░░░ú░░░░░░░╔φm╫▒░╔▄░░▄░░▄╔░»▄▄»░░░░░µ░░▄▄▄▄▄▄▄▄▄▄▄▄░░▄░░▄H░░
+    ░░║██▀░░░¼░░██████████▄x░]░µúµ╙▀▓▓▓░░░░░░╠░░╢▓╠░╠░¡µ»╗╩Ü░░▄█████████▀▀╫░░░░░╙▌░░
+    ░░║░»╩░░░░░░░██████░░╙╠▀▄░░░╟╫╬Ñ▓▓▓░░╟░░░░░»░▓▓╫▓╫▌░µ▄▄╦╨▀▀╠░║█████░░░Ü░░░Üµ░»░░
+    »░║▌h░░░░╠░░░███▄╙▀░Ñ╔░░Ü▀▓▓▓╫╫╫▓╫╫▌░µ░░░╟╔▄▓╫╫▓╫╫▓▓▓▀U░½µK╜ñ╙▀Ü»╨║█ñµ]░░░M░░µ░░
+    ░░║█░╠▄░░▄▄░║███▀░░░░░»░╦░╔▓╫╫▓▓▓╫╫╫░▄╫░µ╙╫╫▓╫╫▓▓▓╫╫▓N▄Å░░░░░µ╩██▄██░▄▄▌░▓█▄▄▌░░
+    ░░║█████╔██████▓▄░«░╦░░░░╙▓╫╫╫▓▓╫╫╫╫▓╫▓▌µñU╬╫▓╫╫╫▓╫╫▓▀░░░µ»m╠░║█████████░████▌░░
+    h░║███████████████▄▄▄▄╬▓▌░╥▀╣▓╫╫╫╫╫»Ñ╠▀▓╬▓▓╫▓░╙▀╩╬▓▓╬▓▓╫░╠»U▄▄███████████████▌░░
+    ░░║███████████████╫▓▓▓╫╫▓╫╬▓▀░hU╠Å▀░ñ╟╫╫M╠▀▀▀H«U╔░µ░╙╫╫╫▓▓╫╫╫╫███████████████▌░░
+    »░║████╫██████████╫▓╫▓▓▓▓╫▌░░m░»»░░µ╙▀▓╫▓╩U▄φ░░░░╚░ñ░▄╫╫╫╫▓▓╫╫▓╫╫██████╫╫████▌░░
+    ░░║█╫╫█▓╫█▓╫██╫▓╫╫▓▓▓╫▓╫╫╫╫▓░░░░µ≈Ü░░▄╣▓▓╫▓╫▓░Hµ░░░░╙╫╫╫▓╫▓╫▓▓╫▓███╫╫╫▓▓▓╫▓╫╫▌░░
+    »░░╫╫╫╫▓▓╫╫╫╫█▓▀▀╨║╫█▓▓▓▓▓Ü▄╬╬░╟░½░╫▓╫▓▓▓▓▓╫╫▌½░░╠░▓▓▓╦▓╫╫╫▓╫▌▀▀▓██▓╫╫╫▓▓▓▓╫╫▌░░
+    ░░╟╫╫╫╫▓▓▓▓╫▀░░U░U║╩▀╠▓╫╫╫╫╫▓▓▓▄╦▓█╢╫╫▓▓▓▓▓╫▓▓╠▀╬▓N▓▓▓▓▓▓▓▀▀▀U░░╠░░╢╫╫▓▓▓╫╫▓▀U░░
+    »░░║╫╫▓╫╫▓Ü░«µ░░»░░░╝▓╫╫╫▓╫▓▓▓▓▓╫▓▓╙╫╫█▓▓▓▓╫╫M⌂╠▄▓▓▓▓▓╫▓▓▓╫▓░░░░░╙h╠╫╫▓▓╫▓░░░░░░
+    »░»╙╫╙╦╟╫╫▓N░»░░»»D░h╦╟╫▓▓╫╫╫▓╫░≈╠»░▀░µ╙╫▌░⌂Ü░░▀▓╫╫▓▓╫▓▓▓╫▌░≈░╦µ░░░░╠»╫╙▓▓▓▓░░░░
+    ░»»╦▓╦ô░▓█▀░h╟N▄╠░>▄▓█▓▓╫╬╫▓╫╫▀ñ>Ü░»░U»░█»»╠░░░╠µ╙╢▓╫╫███▓▓▓▄░░/░ñ░▓▓▓▓▄█▀░░░▌░░
+    ░░░╫╫╫▓▀▓N╫▄D▓╫▓╫╫╫╫████▓▓████▄░ñ░░»»H«╔▌░ñ╠░░h╟«░║██████████╫╫╫▓▓╦╫╫█▀░▓▓▓▓╫▌░░
+    ░░╟▓▓░U░╟▓╫▓▓▓▓▓╫╫▓╫╫╫██████████▄▄░░Å░h██░░▄p░╔░h░█████████╫╫▓╫╫╫▓▓╫▓╠░░╟╫▓╝▓Ü░░
+    ░░╟╫╫╫▓»░▀░µ║╫╫╫▓▓▓╫╫███████████░░░███▓█████▌µ███▓██████████╫▓▓▓╫▓▓╫╫▓╬░░╠µ░║▌░░
+    »░╠▓▀░h░░░⌂»»╫▓╫▓╫╫▓█▓████████▀██▄░████████████▀▀▀██████████▓█▓▓╫▓▓▓░░Ü░░░H░░▓░░
+    »░░U░µÜ░░░Ü»░║▓▓█▓▓██████████▌░░╠»░██████████░░░╚░║█▀▀████████╫▓▓██▓Ü»U░░░Å░ñ╟░░
+    »h╠╫░»╩░░»░░░▓▓▓▓██████████▄░░░░╙>░░██████▀░µ░¥░░░░░║██████████████╫░ñ░⌂░µ▄░░▓░░
+    »░╔╫▌╦▓▓░║▓╫▓╫╫▓███████████▀░H░░h░░ñ▀▀▒╜███▓⌐░░░░µ≥░>╔█████████╫╫▓╫▓▓▓╫▓░▓╫▓▓Ñ░░
+    »░░▓╫╫╫╫░▓╫╫╫▓▓▓╫██████████▄░µÜ░░╠h▄▄▄]U███░>╓▄▄░h░╠██▀▀███████╫╫▓▓▓╫▓╫╫▓╫╫▓▓▓░░
+    »h░▓▓█╫▓▓╫╫╫▓▓▓╫╫╫▓▀▀Ü░░║███████▄▄»▓███▀█▄▄░░║██████▄▒░░██▀▀╙╙╫╫╫╫▓▓▓▓╫╫▓╫╫▓▓▓░░
+    »h░▓╫▓╫▓╟╫╫╫╫▓▓▓╫╫░╟≥░░░░░▄▓█████████░m░║█████████████▄░░░░░░╦░╙╩▓▓▓▓╫╫▌║╫╫╫▓▓░░
+    »»░▓▀╩▓H░▀▀░▓▓▌╫╩▓╩░░»░µ«░▀▀███████████░░▀▀»║████████░░ñ░░░░░░░▄╗▓╫▓╙▀▀░░╠░░╣╫░░
+    h░░Üñ░ó░░░Ü░╜╫»░µ▄▄»╗^░░U░╔█████████▀░╠░░░Ü░╙███████▀██▄░µ░]░µ▄╙▀▓▓░╙░Ñ░░░U»╨▓░░
+    »░░░ññU░░░]≥░║▓╫╫╫╫░µ▄╦≡ñ▀▀░U░████▀▌≈░Ü░»░╠»»║█████▌░░░░X▄µ░░▓▓╫▓▓█U░µH░░░ù<░╬░░
+    ░h╔▓░µ╠░░░Ü╦▓╫▓▓╫╫╫╫╫▀>⌂ñµÅ░░░╙╠░╫╔█░µ½░░µÜh>▓██▓▄»░░░Ñµ╩╙▀╬╫╫╫╫╫╫▓╫░≈Ñ░░╔▄▓╫▓░░
+    »h░╫Mµ╬▓µ╝▀▓╫▓╫▓▓▓╫╫╫╫╦»░░░░░µ║██▄██▌▄██░╫██▓███▀µhU░░░░░Ü▄╫╫╫╫▓▓▓╫╫▄╦▓▓x╙▀╣▓╫░░
+    hñ░╫╫▓▓▓▌φ╠╫▓╫╫╫╫▓╫╫▓▀▄▄«╔hU░░██████████▌████████▄░░╠ñ░»µµ▀▓╫╫╫╫╫╫╫▓▓▓╫▓M╩╠▓▓▓░░
+    »░░▌╩╠Ü╠▓▓╫╫▓▌»╙▀▀▀█▓▓▓╫░╠▄╦╫╗█████████████████████╫╬▓▓▓╫@K╩╠▓╩╩▓▓╫▌╨░N║▓▓▓▓▓▌░░
+    »░░░░▄▓▓▌╬╙╠▀▀»░╟░x░µ▀▓╫▓╫╫▓▓╫╫███████████████████╫╫▓▓╫╫▓▓╫▓▀░Ü░m^╙»░╬█▓▌╠Ü╠╙╙░░
+    ░░░╔╙▀█╫╫╨▄╫╣░░░░░ñÜ╔╦▓▓▓▓▓▓▓╫▓▓╫███████▓██╫██████╫╫▓▓▓▓╫╫▓▄░ñ░░░░░╔╙╙▀▓╫╬▓▓╫K░░
+    »»░░░▄╬╫▓╫╫╫╫░ñ%U░░░╙▀▓╫╫╫▓╫╫╫▓█████╫╫▓▓▓╫▓╫╫█╫█▓▓╫▓▓╫▓╫▓╫╫▓░;»╔»D░U╔╬▓▓▓▓▓▓╫░░░
+    »░░╟▓╫▓▓▓▓▓▓▓▓▄▄░╟░█╫▓▓█▓▓▓▓▓▌╙▀▀▀██╫▓╫▓▓▓▓╫╫█▀░»░║╫╫▓▓╣▓▓▓Φ▓╫▌░m░▄╬╫▓▓▓▓▓▓▓╫▓░░
+    »░░╟╫╫▓▓▓▓█▓╫╫╠Å╫╫N▓╫▓▓╫▓▓Ü╙╙░h░╠░U╙╫╫▓▓▓╫╫▓Ü░░½«░░╙»▄▓╫╫╫╫╫▓╫▓▓▓█╫▀╫▓╫╫▓▓▓╫▓▓░░
+    »░░░▓╫▓▓▓╫╩▓╫▌U╠▄╬▓╫▓▓▓╫╫╫╫▓M░░░░░ñ»▓╫▓▀╫╫▓¿ñHÜ»░»░╔╙▀╫╫▓╫▓▓▓╫▓▓▀█▓░█╫▓▀╫╫▀▀▓Ü░░
+    ░h░░╠░µ╙╫▓«µ░░░╠▀▓╫╫╫▓╫▓▓╫▓░░░ñ>⌂░░░»H╠Ü▓▓╫█▀»░µ>m╙░╔#▓╫╫╫▓╫▓╫╫░ñ╗░░╚«»^╟▌░ñÑ░░░
+    hh░░░U»h█░h╗░░░╟%⌂▀▓╫▓▓██▓╫▓N▄▄╔░╠░╟█▓▓╦║▀╠Uµß╫▓N╦▄▓████▓▓╫▓▓▓▌µ░Ü░░»Kñ░╟░░░░░░░
+    »░h░░H═╗▌░ñ╟░░░╟ñU╟██████████╫╫╫▓▓╦╫╫▓▀╦╝╫▓▓▓╫╫╫╫▓╫▓╫██████████▄░ì░░»Ü░╠█░µ░░░░░
+    »»»░╠ññ██░░▄▄░╔▄░░█████████╫╫▓▓╫▓▓▓╫╫╦▒µm╢█╩▀╫╫╫╫╫╫╫╫╫███████████▀µ░▄▄░║█▌▄▄▓░░░
+    »»░║████████▌░██████████████▓╫▓▓╫╫╫▓╫▓╨Ü░░U«░▓╫╫╫╫╫▓╫███████████▄Uµ║█████████░░░
+    »h░██████████▄██▀▀╙█████████▓█▓╫╫╫▓▓▀µ╬░░░╟ñ^╙╫╫▓▓╫███████████╙▀▀▀K███████████░░
+    »h░██████████▀░½░¼░█▀▀▄████████▓█▓██▒░╩░░░╟░░ñ█████████████▀▀▀░U╟░h╙█████████▀░░
+    »h░░██████▀▀U░Nñ░░░░░██████████████╫▓h░▄░░▄▄░║▓▓████████████Kµ░░░░ñU███████░░«░░
+    »░h½█▀░╜██▀K»Ü»░░░»╨h░»▀▀█▀█▀▀▀▀▀▀▀▀╩╩▀▀H»▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀»░╨hh░»»/╠░╚ñ║▀▀▀M░░░
+    »»»╨╚╙╨░╙╙░╨"!╙░╙╚░╩^^╨^░"h░░""░Ü"░░░^╚"╚╨░»»░░░»░»»░░»»░░»░»»░»»»»»»»»»»░░░░░»»
+'''
+
 import zmq
 import logging
 import riak
@@ -6,7 +76,7 @@ import pylibmc as mc
 from tornado.web import RequestHandler
 from tornado import gen, web
 from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, teams
+from mango.handlers import accounts, tasks, teams
 from mango.tools import options
 from zmq.eventloop import ioloop
 
@@ -51,31 +121,17 @@ def main():
     # application web daemon
     application = web.Application(
         [
-            # Mango Basic-Auth session
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-            # ORGs teams
-            #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
-            #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
-            #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
-            # ORGs members
+            
+            
+            # Organization members
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-            # Organizations of Random Generality.
-            #(r'/orgs/?', orgs.OrgsHandler),
-            #(r'/orgs/(?P<org>.+)/?', orgs.OrgsHandler),
-            #(r'/orgs/(?P<org_uuid>.+)/?', orgs.OrgsHandler),
-            # Users suspended
-            #(r'/users/suspended/?', accounts.UsersSuspendedHandler),
-            # Users disable
-            #(r'/users/disable/?', accounts.UsersDisableHandler),
-            # Users active
-            #(r'/users/active/?', accounts.UsersActiveHandler),
-            # Users resources
-            #(r'/users/?', accounts.UsersHandler),
-            #(r'/users/(?P<account>.+)/?', accounts.UsersHandler),
-            #(r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
+
+            # Tasks new 
+            #(r'/tasks/new/?', tasks.NewHandler),
             # Tasks now 
             #(r'/tasks/now/?', tasks.NowHandler),
             # Tasks later 
@@ -83,8 +139,10 @@ def main():
             # Tasks done
             #(r'/tasks/done/?', tasks.DoneHandler),
             #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
-            #(r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
-            #(r'/tasks/?', tasks.Handler),
+            
+            # Tasks resources
+            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
+            (r'/tasks/?', tasks.Handler),
 
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
@@ -93,6 +151,11 @@ def main():
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
+
+            # Organization teams
+            #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
+            #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
+            #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
 
             (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
             (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
