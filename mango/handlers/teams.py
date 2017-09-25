@@ -11,8 +11,6 @@
 __author__ = 'Team Machine'
 
 
-import time
-import arrow
 import uuid
 import logging
 import urlparse
