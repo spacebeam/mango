@@ -109,7 +109,6 @@ def options():
     tornado.options.define('page_size',
         default=10, type=int,
         help=('Set a custom page size up to 100'))
-
     tornado.options.define('cookie_secret',
         default=secret,
         type=str,

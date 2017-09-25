@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Tasks system logic.
+    Mango tasks system logic.
 '''
 
 # This file is part of mango.

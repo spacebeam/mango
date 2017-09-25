@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Starfruit queues CRDT's.
+    Mango accounts CRDT's.
 '''
 
 # This file is part of starfruit.
@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__authors__ = 'Team Machine'
+__author__ = 'Team Machine'
 
 
 import riak

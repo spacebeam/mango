@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Cas orgs system logic.
+    Mango orgs system logic.
 '''
 
 # This file is part of mango.

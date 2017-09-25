@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Starfruit HTTP event handlers.
+    HTTP accounts handlers.
 '''
 
 # This file is part of mango.

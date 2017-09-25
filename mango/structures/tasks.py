@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango tasks CRDT's structures.
+    Mango tasks CRDT's.
 '''
 
 # This file is part of mango.

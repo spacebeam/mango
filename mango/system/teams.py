@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Cas teams system logic.
+    Mango teams system logic.
 '''
 
 # This file is part of mango.

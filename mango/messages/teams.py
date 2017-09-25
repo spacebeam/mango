@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango accounts models and messages.
+    Mango teams models and messages.
 '''
 
 # This file is part of mango.
