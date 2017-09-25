@@ -23,8 +23,11 @@ class Permissions(models.Model):
     '''
         Permissions
     '''
-    Role = types.StringType()
-    permissions = compound.ListType(types.StringType())
+    role = types.StringType()
+    resources = compound.ListType(types.StringType())
+    permissions = types.StringType(choices=['read',
+                                           'write',
+                                           'admin'], required=True)
 
 
 class Email(models.Model):
