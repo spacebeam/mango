@@ -19,6 +19,14 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
+class Permissions(models.Model):
+    '''
+        Permissions
+    '''
+    Role = types.StringType()
+    permissions = compound.ListType(types.StringType())
+
+
 class Email(models.Model):
     '''
         Email
@@ -50,7 +58,7 @@ class RequiredBase(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     is_admin = types.BooleanType(default=False)
-    permission = compound.ListType(types.StringType())
+    permissions = compound.ListType(compound.ModelType(Permissions))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -92,7 +100,7 @@ class CleanBase(models.Model):
     name = types.StringType()
     email = types.EmailType()
     is_admin = types.BooleanType()
-    permissions = compound.ListType(types.StringType())
+    permissions = compound.ListType(compound.ModelType(Permissions))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -147,7 +155,7 @@ class User(BaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
-    permissions = compound.ListType(types.StringType())
+    permissions = compound.ListType(compound.ModelType(Permissions))
     permissions_total = types.IntType()
 
 
@@ -160,7 +168,7 @@ class ModifyUser(CleanBaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
-    permissions = compound.ListType(types.StringType())
+    permissions = compound.ListType(compound.ModelType(Permissions))
     permissions_total = types.IntType()
 
 
