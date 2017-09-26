@@ -129,6 +129,7 @@ def get_account_uuid(self, account, password):
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
+    logging.info('get_account_uuid hi: {0}'.format(url))
     # got response?
     got_response = []
     # clean response message
