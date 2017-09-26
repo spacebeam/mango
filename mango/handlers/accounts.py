@@ -150,6 +150,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             account_uuid = account_uuid.rstrip('/')
             # get cache data
             message = self.cache.get('accounts:{0}'.format(account_uuid))
+            logging.info(message)
             if message is not None:
                 logging.info('accounts:{0} done retrieving!'.format(account_uuid))
                 #result = data
