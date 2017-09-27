@@ -68,20 +68,27 @@ __ooo__ = '''
     »»»╨╚╙╨░╙╙░╨"!╙░╙╚░╩^^╨^░"h░░""░Ü"░░░^╚"╚╨░»»░░░»░»»░░»»░░»░»»░»»»»»»»»»»░░░░░»»
 '''
 
-import zmq
-import logging
-import riak
 import uuid
+import zmq
+import riak
+import logging
 import pylibmc as mc
-from tornado.web import RequestHandler
 from tornado import gen, web
+from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks, teams
 from mango.tools import options
+
+
+# late 2017, theres something about tornado and pyzmq that need's at least some checking again.
+
 from zmq.eventloop import ioloop
+
+# the idea of course still holds perfectly. (=
 
 # ioloop
 ioloop.install()
+
 
 def main():
     '''
@@ -123,12 +130,10 @@ def main():
         [
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-            
-            # Organization members
+            # Organization members <--------------------------------------------------------------------- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF 
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-
             # Tasks new 
             #(r'/tasks/new/?', tasks.NewHandler),
             # Tasks now 
@@ -138,26 +143,21 @@ def main():
             # Tasks done
             #(r'/tasks/done/?', tasks.DoneHandler),
             #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
-            
-            # Tasks resources
+            # Tasks resources <--------------------------------------------------------------------------- WTF ARE THE MONKEYS DOING!!!
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
-
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
-
-            # Yo!, teams resource? really? 
+            # Yo!, teams resource? really? <-------------------------------------------------------------- ARGHHHH!!!!
             # I think this needs to be called from /orgs/
             (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
             (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
             (r'/teams/?', teams.Handler),
-
-            # Organization teams
+            # Organization teams <------------------------------------------------------------------------ (= U guys, seriusly clean this shit out, please.
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
