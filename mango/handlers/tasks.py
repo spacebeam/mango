@@ -194,6 +194,13 @@ class Handler(tasks.Tasks, BaseHandler):
             message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
             self.set_status(400)
         else:
+
+            # start work on rew resources implementation on riak kv
+
+            link_reference = yield new_resource('tasks', message, struct)
+
+            # please test this shit out
+
             self.set_status(201)
         self.finish(message)
 
