@@ -6,10 +6,3 @@ Growing mango trees in the landscape will give you a lifetime of fresh pungent f
 
 ## Installation
 `cube-cli pull mango`
-
-### References
-https://arxiv.org/abs/0812.4852
-
-https://arxiv.org/abs/1008.1459
-
-https://arxiv.org/abs/0906.2756
