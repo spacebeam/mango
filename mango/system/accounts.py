@@ -40,7 +40,6 @@ class Account(object):
     '''
         Account
     '''
-
     @gen.coroutine
     def get_query_values(self, urls):
         '''

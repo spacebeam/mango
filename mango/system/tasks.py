@@ -40,7 +40,6 @@ class Tasks(object):
     '''
         Tasks
     '''
-
     @gen.coroutine
     def get_query_values(self, urls):
         '''

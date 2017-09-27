@@ -77,13 +77,10 @@ def check_account_type(self, account, account_type):
     search_index = 'mango_account_index'
     query = 'account_type_register:{0}'.format(account_type)
     filter_query = 'account_register:{0}'.format(account)
-    # url building
-    
+    # parse and build url
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-
-
     got_response = []
     # response message
     message = {'message': 'not found'}
@@ -125,11 +122,10 @@ def get_account_uuid(self, account, password):
     search_index = 'mango_account_index'
     query = 'password_register:{0}'.format(password)
     filter_query = 'account_register:{0}'.format(account)
-    # yo! url building
+    # parse and build url
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-    logging.info('get_account_uuid hi: {0}'.format(url))
     # got response?
     got_response = []
     # clean response message
@@ -164,7 +160,6 @@ def get_account_uuid(self, account, password):
         raise gen.Return(e)
     raise gen.Return(message.get('uuid', 'not found'))
 
-
 @gen.coroutine
 def get_account_labels(self, account):
     '''
@@ -173,13 +168,11 @@ def get_account_labels(self, account):
     search_index = 'mango_account_index'
     query = 'account_register:{0}'.format(account)
     filter_query = 'account_register:{0}'.format(account)
-    # url building
-    
+    # parse and build url
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-    logging.info(url)
-
+    # got response
     got_response = []
     # response message
     message = {}
@@ -261,6 +254,51 @@ def check_times_get_datetime(start, end):
     message = {'start':start.naive, 'end':end.naive}
     raise gen.Return(message)
 
+def clean_message(struct):
+    '''
+        clean message
+    '''
+    struct = struct.to_native()
+    struct = {
+        key: struct[key] 
+            for key in struct
+                if struct[key] is not None
+    }
+    return struct
+
+def clean_structure(struct):
+    '''
+        clean structure
+    '''
+    struct = struct.to_primitive()
+    struct = {
+        key: struct[key] 
+            for key in struct
+                if struct[key] is not None
+    }
+    return struct
+
+def clean_results(results):
+    '''
+        clean results
+    '''
+    results = results.to_primitive()
+    results = results.get('results')
+    results = [
+        {
+            key: dic[key]
+                for key in dic
+                    if dic[key] is not None 
+        } for dic in results 
+    ]
+    return {'results': results}
+
+def str2bool(boo):
+    '''
+        String to boolean
+    '''
+    return boo.lower() in ('yes', 'true', 't', '1')
+
 @gen.coroutine
 def new_resource(db, struct, collection=None):
     '''
@@ -309,48 +347,3 @@ def new_resource(db, struct, collection=None):
         raise e
         return
     raise gen.Return(message)
-
-def clean_message(struct):
-    '''
-        clean message
-    '''
-    struct = struct.to_native()
-    struct = {
-        key: struct[key] 
-            for key in struct
-                if struct[key] is not None
-    }
-    return struct
-
-def clean_structure(struct):
-    '''
-        clean structure
-    '''
-    struct = struct.to_primitive()
-    struct = {
-        key: struct[key] 
-            for key in struct
-                if struct[key] is not None
-    }
-    return struct
-
-def clean_results(results):
-    '''
-        clean results
-    '''
-    results = results.to_primitive()
-    results = results.get('results')
-    results = [
-        {
-            key: dic[key]
-                for key in dic
-                    if dic[key] is not None 
-        } for dic in results 
-    ]
-    return {'results': results}
-
-def str2bool(boo):
-    '''
-        String to boolean
-    '''
-    return boo.lower() in ('yes', 'true', 't', '1')
