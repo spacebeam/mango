@@ -201,18 +201,12 @@ class Team(object):
         search_index = 'mango_team_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
-        
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
-
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
             self.solr, search_index, query, filter_query, start_num, page_size
         )
-
-        logging.warning('check this url')
-        logging.warning(url)
-
         von_count = 0
         got_response = []
         def handle_request(response):
@@ -224,7 +218,6 @@ class Team(object):
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
-
         try:
             http_client.fetch(
                 url,
@@ -359,5 +352,5 @@ class Team(object):
         '''
         struct = {}
         struct['status'] = 'deleted'
-        test = yield self.modify_task(account, team_uuid, struct)        
-        raise gen.Return(test)
+        message = yield self.modify_task(account, team_uuid, struct)        
+        raise gen.Return(message)

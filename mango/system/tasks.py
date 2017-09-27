@@ -341,6 +341,9 @@ class Tasks(object):
                 auth_password=melon,
                 callback=handle_request
             )
+
+            # fuck gasoline
+
             # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
 
             # missing secrets current info for gigatech lolol
@@ -416,6 +419,5 @@ class Tasks(object):
         # missing history
         struct = {}
         struct['status'] = 'deleted'
-        test = yield self.modify_task(account, task_uuid, struct)
-        logging.info(test)
-        raise gen.Return(test)
+        message = yield self.modify_task(account, task_uuid, struct)
+        raise gen.Return(message)
