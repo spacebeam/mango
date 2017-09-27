@@ -407,13 +407,6 @@ class Tasks(object):
             raise gen.Return(update_complete)
 
     @gen.coroutine
-    def replace_task(self, account, task_uuid, struct):
-        '''
-            Replace task
-        '''
-        pass
-
-    @gen.coroutine
     def remove_task(self, account, task_uuid):
         '''
             Remove task

@@ -355,13 +355,6 @@ class Team(object):
             raise gen.Return(update_complete)
 
     @gen.coroutine
-    def replace_team(self, account, team_uuid, struct):
-        '''
-            Replace team
-        '''
-        pass
-
-    @gen.coroutine
     def remove_team(self, account, team_uuid):
         '''
             Remove team

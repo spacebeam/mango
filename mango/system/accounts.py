@@ -146,7 +146,6 @@ class Account(object):
         finally:
             raise gen.Return(unique_list)
 
-
     @gen.coroutine
     def get_account(self, account, account_uuid):
         '''
@@ -155,12 +154,9 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(account_uuid)
         filter_query = 'account_register:{0}'.format(account)
-        # url building
-        
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-
         got_response = []
         # response message
         message = {'message': 'not found'}
@@ -202,18 +198,12 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
-        
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
-
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
             self.solr, search_index, query, filter_query, start_num, page_size
         )
-
-        logging.warning('check this url')
-        logging.warning(url)
-
         von_count = 0
         got_response = []
         def handle_request(response):
@@ -342,7 +332,6 @@ class Account(object):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
         got_response = []
@@ -379,13 +368,6 @@ class Account(object):
             raise gen.Return(e)
         finally:
             raise gen.Return(update_complete)
-
-    @gen.coroutine
-    def replace_account(self, account, account_uuid, struct):
-        '''
-            Replace account
-        '''
-        pass
 
     @gen.coroutine
     def remove_account(self, account, account_uuid):
