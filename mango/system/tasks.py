@@ -300,6 +300,8 @@ class Tasks(object):
                 else:
                     logging.warning(response.body)
 
+            # I almost die reading this WTF ?????????????????????????????????????????????????????
+
             # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
             
             # missing secrets current info for gigatech lolol
@@ -413,11 +415,7 @@ class Tasks(object):
         '''
         # missing history
         struct = {}
-
         struct['status'] = 'deleted'
-
         test = yield self.modify_task(account, task_uuid, struct)
-
         logging.info(test)
-        
         raise gen.Return(test)

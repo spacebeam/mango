@@ -146,7 +146,6 @@ class Team(object):
         finally:
             raise gen.Return(unique_list)
 
-
     @gen.coroutine
     def get_team(self, account, team_uuid):
         '''
@@ -316,7 +315,6 @@ class Team(object):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
         got_response = []
@@ -360,11 +358,6 @@ class Team(object):
             Remove team
         '''
         struct = {}
-
         struct['status'] = 'deleted'
-
-        test = yield self.modify_task(account, team_uuid, struct)
-
-        logging.info(test)
-        
+        test = yield self.modify_task(account, team_uuid, struct)        
         raise gen.Return(test)
