@@ -19,7 +19,7 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-class Permissions(models.Model):
+class Permission(models.Model):
     '''
         Permissions
     '''
@@ -28,7 +28,6 @@ class Permissions(models.Model):
     permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
-
 
 class Email(models.Model):
     '''
@@ -61,7 +60,7 @@ class RequiredBase(models.Model):
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
     is_admin = types.BooleanType(default=False)
-    permissions = compound.ListType(compound.ModelType(Permissions))
+    permissions = compound.ListType(compound.ModelType(Permission))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
