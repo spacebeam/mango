@@ -36,7 +36,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -103,7 +103,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -178,7 +178,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # get account from new task struct
         account = struct.get('account', None)
         # get the current frontend logged username
-        username = self.get_current_username()
+        username = self.get_username_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new task struct
@@ -194,13 +194,9 @@ class Handler(tasks.Tasks, BaseHandler):
             message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
             self.set_status(400)
         else:
-
             # start work on rew resources implementation on riak kv
-
-            link_reference = yield new_resource('tasks', message, struct)
-
+            link_reference = yield new_resource('tasks', struct, message)
             # please test this shit out
-
             self.set_status(201)
         self.finish(message)
 

@@ -300,33 +300,18 @@ def str2bool(boo):
     return boo.lower() in ('yes', 'true', 't', '1')
 
 @gen.coroutine
-def new_resource(db, struct, collection=None):
+def new_resource(resource, struct, message=None):
     '''
         New resource function
     '''
-    import uuid as _uuid
-    from schematics import models as _models
-    from schematics import types as _types
-    # class MangoResource schematics model.
-    class MangoResource(_models.Model):
-        '''
-            Mango resource
-        '''
-        uuid = _types.UUIDType(default=_uuid.uuid4)
-        account = _types.StringType(required=False)
-        resource  = _types.StringType(required=True)
-    # Calling getattr(x, "foo") is just another way to write x.foo
-    collection = getattr(db, collection)
-    # the spawning pool of introspection.
-    try:
-        message = MangoResource(struct)
-        message.validate()
-        message = message.to_primitive()
-    except Exception, e:
-        logging.exception(e)
-        raise e
-        return
-    resource = 'resources.{0}'.format(message.get('resource'))
+
+    logging.info(resource)
+
+    logging.info(str(struct))
+
+    logging.info(message)
+
+    # after clean the noise the update need's to take place next
     try:
         message = yield collection.update(
             {
