@@ -157,7 +157,7 @@ class User(BaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
-    permissions = compound.ListType(compound.ModelType(Permissions))
+    permissions = compound.ListType(compound.ModelType(Permission))
     permissions_total = types.IntType()
 
 
@@ -170,7 +170,7 @@ class ModifyUser(CleanBaseAccount):
     account_type = types.StringType(default='user')
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
-    permissions = compound.ListType(compound.ModelType(Permissions))
+    permissions = compound.ListType(compound.ModelType(Permission))
     permissions_total = types.IntType()
 
 
