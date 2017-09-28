@@ -102,7 +102,7 @@ class CleanBase(models.Model):
     name = types.StringType()
     email = types.EmailType()
     is_admin = types.BooleanType()
-    permissions = compound.ListType(compound.ModelType(Permissions))
+    permissions = compound.ListType(compound.ModelType(Permission))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
