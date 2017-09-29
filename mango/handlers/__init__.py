@@ -143,7 +143,7 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,',
                         'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag')))
+                        'Content-Range,Range,Date,Etag,Content-Type, Authorization')))
         # allowed http methods
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
