@@ -125,7 +125,7 @@ class LoginHandler(BaseHandler):
             self.finish()
             
     @gen.coroutine
-    def options(self, account_uuid=None):
+    def options(self):
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
