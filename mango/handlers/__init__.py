@@ -15,7 +15,6 @@ from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
-from mango.messages import accounts 
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
@@ -136,17 +135,6 @@ class LoginHandler(BaseHandler):
         }
         # resource parameters
         parameters = {}
-        # mock your stuff
-        stuff = models.Account.get_mock_object().to_primitive()
-        for k, v in stuff.items():
-            if v is None:
-                parameters[k] = str(type('none'))
-            elif isinstance(v, unicode):
-                parameters[k] = str(type('unicode'))
-            else:
-                parameters[k] = str(type(v))
-        # after automatic madness return description and parameters
-        # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
