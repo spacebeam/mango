@@ -154,12 +154,6 @@ class LoginHandler(BaseHandler):
             "parameters": parameters
         }
         # filter single resource
-        if not account_uuid:
-            message['POST'] = POST
-        else:
-            message['Allow'].remove('POST')
-            message['Allow'].append('PATCH')
-            message['Allow'].append('DELETE')
         self.set_status(200)
         self.finish(message)
 
