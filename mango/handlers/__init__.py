@@ -108,10 +108,7 @@ class LoginHandler(BaseHandler):
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization', ''.join(('Accept-Language,',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
-                        'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag,Content-Type, Authorization')))
+            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
             #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
@@ -142,7 +139,7 @@ class LoginHandler(BaseHandler):
             Resource options
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
-        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,',
                         'If-Modified-Since,Cache-Control,Content-Type,',
