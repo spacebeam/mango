@@ -108,7 +108,10 @@ class LoginHandler(BaseHandler):
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization', ''.join(('Accept-Language,',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
+                        'If-Modified-Since,Cache-Control,Content-Type,',
+                        'Content-Range,Range,Date,Etag')))
             self.set_secure_cookie('username', self.username)
             #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
@@ -134,49 +137,41 @@ class LoginHandler(BaseHandler):
         #self.set_status(200)
         #self.finish()
     @gen.coroutine
-    def options(self, account_uuid=None):
+    def options(self):
         '''
             Resource options
         '''
-        self.set_header('Access-Control-Allow-Origin', '*')
-        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
+        uuid = yield get_account_uuid(self,
+                            self.username,
+                            self.password)
+        # clean message
+        message = {}
+        message['labels'] = yield get_account_labels(self, self.username)
+        #logging.info(uuid)
+        if validate_uuid4(uuid):
+            self.set_header('Access-Control-Allow-Origin','*')
+            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,',
                         'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag,Content-Type, Authorization')))
-        # allowed http methods
-        message = {
-            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
-        }
-        # resource parameters
-        parameters = {}
-        # mock your stuff
-        stuff = models.User.get_mock_object().to_primitive()
-        for k, v in stuff.items():
-            if v is None:
-                parameters[k] = str(type('none'))
-            elif isinstance(v, unicode):
-                parameters[k] = str(type('unicode'))
-            else:
-                parameters[k] = str(type(v))
-        # after automatic madness return description and parameters
-        # we now have the option to clean a little bit.
-        parameters['labels'] = 'array/string'
-        # end of manual cleaning
-        POST = {
-            "description": "Send account",
-            "parameters": parameters
-        }
-        # filter single resource
-        if not account_uuid:
-            message['POST'] = POST
+                        'Content-Range,Range,Date,Etag')))
+            self.set_secure_cookie('username', self.username)
+            #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
+            # if labels we make some fucking labels
+            labels = str(message['labels'])
+            # labels, labels, labels
+            self.set_secure_cookie('labels', labels)
+            message['uuid'] = uuid
+            self.username, self.password = (None, None)
+            self.set_status(200)
+            self.finish(message)
         else:
-            message['Allow'].remove('POST')
-            message['Allow'].append('PATCH')
-            message['Allow'].append('DELETE')
-        self.set_status(200)
-        self.finish(message)
-
+            # 401 status code ?
+            # I don't know, why 401 ?
+            self.set_status(403)
+            self.set_header('WWW-Authenticate', 'Basic realm=mango')
+            self.finish()
+            
 
 
 
