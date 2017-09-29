@@ -15,6 +15,7 @@ from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
+from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
