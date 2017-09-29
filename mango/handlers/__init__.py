@@ -126,16 +126,29 @@ class LoginHandler(BaseHandler):
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
             
-    @gen.coroutine
-    def options(self):
-        self.set_header('Access-Control-Allow-Origin','*')
-        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+    #@gen.coroutine
+    #def options(self):
+        #self.set_header('Access-Control-Allow-Origin','*')
+        #self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+        #self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         #self.set_status(200)
         #self.finish()
+    @gen.coroutine
+    def options(self, account_uuid=None):
+        '''
+            Resource options
+        '''
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
+                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
+                        'If-Modified-Since,Cache-Control,Content-Type,',
+                        'Content-Range,Range,Date,Etag')))
+        # allowed http methods
         message = {
-            'Allow': ['GET', 'OPTIONS']
+            'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
         }
+        # resource parameters
         parameters = {}
         # mock your stuff
         stuff = models.User.get_mock_object().to_primitive()
