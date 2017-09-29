@@ -129,7 +129,6 @@ def main():
     application = web.Application(
         [
             (r'/login/?', LoginHandler),
-            (r'/login/(?P<account_uuid>.+)/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
             # Organization members <--------------------------------------------------------------------- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF 
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
