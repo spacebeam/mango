@@ -108,7 +108,7 @@ class LoginHandler(BaseHandler):
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization', ''.join(('Accept-Language,',
+            self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,',
                         'If-Modified-Since,Cache-Control,Content-Type,',
                         'Content-Range,Range,Date,Etag')))
@@ -151,7 +151,7 @@ class LoginHandler(BaseHandler):
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization', ''.join(('Accept-Language,',
+            self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
                         'DNT,Keep-Alive,User-Agent,X-Requested-With,',
                         'If-Modified-Since,Cache-Control,Content-Type,',
                         'Content-Range,Range,Date,Etag')))
