@@ -136,15 +136,31 @@ class LoginHandler(BaseHandler):
         message = {
             'Allow': ['GET', 'OPTIONS']
         }
-        # resource parameters
         parameters = {}
+        # mock your stuff
+        stuff = models.User.get_mock_object().to_primitive()
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
+            else:
+                parameters[k] = str(type(v))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Send User",
+            "description": "Send account",
             "parameters": parameters
         }
         # filter single resource
+        if not account_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
         self.set_status(200)
         self.finish(message)
 
