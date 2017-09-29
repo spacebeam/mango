@@ -15,6 +15,7 @@ from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
+from mango.messages import accounts 
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_account_labels, get_account_uuid
 from mango import errors
@@ -124,12 +125,49 @@ class LoginHandler(BaseHandler):
             self.finish()
             
     @gen.coroutine
-    def options(self):
+    def options(self, user_uuid=None):
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+        #self.set_status(200)
+        #self.finish()
+        message = {
+            'Allow': ['GET', 'OPTIONS']
+        }
+        # resource parameters
+        parameters = {}
+        # mock your stuff
+        stuff = models.User.get_mock_object().to_primitive()
+        for k, v in stuff.items():
+            if v is None:
+                parameters[k] = str(type('none'))
+            elif isinstance(v, unicode):
+                parameters[k] = str(type('unicode'))
+            else:
+                parameters[k] = str(type(v))
+        # after automatic madness return description and parameters
+        # we now have the option to clean a little bit.
+        parameters['labels'] = 'array/string'
+        # end of manual cleaning
+        POST = {
+            "description": "Send User",
+            "parameters": parameters
+        }
+        # filter single resource
+        if not user_uuid:
+            message['POST'] = POST
+        else:
+            message['Allow'].remove('POST')
+            message['Allow'].append('PATCH')
+            message['Allow'].append('DELETE')
         self.set_status(200)
-        self.finish()
+        self.finish(message)
+
+
+
+
+
+
 
 class LogoutHandler(BaseHandler):
     '''
