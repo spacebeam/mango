@@ -125,7 +125,7 @@ class LoginHandler(BaseHandler):
             self.finish()
             
     @gen.coroutine
-    def options(self, user_uuid=None):
+    def options(self, account_uuid=None):
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
@@ -154,7 +154,7 @@ class LoginHandler(BaseHandler):
             "parameters": parameters
         }
         # filter single resource
-        if not user_uuid:
+        if not account_uuid:
             message['POST'] = POST
         else:
             message['Allow'].remove('POST')
