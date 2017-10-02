@@ -108,10 +108,7 @@ class LoginHandler(BaseHandler):
         if validate_uuid4(uuid):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
-                        'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag')))
+            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
             #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
@@ -129,54 +126,52 @@ class LoginHandler(BaseHandler):
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
             
-    #@gen.coroutine
-    #def options(self):
-        #self.set_header('Access-Control-Allow-Origin','*')
-        #self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        #self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-        #self.set_status(200)
-        #self.finish()
     @gen.coroutine
     def options(self):
-        '''
-            Resource options
-        '''
-        uuid = yield get_account_uuid(self,
-                            self.username,
-                            self.password)
+        logging.warning(self.request.headers)
+        self.set_header('Access-Control-Allow-Origin','*')
+        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
+        self.set_status(200)
+        self.finish()
+    
+    #@gen.coroutine
+    #def options(self):
+        #'''
+            #Resource options
+        #'''
+
+        #uuid = yield get_account_uuid(self,
+                            #self.username,
+                            #self.password)
         # clean message
-        message = {}
-        message['labels'] = yield get_account_labels(self, self.username)
+        #message = {}
+        #message['labels'] = yield get_account_labels(self, self.username)
         #logging.info(uuid)
-        if validate_uuid4(uuid):
-            self.set_header('Access-Control-Allow-Origin','*')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
-                        'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag')))
-            self.set_secure_cookie('username', self.username)
+        #if validate_uuid4(uuid):
+            #self.set_header('Access-Control-Allow-Origin','*')
+            #self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+            #self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
+                        #'DNT,Keep-Alive,User-Agent,X-Requested-With,',
+                        #'If-Modified-Since,Cache-Control,Content-Type,',
+                        #'Content-Range,Range,Date,Etag')))
+            #self.set_secure_cookie('username', self.username)
             #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
             # if labels we make some fucking labels
-            labels = str(message['labels'])
+            #labels = str(message['labels'])
             # labels, labels, labels
-            self.set_secure_cookie('labels', labels)
-            message['uuid'] = uuid
-            self.username, self.password = (None, None)
-            self.set_status(200)
-            self.finish(message)
-        else:
+            #self.set_secure_cookie('labels', labels)
+            #message['uuid'] = uuid
+            #self.username, self.password = (None, None)
+            #self.set_status(200)
+            #self.finish(message)
+        #else:
             # 401 status code ?
             # I don't know, why 401 ?
-            self.set_status(403)
-            self.set_header('WWW-Authenticate', 'Basic realm=mango')
-            self.finish()
+            #self.set_status(403)
+            #self.set_header('WWW-Authenticate', 'Basic realm=mango')
+            #self.finish()
             
-
-
-
-
-
 
 class LogoutHandler(BaseHandler):
     '''
