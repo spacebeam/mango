@@ -106,6 +106,7 @@ class LoginHandler(BaseHandler):
         message['labels'] = yield get_account_labels(self, self.username)
         #logging.info(uuid)
         if validate_uuid4(uuid):
+            logging.warning(self.request.headers)
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
