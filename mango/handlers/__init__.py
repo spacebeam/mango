@@ -53,9 +53,9 @@ class BaseHandler(web.RequestHandler):
         '''
             mango default headers
         '''
-        #self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
-        self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
-    
+        self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', 'lb.spartanapproach.com'))
+        #self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
+
     def get_username_cookie(self):
         '''
             Return the username from a secure cookie (require cookie_secret)
@@ -108,7 +108,7 @@ class LoginHandler(BaseHandler):
         #logging.info(uuid)
         if validate_uuid4(uuid):
             logging.warning(self.request.headers)
-            self.set_header('Access-Control-Allow-Origin','*')
+            self.set_header('Access-Control-Allow-Origin','lb.spartanapproach.com')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
@@ -131,7 +131,7 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     def options(self):
         logging.warning(self.request.headers)
-        self.set_header('Access-Control-Allow-Origin','*')
+        self.set_header('Access-Control-Allow-Origin','lb.spartanapproach.com')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
