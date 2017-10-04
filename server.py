@@ -77,10 +77,10 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, tasks, teams
+from mango.handlers import accounts, groups, tasks
 from mango.tools import options
 
-# late 2017, theres something about tornado and pyzmq that need's at least some checking again.
+# Something about tornado and pyzmq that need's at least some check again.
 
 from zmq.eventloop import ioloop
 
@@ -130,37 +130,33 @@ def main():
         [
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-            # Organization members <--------------------------------------------------------------------- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF
+
+            # Organization members <--- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-            # Tasks new
-            #(r'/tasks/new/?', tasks.NewHandler),
-            # Tasks now
-            #(r'/tasks/now/?', tasks.NowHandler),
-            # Tasks later
-            #(r'/tasks/later/?', tasks.LaterHandler),
-            # Tasks done
-            #(r'/tasks/done/?', tasks.DoneHandler),
-            #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
-            # Tasks resources <--------------------------------------------------------------------------- WTF ARE THE MONKEYS DOING!!!
-            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
-            (r'/tasks/?', tasks.Handler),
-            (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
-            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
-            (r'/users/?', accounts.UsersHandler),
-            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
-            (r'/orgs/?', accounts.OrgsHandler),
-            # Yo!, teams resource? really? <-------------------------------------------------------------- ARGHHHH!!!!
-            # I think this needs to be called from /orgs/
-            (r'/teams/page/(?P<page_num>\d+)/?', teams.Handler),
-            (r'/teams/(?P<team_uuid>.+)/?', teams.Handler),
-            (r'/teams/?', teams.Handler),
-            # Organization teams <------------------------------------------------------------------------ (= U guys, seriusly clean this shit out, please.
+
+            # Organization teams <--- U guys, seriusly clean this shit out, please!
             #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
+
+            # Yo computer!, da fuq are u doing?
+            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
+            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
+            (r'/tasks/?', tasks.Handler),
+            # Users accounts
+            (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
+            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
+            (r'/users/?', accounts.UsersHandler),
+            # Orgs accounts
+            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/?', accounts.OrgsHandler),
+            # Groups, groups, groups, groups, groups.
+            (r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
+            (r'/groups/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/groups/?', teams.Handler),
         ],
         db = db,
         cache = cache,
