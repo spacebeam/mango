@@ -19,7 +19,7 @@ from tornado import web
 from mango.messages import tasks as models
 from mango.system import tasks
 from tornado import httpclient
-from mango.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE 
+from mango.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE
 from mango.handlers import BaseHandler
 
 
@@ -70,7 +70,7 @@ class Handler(tasks.Tasks, BaseHandler):
             for doc in task_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -137,7 +137,7 @@ class Handler(tasks.Tasks, BaseHandler):
             for doc in task_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -182,9 +182,9 @@ class Handler(tasks.Tasks, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new task struct
-        ack = yield self.new_task(struct)
-        # complete message with receive acknowledgment uuid.
-        message = {'uuid':ack}
+        acknowledge = yield self.new_task(struct)
+        # complete message with receive uuid.
+        message = {'uuid':acknowledge}
         if 'error' in message['uuid']:
             scheme = 'task'
             reason = {'duplicates': [
@@ -194,9 +194,9 @@ class Handler(tasks.Tasks, BaseHandler):
             message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
             self.set_status(400)
         else:
-            # start work on rew resources implementation on riak kv
-            link_reference = yield new_resource('tasks', struct, message)
             # please test this shit out
+            account = (struct.get('account') if not account else account)
+            link_reference = yield new_resource('tasks', account, message['uuid'])
             self.set_status(201)
         self.finish(message)
 
