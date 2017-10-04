@@ -78,7 +78,7 @@ from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks
-from mango.handlers import groups
+#from mango.handlers import groups
 from mango.tools import options
 
 # Something about tornado and pyzmq that need's at least some check again.
