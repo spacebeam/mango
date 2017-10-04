@@ -74,8 +74,8 @@ class AccountMap(object):
         #self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
         #self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
-        self.map.registers['teams'].assign(struct.get('teams', ''))
-        #self.map.counters['teams_total'].assign(struct.get('teams_total', ''))
+        self.map.registers['groups'].assign(struct.get('groups', ''))
+        #self.map.counters['groups_total'].assign(struct.get('groups_total', ''))
         self.map.registers['resources'].assign(struct.get('resources', ''))
         #self.map.counters['resources_total'].assign(struct.get('resources_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
@@ -136,8 +136,8 @@ class AccountMap(object):
             #"labels_total": event.counters['labels_total'].value,
             "orgs": event.registers['orgs'].value,
             #"orgs_total": event.counters['orgs_total'].value,
-            "teams": event.registers['teams'].value,
-            #"teams_total": event.counters['teams_total'].value,
+            "groups": event.registers['groups'].value,
+            #"groups_total": event.counters['groups_total'].value,
             "resources": event.registers['resources'].value,
             #"resources_total": event.counters['resources_total'].value,
             "hashs": event.registers['hashs'].value,
@@ -190,8 +190,8 @@ class AccountMap(object):
             #"labels_total": event.counters['labels_total'].value,
             "orgs": event.registers['orgs'].value,
             #"orgs_total": event.counters['orgs_total'].value,
-            "teams": event.registers['teams'].value,
-            #"teams_total": event.counters['teams_total'].value,
+            "groups": event.registers['groups'].value,
+            #"groups_total": event.counters['groups_total'].value,
             "resources": event.registers['resources'].value,
             #"resources_total": event.counters['resources_total'].value,
             "hashs": event.registers['hashs'].value,

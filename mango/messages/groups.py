@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango teams models and messages.
+    Mango groups models and messages.
 '''
 
 # This file is part of mango.
@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Nonsense'
+__author__ = 'Team Machine'
 
 
 import arrow
@@ -19,9 +19,9 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-class Team(models.Model):
+class Group(models.Model):
     '''
-       Team
+       Group
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType(required=True)
@@ -51,9 +51,9 @@ class Team(models.Model):
     history_total = types.IntType()
 
 
-class ModifyTeam(models.Model):
+class ModifyGroup(models.Model):
     '''
-        Team
+        Group
     '''
     uuid = types.UUIDType()
     account = types.StringType()

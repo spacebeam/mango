@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango teams system logic.
+    Mango groups system logic.
 '''
 
 # This file is part of mango.
@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License. 
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+__author__ = 'Group Machine'
 
 
 import uuid
@@ -17,9 +17,9 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.messages import teams
+from mango.messages import groups
 from mango.messages import BaseResult
-from mango.structures.teams import TeamMap
+from mango.structures.groups import GroupMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results
 from tornado import httpclient as _http_client
@@ -29,16 +29,16 @@ _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPCli
 http_client = _http_client.AsyncHTTPClient()
 
 
-class TeamResult(BaseResult):
+class GroupResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(teams.Team))
+    results = compound.ListType(compound.ModelType(groups.Group))
 
 
-class Team(object):
+class Group(object):
     '''
-        Team
+        Group
     '''
     @gen.coroutine
     def get_query_values(self, urls):
@@ -89,7 +89,7 @@ class Team(object):
         '''
             Get unique list from Solr
         '''
-        search_index = 'mango_team_index'
+        search_index = 'mango_group_index'
         query = 'uuid_register:*'
         filter_query = 'uuid_register:*'
         unique_list = []
@@ -147,12 +147,12 @@ class Team(object):
             raise gen.Return(unique_list)
 
     @gen.coroutine
-    def get_team(self, account, team_uuid):
+    def get_group(self, account, group_uuid):
         '''
-            Get team
+            Get group
         '''
-        search_index = 'mango_team_index'
-        query = 'uuid_register:{0}'.format(team_uuid)
+        search_index = 'mango_group_index'
+        query = 'uuid_register:{0}'.format(group_uuid)
         filter_query = 'account_register:{0}'.format(account)
         # url building
         
@@ -194,11 +194,11 @@ class Team(object):
         raise gen.Return(message)
 
     @gen.coroutine
-    def get_team_list(self, account, start, end, lapse, status, page_num):
+    def get_group_list(self, account, start, end, lapse, status, page_num):
         '''
-            Get team list
+            Get group list
         '''
-        search_index = 'mango_team_index'
+        search_index = 'mango_group_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account)
         page_num = int(page_num)
@@ -232,19 +232,19 @@ class Team(object):
             raise gen.Return(got_response[0])
 
     @gen.coroutine
-    def new_team(self, struct):
+    def new_group(self, struct):
         '''
             New query event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
-        search_index = 'mango_team_index'
+        search_index = 'mango_group_index'
         # on the riak database with riak-admin bucket-type create `bucket_type`
         # remember to activate it with riak-admin bucket-type activate
-        bucket_type = 'mango_team'
+        bucket_type = 'mango_group'
         # the bucket name can be dynamic
-        bucket_name = 'teams'
+        bucket_name = 'groups'
         try:
-            event = teams.Team(struct)
+            event = groups.Group(struct)
             event.validate()
             event = clean_structure(event)
         except Exception, e:
@@ -277,7 +277,7 @@ class Team(object):
                 "history": str(event.get('history', '')),
                 "history_total": str(event.get('history_total', '')),
             }
-            result = TeamMap(
+            result = GroupMap(
                 self.kvalue,
                 bucket_name,
                 bucket_type,
@@ -290,18 +290,18 @@ class Team(object):
         raise gen.Return(message)
 
     @gen.coroutine
-    def modify_team(self, account, team_uuid, struct):
+    def modify_group(self, account, group_uuid, struct):
         '''
             Modify query
         '''
         # riak search index
-        search_index = 'mango_team_index'
+        search_index = 'mango_group_index'
         # riak bucket type
-        bucket_type = 'mango_team'
+        bucket_type = 'mango_group'
         # riak bucket name
-        bucket_name = 'teams'
+        bucket_name = 'groups'
         # solr query
-        query = 'uuid_register:{0}'.format(team_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(group_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
@@ -346,11 +346,11 @@ class Team(object):
             raise gen.Return(update_complete)
 
     @gen.coroutine
-    def remove_team(self, account, team_uuid):
+    def remove_group(self, account, group_uuid):
         '''
-            Remove team
+            Remove group
         '''
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_task(account, team_uuid, struct)        
+        message = yield self.modify_task(account, group_uuid, struct)        
         raise gen.Return(message)

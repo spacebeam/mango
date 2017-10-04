@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango teams CRDT's.
+    Mango groups CRDT's.
 '''
 
 # This file is part of starfruit.
@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+__author__ = 'Group Machine'
 
 
 import riak
@@ -17,7 +17,7 @@ import ujson as json
 from riak.datatypes import Map
 
 
-class TeamMap(object):
+class GroupMap(object):
 
     def __init__(
         self,
@@ -28,7 +28,7 @@ class TeamMap(object):
         struct
     ):
         '''
-            Team map structure
+            Group map structure
         '''
         bucket = client.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
         bucket.set_properties({'search_index': search_index})

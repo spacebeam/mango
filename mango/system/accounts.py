@@ -292,8 +292,8 @@ class Account(object):
                 "labels_total": str(event.get('labels_total', '')),
                 "orgs": str(event.get('orgs', '')),
                 "orgs_total": str(event.get('orgs_total', '')),
-                "teams": str(event.get('teams', '')),
-                "teams_total": str(event.get('teams_total', '')),
+                "groups": str(event.get('groups', '')),
+                "groups_total": str(event.get('groups_total', '')),
                 "resources": str(event.get('resources', '')),
                 "resources_total": str(event.get('resources_total', '')),
                 "hashs": str(event.get('hashs', '')),
@@ -376,5 +376,5 @@ class Account(object):
         '''
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_account(account, team_uuid, struct)
+        message = yield self.modify_account(account, group_uuid, struct)
         raise gen.Return(message)

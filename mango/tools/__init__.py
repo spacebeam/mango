@@ -327,6 +327,7 @@ def new_resource(resource, struct, message=None):
         #        }
         #    }
         #)
+        
     except Exception, e:
         logging.exception(e)
         raise e

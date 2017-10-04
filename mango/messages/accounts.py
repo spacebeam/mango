@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+__author__ = 'Group Machine'
 
 
 import arrow
@@ -174,9 +174,9 @@ class ModifyUser(CleanBaseAccount):
     permissions_total = types.IntType()
 
 
-class Team(models.Model):
+class Group(models.Model):
     '''
-        Org team
+        Org group
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     name = types.StringType(required=True)
@@ -193,4 +193,4 @@ class Org(BaseAccount):
     '''
     account_type = types.StringType(default='org')
     members = compound.ListType(types.StringType())
-    teams = compound.ListType(compound.ModelType(Team))
+    groups = compound.ListType(compound.ModelType(Group))
