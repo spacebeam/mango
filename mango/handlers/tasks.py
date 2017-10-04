@@ -103,8 +103,8 @@ class Handler(tasks.Tasks, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_username_cookie()
-        # if the user don't provide an account we use the username
+        username = self.get_current_username()
+        # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -116,17 +116,18 @@ class Handler(tasks.Tasks, BaseHandler):
         status = 'all'
         # are we done yet?
         done = False
-        # some random that crash this shit
-        message = {'crashing': True}
-        # unique flag activated
+        # Some random shit
+        message = {'crashing':True}
         if unique:
             unique_stuff = {key:query_args[key][0] for key in query_args}
-            query_list = yield self.get_unique_querys(unique_stuff)
-            unique_list = yield self.get_query_values(query_list)
+            task_list = yield self.get_unique_querys(unique_stuff)
+            unique_list = yield self.get_query_values(task_list)
+            # yes we are done my bru!
             done = True
             message = {'tasks':unique_list}
+            # set the number code of the state in this rage against the machine nonsense?
             self.set_status(200)
-        # get task list
+
         if not done and not task_uuid:
             task_list = yield self.get_task_list(account, start, end, lapse, status, page_num)
             message = {
@@ -137,7 +138,7 @@ class Handler(tasks.Tasks, BaseHandler):
             for doc in task_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value)
+                    dict((key.split('_register')[0], value) 
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -148,19 +149,21 @@ class Handler(tasks.Tasks, BaseHandler):
             # get cache data
             message = self.cache.get('tasks:{0}'.format(task_uuid))
             if message is not None:
-                logging.info('tasks:{0} done retrieving from cache!'.format(task_uuid))
+                logging.info('tasks:{0} done retrieving!'.format(task_uuid))
                 self.set_status(200)
             else:
-                data = yield self.get_task(account, task_uuid)
-                if self.cache.add('tasks:{0}'.format(task_uuid), data, 1):
+                #data = yield self.get_task(account, task_uuid.rstrip('/'))
+                message = yield self.get_task(account, task_uuid)
+                if self.cache.add('tasks:{0}'.format(task_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(task_uuid)))
                     self.set_status(200)
             if not message:
                 self.set_status(400)
                 message = {'missing account {0} task_uuid {1} page_num {2} checked {3}'.format(
-                    account, task_uuid, page_num, checked):message}
+                    account, task_uuid.rstrip('/'), page_num, checked):result}
         # thanks for all the fish
         self.finish(message)
+
 
     @gen.coroutine
     def post(self):
