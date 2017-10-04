@@ -5,7 +5,7 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Team Machine'
@@ -37,7 +37,7 @@ def validate_uuid4(uuid_string):
     try:
         val = uuid.UUID(uuid_string, version=4)
     except ValueError:
-        # If it's a value error, then the string 
+        # If it's a value error, then the string
         # is not a valid hex code for a UUID.
         return False
     return str(val) == uuid_string
@@ -105,7 +105,7 @@ def check_account_type(self, account, account_type):
             response_doc = stuff['response']['docs'][0]
             IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
             message = dict(
-                (key.split('_register')[0], value) 
+                (key.split('_register')[0], value)
                 for (key, value) in response_doc.items()
                 if key not in IGNORE_ME
             )
@@ -151,7 +151,7 @@ def get_account_uuid(self, account, password):
             response_doc = stuff['response']['docs'][0]
             IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
             message = dict(
-                (key.split('_register')[0], value) 
+                (key.split('_register')[0], value)
                 for (key, value) in response_doc.items()
                 if key not in IGNORE_ME
             )
@@ -197,7 +197,7 @@ def get_account_labels(self, account):
             response_doc = stuff['response']['docs'][0]
             IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
             message = dict(
-                (key.split('_register')[0], value) 
+                (key.split('_register')[0], value)
                 for (key, value) in response_doc.items()
                 if key not in IGNORE_ME
             )
@@ -260,7 +260,7 @@ def clean_message(struct):
     '''
     struct = struct.to_native()
     struct = {
-        key: struct[key] 
+        key: struct[key]
             for key in struct
                 if struct[key] is not None
     }
@@ -272,7 +272,7 @@ def clean_structure(struct):
     '''
     struct = struct.to_primitive()
     struct = {
-        key: struct[key] 
+        key: struct[key]
             for key in struct
                 if struct[key] is not None
     }
@@ -288,8 +288,8 @@ def clean_results(results):
         {
             key: dic[key]
                 for key in dic
-                    if dic[key] is not None 
-        } for dic in results 
+                    if dic[key] is not None
+        } for dic in results
     ]
     return {'results': results}
 
@@ -304,29 +304,29 @@ def new_resource(resource, struct, message=None):
     '''
         New resource function
     '''
-
     logging.info(resource)
 
     logging.info(str(struct))
 
     logging.info(message)
-
-    # after clean the noise the update need's to take place next
     try:
-        message = yield collection.update(
-            {
-                'account': message.get('account')
-            },
-            {
-                '$addToSet': {
-                    '{0}.contains'.format(resource): message.get('uuid')
-                },
-                '$inc': {
-                    'resources.total': 1,
-                    '{0}.total'.format(resource): 1
-                }
-            }
-        )
+
+        logging.info("after clean the noise the update need's to take place next")
+
+        #message = yield collection.update(
+        #    {
+        #        'account': message.get('account')
+        #    },
+        #    {
+        #        '$addToSet': {
+        #            '{0}.contains'.format(resource): message.get('uuid')
+        #        },
+        #        '$inc': {
+        #            'resources.total': 1,
+        #            '{0}.total'.format(resource): 1
+        #        }
+        #    }
+        #)
     except Exception, e:
         logging.exception(e)
         raise e
