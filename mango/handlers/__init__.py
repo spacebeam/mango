@@ -56,7 +56,7 @@ class BaseHandler(web.RequestHandler):
         self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
         #self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
-    def get_secure_cookie(self):
+    def get_username_cookie(self):
         '''
             Return the username from a secure cookie (require cookie_secret)
         '''
