@@ -36,7 +36,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend logged username
-        username = self.get_username_cookie()
+        username = self.get_secure_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -181,7 +181,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # get account from new task struct
         account = struct.get('account', None)
         # get the current frontend logged username
-        username = self.get_username_cookie()
+        username = self.get_secure_cookie()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new task struct
