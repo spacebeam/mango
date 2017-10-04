@@ -42,7 +42,7 @@ class Task(models.Model):
         Task Data Structure
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    account = types.StringType(require=True)
+    account = types.StringType(required=True)
     title = types.StringType()
     description = types.StringType()
     payload = types.StringType()
