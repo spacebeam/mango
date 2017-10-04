@@ -70,7 +70,7 @@ def check_json(struct):
     raise gen.Return(struct)
 
 @gen.coroutine
-def check_account_type(self, account, account_type):
+def check_account_type(account, account_type):
     '''
         check account type
     '''
@@ -115,7 +115,7 @@ def check_account_type(self, account, account_type):
     raise gen.Return(message)
 
 @gen.coroutine
-def get_account_uuid(self, account):
+def get_account_uuid(account):
     '''
         Get valid account uuid
     '''
@@ -160,7 +160,7 @@ def get_account_uuid(self, account):
     raise gen.Return(message.get('uuid', 'not found'))
 
 @gen.coroutine
-def get_auth_uuid(self, account, password):
+def get_auth_uuid(account, password):
     '''
         Get valid account uuid
     '''
@@ -171,7 +171,6 @@ def get_auth_uuid(self, account, password):
     url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
         self.solr, search_index, query, filter_query
     )
-    # got response?
     got_response = []
     # clean response message
     message = {}
