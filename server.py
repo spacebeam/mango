@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 '''
-    Growing mango trees in the landscape will give you a lifetime of fresh 
+    Growing mango trees in the landscape will give you a lifetime of fresh
 
-    pungent fruit from an attractive shade tree enabling asynchronous 
+    pungent fruit from an attractive shade tree enabling asynchronous
 
     communication and control structures as patterns of passing messages.
 '''
@@ -68,6 +68,7 @@ __ooo__ = '''
     »»»╨╚╙╨░╙╙░╨"!╙░╙╚░╩^^╨^░"h░░""░Ü"░░░^╚"╚╨░»»░░░»░»»░░»»░░»░»»░»»»»»»»»»»░░░░░»»
 '''
 
+
 import uuid
 import zmq
 import riak
@@ -78,7 +79,6 @@ from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks, teams
 from mango.tools import options
-
 
 # late 2017, theres something about tornado and pyzmq that need's at least some checking again.
 
@@ -130,19 +130,19 @@ def main():
         [
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-            # Organization members <--------------------------------------------------------------------- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF 
+            # Organization members <--------------------------------------------------------------------- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF
             #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
             #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-            # Tasks new 
+            # Tasks new
             #(r'/tasks/new/?', tasks.NewHandler),
-            # Tasks now 
+            # Tasks now
             #(r'/tasks/now/?', tasks.NowHandler),
-            # Tasks later 
+            # Tasks later
             #(r'/tasks/later/?', tasks.LaterHandler),
             # Tasks done
             #(r'/tasks/done/?', tasks.DoneHandler),
-            #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),            
+            #(r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             # Tasks resources <--------------------------------------------------------------------------- WTF ARE THE MONKEYS DOING!!!
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
@@ -171,7 +171,7 @@ def main():
         solr = opts.solr,
         # cookie settings
         cookie_secret=opts.cookie_secret,
-    )  
+    )
     # Setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))
