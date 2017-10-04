@@ -199,8 +199,9 @@ class Tasks(object):
         filter_query = 'account_register:{0}'.format(account)
         page_num = int(page_num)
         page_size = self.settings['page_size']
-        url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
-            search_index, query, filter_query
+        start_num = page_size * (page_num - 1)
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
+            self.solr, search_index, query, filter_query, start_num, page_size
         )
         von_count = 0
         got_response = []
