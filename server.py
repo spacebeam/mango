@@ -77,7 +77,8 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, groups, tasks
+from mango.handlers import accounts, tasks
+from mango.handlers import groups
 from mango.tools import options
 
 # Something about tornado and pyzmq that need's at least some check again.
@@ -145,18 +146,21 @@ def main():
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
+
             # Users accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            # Orgs accounts
+
+            # Organization accounts
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
+
             # Groups, groups, groups, groups, groups.
-            (r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
-            (r'/groups/(?P<team_uuid>.+)/?', teams.Handler),
-            (r'/groups/?', teams.Handler),
+            #(r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
+            #(r'/groups/(?P<group_uuid>.+)/?', groups.Handler),
+            #(r'/groups/?', groups.Handler),
         ],
         db = db,
         cache = cache,
