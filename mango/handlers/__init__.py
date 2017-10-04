@@ -99,7 +99,7 @@ class LoginHandler(BaseHandler):
     '''
     @gen.coroutine
     def get(self):
-        uuid = yield get_account_uuid(self,
+        uuid = yield get_auth_uuid(self,
                             self.username,
                             self.password)
         # clean message
