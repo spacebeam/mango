@@ -157,6 +157,7 @@ class Tasks(object):
             search_index, query, filter_query
         )
         got_response = []
+        message = {'message': 'not found'}
         def handle_request(response):
             '''
                 Request Async Handler
