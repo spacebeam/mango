@@ -5,7 +5,7 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Team Machine'
@@ -77,7 +77,7 @@ class Tasks(object):
                 yield gen.sleep(0.0001)
                 if len(process_list) == len(urls):
                     break
-                # who fucking cares.. 
+                # who fucking cares..
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
@@ -179,7 +179,7 @@ class Tasks(object):
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
                     # key, value
-                    (key.split('_register')[0], value) 
+                    (key.split('_register')[0], value)
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
@@ -248,7 +248,6 @@ class Tasks(object):
         except Exception, e:
             raise e
         try:
-            message = event.get('uuid')
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
@@ -291,64 +290,7 @@ class Tasks(object):
                 search_index,
                 structure
             )
-            def handle_request(response):
-                '''
-                    Request Async Handler
-                '''
-                if response.error:
-                    logging.error(response.error)
-                else:
-                    logging.warning(response.body)
-
-            # I almost die reading this WTF ?????????????????????????????????????????????????????
-
-            # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
-            
-            # missing secrets current info for gigatech lolol
-
-            # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
-
-            #pis_u = 'mail'
-            #ola_r = 'gun'
-            #gun_l = '/v{0}/gigatechsupport.com/'.format('3') + 'messages'
-            #hammer_in = 'f2309bfe6'
-            #hammer_out = '3dfdabc'
-            #hammer_wut = 'a81966e2f0458f5f'
-            #url = 'https://api.{0}{1}.net{2}'.format(pis_u, ola_r, gun_l)
-            #melon = 'key-{0}{1}{2}'.format(hammer_wut, hammer_in, hammer_out)
-
-            pis_u = 'mail'
-            ola_r = 'gun'
-            gun_l = '/v{0}/fioin.com/'.format('3') + 'messages'
-            hammer_in = '96c209f169f8'
-            hammer_wut = 'c962530294e'          
-            hammer_out = 'ad7755e0c'
-            url = 'https://api.{0}{1}.net{2}'.format(pis_u, ola_r, gun_l)
-            melon = 'key-{0}{1}{2}'.format(hammer_wut, hammer_in, hammer_out)
-
-            body = urllib.urlencode({
-                "to": structure['destination'],
-                "from": structure['source'],
-                "subject": structure['subject'],
-                "text": structure['text'],
-                "html": structure['html']
-            })
-            http_client.fetch(
-                url,
-                body=body,
-                method='POST',
-                auth_username='api',
-                auth_password=melon,
-                callback=handle_request
-            )
-
-            # fuck gasoline
-
-            # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
-
-            # missing secrets current info for gigatech lolol
-            
-            # missing secrets, missing secrets, missing secrets, missing secrets, missing secrets
+            message = structure.get('uuid')
         except Exception, e:
             logging.error(e)
             message = str(e)
@@ -394,7 +336,7 @@ class Tasks(object):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0010) 
+                yield gen.sleep(0.0010)
             response_doc = got_response[0].get('response')['docs'][0]
             riak_key = str(response_doc['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
