@@ -300,18 +300,20 @@ def str2bool(boo):
     return boo.lower() in ('yes', 'true', 't', '1')
 
 @gen.coroutine
-def new_resource(resource, struct, message=None):
+def new_resource(resource, account, uuid):
     '''
         New resource function
     '''
     logging.info(resource)
 
-    logging.info(str(struct))
+    logging.info(str(account))
 
-    logging.info(message)
+    logging.info(uuid)
     try:
 
         logging.info("after clean the noise the update need's to take place next")
+
+        yo_uuid = yield get_account_uuid(account)
 
         #message = yield collection.update(
         #    {
@@ -327,7 +329,7 @@ def new_resource(resource, struct, message=None):
         #        }
         #    }
         #)
-        
+
     except Exception, e:
         logging.exception(e)
         raise e
