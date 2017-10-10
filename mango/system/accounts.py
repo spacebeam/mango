@@ -195,16 +195,6 @@ class Account(object):
         '''
             Get account list
         '''
-        if account is not None:
-            search_index = 'mango_account_index'
-            query = 'uuid_register:*'
-            filter_query = 'account_register:{0}'.format(account)
-            page_num = int(page_num)
-            page_size = self.settings['page_size']
-            start_num = page_size * (page_num - 1)
-            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
-                self.solr, search_index, query, filter_query, start_num, page_size
-            )
         if account is None:
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
@@ -214,6 +204,17 @@ class Account(object):
             url = "https://{0}/search/query/{1}?wt=json&q={2}&start={3}&rows={4}".format(
                 self.solr, search_index, query, start_num, page_size
             )
+        else:
+            search_index = 'mango_account_index'
+            query = 'uuid_register:*'
+            filter_query = 'account_register:{0}'.format(account)
+            page_num = int(page_num)
+            page_size = self.settings['page_size']
+            start_num = page_size * (page_num - 1)
+            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
+                self.solr, search_index, query, filter_query, start_num, page_size
+            )
+
         von_count = 0
         got_response = []
         def handle_request(response):
