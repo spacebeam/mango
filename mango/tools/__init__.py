@@ -344,7 +344,7 @@ def str2bool(boo):
     return boo.lower() in ('yes', 'true', 't', '1')
 
 @gen.coroutine
-def new_resource(resource, account, uuid):
+def new_resource(self, resource, account, uuid):
     '''
         New resource function
     '''
