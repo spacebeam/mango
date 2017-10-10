@@ -207,7 +207,7 @@ class Account(object):
         elif account is not None:
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
-            filter_query = 'account_register:{0}'.format(account)
+            filter_query = 'created_by_register:{0}'.format(account)
             page_num = int(page_num)
             page_size = self.settings['page_size']
             start_num = page_size * (page_num - 1)
