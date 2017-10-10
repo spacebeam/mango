@@ -204,7 +204,7 @@ class Account(object):
             url = "https://{0}/search/query/{1}?wt=json&q={2}&start={3}&rows={4}".format(
                 self.solr, search_index, query, start_num, page_size
             )
-        else:
+        elif account is not None:
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
             filter_query = 'account_register:{0}'.format(account)
