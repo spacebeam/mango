@@ -151,12 +151,20 @@ class Account(object):
         '''
             Get account
         '''
-        search_index = 'mango_account_index'
-        query = 'uuid_register:{0}'.format(account_uuid)
-        filter_query = 'account_register:{0}'.format(account)
-        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            self.solr, search_index, query, filter_query
-        )
+        if account is None:
+            search_index = 'mango_account_index'
+            query = 'uuid_register:{0}'.format(account_uuid)
+            #filter_query = 'account_register:{0}'.format(account)
+            url = "https://{0}/search/query/{1}?wt=json&q={2}".format(
+                self.solr, search_index, query
+            )
+        elif account is not None:
+            search_index = 'mango_account_index'
+            query = 'uuid_register:{0}'.format(account_uuid)
+            filter_query = 'account_register:{0}'.format(account)
+            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+                self.solr, search_index, query, filter_query
+            )          
         got_response = []
         # response message
         message = {'message': 'not found'}
