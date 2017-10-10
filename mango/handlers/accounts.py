@@ -70,13 +70,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             for doc in account_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
-                    for (key, value) in doc.items() if key not in IGNORE_ME)
-                )
-            for doc in account_list.get('response')['docs']:
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message['results'].append(
-                    dict((key.split('_set')[0], value) 
+                    dict((key.split('_register', '_set')[0], value) 
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -146,13 +140,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             for doc in account_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
-                    for (key, value) in doc.items() if key not in IGNORE_ME)
-                )
-            for doc in account_list.get('response')['docs']:
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message['results'].append(
-                    dict((key.split('_set')[0], value) 
+                    dict((key.split('_register', '_set')[0], value) 
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
