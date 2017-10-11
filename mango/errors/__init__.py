@@ -5,23 +5,55 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Team Machine'
+
+
+from tornado import gen
 
 
 class Error(object):
     '''
         Mango custom error class
     '''
-    
+
     def __init__(self, error):
         self.error = str(error)
         self.message = None
-        self.hint = None
         self.data = None
         self.code = None
+
+    @gen.coroutine
+    def let_it_crash(self, struct, scheme, error, reason):
+        '''
+            Let it crash.
+        '''
+        str_error = str(error)
+        error_handler = errors.Error(error)
+        messages = []
+        if error and 'Model' in str_error:
+            message = error_handler.model(scheme)
+        elif error and 'duplicate' in str_error:
+            for name, value in reason.get('duplicates'):
+                if value in str_error:
+                    message = error_handler.duplicate(
+                        name.title(),
+                        value,
+                        struct.get(value)
+                    )
+                    messages.append(message)
+            message = ({'messages':messages} if messages else False)
+        elif error and 'value' in str_error:
+            message = error_handler.value()
+        elif error is not None:
+            logging.warning(str_error)
+            message = {
+                'error': u'nonsense',
+                'message': u'there is no error'
+            }
+        raise gen.Return(message)
 
     def json(self):
         '''
@@ -59,7 +91,7 @@ class Error(object):
     def model(self, model_name):
         '''
             Error model dataset
-            
+
             model_name: Model name of the dataset
         '''
         model_name = ''.join((model_name, ' resource'))

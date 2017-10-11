@@ -10,6 +10,7 @@
 
 __author__ = 'Team Machine'
 
+
 import uuid
 import logging
 import ujson as json
@@ -21,7 +22,6 @@ from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_account_labels, get_account_uuid, get_auth_uuid
 from mango import errors
-#import logging
 
 
 class BaseHandler(web.RequestHandler):
@@ -63,33 +63,216 @@ class BaseHandler(web.RequestHandler):
         return self.get_secure_cookie('username')
 
     @gen.coroutine
-    def let_it_crash(self, struct, scheme, error, reason):
+    def check_account_type(account, account_type):
         '''
-            Let it crash.
+            check account type
         '''
-        str_error = str(error)
-        error_handler = errors.Error(error)
-        messages = []
-        if error and 'Model' in str_error:
-            message = error_handler.model(scheme)
-        elif error and 'duplicate' in str_error:
-            for name, value in reason.get('duplicates'):
-                if value in str_error:
-                    message = error_handler.duplicate(
-                        name.title(),
-                        value,
-                        struct.get(value)
-                    )
-                    messages.append(message)
-            message = ({'messages':messages} if messages else False)
-        elif error and 'value' in str_error:
-            message = error_handler.value()
-        elif error is not None:
-            logging.warning(str_error)
-            message = {
-                'error': u'nonsense',
-                'message': u'there is no error'
-            }
+        search_index = 'mango_account_index'
+        query = 'account_type_register:{0}'.format(account_type)
+        filter_query = 'account_register:{0}'.format(account)
+        # parse and build url
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        got_response = []
+        # response message
+        message = {'message': 'not found'}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response_doc = stuff['response']['docs'][0]
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message = dict(
+                    (key.split('_register')[0], value)
+                    for (key, value) in response_doc.items()
+                    if key not in IGNORE_ME
+                )
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
+        raise gen.Return(message)
+
+    @gen.coroutine
+    def get_account_uuid(account):
+        '''
+            Get valid account uuid
+        '''
+        search_index = 'mango_account_index'
+        query = 'account_register:{0}'.format(account)
+        filter_query = 'account_register:{0}'.format(account)
+        # parse and build url
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        got_response = []
+        # clean response message
+        message = {}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response_doc = stuff['response']['docs'][0]
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message = dict(
+                    (key.split('_register')[0], value)
+                    for (key, value) in response_doc.items()
+                    if key not in IGNORE_ME
+                )
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
+        raise gen.Return(message.get('uuid', 'not found'))
+
+    @gen.coroutine
+    def get_auth_uuid(self, account, password):
+        '''
+            Get valid account uuid
+        '''
+        search_index = 'mango_account_index'
+        query = 'password_register:{0}'.format(password)
+        filter_query = 'account_register:{0}'.format(account)
+        # parse and build url
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        got_response = []
+        # clean response message
+        message = {}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response_doc = stuff['response']['docs'][0]
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message = dict(
+                    (key.split('_register')[0], value)
+                    for (key, value) in response_doc.items()
+                    if key not in IGNORE_ME
+                )
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
+        raise gen.Return(message.get('uuid', 'not found'))
+
+    @gen.coroutine
+    def get_account_labels(self, account):
+        '''
+            Get account labels
+        '''
+        search_index = 'mango_account_index'
+        query = 'account_register:{0}'.format(account)
+        filter_query = 'account_register:{0}'.format(account)
+        # parse and build url
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        # got response
+        got_response = []
+        # response message
+        message = {}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                yield gen.sleep(0.0020) # don't be careless with the time.
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response_doc = stuff['response']['docs'][0]
+                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+                message = dict(
+                    (key.split('_register')[0], value)
+                    for (key, value) in response_doc.items()
+                    if key not in IGNORE_ME
+                )
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
+        raise gen.Return(message.get('labels', []))
+
+    @gen.coroutine
+    def new_resource(self, resource, account, uuid):
+        '''
+            New resource function
+        '''
+        logging.info(resource)
+        logging.info(str(account))
+        logging.info(uuid)
+        try:
+            logging.info("after clean the noise the update need's to take place next")
+            account_uuid = yield get_account_uuid(account)
+            logging.info(account_uuid)
+            #message = yield collection.update(
+            #    {
+            #        'account': message.get('account')
+            #    },
+            #    {
+            #        '$addToSet': {
+            #            '{0}.contains'.format(resource): message.get('uuid')
+            #        },
+            #        '$inc': {
+            #            'resources.total': 1,
+            #            '{0}.total'.format(resource): 1
+            #        }
+            #    }
+            #)
+        except Exception, e:
+            logging.exception(e)
+            raise e
+            return
         raise gen.Return(message)
 
 @basic_authentication
@@ -127,13 +310,13 @@ class LoginHandler(BaseHandler):
             self.set_status(403)
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
-            
+
     @gen.coroutine
     def options(self):
         logging.warning(self.request.headers)
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')        
+        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
 
