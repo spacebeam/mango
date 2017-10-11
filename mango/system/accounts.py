@@ -219,8 +219,9 @@ class Account(object):
             page_num = int(page_num)
             page_size = self.settings['page_size']
             start_num = page_size * (page_num - 1)
-            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
-                self.solr, search_index, query, filter_query, start_num, page_size
+            active = 'active'
+            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&fq={4}&start={5}&rows={6}".format(
+                self.solr, search_index, query, filter_query, active, start_num, page_size
             )
 
         von_count = 0
