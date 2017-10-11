@@ -19,7 +19,7 @@ from tornado import web
 from mango.messages import tasks as models
 from mango.system import tasks
 from tornado import httpclient
-from mango.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE
+from mango.tools import errors, str2bool, check_json # <!--------------------   NEW RESOURCE
 from mango.handlers import BaseHandler
 
 
