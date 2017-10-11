@@ -21,6 +21,10 @@ from mango.messages import tasks as _tasks
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
 from mango import errors
+from tornado import httpclient as _http_client
+
+_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+http_client = _http_client.AsyncHTTPClient()
 
 
 class BaseHandler(web.RequestHandler):
