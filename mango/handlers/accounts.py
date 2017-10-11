@@ -98,7 +98,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, account_uuid=None, start=None, end=None, page_num=1, lapse='hours', status):
+    def get(self, account=None, account_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get accounts
         '''
