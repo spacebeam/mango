@@ -19,7 +19,7 @@ from tornado import web
 from mango.messages import accounts as models
 from mango.system import accounts, groups, orgs
 from tornado import httpclient
-from mango.tools import errors, str2bool, check_json, new_resource
+from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
 
 
