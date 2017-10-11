@@ -107,7 +107,7 @@ class BaseHandler(web.RequestHandler):
         raise gen.Return(message)
 
     @gen.coroutine
-    def get_account_uuid(account):
+    def get_account_uuid(self, account):
         '''
             Get valid account uuid
         '''
