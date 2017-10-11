@@ -19,12 +19,6 @@ from schematics.types import compound
 from mango.messages import Resource
 
 
-class Labels(models.Model):
-    '''
-        Lables
-    '''
-    gloal_labels = compound.ListType(types.StringType())
-
 class Permission(models.Model):
     '''
         Permissions
@@ -87,7 +81,7 @@ class RequiredBase(models.Model):
     phones_total = types.IntType()
     emails = compound.ListType(compound.ModelType(Email))
     emails_total = types.IntType()
-    labels = compound.ListType(compound.ModelType(Labels))
+    labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
     resources = compound.ModelType(Resource)
     resources_total = types.IntType()
@@ -129,7 +123,7 @@ class CleanBase(models.Model):
     phones_total = types.IntType()
     emails = compound.ListType(compound.ModelType(Email))
     emails_total = types.IntType()
-    labels = compound.ListType(compound.ModelType(Labels))
+    labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
     resources = compound.ModelType(Resource)
     resources_total = types.IntType()
