@@ -20,7 +20,6 @@ from mango.system import basic_authentication
 from mango.messages import tasks as _tasks
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
-from mango.tools import get_account_labels, get_account_uuid, get_auth_uuid
 from mango import errors
 
 
@@ -253,7 +252,7 @@ class BaseHandler(web.RequestHandler):
         logging.info(uuid)
         try:
             logging.info("after clean the noise the update need's to take place next")
-            account_uuid = yield get_account_uuid(account)
+            account_uuid = yield self.get_account_uuid(account)
             logging.info(account_uuid)
             #message = yield collection.update(
             #    {
@@ -282,38 +281,29 @@ class LoginHandler(BaseHandler):
     '''
     @gen.coroutine
     def get(self):
-        uuid = yield get_auth_uuid(self,
-                            self.username,
-                            self.password)
         # clean message
         message = {}
-        message['labels'] = yield get_account_labels(self, self.username)
-        #logging.info(uuid)
-        if validate_uuid4(uuid):
-            logging.warning(self.request.headers)
+        message['uuid'] = yield self.get_auth_uuid(self, self.username, self.password)
+        message['labels'] = yield self.get_account_labels(self, self.username)
+        if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_secure_cookie('username', self.username)
-            #logging.info("I've just generated a username secure cookie for {0}".format(self.username))
-            # if labels we make some fucking labels
-            labels = str(message['labels'])
             # labels, labels, labels
-            self.set_secure_cookie('labels', labels)
-            message['uuid'] = uuid
+            self.set_secure_cookie('labels', str(message['labels']))
+            # yo what is this?
             self.username, self.password = (None, None)
             self.set_status(200)
             self.finish(message)
         else:
-            # 401 status code ?
-            # I don't know, why 401 ?
             self.set_status(403)
+            # I don't know why not 401?
             self.set_header('WWW-Authenticate', 'Basic realm=mango')
             self.finish()
 
     @gen.coroutine
     def options(self):
-        logging.warning(self.request.headers)
         self.set_header('Access-Control-Allow-Origin','*')
         self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
