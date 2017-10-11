@@ -20,7 +20,7 @@ from mango.messages import accounts as models
 from mango.system import accounts, groups, orgs
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
-from mango.handlers import BaseHandler, new_resource
+from mango.handlers import BaseHandler
 
 
 class UsersHandler(accounts.Account, BaseHandler):
