@@ -160,7 +160,7 @@ def get_account_uuid(account):
     raise gen.Return(message.get('uuid', 'not found'))
 
 @gen.coroutine
-def get_auth_uuid(account, password):
+def get_auth_uuid(self, account, password):
     '''
         Get valid account uuid
     '''
