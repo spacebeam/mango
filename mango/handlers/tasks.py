@@ -19,7 +19,7 @@ from tornado import web
 from mango.messages import tasks as models
 from mango.system import tasks
 from tornado import httpclient
-from mango.tools import errors, str2bool, check_json, new_resource # <!--------------------   NEW RESOURCE
+from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
 
 
@@ -199,7 +199,7 @@ class Handler(tasks.Tasks, BaseHandler):
         else:
             # please test this shit out
             account = (struct.get('account') if not account else account)
-            link_reference = yield new_resource('tasks', account, message['uuid'])
+            link_reference = yield self.new_resource('tasks', account, message['uuid'])
             self.set_status(201)
         self.finish(message)
 
