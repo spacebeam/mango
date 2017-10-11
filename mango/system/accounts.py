@@ -220,10 +220,10 @@ class Account(object):
             page_size = self.settings['page_size']
             start_num = page_size * (page_num - 1)
             active = 'active'
+            filter_query_two = 'status_register:{0}'.format(active)
             url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&fq={4}&start={5}&rows={6}".format(
-                self.solr, search_index, query, filter_query, active, start_num, page_size
+                self.solr, search_index, query, filter_query, filter_query_two, start_num, page_size
             )
-
         von_count = 0
         got_response = []
         def handle_request(response):
