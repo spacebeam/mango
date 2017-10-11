@@ -20,7 +20,7 @@ from mango.messages import tasks as models
 from mango.system import tasks
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json # <!--------------------   NEW RESOURCE
-from mango.handlers import BaseHandler, new_resource
+from mango.handlers import BaseHandler
 
 
 class Handler(tasks.Tasks, BaseHandler):
