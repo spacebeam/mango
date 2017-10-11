@@ -254,6 +254,7 @@ class BaseHandler(web.RequestHandler):
             logging.info("after clean the noise the update need's to take place next")
             account_uuid = yield self.get_account_uuid(account)
             logging.info(account_uuid)
+            message = {}
             #message = yield collection.update(
             #    {
             #        'account': message.get('account')
