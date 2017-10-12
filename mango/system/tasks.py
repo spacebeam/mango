@@ -311,8 +311,11 @@ class Tasks(object):
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
-        url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
-            search_index, query, filter_query
+        #url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
+            #search_index, query, filter_query
+        #)
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
         )
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
@@ -327,7 +330,6 @@ class Tasks(object):
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
-
         try:
             http_client.fetch(
                 url,
