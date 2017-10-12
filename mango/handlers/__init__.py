@@ -261,9 +261,9 @@ class BaseHandler(web.RequestHandler):
         logging.info(account_uuid)
             #message = {}
             
-        struct = {}
-        struct["resources"] = {'tasks':{'contains':[uuid]}}
-        message = yield self.modify_account(account, struct, uuid)
+        struct = {"resources":{'tasks':{'contains':[uuid]}}}
+
+        message = yield self.modify_account(account, struct)
         raise gen.Return(message)
 
         #except Exception, e:
