@@ -257,14 +257,14 @@ class BaseHandler(web.RequestHandler):
         logging.info(str(account))
         logging.info(uuid)
             
-        #account_uuid = yield self.get_account_uuid(account)
-        #logging.info(account_uuid)
+        account_uuid = yield self.get_account_uuid(account)
+        logging.info(account_uuid)
             #message = {}
             
-        #struct = {}
-        #struct["resources"] = {'tasks':{'contains':[uuid]}}
-        #message = yield self.modify_account(account, struct)
-        #raise gen.Return(message)
+        struct = {}
+        struct["resources"] = {'tasks':{'contains':[uuid]}}
+        message = yield self.modify_account(account, struct)
+        raise gen.Return(message)
 
         #except Exception, e:
             #logging.exception(e)
