@@ -252,23 +252,23 @@ class BaseHandler(web.RequestHandler):
         '''
             New resource function
         '''
-        try:
-            logging.info(resource)
-            logging.info(str(account))
-            logging.info(uuid)
+        #try:
+        logging.info(resource)
+        logging.info(str(account))
+        logging.info(uuid)
             
-            account_uuid = yield self.get_account_uuid(account)
-            logging.info(account_uuid)
+        account_uuid = yield self.get_account_uuid(account)
+        logging.info(account_uuid)
             #message = {}
             
-            struct = {}
-            struct["resources"] = {'tasks':{'contains':[uuid]}}
-            message = yield self.modify_account(account, struct)
+        struct = {}
+        struct["resources"] = {'tasks':{'contains':[uuid]}}
+        message = yield self.modify_account(account, struct)
         #raise gen.Return(message)
 
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
+        #except Exception, e:
+            #logging.exception(e)
+            #raise gen.Return(e)
         raise gen.Return(message)
 
             #logging.info("after clean the noise the update need's to take place next")
