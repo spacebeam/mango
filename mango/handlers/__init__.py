@@ -252,10 +252,11 @@ class BaseHandler(web.RequestHandler):
         '''
             New resource function
         '''
-        logging.info(resource)
-        logging.info(str(account))
-        logging.info(uuid)
         try:
+            logging.info(resource)
+            logging.info(str(account))
+            logging.info(uuid)
+            
             account_uuid = yield self.get_account_uuid(account)
             ogging.info(account_uuid)
             #message = {}
