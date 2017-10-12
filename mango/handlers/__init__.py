@@ -17,6 +17,7 @@ import ujson as json
 from tornado import gen
 from tornado import web
 from mango.system import basic_authentication
+from mango.system import task,
 from mango.messages import tasks as _tasks
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
@@ -263,7 +264,7 @@ class BaseHandler(web.RequestHandler):
             
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
 
-        message = yield self.modify_account(account, struct)
+        message = yield self.modify_task(account, struct)
         raise gen.Return(message)
 
         #except Exception, e:
