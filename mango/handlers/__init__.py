@@ -214,7 +214,6 @@ class BaseHandler(web.RequestHandler):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-        # got response
         got_response = []
         # response message
         message = {}
@@ -257,29 +256,21 @@ class BaseHandler(web.RequestHandler):
         logging.info(str(account))
         logging.info(uuid)
         try:
-            logging.info("after clean the noise the update need's to take place next")
-            account_uuid = yield self.get_account_uuid(account)
-            logging.info(account_uuid)
-            message = {}
-            #message = yield collection.update(
-            #    {
-            #        'account': message.get('account')
-            #    },
-            #    {
-            #        '$addToSet': {
-            #            '{0}.contains'.format(resource): message.get('uuid')
-            #        },
-            #        '$inc': {
-            #            'resources.total': 1,
-            #            '{0}.total'.format(resource): 1
-            #        }
-            #    }
-            #)
+        account_uuid = yield self.get_account_uuid(account)
+        logging.info(account_uuid)
+        #message = {}
+
+        struct = {}
+        struct['resources'] = {"tasks":{'contains':[uuid]}}
+        message = yield self.modify_account(account, struct)
+        raise gen.Return(message)
+
         except Exception, e:
             logging.exception(e)
-            raise e
-            return
+            raise gen.Return(e)
         raise gen.Return(message)
+
+            #logging.info("after clean the noise the update need's to take place next")
 
 @basic_authentication
 class LoginHandler(BaseHandler):
