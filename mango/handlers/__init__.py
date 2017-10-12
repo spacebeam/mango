@@ -262,7 +262,7 @@ class BaseHandler(web.RequestHandler):
             #message = {}
             
             struct = {}
-            struct['resources'] = {"tasks":{'contains':[uuid]}}
+            struct["resources"] = {'tasks':{'contains':[uuid]}}
             message = yield self.modify_account(account, struct)
         #raise gen.Return(message)
 
