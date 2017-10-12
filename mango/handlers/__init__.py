@@ -258,7 +258,7 @@ class BaseHandler(web.RequestHandler):
             logging.info(uuid)
             
             account_uuid = yield self.get_account_uuid(account)
-            ogging.info(account_uuid)
+            logging.info(account_uuid)
             #message = {}
             
             struct = {}
