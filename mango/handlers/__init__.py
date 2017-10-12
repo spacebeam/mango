@@ -115,6 +115,8 @@ class BaseHandler(web.RequestHandler):
         '''
             Get valid account uuid
         '''
+        logging.info(account)
+
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account)
         filter_query = 'account_register:{0}'.format(account)
