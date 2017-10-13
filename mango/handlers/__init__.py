@@ -281,9 +281,12 @@ class LoginHandler(BaseHandler):
     '''
     @gen.coroutine
     def get(self):
+        uuid = yield get_auth_uuid(self,
+                            self.username,
+                            self.password)
         # clean message
         message = {}
-        message['uuid'] = yield self.get_auth_uuid(self, self.username, self.password)
+        #message['uuid'] = yield self.get_auth_uuid(self, self.username, self.password)
         message['labels'] = yield self.get_account_labels(self, self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
