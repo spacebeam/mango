@@ -166,7 +166,7 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'password_register:{0}'.format(password)
         filter_query = 'account_register:{0}'.format(account)
-         parse and build url
+        #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -211,12 +211,12 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account)
         filter_query = 'account_register:{0}'.format(account)
-        # parse and build url
+        #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
         got_response = []
-        # response message
+        #response message
         message = {}
         def handle_request(response):
             '''
