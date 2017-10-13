@@ -214,7 +214,7 @@ class Account(object):
             #url = "https://{0}/search/query/{1}?wt=json&q={2}&start={3}&rows={4}".format(
                 #self.solr, search_index, query, start_num, page_size
             #)
-            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
+            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc".format(
                 self.solr, search_index, query, filter_query, start_num, page_size
             )
         elif account is not None:
@@ -226,7 +226,7 @@ class Account(object):
             start_num = page_size * (page_num - 1)
             active = 'active'
             filter_query_two = 'status_register:{0}'.format(active)
-            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&fq={4}&start={5}&rows={6}".format(
+            url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&fq={4}&start={5}&rows={6}&sort=created_at_register+desc".format(
                 self.solr, search_index, query, filter_query, filter_query_two, start_num, page_size
             )
         von_count = 0
