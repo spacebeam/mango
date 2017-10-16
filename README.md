@@ -1,4 +1,5 @@
 # mango
+https://travis-ci.org/nonsensews/mango.svg?branch=master
 
 Plug and play [management](https://arxiv.org/abs/0812.4852) tool for [Actor](https://arxiv.org/abs/1008.1459) model [ORG's](https://arxiv.org/abs/0906.2756).
 
