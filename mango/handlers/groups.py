@@ -8,7 +8,7 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Machine'
+__author__ = 'Team Machine'
 
 
 import uuid
@@ -70,7 +70,7 @@ class Handler(groups.Group, BaseHandler):
             for doc in group_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -140,7 +140,7 @@ class Handler(groups.Group, BaseHandler):
             for doc in group_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
