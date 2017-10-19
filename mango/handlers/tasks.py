@@ -138,7 +138,7 @@ class Handler(tasks.Tasks, BaseHandler):
             for doc in task_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -163,7 +163,6 @@ class Handler(tasks.Tasks, BaseHandler):
                     account, task_uuid.rstrip('/'), page_num, checked):result}
         # thanks for all the fish
         self.finish(message)
-
 
     @gen.coroutine
     def post(self):
@@ -199,7 +198,7 @@ class Handler(tasks.Tasks, BaseHandler):
         else:
             # please test this shit out
             account = (struct.get('account') if not account else account)
-            link_reference = yield self.new_resource('tasks', account, message['uuid'])
+            #link_reference = yield self.new_resource('tasks', account, message['uuid'])
             self.set_status(201)
         self.finish(message)
 
