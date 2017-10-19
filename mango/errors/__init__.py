@@ -22,6 +22,7 @@ class Error(object):
     def __init__(self, error):
         self.error = str(error)
         self.message = None
+        self.reason = None
         self.data = None
         self.code = None
 

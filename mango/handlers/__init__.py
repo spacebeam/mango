@@ -252,27 +252,47 @@ class BaseHandler(web.RequestHandler):
         '''
             New resource function
         '''
-        #try:
-        logging.info(resource)
-        logging.info(str(account))
-        logging.info(uuid)
-            
         account_uuid = yield self.get_account_uuid(account)
-        logging.info(account_uuid)
-            #message = {}
-            
+
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
+
         logging.info(struct)
-        message = yield self.modify_task(account, struct, uuid)
-        logging.info(message)
-        raise gen.Return(message)
 
-        #except Exception, e:
-            #logging.exception(e)
-            #raise gen.Return(e)
-        #raise gen.Return(message)
+        url = "https://{0}/users/{1}".format(
+            self.solr, account_uuid
+        )
 
-            #logging.info("after clean the noise the update need's to take place next")
+        got_response = []
+
+        update_complete = False
+
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+
+        try:
+            http_client.fetch(
+                url,
+                method='PATCH',
+                body=json.dumps(struct),
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0020)
+            response_doc = got_response[0].get('response')['docs'][0]
+        except Exception, e:
+            logging.exception(e)
+            raise gen.Return(e)
+
+        raise gen.Return(update_complete)
+
 
 @basic_authentication
 class LoginHandler(BaseHandler):
@@ -309,6 +329,7 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
+
 
 class LogoutHandler(BaseHandler):
     '''

@@ -12,7 +12,6 @@ __author__ = 'Team Machine'
 
 
 import uuid
-import urllib
 import logging
 import ujson as json
 from tornado import gen
@@ -182,7 +181,7 @@ class Tasks(object):
                 response_doc = stuff['response']['docs'][0]
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
-                    (key.split('_register')[0], value) 
+                    (key.split('_register')[0], value)
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
@@ -252,7 +251,7 @@ class Tasks(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
-                 "title": str(event.get('title', '')),
+                "title": str(event.get('title', '')),
                 "description": str(event.get('description', '')),
                 "payload": str(event.get('payload', '')),
                 "assignees": str(event.get('assignees', '')),
@@ -276,7 +275,7 @@ class Tasks(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_modified": str(event.get('last_modified', '')),
                 "checksum": str(event.get('checksum', '')),
-                "'comments_total": str(event.get('comments_total', '')),
+                "comments_total": str(event.get('comments_total', '')),
                 "hashs": str(event.get('hashs', '')),
                 "hashs_total": str(event.get('hashs_total', '')),
                 "assignees_total": str(event.get('assignees_total', '')),

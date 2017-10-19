@@ -16,14 +16,8 @@ import arrow
 import ujson as json
 import logging
 import uuid
-import urllib
 from tornado import gen
 from mango import errors
-from mango.messages import accounts
-from tornado import httpclient as _http_client
-
-_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
-http_client = _http_client.AsyncHTTPClient()
 
 
 def validate_uuid4(uuid_string):
@@ -48,12 +42,12 @@ def get_average(total, marks):
     '''
     return float(total) / len(marks)
 
-def get_percentage(shit, stuff):
+def get_percentage(part, whole):
     '''
-        Get percentage of shit and stuff.
+        Get percentage of part and whole.
 
     '''
-    return "{:.0%}".format(shit/stuff)
+    return "{0:.0f}%".format(float(part)/whole * 100)
 
 @gen.coroutine
 def check_json(struct):

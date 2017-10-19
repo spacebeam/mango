@@ -138,7 +138,7 @@ class Handler(tasks.Tasks, BaseHandler):
             for doc in task_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -163,7 +163,6 @@ class Handler(tasks.Tasks, BaseHandler):
                     account, task_uuid.rstrip('/'), page_num, checked):result}
         # thanks for all the fish
         self.finish(message)
-
 
     @gen.coroutine
     def post(self):
