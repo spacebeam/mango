@@ -281,7 +281,7 @@ class BaseHandler(web.RequestHandler):
             http_client.fetch(
                 url,
                 method='PATCH',
-                body=json.dumps(struct)
+                body=json.dumps(struct),
                 callback=handle_request
             )
             while len(got_response) == 0:
