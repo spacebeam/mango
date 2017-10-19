@@ -180,7 +180,7 @@ class Tasks(object):
                 response_doc = stuff['response']['docs'][0]
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
-                    (key.split('_register')[0], value) 
+                    (key.split('_register')[0], value)
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
@@ -311,9 +311,6 @@ class Tasks(object):
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
-        #url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
-            #search_index, query, filter_query
-        #)
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
