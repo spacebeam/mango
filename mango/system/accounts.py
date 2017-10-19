@@ -12,7 +12,6 @@ __author__ = 'Team Machine'
 
 
 import uuid
-import urllib
 import logging
 import ujson as json
 from tornado import gen
