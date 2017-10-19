@@ -16,14 +16,8 @@ import arrow
 import ujson as json
 import logging
 import uuid
-import urllib
 from tornado import gen
 from mango import errors
-from mango.messages import accounts
-from tornado import httpclient as _http_client
-
-_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
-http_client = _http_client.AsyncHTTPClient()
 
 
 def validate_uuid4(uuid_string):
