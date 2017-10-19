@@ -5,10 +5,10 @@
 
 # This file is part of mango.
 
-# Distributed under the terms of the last AGPL License. 
+# Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Group Machine'
+__author__ = 'Team Machine'
 
 
 import uuid
@@ -77,7 +77,7 @@ class Group(object):
                 yield gen.sleep(0.0001)
                 if len(process_list) == len(urls):
                     break
-                # who fucking cares.. 
+                # who fucking cares..
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
@@ -155,7 +155,7 @@ class Group(object):
         query = 'uuid_register:{0}'.format(group_uuid)
         filter_query = 'account_register:{0}'.format(account)
         # url building
-        
+
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -184,7 +184,7 @@ class Group(object):
                 response_doc = stuff['response']['docs'][0]
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
-                    (key.split('_register')[0], value) 
+                    (key.split('_register')[0], value)
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
@@ -328,7 +328,7 @@ class Group(object):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0010) 
+                yield gen.sleep(0.0010)
             response_doc = got_response[0].get('response')['docs'][0]
             riak_key = str(response_doc['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
@@ -352,5 +352,5 @@ class Group(object):
         '''
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_task(account, group_uuid, struct)        
+        message = yield self.modify_task(account, group_uuid, struct)
         raise gen.Return(message)

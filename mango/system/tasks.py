@@ -274,7 +274,7 @@ class Tasks(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_modified": str(event.get('last_modified', '')),
                 "checksum": str(event.get('checksum', '')),
-                "'comments_total": str(event.get('comments_total', '')),
+                "comments_total": str(event.get('comments_total', '')),
                 "hashs": str(event.get('hashs', '')),
                 "hashs_total": str(event.get('hashs_total', '')),
                 "assignees_total": str(event.get('assignees_total', '')),
