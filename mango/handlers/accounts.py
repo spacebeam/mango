@@ -212,6 +212,8 @@ class UsersHandler(accounts.Account, BaseHandler):
 
         logging.warning(struct)
 
+        logging.warning(self.request.headers)
+
         format_pass = (True if not dict(struct).get('errors', False) else False)
         if not format_pass:
             self.set_status(400)
