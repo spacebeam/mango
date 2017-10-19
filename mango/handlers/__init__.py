@@ -280,6 +280,7 @@ class BaseHandler(web.RequestHandler):
             http_client.fetch(
                 url,
                 method='PATCH',
+                headers={'Content-Type': 'application/json'},
                 body=json.dumps(struct),
                 callback=handle_request
             )
