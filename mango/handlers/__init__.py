@@ -256,13 +256,46 @@ class BaseHandler(web.RequestHandler):
 
         logging.info(account_uuid)
 
-        message = {}
-
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
 
         logging.info(struct)
 
-        raise gen.Return(message)
+        # search query url
+
+        url = "https://{0}/users/{1}".format(
+            self.solr, account_uuid
+        )
+
+        logging.warning(url)
+
+        got_response = []
+
+        update_complete = False
+
+        #def handle_request(response):
+        #    '''
+        #        Request Async Handler
+        #    '''
+        #    if response.error:
+        #        logging.error(response.error)
+        #        got_response.append({'error':True, 'message': response.error})
+        #    else:
+        #        got_response.append(json.loads(response.body))
+
+        #try:
+        #    http_client.fetch(
+        #        url,
+        #        callback=handle_request
+        #    )
+        #    while len(got_response) == 0:
+        #        # don't be careless with the time.
+        #        yield gen.sleep(0.0020)
+        #    response_doc = got_response[0].get('response')['docs'][0]
+        #except Exception, e:
+        #    logging.exception(e)
+        #    raise gen.Return(e)
+
+        raise gen.Return(update_complete)
 
 
 
