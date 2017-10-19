@@ -174,7 +174,7 @@ class BaseHandler(web.RequestHandler):
         message = {}
         def handle_request(response):
             '''
-                #Request Async Handler
+                Request Async Handler
             '''
             if response.error:
                 logging.error(response.error)
@@ -284,7 +284,7 @@ class LoginHandler(BaseHandler):
         # clean message
         message = {}
         message['uuid'] = yield self.get_auth_uuid(self, self.username, self.password)
-        #message['labels'] = yield self.get_account_labels(self, self.username)
+        message['labels'] = yield self.get_account_labels(self, self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')

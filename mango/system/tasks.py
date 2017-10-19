@@ -109,7 +109,8 @@ class Tasks(object):
                         'group.field':group_field,
                     }
                     url = ''.join((
-                        'https://api.cloudforest.ws/search/query/',
+                        self.solr,
+                        '/query/',
                         search_index,
                         '?wt=json&q=uuid_register:*&fl=',
                         key,
@@ -130,7 +131,8 @@ class Tasks(object):
                         'group.field':group_field,
                     }
                     url = ''.join((
-                        'https://api.cloudforest.ws/search/query/',
+                        self.solr,
+                        '/query/',
                         search_index,
                         '?wt=json&q=uuid_register:*&fl=',
                         key,
@@ -311,9 +313,6 @@ class Tasks(object):
         # filter query
         filter_query = 'account_register:{0}'.format(account)
         # search query url
-        #url = "https://api.cloudforest.ws/search/query/{0}?wt=json&q={1}&fq={2}".format(
-            #search_index, query, filter_query
-        #)
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
