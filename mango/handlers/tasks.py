@@ -198,7 +198,7 @@ class Handler(tasks.Tasks, BaseHandler):
         else:
             # please test this shit out
             account = (struct.get('account') if not account else account)
-            #link_reference = yield self.new_resource('tasks', account, message['uuid'])
+            link_reference = yield self.new_resource('tasks', account, message['uuid'])
             self.set_status(201)
         self.finish(message)
 

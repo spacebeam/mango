@@ -252,27 +252,22 @@ class BaseHandler(web.RequestHandler):
         '''
             New resource function
         '''
-        #try:
+
         logging.info(resource)
         logging.info(str(account))
         logging.info(uuid)
-            
+
         account_uuid = yield self.get_account_uuid(account)
         logging.info(account_uuid)
-            #message = {}
-            
+
+        message = {}
+
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
         logging.info(struct)
-        message = yield self.modify_task(account, struct, uuid)
-        logging.info(message)
+
         raise gen.Return(message)
 
-        #except Exception, e:
-            #logging.exception(e)
-            #raise gen.Return(e)
-        #raise gen.Return(message)
 
-            #logging.info("after clean the noise the update need's to take place next")
 
 @basic_authentication
 class LoginHandler(BaseHandler):
