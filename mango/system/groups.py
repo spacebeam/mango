@@ -40,6 +40,7 @@ class Group(object):
     '''
         Group
     '''
+
     @gen.coroutine
     def get_query_values(self, urls):
         '''
@@ -234,7 +235,7 @@ class Group(object):
     @gen.coroutine
     def new_group(self, struct):
         '''
-            New query event
+            New group event
         '''
         # currently we are changing this in two steps, first create de index with a structure file
         search_index = 'mango_group_index'
@@ -292,7 +293,7 @@ class Group(object):
     @gen.coroutine
     def modify_group(self, account, group_uuid, struct):
         '''
-            Modify query
+            Modify group
         '''
         # riak search index
         search_index = 'mango_group_index'
@@ -352,5 +353,5 @@ class Group(object):
         '''
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_task(account, group_uuid, struct)
+        message = yield self.modify_group(account, group_uuid, struct)
         raise gen.Return(message)
