@@ -250,7 +250,7 @@ class Tasks(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
-                 "title": str(event.get('title', '')),
+                "title": str(event.get('title', '')),
                 "description": str(event.get('description', '')),
                 "payload": str(event.get('payload', '')),
                 "assignees": str(event.get('assignees', '')),
