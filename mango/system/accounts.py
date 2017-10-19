@@ -258,12 +258,8 @@ class Account(object):
         '''
             New account event
         '''
-        # currently we are changing this in two steps, first create de index with a structure file
         search_index = 'mango_account_index'
-        # on the riak database with riak-admin bucket-type create `bucket_type`
-        # remember to activate it with riak-admin bucket-type activate
         bucket_type = 'mango_account'
-        # the bucket name can be dynamic
         bucket_name = 'accounts'
         try:
             event = accounts.User(struct)
