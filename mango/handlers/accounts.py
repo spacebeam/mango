@@ -212,8 +212,6 @@ class UsersHandler(accounts.Account, BaseHandler):
 
         logging.warning(struct)
 
-        logging.warning(self.request.headers)
-
         format_pass = (True if not dict(struct).get('errors', False) else False)
         if not format_pass:
             self.set_status(400)
@@ -223,8 +221,6 @@ class UsersHandler(accounts.Account, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-
-        logging.warning('clean this shit up')
 
         result = yield self.modify_account(account, account_uuid, struct)
         if not result:
