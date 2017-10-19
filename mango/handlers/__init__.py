@@ -252,17 +252,14 @@ class BaseHandler(web.RequestHandler):
         '''
             New resource function
         '''
-
-        logging.info(resource)
-        logging.info(str(account))
-        logging.info(uuid)
-
         account_uuid = yield self.get_account_uuid(account)
+
         logging.info(account_uuid)
 
         message = {}
 
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
+
         logging.info(struct)
 
         raise gen.Return(message)
