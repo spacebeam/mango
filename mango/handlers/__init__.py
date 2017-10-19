@@ -254,7 +254,6 @@ class BaseHandler(web.RequestHandler):
         '''
         account_uuid = yield self.get_account_uuid(account)
 
-
         struct = {"resources":{'tasks':{'contains':[uuid]}}}
 
         logging.info(struct)
@@ -295,7 +294,6 @@ class BaseHandler(web.RequestHandler):
         raise gen.Return(update_complete)
 
 
-
 @basic_authentication
 class LoginHandler(BaseHandler):
     '''
@@ -331,6 +329,7 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
+
 
 class LogoutHandler(BaseHandler):
     '''
