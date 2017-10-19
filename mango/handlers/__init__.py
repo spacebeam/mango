@@ -277,11 +277,17 @@ class BaseHandler(web.RequestHandler):
                 got_response.append(json.loads(response.body))
 
         try:
+
+            resource = 'tasks'
+            res_uuid = '666'
+
+            test = '{"resources":{"{0}":{"contains":["{1}"]}}}'.format(resource, res_uuid)
+
             http_client.fetch(
                 url,
                 method='PATCH',
                 headers={'Content-Type': 'application/json'},
-                body=json.dumps(struct),
+                body=test,
                 callback=handle_request
             )
             while len(got_response) == 0:
