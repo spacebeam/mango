@@ -262,6 +262,8 @@ class BaseHandler(web.RequestHandler):
             self.solr, account_uuid
         )
 
+        logging.warning(url)
+
         got_response = []
 
         update_complete = False
