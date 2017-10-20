@@ -281,7 +281,9 @@ class BaseHandler(web.RequestHandler):
             resource = 'tasks'
             res_uuid = '666'
 
-            test = '{"resources":{"{0}":{"contains":["{1}"]}}}'.format(resource, res_uuid)
+            test = '{"resources":{"' + resource +'":{"contains":["' + res_uuid + '"]}}}'
+
+            logging.warning(test)
 
             http_client.fetch(
                 url,
