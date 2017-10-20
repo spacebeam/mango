@@ -254,7 +254,7 @@ class BaseHandler(web.RequestHandler):
         '''
         account_uuid = yield self.get_account_uuid(account)
 
-        struct = {"resources":{'tasks':{'contains':[uuid]}}}
+        struct = '{"resources":{"' + resource +'":{"contains":["' + uuid + '"]}}}'
 
         logging.info(struct)
 
@@ -278,18 +278,11 @@ class BaseHandler(web.RequestHandler):
 
         try:
 
-            resource = 'tasks'
-            res_uuid = '666'
-
-            test = '{"resources":{"' + resource +'":{"contains":["' + res_uuid + '"]}}}'
-
-            logging.warning(test)
-
             http_client.fetch(
                 url,
                 method='PATCH',
                 headers={'Content-Type': 'application/json'},
-                body=test,
+                body=struct,
                 callback=handle_request
             )
             while len(got_response) == 0:
