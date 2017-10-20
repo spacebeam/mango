@@ -258,8 +258,8 @@ class BaseHandler(web.RequestHandler):
 
         logging.info(struct)
 
-        url = "https://{0}/users/{1}".format(
-            self.solr, account_uuid
+        url = "https://{0}/users/{1}?account={2}".format(
+            self.solr, account_uuid, account
         )
 
         logging.warning(url)
