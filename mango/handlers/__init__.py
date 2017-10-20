@@ -254,15 +254,17 @@ class BaseHandler(web.RequestHandler):
         '''
         account_uuid = yield self.get_account_uuid(account)
 
+        # lol, need to sleep on this... why a big list with uuids?
+
         struct = '{"resources":{"' + resource +'":{"contains":["' + uuid + '"]}}}'
+
+        # lets, just learn to count and see how are we going to handle the updates on lists.
 
         logging.info(struct)
 
         url = "https://{0}/users/{1}?account={2}".format(
             self.solr, account_uuid, account
         )
-
-        logging.warning(url)
 
         got_response = []
 
