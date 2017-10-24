@@ -146,7 +146,7 @@ class BaseHandler(web.RequestHandler):
                 response_doc = stuff['response']['docs'][0]
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message = dict(
-                    (key.split('_register')[0], value)
+                    (key.split('u')[0], value)
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
