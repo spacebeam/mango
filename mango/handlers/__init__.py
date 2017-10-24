@@ -150,6 +150,10 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
+            message = {}
+            for k in old_strings.keys():
+            newtsrings[k] = old_strings[k].encode('ascii','ignore')
+
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
