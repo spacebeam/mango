@@ -154,7 +154,7 @@ class BaseHandler(web.RequestHandler):
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(str(message.get['permissions'], []))
+        raise gen.Return(str(message.get('labels', [])))
 
     @gen.coroutine
     def get_account_uuid(self, account):
