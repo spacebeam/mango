@@ -196,9 +196,6 @@ class Handler(tasks.Tasks, BaseHandler):
             message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
             self.set_status(400)
         else:
-            # please test this shit out
-            account = (struct.get('account') if not account else account)
-            link_reference = yield self.new_resource('tasks', account, message['uuid'])
             self.set_status(201)
         self.finish(message)
 

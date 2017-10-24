@@ -247,58 +247,6 @@ class BaseHandler(web.RequestHandler):
             raise gen.Return(e)
         raise gen.Return(message.get('labels', []))
 
-    #@gen.coroutine
-    #def new_resource(self, resource, account, uuid):
-        #'''
-            #New resource function
-        #'''
-        #account_uuid = yield self.get_account_uuid(account)
-
-        # lol, need to sleep on this... why a big list with uuids?
-
-        #struct = '{"resources":{"' + resource +'":{"contains":["' + uuid + '"]}}}'
-
-        # lets, just learn to count and see how are we going to handle the updates on lists.
-
-        #logging.info(struct)
-
-        #url = "https://{0}/users/{1}?account={2}".format(
-            #self.solr, account_uuid, account
-        #)
-
-        #got_response = []
-
-        #update_complete = False
-
-        #def handle_request(response):
-            #'''
-                #Request Async Handler
-            #'''
-            #if response.error:
-                #logging.error(response.error)
-                #got_response.append({'error':True, 'message': response.error})
-            #else:
-                #got_response.append(json.loads(response.body))
-
-        #try:
-
-            #http_client.fetch(
-                #url,
-                #method='PATCH',
-                #headers={'Content-Type': 'application/json'},
-                #body=struct,
-                #callback=handle_request
-            #)
-            #while len(got_response) == 0:
-                # don't be careless with the time.
-                #yield gen.sleep(0.0020)
-            #response_doc = got_response[0].get('response')['docs'][0]
-        #except Exception, e:
-            #logging.exception(e)
-            #raise gen.Return(e)
-
-        #raise gen.Return(update_complete)
-
 
 @basic_authentication
 class LoginHandler(BaseHandler):
