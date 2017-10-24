@@ -254,12 +254,16 @@ class BaseHandler(web.RequestHandler):
         '''
         account_uuid = yield self.get_account_uuid(account)
 
-        struct = {"resources":{'tasks':{'contains':[uuid]}}}
+        # lol, need to sleep on this... why a big list with uuids?
+
+        struct = '{"resources":{"' + resource +'":{"contains":["' + uuid + '"]}}}'
+
+        # lets, just learn to count and see how are we going to handle the updates on lists.
 
         logging.info(struct)
 
-        url = "https://{0}/users/{1}".format(
-            self.solr, account_uuid
+        url = "https://{0}/users/{1}?account={2}".format(
+            self.solr, account_uuid, account
         )
 
         got_response = []
@@ -277,10 +281,12 @@ class BaseHandler(web.RequestHandler):
                 got_response.append(json.loads(response.body))
 
         try:
+
             http_client.fetch(
                 url,
                 method='PATCH',
-                body=json.dumps(struct),
+                headers={'Content-Type': 'application/json'},
+                body=struct,
                 callback=handle_request
             )
             while len(got_response) == 0:

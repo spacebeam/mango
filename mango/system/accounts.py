@@ -210,9 +210,6 @@ class Account(object):
             start_num = page_size * (page_num - 1)
             active = 'active'
             filter_query = 'status_register:{0}'.format(active)
-            #url = "https://{0}/search/query/{1}?wt=json&q={2}&start={3}&rows={4}".format(
-                #self.solr, search_index, query, start_num, page_size
-            #)
             url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc".format(
                 self.solr, search_index, query, filter_query, start_num, page_size
             )
@@ -258,12 +255,8 @@ class Account(object):
         '''
             New account event
         '''
-        # currently we are changing this in two steps, first create de index with a structure file
         search_index = 'mango_account_index'
-        # on the riak database with riak-admin bucket-type create `bucket_type`
-        # remember to activate it with riak-admin bucket-type activate
         bucket_type = 'mango_account'
-        # the bucket name can be dynamic
         bucket_name = 'accounts'
         try:
             event = accounts.User(struct)

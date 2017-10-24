@@ -209,6 +209,9 @@ class UsersHandler(accounts.Account, BaseHandler):
             Modify account
         '''
         struct = yield check_json(self.request.body)
+
+        logging.warning(struct)
+
         format_pass = (True if not dict(struct).get('errors', False) else False)
         if not format_pass:
             self.set_status(400)
@@ -218,6 +221,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
+
         result = yield self.modify_account(account, account_uuid, struct)
         if not result:
             self.set_status(400)
@@ -337,7 +341,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
             for doc in org_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)
@@ -407,7 +411,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
             for doc in org_list.get('response')['docs']:
                 IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
                 message['results'].append(
-                    dict((key.split('_register')[0], value) 
+                    dict((key.split('_register')[0], value)
                     for (key, value) in doc.items() if key not in IGNORE_ME)
                 )
             self.set_status(200)

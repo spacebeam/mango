@@ -154,14 +154,10 @@ class Group(object):
         search_index = 'mango_group_index'
         query = 'uuid_register:{0}'.format(group_uuid)
         filter_query = 'account_register:{0}'.format(account)
-        # url building
-
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-
         got_response = []
-        # response message
         message = {'message': 'not found'}
         def handle_request(response):
             '''
@@ -236,12 +232,8 @@ class Group(object):
         '''
             New group event
         '''
-        # currently we are changing this in two steps, first create de index with a structure file
         search_index = 'mango_group_index'
-        # on the riak database with riak-admin bucket-type create `bucket_type`
-        # remember to activate it with riak-admin bucket-type activate
         bucket_type = 'mango_group'
-        # the bucket name can be dynamic
         bucket_name = 'groups'
         try:
             event = groups.Group(struct)
