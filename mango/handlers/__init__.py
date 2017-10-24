@@ -153,7 +153,7 @@ class BaseHandler(web.RequestHandler):
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(message.get(str('permissions', [])))
+        raise gen.Return(message.get('permissions', []))
 
 
     @gen.coroutine
