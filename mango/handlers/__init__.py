@@ -303,7 +303,7 @@ class LoginHandler(BaseHandler):
         # clean message
         message = {}
         message['uuid'] = yield self.get_auth_uuid(self.username, self.password)
-        message['labels'] = yield self.get_account_labels(self.username)
+        #message['labels'] = yield self.get_account_labels(self.username)
         message['account_type'] = yield self.check_account_type(self.username)
         message['permissions'] = yield self.get_permissions(self.username)
         if validate_uuid4(message.get('uuid')):
