@@ -66,14 +66,14 @@ class BaseHandler(web.RequestHandler):
         return self.get_secure_cookie('username')
 
     @gen.coroutine
-    def check_account_type(account, account_type):
+    def check_account_type(self, account):
         '''
             check account type
         '''
         search_index = 'mango_account_index'
-        query = 'account_type_register:{0}'.format(account_type)
+        query = 'account_register:{0}'.format(account)
         filter_query = 'account_register:{0}'.format(account)
-        # parse and build url
+        #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
