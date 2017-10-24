@@ -152,7 +152,7 @@ class BaseHandler(web.RequestHandler):
                 )
             message = {}
             for k in old_strings.keys():
-            message[k] = old_strings[k].encode('ascii','ignore')
+                message[k] = old_strings[k].encode('ascii','ignore')
 
         except Exception, e:
             logging.exception(e)
