@@ -111,7 +111,7 @@ class BaseHandler(web.RequestHandler):
         raise gen.Return(message.get('account_type', 'not found'))
 
     @gen.coroutine
-    def get_permissions(account, account_type):
+    def get_permissions(self, account):
         '''
             Get permissions
         '''
@@ -305,6 +305,7 @@ class LoginHandler(BaseHandler):
         message['uuid'] = yield self.get_auth_uuid(self.username, self.password)
         message['labels'] = yield self.get_account_labels(self.username)
         message['account_type'] = yield self.check_account_type(self.username)
+        message['permissions'] = yield self.get_permissions(self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
