@@ -150,11 +150,11 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(str(message.get('labels', [])))
+        raise gen.Return(message.get(str('permissions', [])))
+
 
     @gen.coroutine
     def get_account_uuid(self, account):
