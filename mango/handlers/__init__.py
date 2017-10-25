@@ -289,6 +289,19 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
+        mensaje=message
+
+        def to_utf8(mensaje):
+            final = []
+            for item in d:
+                if type(item) is dict:
+                    result = {}
+                    for key, value in item.items():
+                        result[str(key)] = str(value)
+                    final.append(result)
+            return final
+        print to_utf8(mensaje) 
+
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
@@ -307,7 +320,7 @@ class LoginHandler(BaseHandler):
         message['uuid'] = yield self.get_auth_uuid(self.username, self.password)
         message['account_type'] = yield self.check_account_type(self.username)
         message['permissions'] = yield self.get_permissions(self.username)
-        #message['labels'] = yield self.get_account_labels(self.username)
+        message['labels'] = yield self.get_account_labels(self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
