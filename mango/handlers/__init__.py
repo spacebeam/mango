@@ -150,14 +150,16 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-            message = {}
+            old_strings = message.get('permissions', [])
+            newstrings = {}
+
             for k in old_strings.keys():
-                message[k] = old_strings[k].encode('ascii','ignore')
+                newstrings[k] = old_strings[k].encode('ascii','ignore')
 
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(message.get('permissions', []))
+        raise gen.Return(newstrings)
 
 
     @gen.coroutine
