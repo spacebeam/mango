@@ -289,9 +289,8 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-        mensaje=message
 
-        def to_utf8(mensaje):
+        def to_utf8(message):
             final = []
             for item in d:
                 if type(item) is dict:
@@ -300,7 +299,7 @@ class BaseHandler(web.RequestHandler):
                         result[str(key)] = str(value)
                     final.append(result)
             return final
-        print to_utf8(mensaje) 
+        print to_utf8(message) 
 
         except Exception, e:
             logging.exception(e)
