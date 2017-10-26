@@ -23,6 +23,7 @@ from mango.tools import clean_structure, validate_uuid4
 from mango import errors
 from tornado import httpclient as _http_client
 
+
 _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
 http_client = _http_client.AsyncHTTPClient()
 
@@ -155,7 +156,6 @@ class BaseHandler(web.RequestHandler):
             logging.exception(e)
             raise gen.Return(e)
         raise gen.Return(message.get('permissions', []))
-
 
     @gen.coroutine
     def get_account_uuid(self, account):
@@ -317,10 +317,6 @@ class BaseHandler(web.RequestHandler):
 
 
 
-
-
-
-
 @basic_authentication
 class LoginHandler(BaseHandler):
     '''
@@ -360,6 +356,7 @@ class LoginHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
+
 
 
 class LogoutHandler(BaseHandler):

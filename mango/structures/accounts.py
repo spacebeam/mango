@@ -76,8 +76,6 @@ class AccountMap(object):
         #self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
         self.map.registers['groups'].assign(struct.get('groups', ''))
         #self.map.counters['groups_total'].assign(struct.get('groups_total', ''))
-        self.map.registers['resources'].assign(struct.get('resources', ''))
-        #self.map.counters['resources_total'].assign(struct.get('resources_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
         #self.map.counters['hashs_total'].assign(struct.get('hashs_total', ''))
         self.map.registers['permissions'].assign(struct.get('permissions', ''))
@@ -138,8 +136,6 @@ class AccountMap(object):
             #"orgs_total": event.counters['orgs_total'].value,
             "groups": event.registers['groups'].value,
             #"groups_total": event.counters['groups_total'].value,
-            "resources": event.registers['resources'].value,
-            #"resources_total": event.counters['resources_total'].value,
             "hashs": event.registers['hashs'].value,
             #"hashs_total": event.counters['hashs_total'].value,
             "permissions": event.registers['permissions'].value,
@@ -192,8 +188,6 @@ class AccountMap(object):
             #"orgs_total": event.counters['orgs_total'].value,
             "groups": event.registers['groups'].value,
             #"groups_total": event.counters['groups_total'].value,
-            "resources": event.registers['resources'].value,
-            #"resources_total": event.counters['resources_total'].value,
             "hashs": event.registers['hashs'].value,
             #"hashs_total": event.counters['hashs_total'].value,
             "permissions": event.registers['permissions'].value,

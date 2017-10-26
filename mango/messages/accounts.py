@@ -16,7 +16,6 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-from mango.messages import Resource
 
 
 class Permission(models.Model):
@@ -28,6 +27,7 @@ class Permission(models.Model):
     permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
+
 
 class Email(models.Model):
     '''
@@ -83,8 +83,6 @@ class RequiredBase(models.Model):
     emails_total = types.IntType()
     labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
-    resources = compound.ModelType(Resource)
-    resources_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
@@ -125,8 +123,6 @@ class CleanBase(models.Model):
     emails_total = types.IntType()
     labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
-    resources = compound.ModelType(Resource)
-    resources_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
@@ -174,7 +170,6 @@ class ModifyUser(CleanBaseAccount):
     permissions_total = types.IntType()
 
 
-
 class Group(models.Model):
     '''
         Org group
@@ -184,7 +179,7 @@ class Group(models.Model):
     permission = types.StringType(choices=['read',
                                            'write',
                                            'admin'], required=True)
-    resources = compound.ModelType(Resource)
+    resources = compound.ListType(types.StringType())
     members = compound.ListType(types.StringType())
 
 
