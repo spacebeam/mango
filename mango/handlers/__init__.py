@@ -290,7 +290,7 @@ class BaseHandler(web.RequestHandler):
                     if key not in IGNORE_ME
                 )
 
-            message[] = yield self.to_utf8(self.message)
+            message = yield self.to_utf8(self.message)
 
         except Exception, e:
             logging.exception(e)
