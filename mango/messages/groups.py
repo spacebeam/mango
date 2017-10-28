@@ -16,7 +16,7 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-from mango.messages import Resource
+#from mango.messages import Resource
 
 
 class Group(models.Model):
@@ -43,7 +43,7 @@ class Group(models.Model):
     members_total = types.IntType()
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()    
-    resources = compound.ModelType(Resource)
+#    resources = compound.ModelType(Resource)
     resources_total = types.IntType()
     labels = compound.ListType(types.StringType())
     labels_total = types.IntType()

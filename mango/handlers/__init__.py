@@ -334,8 +334,6 @@ class LoginHandler(BaseHandler):
         self.set_status(200)
         self.finish()
 
-
-
 class LogoutHandler(BaseHandler):
     '''
         BasicAuth logout
