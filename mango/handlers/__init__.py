@@ -290,34 +290,10 @@ class BaseHandler(web.RequestHandler):
                     if key not in IGNORE_ME
                 )
 
-            message = yield self.to_utf8(self.message)
-
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
         raise gen.Return(message.get('labels', []))
-
-
-    @gen.coroutine
-    def to_utf8(self, message):
-        try
-            final = []
-            for item in d:
-                if type(item) is dict:
-                    result = {}
-                    for key, value in item.items():
-                        result[str(key)] = str(value)
-                    final.append(result)
-            return final
-        #print to_utf8(message) 
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message)
-
-
-
-
 
 
 

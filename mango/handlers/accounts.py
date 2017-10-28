@@ -82,7 +82,6 @@ class UsersHandler(accounts.Account, BaseHandler):
             message = self.cache.get('accounts:{0}'.format(account_uuid))
             if message is not None:
                 logging.info('accounts:{0} done retrieving!'.format(account_uuid))
-                #result = data
                 self.set_status(200)
             else:
                 #data = yield self.get_account(account, account_uuid.rstrip('/'))
@@ -153,7 +152,6 @@ class UsersHandler(accounts.Account, BaseHandler):
             logging.info(message)
             if message is not None:
                 logging.info('accounts:{0} done retrieving!'.format(account_uuid))
-                #result = data
                 self.set_status(200)
             else:
                 #data = yield self.get_account(account, account_uuid.rstrip('/'))
@@ -164,7 +162,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             if not message:
                 self.set_status(400)
                 message = {'missing account {0} account_uuid {1} page_num {2} checked {3}'.format(
-                    account, account_uuid.rstrip('/'), page_num, checked):result}
+                    account, account_uuid.rstrip('/'), page_num, checked):messaget}
         # thanks for all the fish
         self.finish(message)
 
@@ -222,8 +220,8 @@ class UsersHandler(accounts.Account, BaseHandler):
             # if not account we try to get the account from struct
             account = struct.get('account', None)
 
-        result = yield self.modify_account(account, account_uuid, struct)
-        if not result:
+        message = yield self.modify_account(account, account_uuid, struct)
+        if not message:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('account', account_uuid)
@@ -239,8 +237,8 @@ class UsersHandler(accounts.Account, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_account(account, account_uuid)
-        if not result:
+        message = yield self.remove_account(account, account_uuid)
+        if not message:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('account', account_uuid)
@@ -353,7 +351,6 @@ class OrgsHandler(orgs.Org, BaseHandler):
             message = self.cache.get('orgs:{0}'.format(org_uuid))
             if message is not None:
                 logging.info('orgs:{0} done retrieving!'.format(org_uuid))
-                #result = data
                 self.set_status(200)
             else:
                 #data = yield self.get_org(account, org_uuid.rstrip('/'))
@@ -364,7 +361,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
             if not message:
                 self.set_status(400)
                 message = {'missing account {0} org_uuid {1} page_num {2} checked {3}'.format(
-                    account, org_uuid.rstrip('/'), page_num, checked):result}
+                    account, org_uuid.rstrip('/'), page_num, checked):message}
         # thanks for all the fish
         self.finish(message)
 
@@ -423,7 +420,6 @@ class OrgsHandler(orgs.Org, BaseHandler):
             message = self.cache.get('orgs:{0}'.format(org_uuid))
             if message is not None:
                 logging.info('orgs:{0} done retrieving!'.format(org_uuid))
-                #result = data
                 self.set_status(200)
             else:
                 #data = yield self.get_org(account, org_uuid.rstrip('/'))
@@ -434,7 +430,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
             if not message:
                 self.set_status(400)
                 message = {'missing account {0} org_uuid {1} page_num {2} checked {3}'.format(
-                    account, org_uuid.rstrip('/'), page_num, checked):result}
+                    account, org_uuid.rstrip('/'), page_num, checked):message}
         # thanks for all the fish
         self.finish(message)
 
@@ -488,8 +484,8 @@ class OrgsHandler(orgs.Org, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-        result = yield self.modify_org(account, org_uuid, struct)
-        if not result:
+        message = yield self.modify_org(account, org_uuid, struct)
+        if not message:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('org', org_uuid)
@@ -505,8 +501,8 @@ class OrgsHandler(orgs.Org, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_org(account, org_uuid)
-        if not result:
+        message = yield self.remove_org(account, org_uuid)
+        if not message:
             self.set_status(400)
             system_error = errors.Error('missing')
             error = system_error.missing('org', org_uuid)
