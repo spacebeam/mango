@@ -73,7 +73,7 @@ class ModifyGroup(models.Model):
     members_total = types.IntType()
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()    
-    resources = compound.ModelType(Resource)
+#    resources = compound.ModelType(Resource)
     resources_total = types.IntType()
     labels = compound.ListType(types.StringType())
     labels_total = types.IntType()
