@@ -288,11 +288,10 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(message.get('labels', []))
+        raise gen.Return([str(x) for x in message.get('labels', [])])
 
 @basic_authentication
 class LoginHandler(BaseHandler):
