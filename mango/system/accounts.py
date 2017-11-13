@@ -393,5 +393,5 @@ class Account(object):
         '''
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_account(account, group_uuid, struct)
+        message = yield self.modify_account(account, account_uuid, struct)
         raise gen.Return(message)
