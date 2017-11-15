@@ -78,7 +78,7 @@ class Task(models.Model):
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
     labels_total = types.IntType()
-
+    active = types.BooleanType(default=True)
 
 class ModifyTask(models.Model):
     '''
@@ -131,3 +131,4 @@ class ModifyTask(models.Model):
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
     labels_total = types.IntType()
+    active = types.BooleanType()

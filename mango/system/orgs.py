@@ -267,6 +267,9 @@ class Org(object):
                 "labels": str(event.get('labels', '')),
                 "uri":str(event.get('uri', '')),
                 "status": str(event.get('status', '')),
+                "resource": str(event.get('resource', '')),
+                "resource_uuid": str(event.get('resource_uuid', '')),
+                "active": str(event.get('active', '')),
             }
             result = AccountMap(
                 self.kvalue,

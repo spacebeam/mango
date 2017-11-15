@@ -49,6 +49,9 @@ class Group(models.Model):
     labels_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
+    resource = types.StringType()
+    resource_uuid = types.StringType()
+    active = types.BooleanType(default=True)
 
 
 class ModifyGroup(models.Model):
@@ -79,3 +82,6 @@ class ModifyGroup(models.Model):
     labels_total = types.IntType()
     history = compound.ListType(types.StringType())
     history_total = types.IntType()
+    resource = types.StringType()
+    resource_uuid = types.StringType()
+    active = types.BooleanType()

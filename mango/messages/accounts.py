@@ -88,6 +88,8 @@ class RequiredBase(models.Model):
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
     members_total = types.IntType()
+    resource = types.StringType()
+    resource_uuid = types.StringType()
 
 
 class CleanBase(models.Model):
@@ -128,6 +130,8 @@ class CleanBase(models.Model):
     hashs = compound.ListType(types.StringType())
     hashs_total = types.IntType()
     members_total = types.IntType()
+    resource = types.StringType()
+    resource_uuid = types.StringType()
 
 
 class BaseAccount(RequiredBase):

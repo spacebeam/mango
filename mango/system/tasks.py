@@ -278,6 +278,9 @@ class Tasks(object):
                 "history": str(event.get('history', '')),
                 "history_total": str(event.get('history_total', '')),
                 "labels_total": str(event.get('labels_total', '')),
+                "resource": str(event.get('resource', '')),
+                "resource_uuid": str(event.get('resource_uuid', '')),
+                "active": str(event.get('active', '')),
             }
             result = TaskMap(
                 self.kvalue,
