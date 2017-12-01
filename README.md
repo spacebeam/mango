@@ -6,4 +6,4 @@
 Growing mango trees in the landscape will give you a lifetime of fresh pungent fruit from an attractive shade tree enabling asynchronous communication and control structures as patterns of passing messages.
 
 ## Installation
-`cube-cli pull mango`
+`cube-cli install mango`
