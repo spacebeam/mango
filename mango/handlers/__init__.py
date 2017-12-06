@@ -63,7 +63,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Return the username from a secure cookie (require cookie_secret)
         '''
-        return self.get_secure_cookie("username")
+        return self.get_secure_cookie('username')
 
     @gen.coroutine
     def check_account_type(self, account):
@@ -311,7 +311,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             #self.set_cookie('username', self.username)
-            self.set_secure_cookie("username", self.get_argument("username"))
+            self.set_secure_cookie('username', self.get_argument('username'))
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
             # permissions
