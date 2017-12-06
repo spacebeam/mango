@@ -306,12 +306,12 @@ class LoginHandler(BaseHandler):
         message['account_type'] = yield self.check_account_type(self.username)
         message['permissions'] = yield self.get_permissions(self.username)
         message['labels'] = yield self.get_account_labels(self.username)
+        self.set_secure_cookie('username', self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             #self.set_secure_cookie('username', self.username)
-            self.set_secure_cookie('username', 'lol')
             logging.warning('no,no,no,no,no')
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
