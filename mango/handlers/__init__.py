@@ -63,7 +63,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Return the username from a secure cookie (require cookie_secret)
         '''
-        return self.get_secure_cookie('username')
+        return self.get_secure_cookie("username")
 
     @gen.coroutine
     def check_account_type(self, account):
