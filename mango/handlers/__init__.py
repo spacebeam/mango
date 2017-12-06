@@ -308,10 +308,12 @@ class LoginHandler(BaseHandler):
         message['labels'] = yield self.get_account_labels(self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS, POST')
+            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            self.set_cookie("username", self.username)
-            def post(self):
+            
+            if not self.current_user:
+            usernames = self.current_user
+            self.write('Hi there, '+ usernames)
                 self.set_secure_cookie("username", self.username)
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
