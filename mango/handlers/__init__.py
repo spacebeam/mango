@@ -311,6 +311,8 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             self.set_cookie("username", self.username)
+            def post(self):
+                self.set_secure_cookie("username", self.username)
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
             # permissions
@@ -328,7 +330,7 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     def options(self):
         self.set_header('Access-Control-Allow-Origin','*')
-        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
+        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS, POST')
         self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
         self.set_status(200)
         self.finish()
