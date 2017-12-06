@@ -312,7 +312,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             if not self.get_secure_cookie('username'):
                 self.set_secure_cookie('username', self.username)
-                logging.warning('Your cookie was not set yet!')
+                logging.warning(username)
                 #self.set_secure_cookie('username', self.username)
             else:
                 logging.warning('Your cookie was set yet!')
