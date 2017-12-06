@@ -311,7 +311,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
             cookie_test = "Nonsense"
-            if not self.get_cookie(cookie_test):
+            if self.get_cookie(cookie_test):
                 self.set_cookie(self.username, cookie_test)
                 self.write("Cookie is now set")
             else:
