@@ -310,7 +310,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            if not self.get_secure_cookie('username'):
+            if self.get_secure_cookie('username'):
                 self.set_secure_cookie('username', self.username)
                 logging.warning(username)
                 #self.set_secure_cookie('username', self.username)
