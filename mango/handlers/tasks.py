@@ -214,7 +214,13 @@ class Handler(tasks.Tasks, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-        result = yield self.modify_task(account, task_uuid, struct)
+        if task_uuid:
+            # try to get stuff from cache first
+            task_uuid = task_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(task_uuid)))
+            result = self.cache.delete('task:{0}'.format(task_uuid))
+            result = yield self.modify_task(account, task_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
@@ -231,7 +237,13 @@ class Handler(tasks.Tasks, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_task(account, task_uuid)
+        if task_uuid:
+            # try to get stuff from cache first
+            task_uuid = task_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(task_uuid)))
+            result = self.cache.delete('task:{0}'.format(task_uuid))
+            result = yield self.remove_task(account, task_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')

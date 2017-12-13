@@ -219,8 +219,13 @@ class UsersHandler(accounts.Account, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-
-        message = yield self.modify_account(account, account_uuid, struct)
+        if account_uuid:
+            # try to get stuff from cache first
+            account_uuid = account_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(account_uuid)))
+            message = self.cache.delete('account:{0}'.format(account_uuid))
+            message = yield self.modify_account(account, account_uuid, struct)
         if not message:
             self.set_status(400)
             system_error = errors.Error('missing')
@@ -237,7 +242,13 @@ class UsersHandler(accounts.Account, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        message = yield self.remove_account(account, account_uuid)
+        if account_uuid:
+            # try to get stuff from cache first
+            account_uuid = account_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(account_uuid)))
+            message = self.cache.delete('account:{0}'.format(account_uuid))
+            message = yield self.remove_account(account, account_uuid)
         if not message:
             self.set_status(400)
             system_error = errors.Error('missing')

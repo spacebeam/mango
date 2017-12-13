@@ -217,7 +217,13 @@ class Handler(groups.Group, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-        result = yield self.modify_group(account, group_uuid, struct)
+        if group_uuid:
+            # try to get stuff from cache first
+            group_uuid = group_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(group_uuid)))
+            result = self.cache.delete('group:{0}'.format(group_uuid))
+            result = yield self.modify_group(account, group_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
@@ -234,7 +240,13 @@ class Handler(groups.Group, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_group(account, group_uuid)
+        if group_uuid:
+            # try to get stuff from cache first
+            group_uuid = group_uuid.rstrip('/')
+            # get cache data
+            #logging.info('borrando uuid de cache {0}'.format(str(group_uuid)))
+            result = self.cache.delete('group:{0}'.format(group_uuid))
+            result = yield self.remove_group(account, group_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
