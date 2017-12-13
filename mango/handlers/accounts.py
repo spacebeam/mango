@@ -21,7 +21,7 @@ from mango.system import accounts, groups, orgs
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
-
+from collections import OrderedDict
 
 class UsersHandler(accounts.Account, BaseHandler):
     '''
@@ -290,7 +290,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # end of manual cleaning
         POST = {
             "description": "Send account",
-            "parameters": parameters
+            "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
         if not account_uuid:
@@ -554,7 +554,7 @@ class OrgsHandler(orgs.Org, BaseHandler):
         # end of manual cleaning
         POST = {
             "description": "Send org",
-            "parameters": parameters
+            "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
         if not org_uuid:

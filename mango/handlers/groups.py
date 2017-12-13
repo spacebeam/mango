@@ -21,7 +21,7 @@ from mango.system import groups
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
-
+from collections import OrderedDict
 
 class Handler(groups.Group, BaseHandler):
     '''
@@ -288,7 +288,7 @@ class Handler(groups.Group, BaseHandler):
         # end of manual cleaning
         POST = {
             "description": "Send group",
-            "parameters": parameters
+            "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
         if not group_uuid:

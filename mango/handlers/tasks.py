@@ -21,7 +21,7 @@ from mango.system import tasks
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
-
+from collections import OrderedDict
 
 class Handler(tasks.Tasks, BaseHandler):
     '''
@@ -285,7 +285,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # end of manual cleaning
         POST = {
             "description": "Create task",
-            "parameters": parameters
+            "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
         if not task_uuid:
