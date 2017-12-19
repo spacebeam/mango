@@ -150,11 +150,11 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-            result = message.encode('ascii','ignore')
+            #result = message.encode('ascii','ignore')
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return(result.get('permissions', []))
+        raise gen.Return(result.get('permissions', [].encode('ascii','ignore')))
 
     @gen.coroutine
     def get_account_uuid(self, account):
