@@ -150,7 +150,7 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-            result = message.encode('ascii')
+            result = message.encode('ascii','ignore')
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
