@@ -154,7 +154,7 @@ class BaseHandler(web.RequestHandler):
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return((message.decode('utf-8')).get('permissions', []))
+        raise gen.Return((message.encode('utf-8')).get('permissions', []))
 
     @gen.coroutine
     def get_account_uuid(self, account):
