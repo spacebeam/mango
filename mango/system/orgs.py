@@ -265,7 +265,7 @@ class Org(object):
                 "last_update_at": str(event.get('last_update_at', '')),
                 "history": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),
-                "uri":str(event.get('uri', '')),
+                "url":str(event.get('url', '')),
                 "status": str(event.get('status', '')),
                 "resource": str(event.get('resource', '')),
                 "resource_uuid": str(event.get('resource_uuid', '')),

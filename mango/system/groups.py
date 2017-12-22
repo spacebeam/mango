@@ -253,7 +253,7 @@ class Group(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_update_by": str(event.get('last_update_by', '')),
                 "last_update_at": str(event.get('last_update_at', '')),
-                "uri": str(event.get('uri', '')),
+                "url": str(event.get('url', '')),
                 "checksum": str(event.get('checksum', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),

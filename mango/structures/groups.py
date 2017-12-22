@@ -43,21 +43,16 @@ class GroupMap(object):
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
-        self.map.registers['uri'].assign(struct.get('uri', ''))
+        self.map.registers['url'].assign(struct.get('url', ''))
         self.map.registers['checksum'].assign(struct.get('checksum', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
         self.map.registers['checked_at'].assign(struct.get('checked_at', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
-        #self.map.registers['members_total'].assign(struct.get('members_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
-        #self.map.registers['hashs_total'].assign(struct.get('hashs_total', ''))
         self.map.registers['resources'].assign(struct.get('resources', ''))
-        #self.map.registers['resources_total'].assign(struct.get('resources_total', ''))
-        self.map.sets['labels'].add(struct.get('labels'))
-        #self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
-        self.map.counters['history'].assign(struct.get('history', ''))
-        #self.map.counters['history_total'].assign(struct.get('history_total', ''))
+        self.map.registers['labels'].assign(struct.get('labels'))
+        self.map.registers['history'].assign(struct.get('history', ''))
         # end of the map stuff
         self.map.store()
 
@@ -81,21 +76,16 @@ class GroupMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "uri": event.registers['uri'].value,
+            "url": event.registers['url'].value,
             "checksum": event.registers['checksum'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
             "members": event.registers['members'].value,
-            #"members_total": event.counters['members_total'].value,
             "hashs": event.registers['hashs'].value,
-            #"hashs_total": event.counters['hashs_total'].value,
             "resources": event.registers['resources'].value,
-            #"resources_total": event.counters['resources_total'].value,
-            "labels": event.sets['labels'].value,
-            "labels_total": event.counters['labels_total'].value,
+            "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
-            #"history_total": event.counters['history_total'].value,
         }
         return json.dumps(struct)
 
@@ -111,20 +101,15 @@ class GroupMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "uri": event.registers['uri'].value,
+            "url": event.registers['url'].value,
             "checksum": event.registers['checksum'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
             "members": event.registers['members'].value,
-            #"members_total": event.counters['members_total'].value,
             "hashs": event.registers['hashs'].value,
-            #"hashs_total": event.counters['hashs_total'].value,
             "resources": event.registers['resources'].value,
-            #"resources_total": event.counters['resources_total'].value,
-            "labels": event.sets['labels'].value,
-            #"labels_total": event.counters['labels_total'].value,
+            "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
-            #"history_total": event.counters['history_total'].value,
         }
         return struct

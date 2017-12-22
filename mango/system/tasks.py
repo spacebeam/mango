@@ -255,7 +255,7 @@ class Tasks(object):
                 "source ": str(event.get('source', '')),
                 "destination": str(event.get('destination', '')),
                 "labels": str(event.get('labels', '')),
-                "uri": str(event.get('uri', '')),
+                "url": str(event.get('url', '')),
                 "start": str(event.get('start', '')),
                 "ack": str(event.get('ack', '')),
                 "stop": str(event.get('stop', '')),
