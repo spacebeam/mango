@@ -81,11 +81,7 @@ from mango.handlers import accounts, tasks
 #from mango.handlers import groups
 from mango.tools import options
 
-# Something about tornado and pyzmq that need's at least some check again.
-
 from zmq.eventloop import ioloop
-
-# the idea of course still holds perfectly. (=
 
 # ioloop
 ioloop.install()
@@ -118,7 +114,7 @@ def main():
     # logging system spawned
     logging.info('Mango system {0} spawned'.format(system_uuid))
     # logging solr
-    logging.info('Solr riak {0} '.format(solr))
+    logging.info('Solr 4.7 riak {0} '.format(solr))
     # logging riak settings
     logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
     # check for cache
