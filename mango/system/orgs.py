@@ -204,6 +204,7 @@ class Org(object):
                 search_index,
                 structure
             )
+            message = structure.get('uuid')
         except Exception as error:
             logging.error(error)
             message = str(error)
