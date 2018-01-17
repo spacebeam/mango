@@ -22,11 +22,11 @@ from mango import errors
 
 def validate_uuid4(uuid_string):
     '''
-    Validate that a UUID string is in
-    fact a valid uuid4.
+        Validate that a UUID string is in
+        fact a valid uuid4.
 
-    Happily, the uuid module does the actual
-    checking for us.
+        Happily, the uuid module does the actual
+        checking for us.
     '''
     try:
         val = uuid.UUID(uuid_string, version=4)
@@ -35,6 +35,31 @@ def validate_uuid4(uuid_string):
         # is not a valid hex code for a UUID.
         return False
     return str(val) == uuid_string
+
+
+def clean_response(response, ignore):
+    return dict(
+        (key.split('_register')[0], value)
+        for (key, value) in response.items()
+        if key not in ignore
+    )
+
+def get_search_item(solr, search_index, query, filter_query):
+    '''
+        Build and return the item query url
+    '''
+    return "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+        solr, search_index, query, filter_query
+    )
+
+def get_search_list(solr, search_index, query, filter_query, start_num, page_size):
+    '''
+        Build and return the list query url
+    '''
+    # note: the last replace smells a little funny...
+    return "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
+        solr, search_index, query, filter_query, start_num, page_size
+    ).replace(' ', '')
 
 def get_average(total, marks):
     '''
@@ -55,13 +80,13 @@ def check_json(struct):
         Check for malformed JSON
     '''
     try:
-        struct = json.loads(struct)
-    except Exception, e:
-        api_error = errors.Error(e)
-        error = api_error.json()
-        raise gen.Return(error)
-        return
-    raise gen.Return(struct)
+        logging.warning(struct)
+        message = json.loads(struct)
+    except Exception as error:
+        api_error = errors.Error(error)
+        message = api_error.json()
+        raise error
+    return message
 
 @gen.coroutine
 def check_times(start, end):
@@ -74,12 +99,12 @@ def check_times(start, end):
         # so... 2 lines more just for the fucking timestamp?
         start = start.timestamp
         end = end.timestamp
-    except Exception, e:
-        logging.exception(e)
-        raise e
+    except Exception as error:
+        logging.exception(error)
+        raise error
         return
     message = {'start':start, 'end':end}
-    raise gen.Return(message)
+    return message
 
 @gen.coroutine
 def check_times_get_timestamp(start, end):
@@ -89,12 +114,12 @@ def check_times_get_timestamp(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
-    except Exception, e:
-        logging.exception(e)
-        raise e
+    except Exception as error:
+        logging.exception(error)
+        raise error
         return
     message = {'start':start.timestamp, 'end':end.timestamp}
-    raise gen.Return(message)
+    return message
 
 @gen.coroutine
 def check_times_get_datetime(start, end):
@@ -104,12 +129,12 @@ def check_times_get_datetime(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
-    except Exception, e:
-        logging.exception(e)
-        raise e
+    except Exception as error:
+        logging.exception(error)
+        raise error
         return
     message = {'start':start.naive, 'end':end.naive}
-    raise gen.Return(message)
+    return message
 
 def clean_message(struct):
     '''

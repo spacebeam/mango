@@ -35,64 +35,44 @@ class Handler(tasks.Tasks, BaseHandler):
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend logged username
-        username = self.get_username_cookie()
-        # if the user don't provide an account we use the username
+        # get the current frontend username from cookie
+        # username = self.get_username_cookie()
+        # get the current frontend username from token
+        # username = self.get_username_token()
+        username = False
+        # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-        # not unique
-        unique = query_args.get('unique', False)
         # rage against the finite state machine
         status = 'all'
         # are we done yet?
         done = False
-        # some random that crash this shit
-        message = {'crashing': True}
-        # unique flag activated
-        if unique:
-            unique_stuff = {key:query_args[key][0] for key in query_args}
-            query_list = yield self.get_unique_querys(unique_stuff)
-            unique_list = yield self.get_query_values(query_list)
-            done = True
-            message = {'tasks':unique_list}
-            self.set_status(200)
-        # get task list
-        if not done and not task_uuid:
-            task_list = yield self.get_task_list(account, start, end, lapse, status, page_num)
-            message = {
-                'count': task_list.get('response')['numFound'],
-                'page': page_num,
-                'results': []
-            }
-            for doc in task_list.get('response')['docs']:
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message['results'].append(
-                    dict((key.split('_register')[0], value)
-                    for (key, value) in doc.items() if key not in IGNORE_ME)
-                )
+        # init message on error
+        message = {'error':True}
+        # init status that match with our message
+        self.set_status(400)
+        # check if we're list processing
+        if not task_uuid:
+            message = yield self.get_task_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single task received
-        if not done and task_uuid:
-            # try to get stuff from cache first
+        else:
+            # first try to get stuff from cache
             task_uuid = task_uuid.rstrip('/')
             # get cache data
             message = self.cache.get('tasks:{0}'.format(task_uuid))
             if message is not None:
-                logging.info('tasks:{0} done retrieving from cache!'.format(task_uuid))
+                logging.info('tasks:{0} done retrieving!'.format(task_uuid))
                 self.set_status(200)
             else:
                 message = yield self.get_task(account, task_uuid)
-                if self.cache.add('tasks:{0}'.format(task_uuid), data, 1):
+                if self.cache.add('tasks:{0}'.format(task_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(task_uuid)))
                     self.set_status(200)
-            if not message:
-                self.set_status(400)
-                message = {'missing account {0} task_uuid {1} page_num {2} checked {3}'.format(
-                    account, task_uuid, page_num, checked):message}
-        # thanks for all the fish
+        # so long and thanks for all the fish
         self.finish(message)
 
     @gen.coroutine
@@ -102,49 +82,32 @@ class Handler(tasks.Tasks, BaseHandler):
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend logged username
-        username = self.get_username_cookie()
+        # get the current frontend username from cookie
+        # username = self.get_username_cookie()
+        # get the current frontend username from token
+        # username = self.get_username_token()
+        username = False
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-        # not unique
-        unique = query_args.get('unique', False)
         # rage against the finite state machine
         status = 'all'
         # are we done yet?
         done = False
-        # Some random shit
-        message = {'crashing':True}
-        if unique:
-            unique_stuff = {key:query_args[key][0] for key in query_args}
-            task_list = yield self.get_unique_querys(unique_stuff)
-            unique_list = yield self.get_query_values(task_list)
-            # yes we are done my bru!
-            done = True
-            message = {'tasks':unique_list}
-            # set the number code of the state in this rage against the machine nonsense?
-            self.set_status(200)
-
-        if not done and not task_uuid:
-            task_list = yield self.get_task_list(account, start, end, lapse, status, page_num)
-            message = {
-                'count': task_list.get('response')['numFound'],
-                'page': page_num,
-                'results': []
-            }
-            for doc in task_list.get('response')['docs']:
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message['results'].append(
-                    dict((key.split('_register')[0], value)
-                    for (key, value) in doc.items() if key not in IGNORE_ME)
-                )
+        # init message on error
+        message = {'error':True}
+        # init status that match with our message
+        self.set_status(400)
+        # check if we're list processing
+        if not task_uuid:
+            message = yield self.get_task_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single task received
-        if not done and task_uuid:
-            # try to get stuff from cache first
+        else:
+            # first try to get stuff from cache
             task_uuid = task_uuid.rstrip('/')
             # get cache data
             message = self.cache.get('tasks:{0}'.format(task_uuid))
@@ -152,16 +115,11 @@ class Handler(tasks.Tasks, BaseHandler):
                 logging.info('tasks:{0} done retrieving!'.format(task_uuid))
                 self.set_status(200)
             else:
-                #data = yield self.get_task(account, task_uuid.rstrip('/'))
                 message = yield self.get_task(account, task_uuid)
                 if self.cache.add('tasks:{0}'.format(task_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(task_uuid)))
                     self.set_status(200)
-            if not message:
-                self.set_status(400)
-                message = {'missing account {0} task_uuid {1} page_num {2} checked {3}'.format(
-                    account, task_uuid.rstrip('/'), page_num, checked):result}
-        # thanks for all the fish
+        # so long and thanks for all the fish
         self.finish(message)
 
     @gen.coroutine
@@ -179,14 +137,17 @@ class Handler(tasks.Tasks, BaseHandler):
         query_args = self.request.arguments
         # get account from new task struct
         account = struct.get('account', None)
-        # get the current frontend logged username
-        username = self.get_username_cookie()
+        # get the current frontend username from cookie
+        # username = self.get_username_cookie()
+        # get the current frontend username from token
+        # username = self.get_username_token()
+        username = False
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new task struct
-        acknowledge = yield self.new_task(struct)
+        task_uuid = yield self.new_task(struct)
         # complete message with receive uuid.
-        message = {'uuid':acknowledge}
+        message = {'uuid':task_uuid}
         if 'error' in message['uuid']:
             scheme = 'task'
             reason = {'duplicates': [
@@ -214,13 +175,12 @@ class Handler(tasks.Tasks, BaseHandler):
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-        if task_uuid:
-            # try to get stuff from cache first
-            task_uuid = task_uuid.rstrip('/')
-            # get cache data
-            #logging.info('borrando uuid de cache {0}'.format(str(task_uuid)))
-            result = self.cache.delete('task:{0}'.format(task_uuid))
+        # remove query string flag
+        remove = self.request.arguments.get('remove', False)
+        if not remove :
             result = yield self.modify_task(account, task_uuid, struct)
+        else:
+            result = yield self.modify_remove(account, task_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
@@ -237,13 +197,7 @@ class Handler(tasks.Tasks, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        if task_uuid:
-            # try to get stuff from cache first
-            task_uuid = task_uuid.rstrip('/')
-            # get cache data
-            #logging.info('borrando uuid de cache {0}'.format(str(task_uuid)))
-            result = self.cache.delete('task:{0}'.format(task_uuid))
-            result = yield self.remove_task(account, task_uuid)
+        result = yield self.remove_task(account, task_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
@@ -275,12 +229,9 @@ class Handler(tasks.Tasks, BaseHandler):
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
-            elif isinstance(v, unicode):
-                parameters[k] = str(type('unicode'))
             else:
                 parameters[k] = str(type(v))
         # after automatic madness return description and parameters
-        # we now have the option to clean a little bit.
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {

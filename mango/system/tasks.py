@@ -40,126 +40,25 @@ class Tasks(object):
         Tasks
     '''
     @gen.coroutine
-    def get_query_values(self, urls):
-        '''
-            Process grouped values from Solr
-        '''
-        process_list = []
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-            else:
-                result = json.loads(response.body)
-                content = {}
-                options = []
-                # gunter grass penguin powers
-                for stuff in result['grouped']:
-                    content['value'] = stuff[0:-9]
-                    for g in result['grouped'][stuff]['groups']:
-                        options.append(g['groupValue'])
-                    content['options'] = options
-                # append the final content
-                process_list.append(content)
-        try:
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while True:
-                # this probably make no sense
-                # we're just trying to sleep for a nano second in here...
-                # or maybe.., I don't know man.
-                yield gen.sleep(0.0001)
-                if len(process_list) == len(urls):
-                    break
-                # who fucking cares..
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        finally:
-            raise gen.Return(process_list)
-
-    @gen.coroutine
-    def get_unique_querys(self, struct):
-        '''
-            Get unique list from Solr
-        '''
-        search_index = 'mango_task_index'
-        query = 'uuid_register:*'
-        filter_query = 'uuid_register:*'
-        unique_list = []
-        if 'unique' in struct.keys():
-            del struct['unique']
-        try:
-            if len(struct.keys()) == 1:
-                for key in struct.keys():
-                    field_list = key
-                    group_field = key
-                    params = {
-                        'wt': 'json',
-                        'q': query,
-                        'fl': field_list,
-                        'fq':filter_query,
-                        'group':'true',
-                        'group.field':group_field,
-                    }
-                    url = ''.join((
-                        self.solr,
-                        '/query/',
-                        search_index,
-                        '?wt=json&q=uuid_register:*&fl=',
-                        key,
-                        '_register&fq=uuid_register:*&group=true&group.field=',
-                        key,
-                        '_register'))
-                    unique_list.append(url)
-            else:
-                for key in struct.keys():
-                    field_list = key
-                    group_field = key
-                    params = {
-                        'wt': 'json',
-                        'q': query,
-                        'fl': field_list,
-                        'fq':filter_query,
-                        'group':'true',
-                        'group.field':group_field,
-                    }
-                    url = ''.join((
-                        self.solr,
-                        '/query/',
-                        search_index,
-                        '?wt=json&q=uuid_register:*&fl=',
-                        key,
-                        '_register&fq=uuid_register:*&group=true&group.field=',
-                        key,
-                        '_register'))
-                    unique_list.append(url)
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        finally:
-            raise gen.Return(unique_list)
-
-    @gen.coroutine
     def get_task(self, account, task_uuid):
         '''
             Get task
         '''
         search_index = 'mango_task_index'
         query = 'uuid_register:{0}'.format(task_uuid)
-        filter_query = 'account_register:{0}'.format(account)
-        # build the url
-        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            self.solr, search_index, query, filter_query
-        )
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        # init got response list
         got_response = []
-        # response message
+        # init crash message
         message = {'message': 'not found'}
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
         def handle_request(response):
             '''
                 Request Async Handler
@@ -170,25 +69,30 @@ class Tasks(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                response_doc = stuff['response']['docs'][0]
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message = dict(
-                    (key.split('_register')[0], value)
-                    for (key, value) in response_doc.items()
-                    if key not in IGNORE_ME
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
                 )
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message)
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
+            stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
+            if stuff['response']['numFound']:
+                response = stuff['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            elif watchers['response']['numFound']:
+                response = watchers['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message
 
     @gen.coroutine
     def get_task_list(self, account, start, end, lapse, status, page_num):
@@ -197,15 +101,28 @@ class Tasks(object):
         '''
         search_index = 'mango_task_index'
         query = 'uuid_register:*'
-        filter_query = 'account_register:{0}'.format(account)
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # page number
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
-        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}".format(
-            self.solr, search_index, query, filter_query, start_num, page_size
-        )
-        von_count = 0
+        # set of urls
+        urls = set()
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
+        # init got response list
         got_response = []
+        # init crash message
+        message = {
+            'count': 0,
+            'page': page_num,
+            'results': []
+        }
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
         def handle_request(response):
             '''
                 Request Async Handler
@@ -215,19 +132,33 @@ class Tasks(object):
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
-
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        finally:
-            raise gen.Return(got_response[0])
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
+            stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
+            if stuff['response']['numFound']:
+                message['count'] += stuff['response']['numFound']
+                for doc in stuff['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            if watchers['response']['numFound']:
+                message['count'] += watchers['response']['numFound']
+                for doc in watchers['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message
 
     @gen.coroutine
     def new_task(self, struct):
@@ -241,8 +172,8 @@ class Tasks(object):
             event = tasks.Task(struct)
             event.validate()
             event = clean_structure(event)
-        except Exception, e:
-            raise e
+        except Exception as error:
+            raise error
         try:
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
@@ -284,11 +215,11 @@ class Tasks(object):
                 search_index,
                 structure
             )
-            message = structure.get('uuid')
-        except Exception, e:
-            logging.error(e)
-            message = str(e)
-        raise gen.Return(message)
+           message = structure.get('uuid')
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
 
     @gen.coroutine
     def modify_task(self, account, task_uuid, struct):
@@ -304,15 +235,19 @@ class Tasks(object):
         # solr query
         query = 'uuid_register:{0}'.format(task_uuid.rstrip('/'))
         # filter query
-        filter_query = 'account_register:{0}'.format(account)
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
+
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
+
         # pretty please, ignore this list of fields from database.
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords"]
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        # got callback response?
         got_response = []
-        update_complete = False
+        # yours truly
+        message = {'update_complete':False}
         def handle_request(response):
             '''
                 Request Async Handler
@@ -330,29 +265,106 @@ class Tasks(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            response_doc = got_response[0].get('response')['docs'][0]
-            riak_key = str(response_doc['_yz_rk'])
+            response = got_response[0].get('response')['docs'][0]
+            riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
-            contact = Map(bucket, riak_key)
+            task = Map(bucket, riak_key)
             for key in struct:
                 if key not in IGNORE_ME:
-                    contact.registers['{0}'.format(key)].assign(str(struct.get(key)))
-            contact.update()
+                    if type(struct.get(key)) == list:
+                        task.reload()
+                        old_value = task.registers['{0}'.format(key)].value
+                        if old_value:
+                            old_list = json.loads(old_value.replace("'",'"'))
+                            for thing in struct.get(key):
+                                old_list.append(thing)
+                            task.registers['{0}'.format(key)].assign(str(old_list))
+                        else:
+                            new_list = []
+                            for thing in struct.get(key):
+                                new_list.append(thing)
+                            task.registers['{0}'.format(key)].assign(str(new_list))
+                    else:
+                        task.registers['{0}'.format(key)].assign(str(struct.get(key)))
+                    task.update()
             update_complete = True
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        finally:
-            raise gen.Return(update_complete)
+            message['update_complete'] = True
+        except Exception as error:
+            logging.exception(error)
+        return message.get('update_complete', False)
+
+    @gen.coroutine
+    def modify_remove(self, account, task_uuid, struct):
+        '''
+            Modify remove
+        '''
+        # riak search index
+        search_index = 'mango_task_index'
+        # riak bucket type
+        bucket_type = 'mango_task'
+        # riak bucket name
+        bucket_name = 'tasks'
+        # solr query
+        query = 'uuid_register:{0}'.format(task_uuid.rstrip('/'))
+        # filter query
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        # search query url
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
+        # pretty please, ignore this list of fields from database.
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        # got callback response?
+        got_response = []
+        # yours truly
+        message = {'update_complete':False}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # Please, don't be careless with the time.
+                yield gen.sleep(0.0010)
+            response = got_response[0].get('response')['docs'][0]
+            riak_key = str(response['_yz_rk'])
+            bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
+            bucket.set_properties({'search_index': search_index})
+            task = Map(bucket, riak_key)
+            for key in struct:
+                if key not in IGNORE_ME:
+                    if type(struct.get(key)) == list:
+                        task.reload()
+                        old_value = task.registers['{0}'.format(key)].value
+                        if old_value:
+                            old_list = json.loads(old_value.replace("'",'"'))
+                            new_list = [x for x in old_list if x not in struct.get(key)]
+                            task.registers['{0}'.format(key)].assign(str(new_list))
+                            task.update()
+                            message['update_complete'] = True
+                    else:
+                        message['update_complete'] = False
+        except Exception as error:
+            logging.exception(error)
+        return message.get('update_complete', False)
 
     @gen.coroutine
     def remove_task(self, account, task_uuid):
         '''
             Remove task
         '''
-        # missing history
+        # Yo, missing history ?
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_task(account, task_uuid, struct)
-        raise gen.Return(message)
+        return message
