@@ -105,7 +105,7 @@ class Account(object):
     
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))        
         filter_status = 'status_register:active'
-        order = '&sort=created_at_register+desc'
+        order = 'sort=created_at_register+desc'
 
         filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
 
