@@ -102,11 +102,12 @@ class Account(object):
         '''
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
-        #active = 'active'
-
+    
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))        
         filter_status = 'status_register:active'
-        filter_query = '(({0})AND({1}))'.format(filter_account, filter_status)
+        order = '&sort=created_at_register+desc'
+
+        filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
 
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
