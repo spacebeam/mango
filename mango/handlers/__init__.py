@@ -210,12 +210,13 @@ class BaseHandler(web.RequestHandler):
             Get valid account uuid
         '''
         search_index = 'mango_account_index'
-        query = 'password_register:{0}'.format(password)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'password_register:{0}'.format(password.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
-        )
+        ).replace(' ', '')
+        
         logging.warning(url)
         got_response = []
         # clean response message
