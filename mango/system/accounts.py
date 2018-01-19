@@ -102,7 +102,12 @@ class Account(object):
         '''
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
-        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        active = 'active'
+
+        filter_account = 'account_register:{0}'.format(account.decode('utf-8'))        
+        filter_status = 'status_register:{0}'.format(active.decode('utf-8'))
+        filter_query = '(({0})AND({1}))'.format(filter_account, filter_status)
+
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         # page number
@@ -112,6 +117,9 @@ class Account(object):
         # set of urls
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        
+        logging.warning(urls)
+
         urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
         # init got response list
         got_response = []
