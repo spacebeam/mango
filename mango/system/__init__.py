@@ -41,10 +41,10 @@ def basic_authentication(handler_class):
                 handler._transforms = []
                 handler.finish()
                 return False
-            logging.warning('check this----------------------')
             header = auth_header[6:]
             logging.warning(header.encode('utf-8'))
             auth_decoded = base64.decodestring(header.encode('utf-8'))
+            logging.warning(auth_decoded)
             handler.username, handler.password = auth_decoded.split(':', 2)
             logging.info('%s enter the dungeon! @basic_auth' % handler.username)
             return True
