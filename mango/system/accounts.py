@@ -102,10 +102,10 @@ class Account(object):
         '''
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
-        active = 'active'
+        #active = 'active'
 
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))        
-        filter_status = 'status_register:{0}'.format(active.decode('utf-8'))
+        filter_status = 'status_register:active'
         filter_query = '(({0})AND({1}))'.format(filter_account, filter_status)
 
         # note where the hack change ' to %27 for the url string!
