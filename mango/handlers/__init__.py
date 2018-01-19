@@ -119,11 +119,10 @@ class BaseHandler(web.RequestHandler):
         query = 'account_register:{0}'.format(account)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
-        url.set()
-        url.add(get_search_item(self.solr, search_index, query, filter_query))
-        #url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            #self.solr, search_index, query, filter_query
-        #)
+
+        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            self.solr, search_index, query, filter_query
+        )
         got_response = []
         # response message
         message = {'message': 'not found'}
