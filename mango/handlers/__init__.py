@@ -297,7 +297,7 @@ class BaseHandler(web.RequestHandler):
         return message.get('labels', [])
         #raise gen.Return([str(x) for x in message.get('labels', [])])
 
-#@basic_authentication
+@basic_authentication
 class LoginHandler(BaseHandler):
     '''
         BasicAuth login
