@@ -216,6 +216,7 @@ class BaseHandler(web.RequestHandler):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
+        logging.warning(url)
         got_response = []
         # clean response message
         message = {}
