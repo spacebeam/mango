@@ -42,7 +42,7 @@ def basic_authentication(handler_class):
                 handler.finish()
                 return False
             logging.warning(auth_header[6:])
-            auth_decoded = base64.b64encode(auth_header[6:])
+            auth_decoded = base64.b64encode(auth_header)
             #auth_decoded = base64.decodestring(auth_header[6:])
             #logging.warning(auth_decoded)
             #handler.username, handler.password = auth_decoded.split(':', 2)
