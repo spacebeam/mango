@@ -72,8 +72,8 @@ class BaseHandler(web.RequestHandler):
             check account type
         '''
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
@@ -116,7 +116,7 @@ class BaseHandler(web.RequestHandler):
             Get permissions
         '''
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
 
@@ -163,8 +163,8 @@ class BaseHandler(web.RequestHandler):
         logging.info(account)
 
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # parse and build url
         url.set()
         url.add(get_search_item(self.solr, search_index, query, filter_query))
@@ -216,7 +216,7 @@ class BaseHandler(web.RequestHandler):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         ).replace(' ', '')
-        
+
         logging.warning(url)
         got_response = []
         # clean response message
@@ -312,7 +312,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            self.set_secure_cookie("username", self.username)
+            #self.set_secure_cookie("username", self.username)
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
             # permissions
