@@ -200,6 +200,7 @@ class Group(object):
                 "resource": str(event.get('resource', '')),
                 "resource_uuid": str(event.get('resource_uuid', '')),
                 "active": str(event.get('active', '')),
+                "watchers": str(event.get('watchers', '')),
             }
             result = GroupMap(
                 self.kvalue,

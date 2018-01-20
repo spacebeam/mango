@@ -62,6 +62,7 @@ class TaskMap(object):
         self.map.registers['checksum'].assign(struct.get('checksum', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
         self.map.registers['history'].assign(struct.get('history', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         # end of the map stuff
         self.map.store()
 
@@ -104,6 +105,7 @@ class TaskMap(object):
             "checksum": event.registers['checksum'].value,
             "hashs": event.registers['hashs'].value,
             "history": event.registers['history'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return json.dumps(struct)
 
@@ -137,6 +139,7 @@ class TaskMap(object):
             "last_modified": event.registers['last_modified'].value,
             "checksum": event.registers['checksum'].value,
             "hashs": event.registers['hashs'].value,
-            "history": event.registers['history'].value,  
+            "history": event.registers['history'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return struct

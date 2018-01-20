@@ -84,7 +84,7 @@ class RequiredBase(models.Model):
     hashs = compound.ListType(types.StringType())
     resource = types.StringType()
     resource_uuid = types.StringType()
-
+    watchers = compound.ListType(types.StringType())
 
 class CleanBase(models.Model):
     '''
@@ -120,7 +120,7 @@ class CleanBase(models.Model):
     hashs = compound.ListType(types.StringType())
     resource = types.StringType()
     resource_uuid = types.StringType()
-
+    watchers = compound.ListType(types.StringType())
 
 class BaseAccount(RequiredBase):
     '''

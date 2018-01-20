@@ -53,6 +53,7 @@ class GroupMap(object):
         self.map.registers['resources'].assign(struct.get('resources', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
         self.map.registers['history'].assign(struct.get('history', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         # end of the map stuff
         self.map.store()
 
@@ -86,6 +87,7 @@ class GroupMap(object):
             "resources": event.registers['resources'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return json.dumps(struct)
 
@@ -111,5 +113,6 @@ class GroupMap(object):
             "resources": event.registers['resources'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return struct

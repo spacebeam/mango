@@ -71,6 +71,7 @@ class AccountMap(object):
         self.map.registers['groups'].assign(struct.get('groups', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
         self.map.registers['permissions'].assign(struct.get('permissions', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         # end of the map stuff
         self.map.store()
 
@@ -122,6 +123,7 @@ class AccountMap(object):
             "groups": event.registers['groups'].value,
             "hashs": event.registers['hashs'].value,
             "permissions": event.registers['permissions'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return json.dumps(struct)
 
@@ -165,5 +167,6 @@ class AccountMap(object):
             "groups": event.registers['groups'].value,
             "hashs": event.registers['hashs'].value,
             "permissions": event.registers['permissions'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return struct
