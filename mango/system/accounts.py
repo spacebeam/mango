@@ -102,7 +102,6 @@ class Account(object):
         '''
         search_index = 'mango_account_index'
         query = 'uuid_register:*'        
-        filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_status = 'status_register:active'
         order = 'sort=created_at_register+desc'
     
@@ -122,9 +121,9 @@ class Account(object):
         if account is None:
             #search_index = 'mango_account_index'
             #query = 'uuid_register:*'
-            #filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
-            # note where the hack change ' to %27 for the url string!
+            filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
+            # note where the hack change ' to %27 for the url string!
             fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
             #urls = set()
             #urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
