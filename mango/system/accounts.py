@@ -115,7 +115,7 @@ class Account(object):
         #logging.warning(urls)
         #urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
   
-        if str(account) is None:
+        if account.decode('utf8') is None:
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
             filter_query = filter_status
@@ -125,7 +125,7 @@ class Account(object):
             logging.warning(urls)
             urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
 
-        elif str(account) is not None:
+        elif account.decode('utf8') is not None:
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
             
