@@ -115,10 +115,10 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
         # set of urls
-        urls = set()
-        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
-        logging.warning(urls)
-        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
+        #urls = set()
+        #urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
+        #logging.warning(urls)
+        #urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
   
         if account is None:
             filter_query = filter_status
