@@ -103,7 +103,7 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
     
-        filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
+        
         filter_status = 'status_register:active'
         order = 'sort=created_at_register+desc'
         #filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
@@ -128,6 +128,7 @@ class Account(object):
             urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
 
         elif account is not None:
+            filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
             urls = set()
             urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
