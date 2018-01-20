@@ -116,7 +116,7 @@ class Account(object):
         #logging.warning(urls)
         #urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
   
-        if accounts is None:
+        if account is None:
             logging.warning('account ?')
             logging.warning(account)
             search_index = 'mango_account_index'
@@ -130,7 +130,7 @@ class Account(object):
             urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
             urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
 
-        elif accounts is not None:
+        elif account is not None:
             logging.warning('account ?')
             logging.warning(account)
             search_index = 'mango_account_index'
