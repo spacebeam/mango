@@ -103,8 +103,8 @@ class Account(object):
         filter_status = 'status_register:active'
         order = 'sort=created_at_register+desc'
         logging.warning(account)
-        accounts = account.decode('utf-8')
-        logging.warning(accounts)
+        #accounts = account.decode('utf-8')
+        #logging.warning(accounts)
         #filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
 
         # note where the hack change ' to %27 for the url string!
