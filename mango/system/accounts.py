@@ -136,7 +136,7 @@ class Account(object):
             search_index = 'mango_account_index'
             query = 'uuid_register:*'
             filter_query = filter_status
-            fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+            #fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
             urls = set()
             urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
             logging.warning(urls)
