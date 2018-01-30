@@ -77,7 +77,7 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, tasks
+from mango.handlers import accounts, tasks, groups
 #from mango.handlers import groups
 from mango.tools import options
 
@@ -137,7 +137,6 @@ def main():
             #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
             #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
 
-            # Yo computer!, da fuq are u doing?
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
@@ -152,10 +151,10 @@ def main():
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
 
-            # Groups, groups, groups, groups, groups.
-            #(r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
-            #(r'/groups/(?P<group_uuid>.+)/?', groups.Handler),
-            #(r'/groups/?', groups.Handler),
+            # Groups.
+            (r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
+            (r'/groups/(?P<group_uuid>.+)/?', groups.Handler),
+            (r'/groups/?', groups.Handler),
         ],
         db = db,
         cache = cache,

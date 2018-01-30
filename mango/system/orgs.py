@@ -45,7 +45,7 @@ class Org(object):
         '''
             Get org
         '''
-        search_index = 'mango_org_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
@@ -100,7 +100,7 @@ class Org(object):
         '''
             Get org list
         '''
-        search_index = 'mango_org_index'
+        search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
@@ -217,7 +217,7 @@ class Org(object):
             Modify org
         '''
         # riak search index
-        search_index = 'mango_org_index'
+        search_index = 'mango_account_index'
         # riak bucket type
         bucket_type = 'mango_org'
         # riak bucket name
@@ -288,11 +288,11 @@ class Org(object):
             Modify remove
         '''
         # riak search index
-        search_index = 'mango_org_index'
+        search_index = 'mango_account_index'
         # riak bucket type
-        bucket_type = 'mango_org'
+        bucket_type = 'mango_account'
         # riak bucket name
-        bucket_name = 'orgs'
+        bucket_name = 'acounts'
         # solr query
         query = 'uuid_register:{0}'.format(org_uuid.rstrip('/'))
         # filter query
@@ -356,4 +356,3 @@ class Org(object):
         struct['status'] = 'deleted'
         message = yield self.modify_org(account, org_uuid, struct)
         return message
-
