@@ -54,7 +54,7 @@ class AccountMap(object):
         self.map.registers['company'].assign(struct.get('company', ''))
         self.map.registers['location'].assign(struct.get('location', ''))
         self.map.registers['membership'].assign(struct.get('membership', ''))
-        self.map.registers['uri'].assign(struct.get('uri', ''))
+        self.map.registers['url'].assign(struct.get('url', ''))
         self.map.registers['max_channels'].assign(struct.get('max_channels', ''))
         self.map.registers['checksum'].assign(struct.get('checksum', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
@@ -63,23 +63,15 @@ class AccountMap(object):
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
-        #self.map.counters['members_total'].assign(struct.get('members_total', ''))
         self.map.registers['phones'].assign(struct.get('phones', ''))
-        #self.map.counters['phones_total'].assign(struct.get('phones_total', ''))
         self.map.registers['emails'].assign(struct.get('emails', ''))
-        #self.map.counters['emails_total'].assign(struct.get('emails_total', ''))
         self.map.registers['history'].assign(struct.get('history', ''))
-        #self.map.counters['history_total'].assign(struct.get('history_total', ''))
-        self.map.sets['labels'].add(struct.get('labels'))
-        #self.map.counters['labels_total'].assign(struct.get('labels_total', ''))
+        self.map.registers['labels'].assign(struct.get('labels'))
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
-        #self.map.counters['orgs_total'].assign(struct.get('orgs_total', ''))
         self.map.registers['groups'].assign(struct.get('groups', ''))
-        #self.map.counters['groups_total'].assign(struct.get('groups_total', ''))
         self.map.registers['hashs'].assign(struct.get('hashs', ''))
-        #self.map.counters['hashs_total'].assign(struct.get('hashs_total', ''))
         self.map.registers['permissions'].assign(struct.get('permissions', ''))
-        #self.map.counters['permissions_total'].assign(struct.get('permissions_total', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         # end of the map stuff
         self.map.store()
 
@@ -114,7 +106,7 @@ class AccountMap(object):
             "company": event.registers['company'].value,
             "location": event.registers['location'].value,
             "membership": event.registers['membership'].value,
-            "uri": event.registers['uri'].value,
+            "url": event.registers['url'].value,
             "max_channels": event.registers['max_channels'].value,
             "checksum": event.registers['checksum'].value,
             "checked": event.registers['checked'].value,
@@ -123,23 +115,15 @@ class AccountMap(object):
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "members": event.registers['members'].value,
-            #"members_total": event.counters['members_total'].value,
             "phones": event.registers['phones'].value,
-            #"phones_total": event.counters['phones_total'].value,
             "emails": event.registers['emails'].value,
-            #"emails_total": event.counters['emails_total'].value,
             "history": event.registers['history'].value,
-            #"history_total": event.counters['history_total'].value,
-            "labels": event.sets['labels'].value,
-            #"labels_total": event.counters['labels_total'].value,
+            "labels": event.registers['labels'].value,
             "orgs": event.registers['orgs'].value,
-            #"orgs_total": event.counters['orgs_total'].value,
             "groups": event.registers['groups'].value,
-            #"groups_total": event.counters['groups_total'].value,
             "hashs": event.registers['hashs'].value,
-            #"hashs_total": event.counters['hashs_total'].value,
             "permissions": event.registers['permissions'].value,
-            #"permissions_total": event.counters['permissions_total'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return json.dumps(struct)
 
@@ -166,7 +150,7 @@ class AccountMap(object):
             "company": event.registers['company'].value,
             "location": event.registers['location'].value,
             "membership": event.registers['membership'].value,
-            "uri": event.registers['uri'].value,
+            "url": event.registers['url'].value,
             "max_channels": event.registers['max_channels'].value,
             "checksum": event.registers['checksum'].value,
             "checked": event.registers['checked'].value,
@@ -175,22 +159,14 @@ class AccountMap(object):
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "members": event.registers['members'].value,
-            #"members_total": event.counters['members_total'].value,
             "phones": event.registers['phones'].value,
-            #"phones_total": event.counters['phones_total'].value,
             "emails": event.registers['emails'].value,
-            #"emails_total": event.counters['emails_total'].value,
             "history": event.registers['history'].value,
-            #"history_total": event.counters['history_total'].value,
-            "labels": event.sets['labels'].value,
-            #"labels_total": event.counters['labels_total'].value,
+            "labels": event.registers['labels'].value,
             "orgs": event.registers['orgs'].value,
-            #"orgs_total": event.counters['orgs_total'].value,
             "groups": event.registers['groups'].value,
-            #"groups_total": event.counters['groups_total'].value,
             "hashs": event.registers['hashs'].value,
-            #"hashs_total": event.counters['hashs_total'].value,
             "permissions": event.registers['permissions'].value,
-            #"permissions_total": event.counters['permissions_total'].value,
+            "watchers": event.registers['watchers'].value,
         }
         return struct

@@ -18,7 +18,7 @@ import tornado.options
 from tornado.options import parse_config_file
 
 
-secret = base64.b64encode("I've said before that I'm a remarkably unsentimental monkey.")
+#secret = base64.b64encode("I've said before that I'm a remarkably unsentimental monkey.")
 config_path = 'mango.conf'
 
 
@@ -107,13 +107,13 @@ def options():
         default=False, type=bool,
         help=('Enable cache'))
     tornado.options.define('page_size',
-        default=10, type=int,
+        default=50, type=int,
         help=('Set a custom page size up to 100'))
-    tornado.options.define('cookie_secret',
-        default=secret,
-        type=str,
-        help=('Secure cookie secret string')
-    )
+    #tornado.options.define('cookie_secret',
+        #default=secret,
+        #type=str,
+        #help=('Secure cookie secret string')
+    #)
     # Parse config file, then command line...
     # so command line switches take precedence
     if os.path.exists(config_path):

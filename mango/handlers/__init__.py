@@ -19,6 +19,7 @@ from tornado import web
 from mango.system import basic_authentication
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
+from mango.tools import get_search_item, get_search_list
 from mango import errors
 from tornado import httpclient as _http_client
 
@@ -63,7 +64,7 @@ class BaseHandler(web.RequestHandler):
         '''
             Return the username from a secure cookie (require cookie_secret)
         '''
-        return self.get_secure_cookie('username')
+        return self.get_secure_cookie("username")
 
     @gen.coroutine
     def check_account_type(self, account):
@@ -71,8 +72,8 @@ class BaseHandler(web.RequestHandler):
             check account type
         '''
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
@@ -105,10 +106,9 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message.get('account_type', 'not found'))
+        except Exception as error:
+            logging.warning(error)
+        return message.get('account_type', 'not found')
 
     @gen.coroutine
     def get_permissions(self, account):
@@ -116,9 +116,10 @@ class BaseHandler(web.RequestHandler):
             Get permissions
         '''
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
+
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -150,11 +151,9 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message.get('permissions', []))
+        except Exception as error:
+            logging.warning(error)
+        return message.get('permissions', [])
 
     @gen.coroutine
     def get_account_uuid(self, account):
@@ -164,12 +163,15 @@ class BaseHandler(web.RequestHandler):
         logging.info(account)
 
         search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # parse and build url
-        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            self.solr, search_index, query, filter_query
-        )
+        url.set()
+        url.add(get_search_item(self.solr, search_index, query, filter_query))
+
+        #url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
+            #self.solr, search_index, query, filter_query
+        #)
         got_response = []
         # clean response message
         message = {}
@@ -198,10 +200,9 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message.get('uuid', 'not found'))
+        except Exception as error:
+            logging.warning(error)
+        return message.get('uuid', 'not found')
 
     @gen.coroutine
     def get_auth_uuid(self, account, password):
@@ -209,12 +210,14 @@ class BaseHandler(web.RequestHandler):
             Get valid account uuid
         '''
         search_index = 'mango_account_index'
-        query = 'password_register:{0}'.format(password)
-        filter_query = 'account_register:{0}'.format(account)
+        query = 'password_register:{0}'.format(password.decode('utf-8'))
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         #parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
-        )
+        ).replace(' ', '')
+
+        logging.warning(url)
         got_response = []
         # clean response message
         message = {}
@@ -243,10 +246,9 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message.get('uuid', 'not found'))
+        except Exception as error:
+            logging.warning(error)
+        return message.get('uuid', 'not found')
 
     @gen.coroutine
     def get_account_labels(self, account):
@@ -288,10 +290,9 @@ class BaseHandler(web.RequestHandler):
                     for (key, value) in response_doc.items()
                     if key not in IGNORE_ME
                 )
-        except Exception, e:
-            logging.exception(e)
-            raise gen.Return(e)
-        raise gen.Return(message.get('labels', []))
+        except Exception as error:
+            logging.warning(error)
+        return message.get('labels', [])
 
 @basic_authentication
 class LoginHandler(BaseHandler):
@@ -310,7 +311,7 @@ class LoginHandler(BaseHandler):
             self.set_header('Access-Control-Allow-Origin','*')
             self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
             self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            self.set_secure_cookie('username', self.username)
+            #self.set_secure_cookie("username", self.username)
             #account_type
             #self.set_secure_cookie('account_type', str(message['account_type']))
             # permissions

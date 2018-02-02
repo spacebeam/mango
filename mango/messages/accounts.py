@@ -67,7 +67,7 @@ class RequiredBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    uri = types.URLType(required=False)
+    url = types.URLType(required=False)
     max_channels = types.IntType()
     checksum = types.StringType()
     checked = types.BooleanType(default=False)
@@ -78,17 +78,13 @@ class RequiredBase(models.Model):
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     phones = compound.ListType(compound.ModelType(Phone))
-    phones_total = types.IntType()
     emails = compound.ListType(compound.ModelType(Email))
-    emails_total = types.IntType()
     labels = compound.ListType(types.StringType())
-    labels_total = types.IntType()
     history = compound.ListType(types.StringType())
-    history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
-    hashs_total = types.IntType()
-    members_total = types.IntType()
-
+    resource = types.StringType()
+    resource_uuid = types.StringType()
+    watchers = compound.ListType(types.StringType())
 
 class CleanBase(models.Model):
     '''
@@ -107,7 +103,7 @@ class CleanBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    uri = types.URLType()
+    url = types.URLType()
     max_channels = types.IntType()
     checksum = types.StringType()
     checked = types.BooleanType()
@@ -118,17 +114,13 @@ class CleanBase(models.Model):
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     phones = compound.ListType(compound.ModelType(Phone))
-    phones_total = types.IntType()
     emails = compound.ListType(compound.ModelType(Email))
-    emails_total = types.IntType()
     labels = compound.ListType(types.StringType())
-    labels_total = types.IntType()
     history = compound.ListType(types.StringType())
-    history_total = types.IntType()
     hashs = compound.ListType(types.StringType())
-    hashs_total = types.IntType()
-    members_total = types.IntType()
-
+    resource = types.StringType()
+    resource_uuid = types.StringType()
+    watchers = compound.ListType(types.StringType())
 
 class BaseAccount(RequiredBase):
     '''
@@ -154,8 +146,6 @@ class User(BaseAccount):
     orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
     permissions = compound.ListType(compound.ModelType(Permission))
-    permissions_total = types.IntType()
-
 
 class ModifyUser(CleanBaseAccount):
     '''
@@ -167,7 +157,6 @@ class ModifyUser(CleanBaseAccount):
     orgs = compound.ListType(types.StringType())
     password = types.StringType()
     permissions = compound.ListType(compound.ModelType(Permission))
-    permissions_total = types.IntType()
 
 
 class Group(models.Model):
