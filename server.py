@@ -4,7 +4,7 @@
 
     pungent fruit from an attractive shade tree enabling asynchronous
 
-    communication and control structures as patterns of passing messages.
+    organizations and control structures as patterns of passing messages.
 '''
 
 # This file is part of mango.
@@ -77,18 +77,14 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-from mango.handlers import accounts, tasks
-#from mango.handlers import groups
+from mango.handlers import accounts, tasks, teams
 from mango.tools import options
-
-# Something about tornado and pyzmq that need's at least some check again.
 
 from zmq.eventloop import ioloop
 
-# the idea of course still holds perfectly. (=
 
-# ioloop
 ioloop.install()
+
 
 def main():
     '''
@@ -131,35 +127,30 @@ def main():
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
 
-            # Organization members <--- PLEASE CLEAN THIS SHIT IN GENERAL YO! WTF
-            #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
-            #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
-            #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-
-            # Organization teams <--- U guys, seriusly clean this shit out, please!
-            #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', accounts.TeamsHandler),
-            #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', accounts.TeamsHandler),
-            #(r'/orgs/(?P<account>.+)/teams/?', accounts.TeamsHandler),
-
-            # Yo computer!, da fuq are u doing?
+            # Tasks for both human and machine entities.
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
 
-            # Users accounts
+            # User accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
 
-            # Organization accounts
+            # (ORG) members
+            (r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
+
+            # (ORG) teams
+            (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            (r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/orgs/(?P<account>.+)/teams/?', teams.Handler),
+
+            # (Organizations of Restricted Generality)
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
-
-            # Groups, groups, groups, groups, groups.
-            #(r'/groups/page/(?P<page_num>\d+)/?', groups.Handler),
-            #(r'/groups/(?P<group_uuid>.+)/?', groups.Handler),
-            #(r'/groups/?', groups.Handler),
         ],
         db = db,
         cache = cache,
@@ -178,6 +169,6 @@ def main():
 
 if __name__ == '__main__':
     '''
-        Mango for monkey systems
+        Mangos of Restricted Generality
     '''
     main()

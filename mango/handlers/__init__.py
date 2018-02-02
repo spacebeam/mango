@@ -261,7 +261,7 @@ class BaseHandler(web.RequestHandler):
             self.solr, search_index, query, filter_query
         )
         got_response = []
-        #response message
+        # response message
         message = {}
         def handle_request(response):
             '''
@@ -291,7 +291,7 @@ class BaseHandler(web.RequestHandler):
         except Exception, e:
             logging.exception(e)
             raise gen.Return(e)
-        raise gen.Return([str(x) for x in message.get('labels', [])])
+        raise gen.Return(message.get('labels', []))
 
 @basic_authentication
 class LoginHandler(BaseHandler):
