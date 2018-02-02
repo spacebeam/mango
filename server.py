@@ -77,21 +77,13 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-<<<<<<< HEAD
+
 from mango.handlers import accounts, tasks, teams
-=======
-from mango.handlers import accounts, tasks, groups
-#from mango.handlers import groups
->>>>>>> aa5cdb26157503cfde3213a74b34e99e7de711d3
 from mango.tools import options
 
 from zmq.eventloop import ioloop
 
-<<<<<<< HEAD
 
-=======
-# ioloop
->>>>>>> aa5cdb26157503cfde3213a74b34e99e7de711d3
 ioloop.install()
 
 
