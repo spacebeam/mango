@@ -78,7 +78,7 @@ from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 
-from mango.handlers import accounts, tasks, teams
+from mango.handlers import accounts, tasks
 from mango.tools import options
 
 from zmq.eventloop import ioloop
