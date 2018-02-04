@@ -16,8 +16,8 @@ import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.messages import groups as models
-from mango.system import groups
+#from mango.messages import teams as models
+#from mango.system import teams
 from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
