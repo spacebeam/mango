@@ -139,19 +139,19 @@ def main():
             (r'/users/?', accounts.UsersHandler),
 
             # (ORG) members
-            (r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
-            (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
-            (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
+            #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
+            #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
+            #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
 
             # (ORG) teams
-            (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
-            (r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
-            (r'/orgs/(?P<account>.+)/teams/?', teams.Handler),
+            #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            #(r'/orgs/(?P<account>.+)/teams/?', teams.Handler),
 
             # (Organizations of Restricted Generality)
-            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
-            (r'/orgs/?', accounts.OrgsHandler),
+            #(r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            #(r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            #(r'/orgs/?', accounts.OrgsHandler),
         ],
         db = db,
         cache = cache,
