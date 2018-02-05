@@ -212,7 +212,7 @@ class Org(object):
         return message
 
     @gen.coroutine
-    def modify_org(self, account, org_uuid, struct):
+    def modify_org(self, account, account_uuid, struct):
         '''
             Modify org
         '''
@@ -223,7 +223,7 @@ class Org(object):
         # riak bucket name
         bucket_name = 'accounts'
         # solr query
-        query = 'uuid_register:{0}'.format(org_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(account_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
@@ -253,29 +253,30 @@ class Org(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
+            logging.warning(got_response)
             response = got_response[0].get('response')['docs'][0]
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
-            org = Map(bucket, riak_key)
+            account = Map(bucket, riak_key)
             for key in struct:
                 if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
-                        org.reload()
-                        old_value = org.registers['{0}'.format(key)].value
+                        account.reload()
+                        old_value = account.registers['{0}'.format(key)].value
                         if old_value:
                             old_list = json.loads(old_value.replace("'",'"'))
                             for thing in struct.get(key):
                                 old_list.append(thing)
-                            org.registers['{0}'.format(key)].assign(str(old_list))
+                            account.registers['{0}'.format(key)].assign(str(old_list))
                         else:
                             new_list = []
                             for thing in struct.get(key):
                                 new_list.append(thing)
-                            org.registers['{0}'.format(key)].assign(str(new_list))
+                            account.registers['{0}'.format(key)].assign(str(new_list))
                     else:
-                        org.registers['{0}'.format(key)].assign(str(struct.get(key)))
-                    org.update()
+                        account.registers['{0}'.format(key)].assign(str(struct.get(key)))
+                    account.update()
             update_complete = True
             message['update_complete'] = True
         except Exception as error:
