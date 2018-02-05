@@ -16,10 +16,10 @@ import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-from tsunami.messages import teams as models
-from tsunami.system import teams
-from tsunami.tools import errors, str2bool, check_json
-from tsunami.handlers import BaseHandler
+from mango.messages import teams as models
+from mango.system import teams
+from mango.tools import errors, str2bool, check_json
+from mango.handlers import BaseHandler
 from collections import OrderedDict
 
 
