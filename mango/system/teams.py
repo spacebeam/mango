@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango groups system logic.
+    Mango teams system logic.
 '''
 
 # This file is part of mango.
@@ -16,9 +16,9 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.messages import groups
+from mango.messages import teams
 from mango.messages import BaseResult
-from mango.structures.groups import GroupMap
+from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
 from mango.tools import get_search_item, get_search_list
@@ -29,24 +29,24 @@ _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPCli
 http_client = _http_client.AsyncHTTPClient()
 
 
-class GroupResult(BaseResult):
+class TeamResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(groups.Group))
+    results = compound.ListType(compound.ModelType(teams.Team))
 
 
-class Group(object):
+class Team(object):
     '''
-        Group
+        Team
     '''
     @gen.coroutine
-    def get_group(self, account, group_uuid):
+    def get_team(self, account, team_uuid):
         '''
-            Get group
+            Get team
         '''
-        search_index = 'mango_group_index'
-        query = 'uuid_register:{0}'.format(group_uuid)
+        search_index = 'mango_team_index'
+        query = 'uuid_register:{0}'.format(team_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
@@ -96,11 +96,11 @@ class Group(object):
         return message
 
     @gen.coroutine
-    def get_group_list(self, account, start, end, lapse, status, page_num):
+    def get_team_list(self, account, start, end, lapse, status, page_num):
         '''
-            Get group list
+            Get team list
         '''
-        search_index = 'mango_group_index'
+        search_index = 'mango_team_index'
         query = 'uuid_register:*'
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
@@ -162,15 +162,15 @@ class Group(object):
         return message
 
     @gen.coroutine
-    def new_group(self, struct):
+    def new_team(self, struct):
         '''
-            New group event
+            New team event
         '''
-        search_index = 'mango_group_index'
-        bucket_type = 'mango_group'
-        bucket_name = 'groups'
+        search_index = 'mango_team_index'
+        bucket_type = 'mango_team'
+        bucket_name = 'teams'
         try:
-            event = groups.Group(struct)
+            event = teams.Team(struct)
             event.validate()
             event = clean_structure(event)
         except Exception as error:
@@ -202,7 +202,7 @@ class Group(object):
                 "active": str(event.get('active', '')),
                 "watchers": str(event.get('watchers', '')),
             }
-            result = GroupMap(
+            result = TeamMap(
                 self.kvalue,
                 bucket_name,
                 bucket_type,
@@ -216,18 +216,18 @@ class Group(object):
         return message
 
     @gen.coroutine
-    def modify_group(self, account, group_uuid, struct):
+    def modify_team(self, account, team_uuid, struct):
         '''
-            Modify group
+            Modify team
         '''
         # riak search index
-        search_index = 'mango_group_index'
+        search_index = 'mango_team_index'
         # riak bucket type
-        bucket_type = 'mango_group'
+        bucket_type = 'mango_team'
         # riak bucket name
-        bucket_name = 'groups'
+        bucket_name = 'teams'
         # solr query
-        query = 'uuid_register:{0}'.format(group_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(team_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
@@ -261,25 +261,25 @@ class Group(object):
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
-            group = Map(bucket, riak_key)
+            team = Map(bucket, riak_key)
             for key in struct:
                 if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
-                        group.reload()
-                        old_value = group.registers['{0}'.format(key)].value
+                        team.reload()
+                        old_value = team.registers['{0}'.format(key)].value
                         if old_value:
                             old_list = json.loads(old_value.replace("'",'"'))
                             for thing in struct.get(key):
                                 old_list.append(thing)
-                            group.registers['{0}'.format(key)].assign(str(old_list))
+                            team.registers['{0}'.format(key)].assign(str(old_list))
                         else:
                             new_list = []
                             for thing in struct.get(key):
                                 new_list.append(thing)
-                            group.registers['{0}'.format(key)].assign(str(new_list))
+                            team.registers['{0}'.format(key)].assign(str(new_list))
                     else:
-                        group.registers['{0}'.format(key)].assign(str(struct.get(key)))
-                    group.update()
+                        team.registers['{0}'.format(key)].assign(str(struct.get(key)))
+                    team.update()
             update_complete = True
             message['update_complete'] = True
         except Exception as error:
@@ -287,18 +287,18 @@ class Group(object):
         return message.get('update_complete', False)
 
     @gen.coroutine
-    def modify_remove(self, account, group_uuid, struct):
+    def modify_remove(self, account, team_uuid, struct):
         '''
             Modify remove
         '''
         # riak search index
-        search_index = 'mango_group_index'
+        search_index = 'mango_team_index'
         # riak bucket type
-        bucket_type = 'mango_group'
+        bucket_type = 'mango_team'
         # riak bucket name
-        bucket_name = 'groups'
+        bucket_name = 'teams'
         # solr query
-        query = 'uuid_register:{0}'.format(group_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(team_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
@@ -332,17 +332,17 @@ class Group(object):
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
-            group = Map(bucket, riak_key)
+            team = Map(bucket, riak_key)
             for key in struct:
                 if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
-                        group.reload()
-                        old_value = group.registers['{0}'.format(key)].value
+                        team.reload()
+                        old_value = team.registers['{0}'.format(key)].value
                         if old_value:
                             old_list = json.loads(old_value.replace("'",'"'))
                             new_list = [x for x in old_list if x not in struct.get(key)]
-                            group.registers['{0}'.format(key)].assign(str(new_list))
-                            group.update()
+                            team.registers['{0}'.format(key)].assign(str(new_list))
+                            team.update()
                             message['update_complete'] = True
                     else:
                         message['update_complete'] = False
@@ -351,12 +351,12 @@ class Group(object):
         return message.get('update_complete', False)
 
     @gen.coroutine
-    def remove_group(self, account, group_uuid):
+    def remove_team(self, account, team_uuid):
         '''
-            Remove group
+            Remove team
         '''
         # Yo, missing history ?
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_group(account, group_uuid, struct)
+        message = yield self.modify_team(account, team_uuid, struct)
         return message
