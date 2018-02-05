@@ -29,16 +29,16 @@ _http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPCli
 http_client = _http_client.AsyncHTTPClient()
 
 
-class TeamResult(BaseResult):
+class TeamsResult(BaseResult):
     '''
         List result
     '''
     results = compound.ListType(compound.ModelType(teams.Team))
 
 
-class Team(object):
+class Teams(object):
     '''
-        Team
+        Teams
     '''
     @gen.coroutine
     def get_team(self, account, team_uuid):
