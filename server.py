@@ -78,7 +78,7 @@ from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 
-from mango.handlers import accounts, tasks
+from mango.handlers import accounts, tasks, teams
 from mango.tools import options
 
 from zmq.eventloop import ioloop
@@ -127,31 +127,26 @@ def main():
         [
             (r'/login/?', LoginHandler),
             (r'/logout/?', LogoutHandler),
-
             # Tasks for both human and machine entities.
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
-
             # User accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-
             # (ORG) members
-            #(r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
-            #(r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
-            #(r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
-
+            (r'/orgs/(?P<account>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/(?P<user>.+)/?', accounts.MembersHandler),
+            (r'/orgs/(?P<account>.+)/members/?', accounts.MembersHandler),
             # (ORG) teams
-            #(r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
-            #(r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
-            #(r'/orgs/(?P<account>.+)/teams/?', teams.Handler),
-
+            (r'/orgs/(?P<account>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            (r'/orgs/(?P<account>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/orgs/(?P<account>.+)/teams/?', teams.Handler),
             # (Organizations of Restricted Generality)
-            #(r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
-            #(r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
-            #(r'/orgs/?', accounts.OrgsHandler),
+            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/?', accounts.OrgsHandler),
         ],
         db = db,
         cache = cache,
@@ -161,7 +156,7 @@ def main():
         page_size = opts.page_size,
         solr = opts.solr,
         # cookie settings
-        #cookie_secret=opts.cookie_secret,
+        cookie_secret=opts.cookie_secret,
     )
     # Setting up the application server process
     application.listen(opts.port)
