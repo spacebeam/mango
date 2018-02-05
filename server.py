@@ -77,7 +77,6 @@ import pylibmc as mc
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
-
 from mango.handlers import accounts, tasks, teams
 from mango.tools import options
 
