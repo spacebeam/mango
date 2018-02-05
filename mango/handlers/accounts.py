@@ -163,7 +163,7 @@ class UsersHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def patch(self, account_uuid):
         '''
-            Modify org
+            Modify user
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if not dict(struct).get('errors', False) else False)
@@ -178,15 +178,15 @@ class UsersHandler(accounts.Account, BaseHandler):
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
         if not remove :
-            result = self.cache.delete('org:{0}'.format(org_uuid))
-            result = yield self.modify_org(account, org_uuid, struct)
+            result = self.cache.delete('user:{0}'.format(account_uuid))
+            result = yield self.modify_account(account, account_uuid, struct)
         else:
-            result = self.cache.delete('org:{0}'.format(org_uuid))
-            result = yield self.modify_remove(account, org_uuid, struct)
+            result = self.cache.delete('user:{0}'.format(account_uuid))
+            result = yield self.modify_remove(account, account_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('org', org_uuid)
+            error = system_error.missing('user', account_uuid)
             self.finish(error)
             return
         self.set_status(200)
@@ -406,8 +406,10 @@ class OrgsHandler(orgs.Org, BaseHandler):
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
         if not remove :
+            result = self.cache.delete('org:{0}'.format(org_uuid))
             result = yield self.modify_org(account, org_uuid, struct)
         else:
+            result = self.cache.delete('org:{0}'.format(org_uuid))
             result = yield self.modify_remove(account, org_uuid, struct)
         if not result:
             self.set_status(400)
