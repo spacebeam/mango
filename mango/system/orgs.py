@@ -221,7 +221,7 @@ class Org(object):
         # riak bucket type
         bucket_type = 'mango_account'
         # riak bucket name
-        bucket_name = 'orgs'
+        bucket_name = 'accounts'
         # solr query
         query = 'uuid_register:{0}'.format(org_uuid.rstrip('/'))
         # filter query
