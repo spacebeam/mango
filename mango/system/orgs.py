@@ -235,6 +235,7 @@ class Org(object):
         # got callback response?
         got_response = []
         # yours truly
+        logging.warning(url)
         message = {'update_complete':False}
         def handle_request(response):
             '''
