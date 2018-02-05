@@ -219,7 +219,7 @@ class Org(object):
         # riak search index
         search_index = 'mango_account_index'
         # riak bucket type
-        bucket_type = 'mango_org'
+        bucket_type = 'mango_account'
         # riak bucket name
         bucket_name = 'orgs'
         # solr query
