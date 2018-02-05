@@ -18,7 +18,7 @@ import tornado.options
 from tornado.options import parse_config_file
 
 
-secret = base64.b64encode("Doesn't take a telepath to know what you're thinkin'.")
+secret = base64.b64encode(b"Doesn't take a telepath to know what you're thinkin'.")
 config_path = 'mango.conf'
 
 
