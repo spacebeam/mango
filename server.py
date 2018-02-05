@@ -154,8 +154,6 @@ def main():
         domain = opts.domain,
         page_size = opts.page_size,
         solr = opts.solr,
-        # cookie settings
-        cookie_secret=opts.cookie_secret,
     )
     # Setting up the application server process
     application.listen(opts.port)

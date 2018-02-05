@@ -50,7 +50,7 @@ class BaseHandler(web.RequestHandler):
         self.cache = self.settings.get('cache')
         # Page settings
         self.page_size = self.settings.get('page_size')
-        # solr riak
+        # Solr riak
         self.solr = self.settings.get('solr')
 
     def set_default_headers(self):
@@ -58,7 +58,6 @@ class BaseHandler(web.RequestHandler):
             mango default headers
         '''
         self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
-        #self.set_header("Access-Control-Allow-Origin", self.settings['domain'])
 
     def get_username_cookie(self):
         '''
@@ -74,7 +73,7 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        #parse and build url
+        # parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -96,7 +95,8 @@ class BaseHandler(web.RequestHandler):
                 callback=handle_request
             )
             while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
+                # don't be careless with the time.
+                yield gen.sleep(0.0020)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]

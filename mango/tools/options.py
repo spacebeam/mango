@@ -12,13 +12,11 @@ __author__ = 'Team Machine'
 
 
 import os
-import base64
 import uuid
 import tornado.options
 from tornado.options import parse_config_file
 
 
-secret = base64.b64encode(b"Doesn't take a telepath to know what you're thinkin'.")
 config_path = 'mango.conf'
 
 
@@ -41,7 +39,7 @@ def options():
     # domain
     tornado.options.define('domain',
         default='*', type=str,
-        help='Application domain, e.g: "your_domain.com"')
+        help='Application domain, e.g: "example.com"')
     # solr
     tornado.options.define('solr',
         default='api.cloudforest.ws', type=str,
@@ -109,11 +107,6 @@ def options():
     tornado.options.define('page_size',
         default=50, type=int,
         help=('Set a custom page size up to 100'))
-    tornado.options.define('cookie_secret',
-        default=secret,
-        type=str,
-        help=('Secure cookie secret string')
-    )
     # Parse config file, then command line...
     # so command line switches take precedence
     if os.path.exists(config_path):
