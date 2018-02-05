@@ -74,16 +74,12 @@ import zmq
 import riak
 import logging
 import pylibmc as mc
+from tornado import ioloop
 from tornado import gen, web
 from tornado.web import RequestHandler
 from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks, teams
 from mango.tools import options
-
-from zmq.eventloop import ioloop
-
-
-ioloop.install()
 
 
 def main():
@@ -158,7 +154,7 @@ def main():
     # Setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))
-    ioloop.IOLoop.instance().start()
+    ioloop.IOLoop.current().start()
 
 if __name__ == '__main__':
     '''
