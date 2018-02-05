@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango groups models and messages.
+    Mango teams models and messages.
 '''
 
 # This file is part of mango.
@@ -16,12 +16,11 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-#from mango.messages import Resource
 
 
-class Group(models.Model):
+class Team(models.Model):
     '''
-       Group
+       (ORG) Team
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType(required=True)
@@ -48,9 +47,9 @@ class Group(models.Model):
     active = types.BooleanType(default=True)
 
 
-class ModifyGroup(models.Model):
+class ModifyTeam(models.Model):
     '''
-        Group
+        Modify (ORG) Team
     '''
     uuid = types.UUIDType()
     account = types.StringType()

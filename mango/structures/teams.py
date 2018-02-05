@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango groups CRDT's.
+    Mango teams CRDT's.
 '''
 
 # This file is part of mango.
@@ -17,7 +17,7 @@ import ujson as json
 from riak.datatypes import Map
 
 
-class GroupMap(object):
+class TeamMap(object):
 
     def __init__(
         self,
@@ -28,7 +28,7 @@ class GroupMap(object):
         struct
     ):
         '''
-            Group map structure
+            Team map structure
         '''
         bucket = client.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
         bucket.set_properties({'search_index': search_index})

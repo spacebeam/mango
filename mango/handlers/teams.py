@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    HTTP groups handlers.
+    HTTP teams handlers.
 '''
 
 # This file is part of mango.
@@ -16,22 +16,22 @@ import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-#from mango.messages import teams as models
-#from mango.system import teams
-from tornado import httpclient
-from mango.tools import errors, str2bool, check_json
-from mango.handlers import BaseHandler
+from tsunami.messages import teams as models
+from tsunami.system import teams
+from tsunami.tools import errors, str2bool, check_json
+from tsunami.handlers import BaseHandler
 from collections import OrderedDict
 
-class Handler(groups.Group, BaseHandler):
+
+class Handler(teams.Teams, BaseHandler):
     '''
         HTTP request handlers
     '''
 
     @gen.coroutine
-    def head(self, account=None, group_uuid=None, page_num=0):
+    def head(self, account=None, team_uuid=None, page_num=0):
         '''
-            Head groups
+            Head teams
         '''
         # request query arguments
         query_args = self.request.arguments
@@ -55,30 +55,30 @@ class Handler(groups.Group, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not group_uuid:
-            message = yield self.get_group_list(account, start, end, lapse, status, page_num)
+        if not team_uuid:
+            message = yield self.get_team_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
-        # single group received
+        # single team received
         else:
             # first try to get stuff from cache
-            group_uuid = group_uuid.rstrip('/')
+            team_uuid = team_uuid.rstrip('/')
             # get cache data
-            message = self.cache.get('groups:{0}'.format(group_uuid))
+            message = self.cache.get('teams:{0}'.format(team_uuid))
             if message is not None:
-                logging.info('groups:{0} done retrieving!'.format(group_uuid))
+                logging.info('teams:{0} done retrieving!'.format(team_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_group(account, group_uuid)
-                if self.cache.add('groups:{0}'.format(group_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(group_uuid)))
+                message = yield self.get_team(account, team_uuid)
+                if self.cache.add('teams:{0}'.format(team_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(team_uuid)))
                     self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, group_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, team_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
-            Get groups
+            Get teams
         '''
         # request query arguments
         query_args = self.request.arguments
@@ -102,22 +102,22 @@ class Handler(groups.Group, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not group_uuid:
-            message = yield self.get_group_list(account, start, end, lapse, status, page_num)
+        if not team_uuid:
+            message = yield self.get_team_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
-        # single group received
+        # single team received
         else:
             # first try to get stuff from cache
-            group_uuid = group_uuid.rstrip('/')
+            team_uuid = team_uuid.rstrip('/')
             # get cache data
-            message = self.cache.get('groups:{0}'.format(group_uuid))
+            message = self.cache.get('teams:{0}'.format(team_uuid))
             if message is not None:
-                logging.info('groups:{0} done retrieving!'.format(group_uuid))
+                logging.info('teams:{0} done retrieving!'.format(team_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_group(account, group_uuid)
-                if self.cache.add('groups:{0}'.format(group_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(group_uuid)))
+                message = yield self.get_team(account, team_uuid)
+                if self.cache.add('teams:{0}'.format(team_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(team_uuid)))
                     self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
@@ -125,7 +125,7 @@ class Handler(groups.Group, BaseHandler):
     @gen.coroutine
     def post(self):
         '''
-            Create group
+            Create team
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if struct and not struct.get('errors') else False)
@@ -135,7 +135,7 @@ class Handler(groups.Group, BaseHandler):
             return
         # request query arguments
         query_args = self.request.arguments
-        # get account from new group struct
+        # get account from new team struct
         account = struct.get('account', None)
         # get the current frontend username from cookie
         # username = self.get_username_cookie()
@@ -144,12 +144,12 @@ class Handler(groups.Group, BaseHandler):
         username = False
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
-        # execute new group struct
-        group_uuid = yield self.new_group(struct)
+        # execute new team struct
+        team_uuid = yield self.new_team(struct)
         # complete message with receive uuid.
-        message = {'uuid':group_uuid}
+        message = {'uuid':team_uuid}
         if 'error' in message['uuid']:
-            scheme = 'group'
+            scheme = 'team'
             reason = {'duplicates': [
                 (scheme, 'account'),
                 (scheme, 'uuid')
@@ -161,9 +161,9 @@ class Handler(groups.Group, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def patch(self, group_uuid):
+    def patch(self, team_uuid):
         '''
-            Modify group
+            Modify team
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if not dict(struct).get('errors', False) else False)
@@ -178,37 +178,37 @@ class Handler(groups.Group, BaseHandler):
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
         if not remove :
-            result = yield self.modify_group(account, group_uuid, struct)
+            result = yield self.modify_team(account, team_uuid, struct)
         else:
-            result = yield self.modify_remove(account, group_uuid, struct)
+            result = yield self.modify_remove(account, team_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('group', group_uuid)
+            error = system_error.missing('team', team_uuid)
             self.finish(error)
             return
         self.set_status(200)
         self.finish({'message': 'update completed successfully'})
 
     @gen.coroutine
-    def delete(self, group_uuid):
+    def delete(self, team_uuid):
         '''
-            Delete group
+            Delete team
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_group(account, group_uuid)
+        result = yield self.remove_team(account, team_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('group', group_uuid)
+            error = system_error.missing('team', team_uuid)
             self.finish(error)
             return
         self.set_status(204)
         self.finish()
 
     @gen.coroutine
-    def options(self, group_uuid=None):
+    def options(self, team_uuid=None):
         '''
             Resource options
         '''
@@ -225,7 +225,7 @@ class Handler(groups.Group, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.Group.get_mock_object().to_primitive()
+        stuff = models.Team.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -235,11 +235,11 @@ class Handler(groups.Group, BaseHandler):
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Create group",
+            "description": "Create team",
             "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
-        if not group_uuid:
+        if not team_uuid:
             message['POST'] = POST
         else:
             message['Allow'].remove('POST')
