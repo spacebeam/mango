@@ -48,6 +48,7 @@ class ModifyTeam(models.Model):
         Modify (ORG) Team
     '''
     uuid = types.UUIDType()
+    # Yo, this is not your simple account; it's an organization!
     account = types.StringType()
     status = types.StringType()
     name = types.StringType()

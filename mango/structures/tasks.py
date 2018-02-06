@@ -16,6 +16,42 @@ import logging
 import ujson as json
 from riak.datatypes import Map
 
+'''
+
+uuid = types.UUIDType(default=uuid.uuid4)
+account = types.StringType()
+name = types.StringType()
+description = types.StringType()
+payload = types.StringType()
+assignees = compound.ListType(types.StringType())
+watchers = compound.ListType(types.StringType())
+public = types.BooleanType(default=False)
+source = types.StringType()
+destination = types.StringType()
+labels = compound.ListType(types.StringType())
+start = types.TimestampType()
+acknowledge = types.TimestampType()
+stop = types.TimestampType()
+deadline = types.TimestampType()
+duration = types.StringType()
+comments = compound.ListType(types.StringType())
+history = compound.ListType(types.StringType())
+status = types.StringType(choices=['new',
+                                   'now',
+                                   'later',
+                                   'done'],
+                          default='new',
+                          required=True)
+checked = types.BooleanType(default=False)
+checked_by = types.StringType()
+checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+created_by = types.StringType()
+created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+last_update_by = types.StringType()
+last_update_at = types.TimestampType()
+
+
+'''
 
 class TaskMap(object):
 
@@ -36,21 +72,22 @@ class TaskMap(object):
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
         self.map.registers['account'].assign(struct.get('account', ''))
-        self.map.registers['title'].assign(struct.get('title', ''))
+        self.map.registers['name'].assign(struct.get('title', ''))
         self.map.registers['description'].assign(struct.get('description', ''))
         self.map.registers['payload'].assign(struct.get('payload', ''))
         self.map.registers['assignees'].assign(struct.get('assignees', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         self.map.registers['public'].assign(struct.get('public', ''))
         self.map.registers['source '].assign(struct.get('source', ''))
         self.map.registers['destination'].assign(struct.get('destination', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
-        self.map.registers['url'].assign(struct.get('url', ''))
         self.map.registers['start'].assign(struct.get('start', ''))
-        self.map.registers['ack'].assign(struct.get('ack', ''))
+        self.map.registers['acknowledge'].assign(struct.get('acknowledge', ''))
         self.map.registers['stop'].assign(struct.get('stop', ''))
         self.map.registers['deadline'].assign(struct.get('deadline', ''))
         self.map.registers['duration'].assign(struct.get('duration', ''))
         self.map.registers['comments'].assign(struct.get('comments', ''))
+        self.map.registers['history'].assign(struct.get('history', ''))
         self.map.registers['status'].assign(struct.get('status', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
@@ -58,11 +95,7 @@ class TaskMap(object):
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         self.map.registers['created_by'].assign(struct.get('created_by', ''))
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
-        self.map.registers['last_modified'].assign(struct.get('last_modified', ''))
-        self.map.registers['checksum'].assign(struct.get('checksum', ''))
-        self.map.registers['hashs'].assign(struct.get('hashs', ''))
-        self.map.registers['history'].assign(struct.get('history', ''))
-        self.map.registers['watchers'].assign(struct.get('watchers', ''))
+
         # end of the map stuff
         self.map.store()
 

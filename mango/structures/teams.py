@@ -41,17 +41,14 @@ class TeamMap(object):
         self.map.registers['permission'].assign(struct.get('permission', ''))
         self.map.registers['created_by'].assign(struct.get('created_by', ''))
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
-        self.map.registers['url'].assign(struct.get('url', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
         self.map.registers['checked_at'].assign(struct.get('checked_at', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
-        self.map.registers['hashs'].assign(struct.get('hashs', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
         self.map.registers['history'].assign(struct.get('history', ''))
-        self.map.registers['last_update_by'].assign(struct.get('created_by', ''))
-        self.map.registers['last_update_at'].assign(struct.get('created_at', ''))
-        self.map.registers['active'].assign(struct.get('active', ''))
+        self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
+        self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
         # end of the map stuff
         self.map.store()
 
@@ -71,19 +68,16 @@ class TeamMap(object):
             "status": event.registers['status'].value,
             "name": event.registers['name'].value,
             "permission": event.registers['permission'].value,
-            "created_by": event.registers['created_by'].value,
-            "created_at": event.registers['created_at'].value,
-            "url": event.registers['url'].value,
+            "members": event.registers['members'].value,
+            "labels": event.registers['labels'].value,
+            "history": event.registers['history'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
-            "members": event.registers['members'].value,
-            "hashs": event.registers['hashs'].value,
-            "labels": event.registers['labels'].value,
-            "history": event.registers['history'].value,
+            "created_by": event.registers['created_by'].value,
+            "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "active": event.registers['active'].value,
         }
         return json.dumps(struct)
 
@@ -97,16 +91,13 @@ class TeamMap(object):
             "permission": event.registers['permission'].value,
             "created_by": event.registers['created_by'].value,
             "created_at": event.registers['created_at'].value,
-            "url": event.registers['url'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
             "checked_at": event.registers['checked_at'].value,
             "members": event.registers['members'].value,
-            "hashs": event.registers['hashs'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "active": event.registers['active'].value,
         }
         return struct

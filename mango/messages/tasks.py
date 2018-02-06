@@ -33,11 +33,12 @@ class Task(models.Model):
     destination = types.StringType()
     labels = compound.ListType(types.StringType())
     start = types.TimestampType()
-    ack = types.TimestampType()
+    acknowledge = types.TimestampType()
     stop = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
     comments = compound.ListType(types.StringType())
+    history = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
@@ -46,12 +47,12 @@ class Task(models.Model):
                               required=True)
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-    last_update_by = types.StringType()
-    last_update_at = types.TimestampType()
+    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
-    last_modified = types.TimestampType()
-    history = compound.ListType(types.StringType())
+    last_update_by = types.StringType()
+    last_update_at = types.TimestampType()
+
 
 class ModifyTask(models.Model):
     '''
