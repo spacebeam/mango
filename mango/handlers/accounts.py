@@ -373,7 +373,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # orgs do not have password!
-        struct['password'] = 'not_applicable
+        struct['password'] = 'not_applicable'
         # execute new org struct
         org_uuid = yield self.new_account(struct)
         # complete message with receive uuid.
@@ -601,7 +601,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         # username = self.get_username_token()
         username = False
         # if the user don't provide an account we use the username
-        account = (query_args.get('account', [username])[0] if not account else account)'
+        account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
         org_uuid = yield self.new_account(struct)
         # complete message with receive uuid.
