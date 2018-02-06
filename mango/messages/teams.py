@@ -23,7 +23,8 @@ class Team(models.Model):
        (ORG) Team
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    org = types.StringType()
+    # Yo, this is not your simple account; it's an organization!
+    account = types.StringType()
     status = types.StringType()
     name = types.StringType(required=True)
     description = types.StringType()
@@ -47,7 +48,7 @@ class ModifyTeam(models.Model):
         Modify (ORG) Team
     '''
     uuid = types.UUIDType()
-    org = types.StringType()
+    account = types.StringType()
     status = types.StringType()
     name = types.StringType()
     description = types.StringType()

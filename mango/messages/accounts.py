@@ -38,7 +38,9 @@ class User(BaseAccount):
         User account
     '''
     account_type = types.StringType(default='user')
+    nickname = types.StringType()
     first_name = types.StringType()
+    middle_name = types.StringType()
     last_name = types.StringType()
     password = types.StringType(required=True)
     orgs = compound.ListType(types.StringType())
@@ -49,6 +51,7 @@ class ModifyUser(CleanBaseAccount):
         Modify account
     '''
     account_type = types.StringType(default='user')
+    nickname = types.StringType()
     first_name = types.StringType()
     middle_name = types.StringType()
     last_name = types.StringType()
