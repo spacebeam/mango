@@ -46,7 +46,7 @@ class Account(object):
             Get user
         '''
         search_index = 'mango_account_index'
-        query = 'uuid_register:{0}'.format(account_uuid)
+        query = 'uuid_register:{0}'.format(user_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
@@ -229,7 +229,6 @@ class Account(object):
             logging.warning(error)
         return message
 
-
     @gen.coroutine
     def get_org_list(self, account, start, end, lapse, status, page_num):
         '''
@@ -309,7 +308,6 @@ class Account(object):
             logging.warning(error)
         return message
 
-
     @gen.coroutine
     def new_user(self, struct):
         '''
@@ -371,7 +369,6 @@ class Account(object):
             message = str(error)
         return message
 
-
     @gen.coroutine
     def new_org(self, struct):
         '''
@@ -429,10 +426,6 @@ class Account(object):
             logging.error(error)
             message = str(error)
         return message
-
-
-    # what is going to happend to modify_stuff then ??
-    # for know it appears to hold
 
     @gen.coroutine
     def modify_account(self, account, account_uuid, struct):

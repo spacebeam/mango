@@ -181,7 +181,7 @@ class Tasks(object):
                 "name": str(event.get('title', '')),
                 "description": str(event.get('description', '')),
                 "payload": str(event.get('payload', '')),
-                "assigne": str(event.get('assigne', '')),
+                "assign": str(event.get('assign', '')),
                 "public": str(event.get('public', '')),
                 "source ": str(event.get('source', '')),
                 "destination": str(event.get('destination', '')),
