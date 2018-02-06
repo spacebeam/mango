@@ -18,35 +18,15 @@ from schematics import types
 from schematics.types import compound
 
 
-class Email(models.Model):
-    '''
-        Email
-    '''
-    title = types.StringType()
-    address = types.EmailType()
-    validated = types.BooleanType(default=False)
-    primary = types.BooleanType(default=False)
-
-
-class Phone(models.Model):
-    '''
-        Phone
-    '''
-    title = types.StringType()
-    number = types.StringType()
-    extension = types.StringType()
-    validated = types.BooleanType(default=False)
-    primary = types.BooleanType(default=False)
+from mango.messages import Email, Phone
 
 
 class RequiredBase(models.Model):
     '''
         Required base class
     '''
-    active = types.BooleanType(default=True)
     status = types.StringType(required=False)
     account = types.StringType(required=True)
-    name = types.StringType(required=False)
     email = types.EmailType(required=True)
     phone_number = types.StringType()
     extension = types.StringType()
@@ -54,11 +34,10 @@ class RequiredBase(models.Model):
     timezone = types.StringType()
     company = types.StringType()
     location = types.StringType()
-    url = types.URLType(required=False)
-    checked = types.BooleanType(default=False)
-    checked_by = types.StringType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    checked = types.BooleanType(default=False)
+    checked_by = types.StringType()
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
@@ -66,7 +45,6 @@ class RequiredBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
-    hashs = compound.ListType(types.StringType())
     watchers = compound.ListType(types.StringType())
 
 
@@ -143,4 +121,13 @@ class Org(BaseAccount):
     '''
     account_type = types.StringType(default='org')
     members = compound.ListType(types.StringType())
-    teams = compound.ListType(compound.ModelType(Team))
+    teams = compound.ListType(types.StringType())
+
+
+class ModifyOrg(BaseAccount):
+    '''
+        ModifyOrg account
+    '''
+    account_type = types.StringType(default='org')
+    members = compound.ListType(types.StringType())
+    teams = compound.ListType(types.StringType())
