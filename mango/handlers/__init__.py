@@ -111,67 +111,16 @@ class BaseHandler(web.RequestHandler):
         return message.get('account_type', 'not found')
 
     @gen.coroutine
-    def get_permissions(self, account):
-        '''
-            Get permissions
-        '''
-        search_index = 'mango_account_index'
-        query = 'account_register:{0}'.format(account.decode('utf-8'))
-        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        #parse and build url
-
-        url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            self.solr, search_index, query, filter_query
-        )
-        got_response = []
-        # response message
-        message = {'message': 'not found'}
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                response_doc = stuff['response']['docs'][0]
-                IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-                message = dict(
-                    (key.split('_register')[0], value)
-                    for (key, value) in response_doc.items()
-                    if key not in IGNORE_ME
-                )
-        except Exception as error:
-            logging.warning(error)
-        return message.get('permissions', [])
-
-    @gen.coroutine
     def get_account_uuid(self, account):
         '''
             Get valid account uuid
         '''
-        logging.info(account)
-
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # parse and build url
         url.set()
         url.add(get_search_item(self.solr, search_index, query, filter_query))
-
-        #url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
-            #self.solr, search_index, query, filter_query
-        #)
         got_response = []
         # clean response message
         message = {}
@@ -303,7 +252,6 @@ class LoginHandler(BaseHandler):
         message = {}
         message['uuid'] = yield self.get_auth_uuid(self.username, self.password)
         message['account_type'] = yield self.check_account_type(self.username)
-        message['permissions'] = yield self.get_permissions(self.username)
         message['labels'] = yield self.get_account_labels(self.username)
         if validate_uuid4(message.get('uuid')):
             self.set_header('Access-Control-Allow-Origin','*')
@@ -337,6 +285,7 @@ class LogoutHandler(BaseHandler):
         '''
             Clear secure cookie
         '''
+        # check this out cuz there is no cookies anymore!
         self.clear_cookie('username')
         self.clear_cookie('labels')
         self.set_status(200)
