@@ -37,7 +37,7 @@ class Task(models.Model):
     stop = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
-    comments = compound.ModelType(Comment)
+    comments = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
