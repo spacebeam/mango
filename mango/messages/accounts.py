@@ -38,7 +38,7 @@ class User(BaseAccount):
         User account
     '''
     account_type = types.StringType(
-        choices=['user', 'org'],
+        choices=['user',],
         default='user',
         required=True
     )
@@ -55,7 +55,7 @@ class ModifyUser(CleanBaseAccount):
         Modify account
     '''
     account_type = types.StringType(
-        choices=['user', 'org'],
+        choices=['user',],
         default='user'
     )
     nickname = types.StringType()
@@ -71,7 +71,7 @@ class Org(BaseAccount):
         Org account
     '''
     account_type = types.StringType(
-        choices=['user', 'org'],
+        choices=['org',],
         default='org',
         required=True
     )
@@ -86,7 +86,7 @@ class ModifyOrg(BaseAccount):
         ModifyOrg account
     '''
     account_type = types.StringType(
-        choices=['user', 'org'],
+        choices=['org',],
         default='org'
     )
     name = types.StringType()

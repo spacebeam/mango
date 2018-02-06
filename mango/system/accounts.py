@@ -170,6 +170,8 @@ class Account(object):
             logging.warning(error)
         return message
 
+
+    # there is not going to be a new_account this must reflect user and org types.
     @gen.coroutine
     def new_account(self, struct):
         '''
