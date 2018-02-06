@@ -170,7 +170,7 @@ class Account(object):
             filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
             fq_watchers = "watchers_register:*'null'*"
         elif account is not False:
-            filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
+            filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
             # note where the hack change ' to %27 for the url string!
             fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
