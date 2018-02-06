@@ -479,7 +479,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
 
-class MembersHandler(orgs.Org, BaseHandler):
+class MembersHandler(accounts.Account, BaseHandler):
     '''
         HTTP request handlers
     '''
