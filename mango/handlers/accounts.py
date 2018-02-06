@@ -559,7 +559,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_org_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single org received
         else:
@@ -601,7 +601,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
-        org_uuid = yield self.new_org(struct)
+        org_uuid = yield self.new_account(struct)
         # complete message with receive uuid.
         message = {'uuid':org_uuid}
         if 'error' in message['uuid']:
@@ -634,7 +634,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
         if not remove :
-            result = yield self.modify_org(account, org_uuid, struct)
+            result = yield self.modify_account(account, org_uuid, struct)
         else:
             result = yield self.modify_remove(account, org_uuid, struct)
         if not result:
@@ -653,7 +653,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_org(account, org_uuid)
+        result = yield self.remove_account(account, org_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
