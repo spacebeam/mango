@@ -29,7 +29,7 @@ class Handler(teams.Teams, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, team_uuid=None, page_num=0):
+    def head(self, account=None, org_uuid=None, team_uuid=None, page_num=0):
         '''
             Head teams
         '''
@@ -76,7 +76,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, team_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
         '''
             Get teams
         '''
@@ -123,7 +123,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def post(self):
+    def post(self, org_uuid):
         '''
             Create team
         '''
@@ -161,7 +161,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def patch(self, team_uuid):
+    def patch(self, org_uuid, team_uuid):
         '''
             Modify team
         '''
@@ -191,7 +191,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish({'message': 'update completed successfully'})
 
     @gen.coroutine
-    def delete(self, team_uuid):
+    def delete(self, org_uuid, team_uuid):
         '''
             Delete team
         '''
@@ -208,7 +208,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish()
 
     @gen.coroutine
-    def options(self, team_uuid=None):
+    def options(self, org_uuid=None, team_uuid=None):
         '''
             Resource options
         '''
