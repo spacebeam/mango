@@ -29,14 +29,12 @@ class Handler(tasks.Tasks, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, task_uuid=None, page_num=0):
+    def head(self, account=None, task_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Head tasks
+            Get tasks
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -76,14 +74,12 @@ class Handler(tasks.Tasks, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, task_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, task_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get tasks
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -137,8 +133,6 @@ class Handler(tasks.Tasks, BaseHandler):
         query_args = self.request.arguments
         # get account from new task struct
         account = struct.get('account', None)
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
