@@ -122,6 +122,7 @@ class Account(object):
         # set of urls
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        logging.warning(urls)
         urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
         # init got response list
         got_response = []
