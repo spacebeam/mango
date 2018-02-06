@@ -30,7 +30,7 @@ class UsersHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, account_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self, account=None, user_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get user accounts
         '''
@@ -54,28 +54,28 @@ class UsersHandler(accounts.Account, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not account_uuid:
+        if not user_uuid:
             message = yield self.get_user_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single account received
         else:
             # first try to get stuff from cache
-            account_uuid = account_uuid.rstrip('/')
+            user_uuid = user_uuid.rstrip('/')
             # get cache data
-            message = self.cache.get('accounts:{0}'.format(account_uuid))
+            message = self.cache.get('accounts:{0}'.format(user_uuid))
             if message is not None:
-                logging.info('accounts:{0} done retrieving!'.format(account_uuid))
+                logging.info('accounts:{0} done retrieving!'.format(user_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_user(account, account_uuid)
-                if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(account_uuid)))
+                message = yield self.get_user(account, user_uuid)
+                if self.cache.add('accounts:{0}'.format(user_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(user_uuid)))
                     self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, account_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self, account=None, user_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get user accounts
         '''
@@ -99,22 +99,22 @@ class UsersHandler(accounts.Account, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not account_uuid:
+        if not user_uuid:
             message = yield self.get_user_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single account received
         else:
             # first try to get stuff from cache
-            account_uuid = account_uuid.rstrip('/')
+            user_uuid = user_uuid.rstrip('/')
             # get cache data
-            message = self.cache.get('accounts:{0}'.format(account_uuid))
+            message = self.cache.get('accounts:{0}'.format(user_uuid))
             if message is not None:
-                logging.info('accounts:{0} done retrieving!'.format(account_uuid))
+                logging.info('accounts:{0} done retrieving!'.format(user_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_user(account, account_uuid)
-                if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(account_uuid)))
+                message = yield self.get_user(account, user_uuid)
+                if self.cache.add('accounts:{0}'.format(user_uuid), message, 1):
+                    logging.info('new cache entry {0}'.format(str(user_uuid)))
                     self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
@@ -140,9 +140,9 @@ class UsersHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new account struct
-        account_uuid = yield self.new_user(struct)
+        user_uuid = yield self.new_user(struct)
         # complete message with receive uuid.
-        message = {'uuid':account_uuid}
+        message = {'uuid':user_uuid}
         if 'error' in message['uuid']:
             scheme = 'account'
             reason = {'duplicates': [
@@ -156,7 +156,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def patch(self, account_uuid):
+    def patch(self, user_uuid):
         '''
             Modify user
         '''
@@ -173,39 +173,39 @@ class UsersHandler(accounts.Account, BaseHandler):
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
         if not remove :
-            result = self.cache.delete('user:{0}'.format(account_uuid))
-            result = yield self.modify_account(account, account_uuid, struct)
+            result = self.cache.delete('user:{0}'.format(user_uuid))
+            result = yield self.modify_account(account, user_uuid, struct)
         else:
-            result = self.cache.delete('user:{0}'.format(account_uuid))
-            result = yield self.modify_remove(account, account_uuid, struct)
+            result = self.cache.delete('user:{0}'.format(user_uuid))
+            result = yield self.modify_remove(account, user_uuid, struct)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('user', account_uuid)
+            error = system_error.missing('user', user_uuid)
             self.finish(error)
             return
         self.set_status(200)
         self.finish({'message': 'update completed successfully'})
 
     @gen.coroutine
-    def delete(self, account_uuid):
+    def delete(self, user_uuid):
         '''
             Delete account
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
-        result = yield self.remove_account(account, account_uuid)
+        result = yield self.remove_account(account, user_uuid)
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')
-            error = system_error.missing('account', account_uuid)
+            error = system_error.missing('account', user_uuid)
             self.finish(error)
             return
         self.set_status(204)
         self.finish()
 
     @gen.coroutine
-    def options(self, account_uuid=None):
+    def options(self, user_uuid=None):
         '''
             Resource options
         '''
@@ -236,7 +236,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
-        if not account_uuid:
+        if not user_uuid:
             message['POST'] = POST
         else:
             message['Allow'].remove('POST')
