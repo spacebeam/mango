@@ -107,11 +107,11 @@ class AccountMap(object):
             "teams": event.registers['teams'].value,
             "members": event.registers['members'].value,
             "watchers": event.registers['watchers'].value,
-            "checked": event.registers['chhecked'].value,
+            "checked": event.registers['checked'].value,
             "checked_at": event.registers['checked_at'].value,
             "checked_by": event.registers['checked_by'].value,
-            "created_by": event.registers['created_by'].value,
             "created_at": event.registers['created_at'].value,
+            "created_by": event.registers['created_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
         }
@@ -149,8 +149,8 @@ class AccountMap(object):
             "checked": event.registers['checked'].value,
             "checked_at": event.registers['checked_at'].value,
             "checked_by": event.registers['checked_by'].value,
-            "created_by": event.registers['created_by'].value,
             "created_at": event.registers['created_at'].value,
+            "created_by": event.registers['created_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
         }
