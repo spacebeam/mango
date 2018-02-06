@@ -29,15 +29,13 @@ class UsersHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, account_uuid=None, page_num=0):
+    def head(self, account=None, account_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Head accounts
+            Get user accounts
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
-        # get the current frontend username from token
+        # Yo, get the current frontend username from token!
         # username = self.get_username_token()
         username = False
         # if the user don't provide an account we use the frontend username as last resort
@@ -56,7 +54,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not account_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_user_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single account received
         else:
@@ -68,7 +66,7 @@ class UsersHandler(accounts.Account, BaseHandler):
                 logging.info('accounts:{0} done retrieving!'.format(account_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_account(account, account_uuid)
+                message = yield self.get_user(account, account_uuid)
                 if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(account_uuid)))
                     self.set_status(200)
@@ -76,15 +74,13 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, account_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, account_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Get accounts
+            Get user accounts
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
-        # get the current frontend username from token
+        # Yo, get the current frontend username from token!
         # username = self.get_username_token()
         username = False
         # if the user don't provide an account we use the frontend username as last resort
@@ -103,7 +99,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not account_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_user_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single account received
         else:
@@ -115,7 +111,7 @@ class UsersHandler(accounts.Account, BaseHandler):
                 logging.info('accounts:{0} done retrieving!'.format(account_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_account(account, account_uuid)
+                message = yield self.get_user(account, account_uuid)
                 if self.cache.add('accounts:{0}'.format(account_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(account_uuid)))
                     self.set_status(200)
@@ -125,7 +121,7 @@ class UsersHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def post(self):
         '''
-            Create account
+            Create user account
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if struct and not struct.get('errors') else False)
