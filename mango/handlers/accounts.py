@@ -145,7 +145,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new account struct
-        account_uuid = yield self.new_account(struct)
+        account_uuid = yield self.new_user(struct)
         # complete message with receive uuid.
         message = {'uuid':account_uuid}
         if 'error' in message['uuid']:
@@ -375,7 +375,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # orgs do not have password!
         struct['password'] = 'not_applicable'
         # execute new org struct
-        org_uuid = yield self.new_account(struct)
+        org_uuid = yield self.new_org(struct)
         # complete message with receive uuid.
         message = {'uuid':org_uuid}
         if 'error' in message['uuid']:
@@ -457,7 +457,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.User.get_mock_object().to_primitive()
+        stuff = models.Org.get_mock_object().to_primitive()
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
