@@ -111,14 +111,14 @@ class Account(object):
 
 
         if account is False:
+            filter_query = filter_status
+            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
+            fq_watchers = "watchers_register:*'null'*"
+        elif account is not False:
             filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
             # note where the hack change ' to %27 for the url string!
             fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
-        elif account is not False:
-            filter_query = filter_status
-            fq_watchers = "watchers_register:*'null'*"
-
         # set of urls
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
