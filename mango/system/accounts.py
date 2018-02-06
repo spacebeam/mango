@@ -41,9 +41,9 @@ class Account(object):
         Account
     '''
     @gen.coroutine
-    def get_account(self, account, account_uuid):
+    def get_user(self, account, user_uuid):
         '''
-            Get account
+            Get user
         '''
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(account_uuid)
@@ -96,7 +96,62 @@ class Account(object):
         return message
 
     @gen.coroutine
-    def get_account_list(self, account, start, end, lapse, status, page_num):
+    def get_org(self, account, org_uuid):
+        '''
+            Get (ORG)
+        '''
+        search_index = 'mango_account_index'
+        query = 'uuid_register:{0}'.format(account_uuid)
+        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        # init got response list
+        got_response = []
+        # init crash message
+        message = {'message': 'not found'}
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
+            stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
+            if stuff['response']['numFound']:
+                response = stuff['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            elif watchers['response']['numFound']:
+                response = watchers['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message
+
+    @gen.coroutine
+    def get_user_list(self, account, start, end, lapse, status, page_num):
         '''
             Get account list
         '''
@@ -109,7 +164,7 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-
+        # and so he left!
         if account is False:
             filter_query = filter_status
             filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
@@ -119,6 +174,88 @@ class Account(object):
             filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
             # note where the hack change ' to %27 for the url string!
             fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # yo, tony was here
+
+        # set of urls
+        urls = set()
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        logging.warning(urls)
+        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
+        # init got response list
+        got_response = []
+        # init crash message
+        message = {
+            'count': 0,
+            'page': page_num,
+            'results': []
+        }
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
+            stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
+            if stuff['response']['numFound']:
+                message['count'] += stuff['response']['numFound']
+                for doc in stuff['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            if watchers['response']['numFound']:
+                message['count'] += watchers['response']['numFound']
+                for doc in watchers['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message
+
+
+    @gen.coroutine
+    def get_org_list(self, account, start, end, lapse, status, page_num):
+        '''
+            Get (ORG) list
+        '''
+        search_index = 'mango_account_index'
+        query = 'uuid_register:*'
+        filter_status = 'status_register:active'
+        filter_account_type = 'account_type_register:org'
+        # page number
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        start_num = page_size * (page_num - 1)
+
+        # yo, tony was here!
+        if account is False:
+            filter_query = filter_status
+            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
+            fq_watchers = "watchers_register:*'null'*"
+        elif account is not False:
+            filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
+            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+            # note where the hack change ' to %27 for the url string!
+            fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # and so he left!
+
         # set of urls
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
@@ -295,6 +432,7 @@ class Account(object):
 
 
     # what is going to happend to modify_stuff then ??
+    # for know it appears to hold
 
     @gen.coroutine
     def modify_account(self, account, account_uuid, struct):
