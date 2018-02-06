@@ -56,6 +56,7 @@ class Handler(teams.Teams, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not team_uuid:
+            # here we can re'use the account, kind of get the org from its org_uuid, and pass it return.
             message = yield self.get_team_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single team received
