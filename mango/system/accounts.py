@@ -103,15 +103,16 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:*'
         filter_status = 'status_register:active'
-        order = 'sort=created_at_register+desc'
+        filter_account_type = 'account_type_register:user'
         # page number
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
+
         if account is None:
             filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
-            filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
+            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
             # note where the hack change ' to %27 for the url string!
             fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         elif account is not None:
