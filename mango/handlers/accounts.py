@@ -251,7 +251,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
 
-class OrgsHandler(orgs.Org, BaseHandler):
+class OrgsHandler(accounts.Account, BaseHandler):
     '''
         HTTP request handlers
     '''
