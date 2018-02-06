@@ -284,7 +284,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_org_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single org received
         else:
@@ -296,7 +296,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
                 logging.info('orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_org(account, org_uuid)
+                message = yield self.account(account, org_uuid)
                 if self.cache.add('orgs:{0}'.format(org_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(org_uuid)))
                     self.set_status(200)
