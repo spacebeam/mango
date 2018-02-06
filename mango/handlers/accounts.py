@@ -23,6 +23,7 @@ from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
 from collections import OrderedDict
 
+
 class UsersHandler(accounts.Account, BaseHandler):
     '''
         HTTP request handlers
@@ -133,8 +134,6 @@ class UsersHandler(accounts.Account, BaseHandler):
         query_args = self.request.arguments
         # get account from new account struct
         account = struct.get('account', None)
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -253,14 +252,12 @@ class OrgsHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, page_num=0):
+    def head(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Head orgs
+            Get orgs
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -292,7 +289,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
                 logging.info('orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
             else:
-                message = yield self.account(account, org_uuid)
+                message = yield self.get_account(account, org_uuid)
                 if self.cache.add('orgs:{0}'.format(org_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(org_uuid)))
                     self.set_status(200)
@@ -300,14 +297,12 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):,
         '''
             Get orgs
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -361,8 +356,6 @@ class OrgsHandler(accounts.Account, BaseHandler):
         query_args = self.request.arguments
         # get account from new org struct
         account = struct.get('account', None)
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -481,14 +474,12 @@ class MembersHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, page_num=0):
+    def head(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Head orgs
+            Get orgs
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -508,7 +499,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_org_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single org received
         else:
@@ -528,14 +519,12 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get orgs
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False

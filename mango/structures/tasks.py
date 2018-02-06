@@ -39,7 +39,7 @@ class TaskMap(object):
         self.map.registers['name'].assign(struct.get('name', ''))
         self.map.registers['description'].assign(struct.get('description', ''))
         self.map.registers['payload'].assign(struct.get('payload', ''))
-        self.map.registers['assignees'].assign(struct.get('assignees', ''))
+        self.map.registers['assigne'].assign(struct.get('assigne', ''))
         self.map.registers['watchers'].assign(struct.get('watchers', ''))
         self.map.registers['public'].assign(struct.get('public', ''))
         self.map.registers['source '].assign(struct.get('source', ''))
@@ -79,7 +79,7 @@ class TaskMap(object):
             "name": event.registers['name'].value,
             "description": event.registers['description'].value,
             "payload": event.registers['payload'].value,
-            "assignees": event.registers['assignees'].value,
+            "assigne": event.registers['assigne'].value,
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
@@ -111,7 +111,7 @@ class TaskMap(object):
             "name": event.registers['name'].value,
             "description": event.registers['description'].value,
             "payload": event.registers['payload'].value,
-            "assignees": event.registers['assignees'].value,
+            "assigne": event.registers['assigne'].value,
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
