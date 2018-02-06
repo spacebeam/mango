@@ -101,7 +101,7 @@ class Account(object):
             Get (ORG)
         '''
         search_index = 'mango_account_index'
-        query = 'uuid_register:{0}'.format(account_uuid)
+        query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
