@@ -75,5 +75,7 @@ class ModifyOrg(BaseAccount):
         ModifyOrg account
     '''
     account_type = types.StringType(default='org')
+    name = types.StringType()
+    description = types.StringType()
     members = compound.ListType(types.StringType())
     teams = compound.ListType(types.StringType())
