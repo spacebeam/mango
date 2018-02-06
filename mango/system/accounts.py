@@ -171,11 +171,10 @@ class Account(object):
         return message
 
 
-    # there is not going to be a new_account this must reflect user and org types.
     @gen.coroutine
-    def new_account(self, struct):
+    def new_user(self, struct):
         '''
-            New account event
+            New user event
         '''
         search_index = 'mango_account_index'
         bucket_type = 'mango_account'
@@ -192,9 +191,7 @@ class Account(object):
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "status": str(event.get('status', '')),
                 "account": str(event.get('account', 'pebkac')),
-                "account_type": str(event.get('account_type', '')),
-                "name": str(event.get('name', '')),
-                "description": str(event.get('description', '')),
+                "account_type": str(event.get('account_type', 'user')),
                 "nickname": str(event.get('nickname', '')),
                 "first_name": str(event.get('first_name', '')),
                 "last_name": str(event.get('last_name', '')),
@@ -212,8 +209,7 @@ class Account(object):
                 "history": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),
                 "orgs": str(event.get('orgs', '')),
-                "teams": str(event.get('teams', '')),
-                "members": str(event.get('members', '')),
+                "teams": str(event.get('teams', '')),               # ?
                 "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),
@@ -235,6 +231,68 @@ class Account(object):
             logging.error(error)
             message = str(error)
         return message
+
+
+    @gen.coroutine
+    def new_org(self, struct):
+        '''
+            New (ORG) event
+        '''
+        search_index = 'mango_account_index'
+        bucket_type = 'mango_account'
+        bucket_name = 'accounts'
+        try:
+            event = accounts.Org(struct)
+            event.validate()
+            event = clean_structure(event)
+        except Exception as error:
+            raise error
+        try:
+            message = event.get('uuid')
+            structure = {
+                "uuid": str(event.get('uuid', str(uuid.uuid4()))),
+                "status": str(event.get('status', '')),
+                "account": str(event.get('account', 'pebkac')),
+                "account_type": str(event.get('account_type', 'org')),
+                "name": str(event.get('name', '')),
+                "description": str(event.get('description', '')),
+                "email": str(event.get('email', '')),
+                "phone_number": str(event.get('phone_number', '')),
+                "extension": str(event.get('extension', '')),
+                "country_code": str(event.get('country_code', '')),
+                "timezone": str(event.get('timezone', '')),
+                "company": str(event.get('company', '')),
+                "location": str(event.get('location', '')),
+                "phones": str(event.get('phones', '')),
+                "emails": str(event.get('emails', '')),
+                "history": str(event.get('history', '')),
+                "labels": str(event.get('labels', '')),
+                "members": str(event.get('members', '')),
+                "teams": str(event.get('teams', '')),               # ?
+                "watchers": str(event.get('watchers', '')),
+                "checked": str(event.get('checked', '')),
+                "checked_by": str(event.get('checked_by', '')),
+                "checked_at": str(event.get('checked_at', '')),
+                "created_by": str(event.get('created_by', '')),
+                "created_at": str(event.get('created_at', '')),
+                "last_update_at": str(event.get('last_update_at', '')),
+                "last_update_by": str(event.get('last_update_by', '')),
+            }
+            result = AccountMap(
+                self.kvalue,
+                bucket_name,
+                bucket_type,
+                search_index,
+                structure
+            )
+            message = structure.get('uuid')
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
+
+
+    # what is going to happend to modify_stuff then ??
 
     @gen.coroutine
     def modify_account(self, account, account_uuid, struct):
