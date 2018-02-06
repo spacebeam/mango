@@ -13,4 +13,3 @@ arrow
 pycurl
 ujson
 pylibmc
-msgpack-python
