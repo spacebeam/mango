@@ -123,7 +123,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def post(self):
+    def post(self, org_uuid):
         '''
             Create team
         '''
@@ -161,7 +161,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def patch(self, team_uuid):
+    def patch(self, org_uuid, team_uuid):
         '''
             Modify team
         '''
@@ -191,7 +191,7 @@ class Handler(teams.Teams, BaseHandler):
         self.finish({'message': 'update completed successfully'})
 
     @gen.coroutine
-    def delete(self, team_uuid):
+    def delete(self, org_uuid, team_uuid):
         '''
             Delete team
         '''
