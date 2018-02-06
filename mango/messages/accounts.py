@@ -18,17 +18,6 @@ from schematics import types
 from schematics.types import compound
 
 
-class Permission(models.Model):
-    '''
-        Permissions
-    '''
-    role = types.StringType()
-    resources = compound.ListType(types.StringType())
-    permission = types.StringType(choices=['read',
-                                           'write',
-                                           'admin'], required=True)
-
-
 class Email(models.Model):
     '''
         Email
@@ -59,8 +48,6 @@ class RequiredBase(models.Model):
     account = types.StringType(required=True)
     name = types.StringType(required=False)
     email = types.EmailType(required=True)
-    is_admin = types.BooleanType(default=False)
-    permissions = compound.ListType(compound.ModelType(Permission))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -68,8 +55,6 @@ class RequiredBase(models.Model):
     company = types.StringType()
     location = types.StringType()
     url = types.URLType(required=False)
-    max_channels = types.IntType()
-    checksum = types.StringType()
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     last_update_by = types.StringType()
@@ -82,9 +67,8 @@ class RequiredBase(models.Model):
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     hashs = compound.ListType(types.StringType())
-    resource = types.StringType()
-    resource_uuid = types.StringType()
     watchers = compound.ListType(types.StringType())
+
 
 class CleanBase(models.Model):
     '''
@@ -95,8 +79,6 @@ class CleanBase(models.Model):
     account = types.StringType()
     name = types.StringType()
     email = types.EmailType()
-    is_admin = types.BooleanType()
-    permissions = compound.ListType(compound.ModelType(Permission))
     phone_number = types.StringType()
     extension = types.StringType()
     country_code = types.StringType()
@@ -104,13 +86,11 @@ class CleanBase(models.Model):
     company = types.StringType()
     location = types.StringType()
     url = types.URLType()
-    max_channels = types.IntType()
-    checksum = types.StringType()
     checked = types.BooleanType()
     checked_by = types.StringType()
+    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
-    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     phones = compound.ListType(compound.ModelType(Phone))
@@ -118,9 +98,8 @@ class CleanBase(models.Model):
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     hashs = compound.ListType(types.StringType())
-    resource = types.StringType()
-    resource_uuid = types.StringType()
     watchers = compound.ListType(types.StringType())
+
 
 class BaseAccount(RequiredBase):
     '''
@@ -140,36 +119,22 @@ class User(BaseAccount):
     '''
         User account
     '''
+    account_type = types.StringType(default='user')
     first_name = types.StringType()
     last_name = types.StringType()
-    account_type = types.StringType(default='user')
-    orgs = compound.ListType(types.StringType())
     password = types.StringType(required=True)
-    permissions = compound.ListType(compound.ModelType(Permission))
+    orgs = compound.ListType(types.StringType())
+
 
 class ModifyUser(CleanBaseAccount):
     '''
         Modify account
     '''
+    account_type = types.StringType(default='user')
     first_name = types.StringType()
     last_name = types.StringType()
-    account_type = types.StringType(default='user')
-    orgs = compound.ListType(types.StringType())
     password = types.StringType()
-    permissions = compound.ListType(compound.ModelType(Permission))
-
-
-class Group(models.Model):
-    '''
-        Org group
-    '''
-    uuid = types.UUIDType(default=uuid.uuid4)
-    name = types.StringType(required=True)
-    permission = types.StringType(choices=['read',
-                                           'write',
-                                           'admin'], required=True)
-    resources = compound.ListType(types.StringType())
-    members = compound.ListType(types.StringType())
+    orgs = compound.ListType(types.StringType())
 
 
 class Org(BaseAccount):
@@ -178,4 +143,4 @@ class Org(BaseAccount):
     '''
     account_type = types.StringType(default='org')
     members = compound.ListType(types.StringType())
-    groups = compound.ListType(compound.ModelType(Group))
+    teams = compound.ListType(compound.ModelType(Team))

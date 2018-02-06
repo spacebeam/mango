@@ -23,7 +23,7 @@ class Team(models.Model):
        (ORG) Team
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    account = types.StringType(required=True)
+    account = types.StringType()
     status = types.StringType()
     name = types.StringType(required=True)
     permission = types.StringType(choices=['read',
@@ -31,10 +31,7 @@ class Team(models.Model):
                                            'admin'], required=True)
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
-    last_update_by = types.StringType()
-    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
     url = types.URLType()
-    checksum = types.StringType()
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
@@ -42,8 +39,8 @@ class Team(models.Model):
     hashs = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
-    resource = types.StringType()
-    resource_uuid = types.StringType()
+    last_update_by = types.StringType()
+    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
     active = types.BooleanType(default=True)
 
 
@@ -58,10 +55,7 @@ class ModifyTeam(models.Model):
     permission = types.StringType()
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
-    last_update_by = types.StringType()
-    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
     url = types.URLType()
-    checksum = types.StringType()
     checked = types.BooleanType()
     checked_by = types.StringType()
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
@@ -69,6 +63,6 @@ class ModifyTeam(models.Model):
     hashs = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
-    resource = types.StringType()
-    resource_uuid = types.StringType()
+    last_update_by = types.StringType()
+    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
     active = types.BooleanType()

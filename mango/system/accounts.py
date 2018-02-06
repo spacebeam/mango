@@ -101,14 +101,14 @@ class Account(object):
             Get account list
         '''
         search_index = 'mango_account_index'
-        query = 'uuid_register:*'        
+        query = 'uuid_register:*'
         filter_status = 'status_register:active'
         order = 'sort=created_at_register+desc'
         # page number
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
-       
+
         if account is None:
             filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1}))&{2}'.format(filter_account, filter_status, order)
@@ -120,7 +120,7 @@ class Account(object):
 
         # set of urls
         urls = set()
-        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))        
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
         urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
         # init got response list
         got_response = []
@@ -189,47 +189,33 @@ class Account(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "account": str(event.get('account', 'pebkac')),
-                "active": str(event.get('active', '')),
+                "account_type": str(event.get('account_type', '')),
                 "status": str(event.get('status', '')),
-                "name": str(event.get('name', '')),
+                "nickname": str(event.get('nickname', '')),
                 "first_name": str(event.get('first_name', '')),
                 "last_name": str(event.get('last_name', '')),
                 "middle_name": str(event.get('middle_name', '')),
-                "description": str(event.get('description', '')),
-                "account_type": str(event.get('account_type', '')),
                 "password": str(event.get('password', '')),
                 "email": str(event.get('email', '')),
-                "is_admin": str(event.get('is_admin', '')),
                 "phone_number": str(event.get('phone_number', '')),
                 "extension": str(event.get('extension', '')),
                 "country_code": str(event.get('country_code', '')),
                 "timezone": str(event.get('timezone', '')),
                 "company": str(event.get('company', '')),
                 "location": str(event.get('location', '')),
-                "membership": str(event.get('membership', '')),
-                "url": str(event.get('url', '')),
-                "max_channels": str(event.get('max_channels', '')),
-                "checksum": str(event.get('checksum', '')),
+                "phones": str(event.get('phones', '')),
+                "emails": str(event.get('emails', '')),
+                "history": str(event.get('history', '')),
+                "labels": str(event.get('labels', '')),
+                "orgs": str(event.get('orgs', '')),
+                "teams": str(event.get('teams', '')),
+                "hashs": str(event.get('hashs', '')),
+                "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "created_by": str(event.get('created_by', '')),
                 "created_at": str(event.get('created_at', '')),
                 "last_update_at": str(event.get('last_update_at', '')),
                 "last_update_by": str(event.get('last_update_by', '')),
-                "members": str(event.get('members', '')),
-                "phones": str(event.get('phones', '')),
-                "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),
-                "layouts": str(event.get('layouts', '')),
-                "labels": str(event.get('labels', '')),
-                "orgs": str(event.get('orgs', '')),
-                "groups": str(event.get('groups', '')),
-                "resources": str(event.get('resources', '')),
-                "hashs": str(event.get('hashs', '')),
-                "permissions": str(event.get('permissions', '')),
-                "resource": str(event.get('resource', '')),
-                "resource_uuid": str(event.get('resource_uuid', '')),
-                "active": str(event.get('active', '')),
-                "watchers": str(event.get('watchers', '')),
             }
             result = AccountMap(
                 self.kvalue,
