@@ -185,6 +185,7 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
+            # aqui si en os patch ocupas account q pasa en post donde tambien te mando shit en el body?
             http_client.fetch(
                 url,
                 method='PATCH',
