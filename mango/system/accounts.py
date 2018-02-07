@@ -94,7 +94,7 @@ class Account(object):
                 response = stuff['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
             elif things['response']['numFound']:
-                response = watchers['response']['docs'][0]
+                response = things['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
             else:
                 logging.error('there is probably something wrong!')
