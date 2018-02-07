@@ -110,7 +110,7 @@ def main():
     # logging system spawned
     logging.info('Mango system {0} spawned'.format(system_uuid))
     # logging solr
-    logging.info('Solr 4.7 riak {0} '.format(solr))
+    logging.info('Solr 4.7 https://{0}/search/ '.format(solr))
     # logging riak settings
     logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
     # check for cache
