@@ -145,6 +145,14 @@ class Account(object):
             stuff = got_response[0]
             # get it from watchers list
             watchers = got_response[1]
+
+            logging.error('stuff')
+            logging.warning(stuff)
+
+            # mae mae mae mae mae mae mae mae mueva esta picha para otro lado
+            logging.error('watchers')
+            logging.warning(watchers)
+
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
                 logging.warning(response)
