@@ -29,14 +29,12 @@ class Handler(teams.Teams, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, team_uuid=None, page_num=0):
+    def head(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Head teams
+            Get teams
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
@@ -56,7 +54,6 @@ class Handler(teams.Teams, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not team_uuid:
-            # here we can re'use the account, kind of get the org from its org_uuid, and pass it return.
             message = yield self.get_team_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single team received
@@ -77,14 +74,12 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, page_num=1, lapse='hours'):
+    def get(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get teams
         '''
         # request query arguments
         query_args = self.request.arguments
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
