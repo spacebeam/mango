@@ -109,8 +109,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             # get cache data
             message = self.cache.get('accounts:{0}'.format(user_uuid))
             if message is not None:
-                logging.warning(message)
-                logging.info('accounts:{0} done retrieving!'.format(user_uuid))
+                logging.info('cache accounts:{0} done retrieving!'.format(user_uuid))
                 self.set_status(200)
             else:
                 message = yield self.get_user(account, user_uuid)
