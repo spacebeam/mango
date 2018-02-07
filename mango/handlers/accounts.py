@@ -297,7 +297,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):,
+    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
             Get orgs
         '''
