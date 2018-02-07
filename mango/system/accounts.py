@@ -52,6 +52,7 @@ class Account(object):
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        logging.warning(urls)
         urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
         # init got response list
         got_response = []
