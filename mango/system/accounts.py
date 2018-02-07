@@ -155,6 +155,9 @@ class Account(object):
                 logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
+        logging.warning('que putas?')
+        logging.warning(message)
+        logging.warning('fuck')
         return message
 
     @gen.coroutine
