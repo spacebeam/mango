@@ -80,9 +80,9 @@ def check_json(struct):
         Check for malformed JSON
     '''
     try:
-        logging.warning(struct)
         message = json.loads(struct)
     except Exception as error:
+        # Yo, WTF this is so old and so wrong! please clean the shit out of this !!!
         api_error = errors.Error(error)
         message = api_error.json()
         raise error
