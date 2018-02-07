@@ -59,11 +59,11 @@ class RequiredBase(models.Model):
     watchers = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    checked_at = types.TimestampType()
     created_by = types.StringType(required=True)
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
-    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    last_update_at = types.TimestampType()
 
 
 class CleanBase(models.Model):
@@ -86,9 +86,9 @@ class CleanBase(models.Model):
     watchers = compound.ListType(types.StringType())
     checked = types.BooleanType()
     checked_by = types.StringType()
-    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    checked_at = types.TimestampType()
     created_by = types.StringType()
-    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    created_at = types.TimestampType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
 
