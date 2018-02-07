@@ -166,7 +166,7 @@ class Teams(object):
         '''
             add (ORG) team
         '''
-        # pretty please, dont hardcode your shitty domain in here.
+        # please, dont hardcode your shitty domain in here.
         url = 'https://nonsense.ws/orgs/{0}'.format(org_uuid)
         # got callback response?
         got_response = []
