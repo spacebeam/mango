@@ -162,6 +162,39 @@ class Teams(object):
         return message
 
     @gen.coroutine
+    def add_team(self, org_uuid, team_uuid):
+        '''
+            add (ORG) team
+        '''
+        # got callback response?
+        got_response = []
+        # yours truly
+        message = {'update_complete':False}
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                method='PATCH',
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010)
+            response = got_response[0].get('response')['docs'][0]
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
+
+    @gen.coroutine
     def new_team(self, struct):
         '''
             New team event

@@ -144,6 +144,9 @@ class Handler(teams.Teams, BaseHandler):
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
         team_uuid = yield self.new_team(struct)
+        # add_team to (ORG)
+        new_team = yield self.add_team(org_uuid, team_uuid)
+        logging.warning(new_team)
         # complete message with receive uuid.
         message = {'uuid':team_uuid}
         if 'error' in message['uuid']:
