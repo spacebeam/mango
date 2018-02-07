@@ -117,9 +117,12 @@ class Account(object):
         IGNORE_ME = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
-            "nickname", "first_name",
-            "last_name", "middle_name",
-            "password", "orgs"
+            "nickname_register",
+            "first_name_register",
+            "last_name_register",
+            "middle_name_register",
+            "password_register",
+            "orgs_register"
         ]
         # hopefully asynchronous handle function request
         def handle_request(response):
@@ -141,27 +144,15 @@ class Account(object):
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
                 yield gen.sleep(0.0010)
-            # get stuff from response
+            # get it from stuff
             stuff = got_response[0]
-            # get it from watchers list
-            watchers = got_response[1]
-
-            logging.error('stuff')
-            logging.warning(stuff)
-
-            # mae mae mae mae mae mae mae mae mueva esta picha para otro lado
-            logging.error('watchers')
-            logging.warning(watchers)
-
+            # get it from things
+            things = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                logging.warning(response)
                 message = clean_response(response, IGNORE_ME)
-                logging.warning(message)
-            ## que pasa con los watchers? no prefiere la mona otro url para estos datos?
-
-            elif watchers['response']['numFound']:
-                response = watchers['response']['docs'][0]
+            elif things['response']['numFound']:
+                response = things['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
             else:
                 logging.error('there is probably something wrong!')
