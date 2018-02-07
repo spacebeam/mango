@@ -166,10 +166,15 @@ class Teams(object):
         '''
             add (ORG) team
         '''
+        url = 'https://nonsense.ws/orgs/{0}'.format(org_uuid)
+        logging.warning(url)
         # got callback response?
         got_response = []
         # yours truly
-        message = {'update_complete':False}
+        headers = {'content-type':'application/json'}
+        # and know for something completly different
+        message = {'teams':[team_uuid]}
+        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -183,12 +188,16 @@ class Teams(object):
             http_client.fetch(
                 url,
                 method='PATCH',
+                headers=headers,
+                body=json.dumps(message),
                 callback=handle_request
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            response = got_response[0].get('response')['docs'][0]
+
+            logging.warning(got_response)
+            #response = got_response[0].get('response')['docs'][0]
         except Exception as error:
             logging.error(error)
             message = str(error)
