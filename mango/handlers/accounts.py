@@ -580,8 +580,6 @@ class MembersHandler(accounts.Account, BaseHandler):
         account = struct.get('account', None)
         # get the current frontend username from cookie
         # username = self.get_username_cookie()
-        # get the current frontend username from token
-        # username = self.get_username_token()
         username = False
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)

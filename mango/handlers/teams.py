@@ -133,8 +133,6 @@ class Handler(teams.Teams, BaseHandler):
         query_args = self.request.arguments
         # get account from new team struct
         account = struct.get('account', None)
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
