@@ -398,13 +398,6 @@ class OrgsHandler(accounts.Account, BaseHandler):
         remove = self.request.arguments.get('remove', False)
         if not remove :
             result = self.cache.delete('org:{0}'.format(org_uuid))
-
-
-            logging.warning(struct)
-            logging.warning(account)
-            logging.warning(org_uuid)
-
-
             result = yield self.modify_account(account, org_uuid, struct)
         else:
             result = self.cache.delete('org:{0}'.format(org_uuid))
