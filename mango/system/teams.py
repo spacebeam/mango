@@ -236,6 +236,7 @@ class Teams(object):
                 "name": str(event.get('name', '')),
                 "permission": str(event.get('permission', '')),
                 "members": str(event.get('members', '')),
+                "resources": str(event.get('resources', '')),
                 "labels": str(event.get('labels', '')),
                 "history": str(event.get('history', '')),
                 "checked": str(event.get('checked', '')),

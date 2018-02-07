@@ -40,6 +40,7 @@ class TeamMap(object):
         self.map.registers['name'].assign(struct.get('name', ''))
         self.map.registers['permission'].assign(struct.get('permission', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
+        self.map.registers['resources'].assign(struct.get('resources', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
         self.map.registers['history'].assign(struct.get('history', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
@@ -69,6 +70,7 @@ class TeamMap(object):
             "name": event.registers['name'].value,
             "permission": event.registers['permission'].value,
             "members": event.registers['members'].value,
+            "resources": event.registers['resources'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
             "checked": event.registers['checked'].value,
@@ -90,6 +92,7 @@ class TeamMap(object):
             "name": event.registers['name'].value,
             "permission": event.registers['permission'].value,
             "members": event.registers['members'].value,
+            "resources": event.registers['resources'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
             "checked": event.registers['checked'].value,

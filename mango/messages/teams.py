@@ -32,6 +32,7 @@ class Team(models.Model):
                                            'write',
                                            'admin'], required=True)
     members = compound.ListType(types.StringType())
+    resources = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
@@ -55,6 +56,7 @@ class ModifyTeam(models.Model):
     description = types.StringType()
     permission = types.StringType()
     members = compound.ListType(types.StringType())
+    resources = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     checked = types.BooleanType()
