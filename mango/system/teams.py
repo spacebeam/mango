@@ -186,6 +186,12 @@ class Teams(object):
                 got_response.append(json.loads(response.body))
         try:
             # aqui si en os patch ocupas account q pasa en post donde tambien te mando shit en el body?
+
+            ## get account from uuid/token?
+
+            ## inspired by get uuid from account if exist.
+
+            # so, where it is it.
             http_client.fetch(
                 url,
                 method='PATCH',
