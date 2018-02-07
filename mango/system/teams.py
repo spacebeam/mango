@@ -162,7 +162,7 @@ class Teams(object):
         return message
 
     @gen.coroutine
-    def add_team(self, org_uuid, team_uuid):
+    def add_team(self, org_account, org_uuid, team_uuid):
         '''
             add (ORG) team
         '''
