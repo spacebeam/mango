@@ -52,14 +52,20 @@ class Account(object):
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
-        logging.warning(urls)
         urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        IGNORE_ME = [
+            "_yz_id","_yz_rk","_yz_rt","_yz_rb",
+            # CUSTOM FIELDS
+            "name_register",
+            "description_register",
+            "teams_register",
+            "members_register"
+        ]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
@@ -80,14 +86,14 @@ class Account(object):
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
                 yield gen.sleep(0.0010)
-            # get stuff from response
+            # get it from stuff
             stuff = got_response[0]
-            # get it from watchers list
-            watchers = got_response[1]
+            # get it from things
+            things = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
-            elif watchers['response']['numFound']:
+            elif things['response']['numFound']:
                 response = watchers['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
             else:
