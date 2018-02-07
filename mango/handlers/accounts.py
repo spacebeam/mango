@@ -106,7 +106,6 @@ class UsersHandler(accounts.Account, BaseHandler):
         else:
             # first try to get stuff from cache
             user_uuid = user_uuid.rstrip('/')
-            logging.warning('que pasa!!!!!!!!!!!!')
             # get cache data
             message = self.cache.get('accounts:{0}'.format(user_uuid))
             if message is not None:
