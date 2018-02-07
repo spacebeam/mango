@@ -128,7 +128,7 @@ def main():
             (r'/tasks/?', tasks.Handler),
             # User accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
-            (r'/users/(?P<account_uuid>.+)/?', accounts.UsersHandler),
+            (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
             # (ORG) members
             (r'/orgs/(?P<org_uuid>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
