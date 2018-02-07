@@ -173,7 +173,10 @@ class Teams(object):
         # yours truly
         headers = {'content-type':'application/json'}
         # and know for something completly different
-        message = {'teams':[team_uuid]}
+        message = {
+            'account': org_account,
+            'teams':[team_uuid]
+        }
         logging.warning(message)
         def handle_request(response):
             '''
