@@ -147,7 +147,11 @@ class Account(object):
             watchers = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
+                logging.warning(response)
                 message = clean_response(response, IGNORE_ME)
+                logging.warning(message)
+            ## que pasa con los watchers? no prefiere la mona otro url para estos datos?
+
             elif watchers['response']['numFound']:
                 response = watchers['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
@@ -155,9 +159,6 @@ class Account(object):
                 logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
-        logging.warning('que putas?')
-        logging.warning(message)
-        logging.warning('fuck')
         return message
 
     @gen.coroutine
