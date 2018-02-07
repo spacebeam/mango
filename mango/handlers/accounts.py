@@ -331,7 +331,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
             # get cache data
             message = self.cache.get('orgs:{0}'.format(org_uuid))
             if message is not None:
-                logging.info('orgs:{0} done retrieving!'.format(org_uuid))
+                logging.info('cache orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
             else:
                 message = yield self.get_org(account, org_uuid)
@@ -553,7 +553,7 @@ class MembersHandler(accounts.Account, BaseHandler):
             # get cache data
             message = self.cache.get('orgs:{0}'.format(org_uuid))
             if message is not None:
-                logging.info('orgs:{0} done retrieving!'.format(org_uuid))
+                logging.info('cache orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
             else:
                 message = yield self.get_org(account, org_uuid)
