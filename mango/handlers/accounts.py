@@ -192,7 +192,7 @@ class UsersHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def delete(self, user_uuid):
         '''
-            Delete account
+            Delete user
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
@@ -256,7 +256,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def head(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Get orgs
+            Get (ORG)
         '''
         # request query arguments
         query_args = self.request.arguments
@@ -456,7 +456,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         parameters['labels'] = 'array/string'
         # end of manual cleaning
         POST = {
-            "description": "Create org",
+            "description": "Create (ORG)",
             "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
