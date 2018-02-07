@@ -114,7 +114,13 @@ class Account(object):
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        IGNORE_ME = [
+            "_yz_id","_yz_rk","_yz_rt","_yz_rb",
+            # CUSTOM FIELDS
+            "nickname", "first_name",
+            "last_name", "middle_name",
+            "password", "orgs"
+        ]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
