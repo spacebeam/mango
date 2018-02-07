@@ -299,7 +299,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
         '''
-            Get orgs
+            Get (ORG)
         '''
         # request query arguments
         query_args = self.request.arguments
@@ -322,7 +322,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_org_list(account, start, end, lapse, status, page_num)
             self.set_status(200)
         # single org received
         else:
@@ -334,7 +334,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
                 logging.info('orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
             else:
-                message = yield self.get_account(account, org_uuid)
+                message = yield self.get_org(account, org_uuid)
                 if self.cache.add('orgs:{0}'.format(org_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(org_uuid)))
                     self.set_status(200)
@@ -344,7 +344,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def post(self):
         '''
-            Create org
+            Create (ORG)
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if struct and not struct.get('errors') else False)
@@ -380,7 +380,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def patch(self, org_uuid):
         '''
-            Modify org
+            Modify (ORG)
         '''
         struct = yield check_json(self.request.body)
         format_pass = (True if not dict(struct).get('errors', False) else False)
@@ -412,7 +412,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
     @gen.coroutine
     def delete(self, org_uuid):
         '''
-            Delete org
+            Delete (ORG)
         '''
         query_args = self.request.arguments
         account = query_args.get('account', [None])[0]
