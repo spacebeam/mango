@@ -166,8 +166,8 @@ class Teams(object):
         '''
             add (ORG) team
         '''
+        # pretty please, dont hardcode your shitty domain in here.
         url = 'https://nonsense.ws/orgs/{0}'.format(org_uuid)
-        logging.warning(url)
         # got callback response?
         got_response = []
         # yours truly
@@ -177,7 +177,6 @@ class Teams(object):
             'account': org_account,
             'teams':[team_uuid]
         }
-        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -188,13 +187,6 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # aqui si en os patch ocupas account q pasa en post donde tambien te mando shit en el body?
-
-            ## get account from uuid/token?
-
-            ## inspired by get uuid from account if exist.
-
-            # so, where it is it.
             http_client.fetch(
                 url,
                 method='PATCH',
@@ -205,7 +197,6 @@ class Teams(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-
             logging.warning(got_response)
             #response = got_response[0].get('response')['docs'][0]
         except Exception as error:
