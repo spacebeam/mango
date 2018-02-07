@@ -232,13 +232,13 @@ class Tasks(object):
         # filter query
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
-
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-
         # pretty please, ignore this list of fields from database.
-        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        # if you want to include something in here, remember the _register.
+        # example: labels_register.
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb")
         # got callback response?
         got_response = []
         # yours truly
@@ -309,7 +309,9 @@ class Tasks(object):
             self.solr, search_index, query, filter_query
         )
         # pretty please, ignore this list of fields from database.
-        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        # if you want to include something in here, remember the _register.
+        # example: labels_register.
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb")
         # got callback response?
         got_response = []
         # yours truly
