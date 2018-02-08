@@ -103,10 +103,11 @@ class Account(object):
         return message
 
     @gen.coroutine
-    def add_org(self, account, org_uuid):
+    def add_org(self, username, account, org_uuid):
         '''
+            Update user profile with (ORG)
         '''
-        pass
+        logging.warning(username, account, org_uuid)
 
     @gen.coroutine
     def get_org(self, account, org_uuid):
