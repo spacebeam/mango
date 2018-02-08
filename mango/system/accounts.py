@@ -118,7 +118,7 @@ class Account(object):
         logging.warning(username)
         logging.warning(org_account)
         logging.warning(org_uuid)
-        user_uuid = yield uuid_from_account(username)
+        user_uuid = yield self.uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
         logging.warning(url)
