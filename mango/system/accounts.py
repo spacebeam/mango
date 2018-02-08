@@ -104,7 +104,7 @@ class Account(object):
         return message
 
     @gen.coroutine
-    def uuid_from_account(username):
+    def uuid_from_account(self, username):
         '''
             Get uuid from username account
         '''
