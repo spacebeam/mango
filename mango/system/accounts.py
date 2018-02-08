@@ -108,10 +108,10 @@ class Account(object):
         '''
             Get uuid from username account
         '''
-        return 'ccd5e3a6-d483-431a-8c2b-e2960397f1da'
+        return '4564d73d-6a7f-4587-9ae2-4dfa93d54d89'
 
     @gen.coroutine
-    def add_team(self, username, org_uuid, team_name, team_uuid):
+    def add_team(self, username, org_uuid, org_account, team_name, team_uuid):
         '''
             Update user profile with team
         '''
@@ -126,7 +126,10 @@ class Account(object):
         # and know for something completly different
         message = {
             'account': username,
-            'teams': [{"uuid":team_uuid,"name":team_name, 'org':org_uuid}],
+            'teams': [{"uuid":team_uuid,
+                       "name":team_name,
+                       "org":org_uuid,
+                       "account":org_account}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
