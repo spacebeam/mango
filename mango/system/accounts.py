@@ -108,20 +108,63 @@ class Account(object):
         '''
             Get uuid from username account
         '''
-        return 'ccd5e3a6-d483-431a-8c2b-e2960397f1da'
+        search_index = 'mango_account_index'
+        query = 'account_register:{0}'.format(username)
+        filter_query = 'account_register:{0}'.format(username)
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        # init got response list
+        got_response = []
+        # init crash message
+        message = {'message': 'not found'}
+        # ignore riak fields
+        IGNORE_ME = [
+            "_yz_id","_yz_rk","_yz_rt","_yz_rb",
+            # CUSTOM FIELDS
+            "name_register",
+            "description_register",
+            "teams_register",
+            "members_register"
+        ]
+        # hopefully asynchronous handle function request
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) < 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get it from stuff
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response = stuff['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message['uuid']
 
     @gen.coroutine
-    def add_org(self, username, org_account, org_uuid):
+    def add_team(self, username, org_uuid, org_account, team_name, team_uuid):
         '''
-            Update user profile with (ORG)
+            Update user profile with team
         '''
-        logging.warning(username)
-        logging.warning(org_account)
-        logging.warning(org_uuid)
         user_uuid = yield self.uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
-        logging.warning(url)
         # got callback response?
         got_response = []
         # yours trully
@@ -129,12 +172,58 @@ class Account(object):
         # and know for something completly different
         message = {
             'account': username,
-            'orgs': [org_uuid],
-            'labels':{'org:{0}'.format(org_account):org_uuid},
+            'teams': [{"uuid":team_uuid,
+                       "name":team_name,
+                       "org":org_uuid,
+                       "account":org_account}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
-        logging.warning(message)
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                method='PATCH',
+                headers=headers,
+                body=json.dumps(message),
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010)
+            #logging.warning(got_response)
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
+
+    @gen.coroutine
+    def add_org(self, username, org_account, org_uuid):
+        '''
+            Update user profile with (ORG)
+        '''
+        user_uuid = yield self.uuid_from_account(username)
+        # Please, don't hardcode your shitty domain in here.
+        url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
+        # got callback response?
+        got_response = []
+        # yours trully
+        headers = {'content-type':'application/json'}
+        # and know for something completly different
+        message = {
+            'account': username,
+            'orgs': [{"uuid":org_uuid,"account":org_account}],
+            'last_update_at': arrow.utcnow().timestamp,
+            'last_update_by': username,
+        }
         def handle_request(response):
             '''
                 Request Async Handler
@@ -416,10 +505,10 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # ?
+                "history": str(event.get('history', '')),           # still missing
                 "labels": str(event.get('labels', '')),
                 "orgs": str(event.get('orgs', '')),
-                "teams": str(event.get('teams', '')),               # ?
+                "teams": str(event.get('teams', '')),
                 "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),
@@ -474,10 +563,10 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # ?
+                "history": str(event.get('history', '')),           # still missing
                 "labels": str(event.get('labels', '')),
                 "members": str(event.get('members', '')),
-                "teams": str(event.get('teams', '')),               # ?
+                "teams": str(event.get('teams', '')),
                 "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),
