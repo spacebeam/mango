@@ -163,10 +163,8 @@ class Account(object):
             Update user profile with team
         '''
         user_uuid = yield self.uuid_from_account(username)
-        logging.warning(user_uuid)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
-        logging.warning(url)
         # got callback response?
         got_response = []
         # yours trully
@@ -181,7 +179,6 @@ class Account(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
-        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -214,10 +211,8 @@ class Account(object):
             Update user profile with (ORG)
         '''
         user_uuid = yield self.uuid_from_account(username)
-        logging.warning(user_uuid)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
-        logging.warning(url)
         # got callback response?
         got_response = []
         # yours trully
@@ -229,7 +224,6 @@ class Account(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
-        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
