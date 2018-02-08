@@ -65,6 +65,7 @@ class ModifyUser(CleanBaseAccount):
     last_name = types.StringType()
     password = types.StringType()
     orgs = compound.ListType(types.DictType(types.StringType))
+    teams = compound.ListType(types.DictType(types.StringType))
 
 
 class Org(BaseAccount):

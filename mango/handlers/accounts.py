@@ -222,7 +222,12 @@ class UsersHandler(accounts.Account, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.User.get_mock_object().to_primitive()
+        stuff = False
+        while not stuff:
+            try:
+                stuff = models.User.get_mock_object().to_primitive()
+            except Exception as error:
+                pass
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -230,6 +235,8 @@ class UsersHandler(accounts.Account, BaseHandler):
                 parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         parameters['labels'] = 'array/string'
+        parameters['orgs'] = 'array//kv/string'
+        parameters['teams'] = 'array/kv/string'
         # end of manual cleaning
         POST = {
             "description": "Create account",
@@ -446,7 +453,12 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.Org.get_mock_object().to_primitive()
+        stuff = False
+        while not stuff:
+            try:
+                stuff = models.Org.get_mock_object().to_primitive()
+            except Exception as error:
+                pass
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -454,6 +466,8 @@ class OrgsHandler(accounts.Account, BaseHandler):
                 parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         parameters['labels'] = 'array/string'
+        parameters['members'] = 'array/string'
+        parameters['teams'] = 'array/kv/string'
         # end of manual cleaning
         POST = {
             "description": "Create (ORG)",
@@ -666,8 +680,12 @@ class MembersHandler(accounts.Account, BaseHandler):
         # resource parameters
         parameters = {}
         # mock your stuff
-        stuff = models.Org.get_mock_object().to_primitive()
-        logging.error(stuff)
+        stuff = False
+        while not stuff:
+            try:
+                stuff = models.Org.get_mock_object().to_primitive()
+            except Exception as error:
+                pass
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
@@ -675,6 +693,8 @@ class MembersHandler(accounts.Account, BaseHandler):
                 parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         parameters['labels'] = 'array/string'
+        parameters['members'] = 'array/string'
+        parameters['teams'] = 'array/kv/string'
         # end of manual cleaning
         POST = {
             "description": "Create (ORG)",
