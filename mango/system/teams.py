@@ -103,7 +103,10 @@ class Teams(object):
         '''
         search_index = 'mango_team_index'
         query = 'uuid_register:*'
-        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_status = 'status_register:{0}'.format(account.decode('utf-8'))
+        filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
+
+        filter_query = '(({1})AND({2}))'.format(filter_status, filter_account)
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         # page number
