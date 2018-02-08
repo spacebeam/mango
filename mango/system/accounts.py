@@ -107,7 +107,10 @@ class Account(object):
         '''
             Update user profile with (ORG)
         '''
-        logging.warning(username, account, org_uuid)
+        logging.warning(username)
+        logging.warning(account)
+        logging.warning(org_uuid)
+
 
     @gen.coroutine
     def get_org(self, account, org_uuid):
