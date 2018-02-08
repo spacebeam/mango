@@ -162,7 +162,7 @@ class Teams(object):
         return message
 
     @gen.coroutine
-    def add_team(self, org_account, org_uuid, team_uuid):
+    def add_team(self, username, org_account, org_uuid, team_uuid):
         '''
             add (ORG) team
         '''
@@ -175,7 +175,9 @@ class Teams(object):
         # and know for something completly different
         message = {
             'account': org_account,
-            'teams':[team_uuid]
+            'teams': [team_uuid],
+            'last_update_at': arrow.utcnow().timestamp,
+            'last_update_by': username,
         }
         def handle_request(response):
             '''
