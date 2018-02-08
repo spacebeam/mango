@@ -459,10 +459,10 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # ?
+                "history": str(event.get('history', '')),           # still missing
                 "labels": str(event.get('labels', '')),
                 "orgs": str(event.get('orgs', '')),
-                "teams": str(event.get('teams', '')),               # ?
+                "teams": str(event.get('teams', '')),
                 "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),
@@ -517,10 +517,10 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # ?
+                "history": str(event.get('history', '')),           # still missing
                 "labels": str(event.get('labels', '')),
                 "members": str(event.get('members', '')),
-                "teams": str(event.get('teams', '')),               # ?
+                "teams": str(event.get('teams', '')),
                 "watchers": str(event.get('watchers', '')),
                 "checked": str(event.get('checked', '')),
                 "checked_by": str(event.get('checked_by', '')),
