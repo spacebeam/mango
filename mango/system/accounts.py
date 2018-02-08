@@ -130,7 +130,7 @@ class Account(object):
         message = {
             'account': username,
             'orgs': [org_uuid],
-            'labels':[json.dumps({'org:{0}'.format(org_account):org_uuid})],
+            'labels':{'org:{0}'.format(org_account):org_uuid},
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
