@@ -667,6 +667,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         parameters = {}
         # mock your stuff
         stuff = models.Org.get_mock_object().to_primitive()
+        logging.error(stuff)
         for k, v in stuff.items():
             if v is None:
                 parameters[k] = str(type('none'))
