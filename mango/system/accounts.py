@@ -11,6 +11,7 @@
 __author__ = 'Team Machine'
 
 
+import arrow
 import uuid
 import logging
 import ujson as json
@@ -103,14 +104,54 @@ class Account(object):
         return message
 
     @gen.coroutine
-    def add_org(self, username, account, org_uuid):
+    def add_org(self, username, org_account, org_uuid):
         '''
             Update user profile with (ORG)
         '''
         logging.warning(username)
-        logging.warning(account)
+        logging.warning(org_account)
         logging.warning(org_uuid)
-
+        user_uuid = yield uuid_from_account(username)
+        # Please, don't hardcode your shitty domain in here.
+        url = 'https://nonsense.ws/users/{}'.format(user_uuid)
+        # got callback response?
+        got_response = []
+        # yours trully
+        headers = {'content-type':'application/json'}
+        # and know for something completly different
+        message = {
+            'account': username,
+            'orgs': [org_uuid],
+            'labels':[json.dumps({'org:{0}'.format(org_account):org_uuid})],
+            'last_update_at': arrow.utcnow().timestamp,
+            'last_update_by': username,
+        }
+        logging.warning(message)
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                method='PATCH',
+                headers=headers,
+                body=json.dumps(message),
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010)
+            #logging.warning(got_response)
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
 
     @gen.coroutine
     def get_org(self, account, org_uuid):
