@@ -120,7 +120,8 @@ class Account(object):
         logging.warning(org_uuid)
         user_uuid = yield uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
-        url = 'https://nonsense.ws/users/{}'.format(user_uuid)
+        url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
+        logging.warning(url)
         # got callback response?
         got_response = []
         # yours trully
