@@ -113,6 +113,7 @@ class Account(object):
         filter_query = 'account_register:{0}'.format(username)
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
