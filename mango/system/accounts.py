@@ -113,7 +113,6 @@ class Account(object):
         filter_query = 'account_register:{0}'.format(username)
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
-        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
@@ -144,7 +143,7 @@ class Account(object):
                     url,
                     callback=handle_request
                 )
-            while len(got_response) <= 1:
+            while len(got_response) < 1:
                 # Yo, don't be careless with the time!
                 yield gen.sleep(0.0010)
             # get it from stuff
