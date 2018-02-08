@@ -111,13 +111,10 @@ class Account(object):
         return 'ccd5e3a6-d483-431a-8c2b-e2960397f1da'
 
     @gen.coroutine
-    def add_org(self, username, org_account, org_uuid):
+    def add_team(self, username, org_uuid, team_name, team_uuid):
         '''
-            Update user profile with (ORG)
+            Update user profile with team
         '''
-        logging.warning(username)
-        logging.warning(org_account)
-        logging.warning(org_uuid)
         user_uuid = yield self.uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
@@ -129,8 +126,54 @@ class Account(object):
         # and know for something completly different
         message = {
             'account': username,
-            'orgs': [org_uuid],
-            'labels':{'org:{0}'.format(org_account):org_uuid},
+            'teams': [{"uuid":team_uuid,"name":team_name, 'org':org_uuid}],
+            'last_update_at': arrow.utcnow().timestamp,
+            'last_update_by': username,
+        }
+        logging.warning(message)
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                method='PATCH',
+                headers=headers,
+                body=json.dumps(message),
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010)
+            #logging.warning(got_response)
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
+
+    @gen.coroutine
+    def add_org(self, username, org_account, org_uuid):
+        '''
+            Update user profile with (ORG)
+        '''
+        user_uuid = yield self.uuid_from_account(username)
+        # Please, don't hardcode your shitty domain in here.
+        url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
+        logging.warning(url)
+        # got callback response?
+        got_response = []
+        # yours trully
+        headers = {'content-type':'application/json'}
+        # and know for something completly different
+        message = {
+            'account': username,
+            'orgs': [{"uuid":org_uuid,"account":org_account}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
