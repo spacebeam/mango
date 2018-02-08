@@ -103,7 +103,7 @@ class Teams(object):
         '''
         search_index = 'mango_team_index'
         query = 'uuid_register:*'
-        filter_status = 'status_register:{0}'.format(account.decode('utf-8'))
+        filter_status = 'status_register:active'
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
         filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
