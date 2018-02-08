@@ -104,6 +104,13 @@ class Account(object):
         return message
 
     @gen.coroutine
+    def uuid_from_account(username):
+        '''
+            Get uuid from username account
+        '''
+        return 'dc917adc-4ee8-439e-91b5-264f62315594'
+
+    @gen.coroutine
     def add_org(self, username, org_account, org_uuid):
         '''
             Update user profile with (ORG)
