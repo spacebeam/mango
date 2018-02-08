@@ -47,7 +47,8 @@ class User(BaseAccount):
     middle_name = types.StringType()
     last_name = types.StringType()
     password = types.StringType(required=True)
-    orgs = compound.ListType(types.StringType())
+    orgs = compound.ListType(types.DictType(types.StringType))
+    teams = compound.ListType(types.DictType(types.StringType))
 
 
 class ModifyUser(CleanBaseAccount):
@@ -63,7 +64,7 @@ class ModifyUser(CleanBaseAccount):
     middle_name = types.StringType()
     last_name = types.StringType()
     password = types.StringType()
-    orgs = compound.ListType(types.StringType())
+    orgs = compound.ListType(types.DictType(types.StringType))
 
 
 class Org(BaseAccount):
@@ -78,7 +79,7 @@ class Org(BaseAccount):
     name = types.StringType()
     description = types.StringType()
     members = compound.ListType(types.StringType())
-    teams = compound.ListType(types.StringType())
+    teams = compound.ListType(types.DictType(types.StringType))
 
 
 class ModifyOrg(BaseAccount):
@@ -92,4 +93,4 @@ class ModifyOrg(BaseAccount):
     name = types.StringType()
     description = types.StringType()
     members = compound.ListType(types.StringType())
-    teams = compound.ListType(types.StringType())
+    teams = compound.ListType(types.DictType(types.StringType))
