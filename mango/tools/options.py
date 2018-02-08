@@ -106,7 +106,7 @@ def options():
         help=('Enable cache'))
     tornado.options.define('page_size',
         default=50, type=int,
-        help=('Set a custom page size up to 100'))
+        help=('Set a custom page size up to 50'))
     # Parse config file, then command line...
     # so command line switches take precedence
     if os.path.exists(config_path):
