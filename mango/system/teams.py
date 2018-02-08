@@ -199,8 +199,7 @@ class Teams(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            logging.warning(got_response)
-            #response = got_response[0].get('response')['docs'][0]
+            #logging.warning(got_response)
         except Exception as error:
             logging.error(error)
             message = str(error)
