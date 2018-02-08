@@ -142,7 +142,6 @@ class Handler(teams.Teams, BaseHandler):
         team_uuid = yield self.new_team(struct)
         # add_team to (ORG) -> the struct['account'] here is the org_account
         new_team = yield self.add_team(username, struct['account'], org_uuid, team_uuid)
-        logging.warning(new_team)
         # complete message with receive uuid.
         message = {'uuid':team_uuid}
         if 'error' in message['uuid']:
