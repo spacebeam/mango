@@ -80,10 +80,6 @@ class Handler(teams.Teams, BaseHandler):
         '''
         # request query arguments
         query_args = self.request.arguments
-
-        logging.warning(org_uuid)
-        logging.warning(team_uuid)
-
         # get the current frontend username from token
         # username = self.get_username_token()
         username = False
