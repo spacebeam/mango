@@ -363,6 +363,8 @@ class OrgsHandler(accounts.Account, BaseHandler):
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
         org_uuid = yield self.new_org(struct)
+        # add_org to user -> the struct['account'] here is the org_account
+        new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
         # complete message with receive uuid.
         message = {'uuid':org_uuid}
         if 'error' in message['uuid']:

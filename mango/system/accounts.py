@@ -103,6 +103,12 @@ class Account(object):
         return message
 
     @gen.coroutine
+    def add_org(self, account, org_uuid):
+        '''
+        '''
+        pass
+
+    @gen.coroutine
     def get_org(self, account, org_uuid):
         '''
             Get (ORG)
