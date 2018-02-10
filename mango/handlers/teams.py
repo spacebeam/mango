@@ -18,6 +18,7 @@ from tornado import gen
 from tornado import web
 from mango.messages import teams as models
 from mango.system import teams
+from tornado import httpclient
 from mango.tools import errors, str2bool, check_json
 from mango.handlers import BaseHandler
 from collections import OrderedDict
