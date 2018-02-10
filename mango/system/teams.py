@@ -103,7 +103,10 @@ class Teams(object):
         '''
         search_index = 'mango_team_index'
         query = 'uuid_register:*'
-        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        filter_status = 'status_register:active'
+        filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
+
+        filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
         # note where the hack change ' to %27 for the url string!
         fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
         # page number
@@ -114,6 +117,7 @@ class Teams(object):
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
         urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
