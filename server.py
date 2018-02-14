@@ -70,7 +70,6 @@ __ooo__ = '''
 
 
 import uuid
-import zmq
 import riak
 import logging
 import pylibmc as mc
