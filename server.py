@@ -117,7 +117,7 @@ def main():
     # application web daemon
     application = web.Application(
         [
-            # Tasks for natural and artificial entities.
+            # Tasks for artificial and natural entities.
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
