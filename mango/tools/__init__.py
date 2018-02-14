@@ -13,6 +13,7 @@ __author__ = 'Team Machine'
 
 import time
 import arrow
+import csv
 import ujson as json
 import logging
 import uuid
@@ -180,3 +181,15 @@ def str2bool(boo):
         String to boolean
     '''
     return boo.lower() in ('yes', 'true', 't', '1')
+
+def export_to_csv(csv_file_path, dict_data):
+    csv_file = open(csv_file_path, 'w')
+    writer = csv.writer(csv_file, dialect='excel')
+    headers = dict_data[0].keys()
+    writer.writerow(headers)
+    for dat in dict_data:
+        line = []
+        for field in headers:
+            line.append(dat[field])
+        writer.writerow(line)
+    csv_file.close()
