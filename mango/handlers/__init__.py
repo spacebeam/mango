@@ -73,7 +73,7 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        # parse and build url
+        # format and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -139,7 +139,8 @@ class BaseHandler(web.RequestHandler):
                 callback=handle_request
             )
             while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
+                # don't be careless with the time.
+                yield gen.sleep(0.0020)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -161,7 +162,7 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'password_register:{0}'.format(password.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        #parse and build url
+        # parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         ).replace(' ', '')
@@ -183,7 +184,8 @@ class BaseHandler(web.RequestHandler):
                 callback=handle_request
             )
             while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
+                # don't be careless with the time.
+                yield gen.sleep(0.0020)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -205,7 +207,7 @@ class BaseHandler(web.RequestHandler):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(account)
         filter_query = 'account_register:{0}'.format(account)
-        #parse and build url
+        # parse and build url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
@@ -227,7 +229,8 @@ class BaseHandler(web.RequestHandler):
                 callback=handle_request
             )
             while len(got_response) == 0:
-                yield gen.sleep(0.0020) # don't be careless with the time.
+                # don't be careless with the time.
+                yield gen.sleep(0.0020)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -285,7 +288,7 @@ class LogoutHandler(BaseHandler):
         '''
             Clear secure cookie
         '''
-        # check this out cuz there is no cookies anymore!
+        # Check this out cuz there are no cookies anymore!
         self.clear_cookie('username')
         self.clear_cookie('labels')
         self.set_status(200)
