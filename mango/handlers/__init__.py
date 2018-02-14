@@ -16,7 +16,6 @@ import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.system import basic_authentication
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_search_item, get_search_list
@@ -243,53 +242,3 @@ class BaseHandler(web.RequestHandler):
         except Exception as error:
             logging.warning(error)
         return message.get('labels', [])
-
-@basic_authentication
-class LoginHandler(BaseHandler):
-    '''
-        BasicAuth login
-    '''
-    @gen.coroutine
-    def get(self):
-        # clean message
-        message = {}
-        message['uuid'] = yield self.get_auth_uuid(self.username, self.password)
-        message['account_type'] = yield self.check_account_type(self.username)
-        message['labels'] = yield self.get_account_labels(self.username)
-        if validate_uuid4(message.get('uuid')):
-            self.set_header('Access-Control-Allow-Origin','*')
-            self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-            self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-            # Yo, missing set_header with the security token!
-            self.username, self.password = (None, None)
-            self.set_status(200)
-            self.finish(message)
-        else:
-            self.set_status(403)
-            # I don't know why not 401?
-            self.set_header('WWW-Authenticate', 'Basic realm=mango')
-            self.finish()
-
-    @gen.coroutine
-    def options(self):
-        self.set_header('Access-Control-Allow-Origin','*')
-        self.set_header('Access-Control-Allow-Methods','GET, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers','Content-Type, Authorization')
-        self.set_status(200)
-        self.finish()
-
-class LogoutHandler(BaseHandler):
-    '''
-        BasicAuth logout
-    '''
-
-    @gen.coroutine
-    def get(self):
-        '''
-            Clear secure cookie
-        '''
-        # Check this out cuz there are no cookies anymore!
-        self.clear_cookie('username')
-        self.clear_cookie('labels')
-        self.set_status(200)
-        self.finish()

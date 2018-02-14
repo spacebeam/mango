@@ -75,7 +75,6 @@ import logging
 import pylibmc as mc
 from tornado import ioloop
 from tornado import gen, web
-from mango.handlers import LoginHandler, LogoutHandler
 from mango.handlers import accounts, tasks, teams
 from mango.tools import options
 
@@ -118,8 +117,6 @@ def main():
     # application web daemon
     application = web.Application(
         [
-            (r'/login/?', LoginHandler),
-            (r'/logout/?', LogoutHandler),
             # Tasks for natural and artificial entities.
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
