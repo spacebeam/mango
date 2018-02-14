@@ -373,6 +373,8 @@ class OrgsHandler(accounts.Account, BaseHandler):
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
         # add owners team to the new_org and created_by account
 
+        new_team = yield self.new_team()
+
         # new_team = send post to /teams/ then add owners team to the new organization
 
         # complete message with receive uuid.
