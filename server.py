@@ -75,7 +75,7 @@ import logging
 import pylibmc as mc
 from tornado import ioloop
 from tornado import gen, web
-from mango.handlers import accounts, tasks, teams
+from mango.handlers import accounts, teams, tasks
 from mango.tools import options
 
 
@@ -117,14 +117,6 @@ def main():
     # application web daemon
     application = web.Application(
         [
-            # Tasks for artificial and natural entities.
-            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
-            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
-            (r'/tasks/?', tasks.Handler),
-            # User accounts
-            (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
-            (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
-            (r'/users/?', accounts.UsersHandler),
             # (ORG) members
             (r'/orgs/(?P<org_uuid>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
             (r'/orgs/(?P<org_uuid>.+)/members/(?P<user_uuid>.+)/?', accounts.MembersHandler),
@@ -137,6 +129,14 @@ def main():
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
+            # Simple user accounts
+            (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
+            (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
+            (r'/users/?', accounts.UsersHandler),
+            # Tasks for artificial and natural entities.
+            (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
+            (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
+            (r'/tasks/?', tasks.Handler),
         ],
         db = db,
         cache = cache,
