@@ -80,6 +80,7 @@ class Org(BaseAccount):
     name = types.StringType()
     description = types.StringType()
     members = compound.ListType(types.StringType())
+    owners = compound.ListType(types.StringType())
     teams = compound.ListType(types.DictType(types.StringType))
 
 
@@ -94,4 +95,5 @@ class ModifyOrg(BaseAccount):
     name = types.StringType()
     description = types.StringType()
     members = compound.ListType(types.StringType())
+    owners = compound.ListType(types.StringType())
     teams = compound.ListType(types.DictType(types.StringType))

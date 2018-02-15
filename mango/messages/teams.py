@@ -32,7 +32,7 @@ class Team(models.Model):
                                            'write',
                                            'admin'], required=True)
     members = compound.ListType(types.StringType())
-    resources = compound.ListType(types.StringType())
+    resources = compound.ListType(types.StringType()) # [noun:uuid, noun:*]
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)

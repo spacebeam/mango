@@ -363,18 +363,21 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # get account from new org struct
         account = struct.get('account', None)
         # get the current frontend username from token
+
         # username = self.get_username_token()
         username = False
+
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
+
         # execute new org struct
         org_uuid = yield self.new_org(struct)
+
         # add_org to user -> the struct['account'] here is the org_account
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
         # add owners team to the new_org and created_by account
 
         new_team = yield self.new_team()
-
         # new_team = send post to /teams/ then add owners team to the new organization
 
         # complete message with receive uuid.
