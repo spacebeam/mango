@@ -234,7 +234,9 @@ class UsersHandler(accounts.Account, BaseHandler):
                 parameters[k] = str(type(v))
         # after automatic madness return description and parameters
         parameters['labels'] = 'array/string'
-        parameters['orgs'] = 'array//kv/string'
+        # what the fuck is array/kv/string?
+        parameters['orgs'] = 'array/kv/string'
+        # seriously, what is it?
         parameters['teams'] = 'array/kv/string'
         # end of manual cleaning
         POST = {
