@@ -669,6 +669,7 @@ class Account(object):
                 url,
                 callback=handle_request
             )
+            logging.warning(url)
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
