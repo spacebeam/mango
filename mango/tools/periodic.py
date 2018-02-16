@@ -17,6 +17,10 @@ from tornado import gen
 
 httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
 
+
+# TODO: lol, yo.. here is some code 2 refactor, cuz u know!
+# simplify and test my bru.
+
 @gen.coroutine
 def new_team(self, username, org_uuid, org_account, struct):
     '''
