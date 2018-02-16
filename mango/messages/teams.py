@@ -24,24 +24,24 @@ class Team(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     # Yo, this is not your simple account; it's an organization!
-    account = types.StringType()
-    status = types.StringType()
+    account = types.StringType(required=True)
+    status = types.StringType(required=True)
     name = types.StringType(required=True)
     description = types.StringType()
     permission = types.StringType(choices=['read',
                                            'write',
-                                           'admin'], required=True)
-    members = compound.ListType(types.StringType())
-    resources = compound.ListType(types.StringType()) # [noun:uuid, noun:*]
+                                           'owner'], required=True)
+    members = compound.ListType(types.StringType(), required=True)
+    resources = compound.ListType(types.StringType()) # [resource:uuid, noun:*]
     labels = compound.ListType(types.StringType())
     history = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
-    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    checked_at = types.TimestampType()
     created_by = types.StringType()
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
-    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    last_update_at = types.TimestampType()
 
 
 class ModifyTeam(models.Model):
@@ -61,8 +61,8 @@ class ModifyTeam(models.Model):
     history = compound.ListType(types.StringType())
     checked = types.BooleanType()
     checked_by = types.StringType()
-    checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    checked_at = types.TimestampType()
     created_by = types.StringType()
-    created_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    created_at = types.TimestampType()
     last_update_by = types.StringType()
-    last_update_at = types.TimestampType(default=arrow.utcnow().timestamp)
+    last_update_at = types.TimestampType()
