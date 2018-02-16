@@ -163,10 +163,37 @@ class Account(object):
             POST new team
         '''
         logging.warning('here we post a new team')
-        logging.warning(username)
-        logging.warning(org_uuid)
-        logging.warning(org_account)
-        logging.warning(json.dumps(struct))
+        user_uuid = yield self.uuid_from_account(username)
+        url = 'https://nonsense.ws/orgs/{0}/teams/'.format(org_uuid)
+        got_response = []
+        headers = {'content-type':'application/json'}
+        struct['members'] = ['{0}:{1}'.format(username, user_uuid)]
+        logging.warning(struct)
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            http_client.fetch(
+                url,
+                method='POST',
+                headers=headers,
+                body=json.dumps(struct),
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0010)
+            #logging.warning(got_response)
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
 
     @gen.coroutine
     def add_team(self, username, org_uuid, org_account, team_name, team_uuid):
