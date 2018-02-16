@@ -158,12 +158,15 @@ class Account(object):
         return message['uuid']
 
     @gen.coroutine
-    def new_team(self, struct):
+    def new_team(self, username, org_uuid, org_account, struct):
         '''
             POST new team
         '''
         logging.warning('here we post a new team')
-        logging.warning(struct)
+        logging.warning(username)
+        logging.warning(org_uuid)
+        logging.warning(org_account)
+        logging.warning(json.dumps(struct))
 
     @gen.coroutine
     def add_team(self, username, org_uuid, org_account, team_name, team_uuid):

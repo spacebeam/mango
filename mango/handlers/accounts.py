@@ -377,7 +377,9 @@ class OrgsHandler(accounts.Account, BaseHandler):
         new_team = {
             'account':struct['account'],
             'name':'owners',
-            'members':[struct['created_by']]
+            'members':[struct['created_by']],
+            'status':'active',
+            'permission':'owner'
         }
         # create a new owners team
         new_team = yield self.new_team(new_team)
