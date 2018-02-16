@@ -373,16 +373,17 @@ class OrgsHandler(accounts.Account, BaseHandler):
         org_uuid = yield self.new_org(struct)
         # add_org to user -> the struct['account'] here is the org_account
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
+
         # add owners team to the new_org and created_by account
-        new_team = {
-            'account':struct['account'],
-            'name':'owners',
-            'status':'active',
-            'permission':'owner',
-            'created_by': struct['created_by']
-        }
+        #new_team = {
+        #    'account':struct['account'],
+        #    'name':'owners',
+        #    'status':'active',
+        #    'permission':'owner',
+        #    'created_by': struct['created_by']
+        #}
         # create a new owners team
-        new_team = yield self.new_team(struct['created_by'], org_uuid, struct['account'], new_team)
+        #new_team = yield self.new_team(struct['created_by'], org_uuid, struct['account'], new_team)
         # new_team = send post to /teams/ then add owners team to the new organization
 
         # complete message with receive uuid.
