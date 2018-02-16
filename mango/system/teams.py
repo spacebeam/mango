@@ -198,6 +198,7 @@ class Teams(object):
         logging.warning(message)
         logging.warning(org_uuid)
         logging.warning(org_account)
+
         def handle_request(response):
             '''
                 Request Async Handler

@@ -216,6 +216,7 @@ class Account(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
+        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
