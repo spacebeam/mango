@@ -373,11 +373,13 @@ class OrgsHandler(accounts.Account, BaseHandler):
         org_uuid = yield self.new_org(struct)
         # add_org to user -> the struct['account'] here is the org_account
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
+        # usr_uuid from username
+        usr_uuid = yield self.uuid_from_account(struct['created_by'])
         # add owners team to the new_org and created_by account
         new_team = {
             'account':struct['account'],
             'name':'owners',
-            'members':[struct['created_by']],
+            'members':['{0}:{1}'.format(struct['created_by'], usr_uuid)],
             'status':'active',
             'permission':'owner'
         }
