@@ -171,8 +171,18 @@ class Teams(object):
         '''
             add (ORG) team
         '''
+
+        logging.warning(username)
+        logging.warning(org_account)
+        logging.warning(org_uuid)
+        logging.warning(team_name)
+        logging.warning(team_uuid)
+
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/orgs/{0}'.format(org_uuid)
+
+        logging.warning(url)
+
         # got callback response?
         got_response = []
         # yours truly
@@ -204,7 +214,7 @@ class Teams(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            #logging.warning(got_response)
+            logging.warning(got_response)
         except Exception as error:
             logging.error(error)
             message = str(error)

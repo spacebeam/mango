@@ -168,7 +168,6 @@ class Account(object):
         got_response = []
         headers = {'content-type':'application/json'}
         struct['members'] = ['{0}:{1}'.format(username, user_uuid)]
-        logging.warning(struct)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -189,8 +188,7 @@ class Account(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            logging.warning(got_response)
-            message = got_response[0]
+            message = got_response[0].get('uuid')
         except Exception as error:
             logging.error(error)
             message = str(error)
