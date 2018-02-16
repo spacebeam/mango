@@ -382,7 +382,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
             'permission':'owner'
         }
         # create a new owners team
-        new_team = yield self.new_team(new_team)
+        new_team = yield self.new_team(struct['created_by'], org_uuid, struct['account'], new_team)
         # new_team = send post to /teams/ then add owners team to the new organization
 
         # complete message with receive uuid.
