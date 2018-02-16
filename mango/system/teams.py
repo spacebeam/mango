@@ -192,8 +192,12 @@ class Teams(object):
             'account': org_account,
             'teams': [{'uuid':team_uuid, 'name':team_name}],
             'last_update_at': arrow.utcnow().timestamp,
-            'last_update_by': username,
+            'last_update_by': (username if username else 'pebkac'),
         }
+
+        logging.warning(message)
+        logging.warning(org_uuid)
+        logging.warning(org_account)
         def handle_request(response):
             '''
                 Request Async Handler
