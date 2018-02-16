@@ -38,7 +38,7 @@ class Team(models.Model):
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType()
-    created_by = types.StringType()
+    created_by = types.StringType(required=True)
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
