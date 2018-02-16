@@ -171,18 +171,8 @@ class Teams(object):
         '''
             add (ORG) team
         '''
-
-        logging.warning(username)
-        logging.warning(org_account)
-        logging.warning(org_uuid)
-        logging.warning(team_name)
-        logging.warning(team_uuid)
-
         # Please, don't hardcode your shitty domain in here.
         url = 'https://nonsense.ws/orgs/{0}'.format(org_uuid)
-
-        logging.warning(url)
-
         # got callback response?
         got_response = []
         # yours truly
@@ -194,17 +184,11 @@ class Teams(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': (username if username else 'pebkac'),
         }
-
-        logging.warning(message)
-        logging.warning(org_uuid)
-        logging.warning(org_account)
-
         def handle_request(response):
             '''
                 Request Async Handler
             '''
             if response.error:
-                logging.error(response.error)
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
@@ -219,7 +203,7 @@ class Teams(object):
             while len(got_response) == 0:
                 # don't be careless with the time.
                 yield gen.sleep(0.0010)
-            logging.warning(got_response)
+            message = got_response[0]
         except Exception as error:
             logging.error(error)
             message = str(error)
