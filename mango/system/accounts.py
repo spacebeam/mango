@@ -542,7 +542,7 @@ class Account(object):
         return message
 
     @gen.coroutine
-    def modify_account(self, account, account_uuid, struct):
+    def modify_account(self, account, user_uuid, struct):
         '''
             Modify account
         '''
@@ -553,7 +553,7 @@ class Account(object):
         # riak bucket name
         bucket_name = 'accounts'
         # solr query
-        query = 'uuid_register:{0}'.format(account_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(user_uuid.rstrip('/'))
         # filter query
         try:
             filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
@@ -619,7 +619,7 @@ class Account(object):
         return message.get('update_complete', False)
 
     @gen.coroutine
-    def modify_remove(self, account, account_uuid, struct):
+    def modify_remove(self, account, user_uuid, struct):
         '''
             Modify remove
         '''
@@ -630,7 +630,7 @@ class Account(object):
         # riak bucket name
         bucket_name = 'accounts'
         # solr query
-        query = 'uuid_register:{0}'.format(account_uuid.rstrip('/'))
+        query = 'uuid_register:{0}'.format(user_uuid.rstrip('/'))
         # filter query
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # search query url
@@ -683,12 +683,12 @@ class Account(object):
         return message.get('update_complete', False)
 
     @gen.coroutine
-    def remove_account(self, account, account_uuid):
+    def remove_account(self, account, user_uuid):
         '''
             Remove account
         '''
         # Yo, missing history ?
         struct = {}
         struct['status'] = 'deleted'
-        message = yield self.modify_account(account, account_uuid, struct)
+        message = yield self.modify_account(account, user_uuid, struct)
         return message
