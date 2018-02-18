@@ -594,30 +594,31 @@ class Account(object):
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
-            account = Map(bucket, riak_key)
+            user = Map(bucket, riak_key)
             for key in struct:
                 if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
-                        account.reload()
-                        old_value = account.registers['{0}'.format(key)].value
+                        user.reload()
+                        old_value = user.registers['{0}'.format(key)].value
                         if old_value:
                             old_list = json.loads(old_value.replace("'",'"'))
                             for thing in struct.get(key):
                                 old_list.append(thing)
-                            account.registers['{0}'.format(key)].assign(str(old_list))
+                            user.registers['{0}'.format(key)].assign(str(old_list))
                         else:
                             new_list = []
                             for thing in struct.get(key):
                                 new_list.append(thing)
-                            account.registers['{0}'.format(key)].assign(str(new_list))
+                            user.registers['{0}'.format(key)].assign(str(new_list))
                     else:
-                        account.registers['{0}'.format(key)].assign(str(struct.get(key)))
-                    account.update()
+                        user.registers['{0}'.format(key)].assign(str(struct.get(key)))
+                    user.update()
             update_complete = True
             message['update_complete'] = True
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
+
 
     @gen.coroutine
     def modify_remove(self, account, user_uuid, struct):
