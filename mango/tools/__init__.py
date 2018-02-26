@@ -58,8 +58,8 @@ def get_search_list(solr, search_index, query, filter_query, start_num, page_siz
         Build and return the list query url
     '''
     # note: the last replace smells a little funny...
-    return "http://localnonsense/search/query/{0}?wt=json&q={1}&fq={2}&start={3}&rows={4}&sort=created_at_register+desc".format(
-        search_index, query, filter_query, start_num, page_size).replace(
+    return "https://{0}}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc".format(
+        solr, search_index, query, filter_query, start_num, page_size).replace(
             ' ', '')
 
 def get_average(total, marks):
