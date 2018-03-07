@@ -146,6 +146,9 @@ def main():
         page_size = opts.page_size,
         solr = opts.solr,
     )
+    # Periodic Cast Functions
+    check_active_campaigns = Cast(check_active_campaigns, 500)
+    check_active_campaigns.start()
     # Setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))

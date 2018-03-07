@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Periodic functions.
+    Periodic callback functions.
 '''
 
 # This file is part of mango.
@@ -9,6 +9,7 @@
 # The full license is in the file LICENCE, distributed as part of this software.
 
 __author__ = 'Team Machine'
+
 
 import logging
 import ujson as json
@@ -20,6 +21,9 @@ httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClien
 
 # TODO: lol, yo.. here is some code 2 refactor, cuz u know!
 # simplify and test my bru.
+
+# Yo, hello old friend, we meet again!
+
 
 @gen.coroutine
 def new_team(self, username, org_uuid, org_account, struct):
