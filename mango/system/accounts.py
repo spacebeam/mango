@@ -556,13 +556,11 @@ class Account(object):
         # solr query
         query = 'uuid_register:{0}'.format(user_uuid.rstrip('/'))
         # filter query
-        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        #try:
-    #        filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        try:
+            filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
+        except AttributeError:
+            filter_query = 'account_register:{0}'.format(account)
         logging.warning(filter_query)
-    #    except AttributeError:
-#            filter_query = 'account_register:{0}'.format(account)
-#            logging.warning(filter_query)
         # search query url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
