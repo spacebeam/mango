@@ -36,8 +36,7 @@ class Handler(tasks.Tasks, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
