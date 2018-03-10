@@ -36,8 +36,7 @@ class Handler(teams.Teams, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -46,8 +45,6 @@ class Handler(teams.Teams, BaseHandler):
         page_num = int(query_args.get('page', [page_num])[0])
         # rage against the finite state machine
         status = 'all'
-        # are we done yet?
-        done = False
         # init message on error
         message = {'error':True}
         # init status that match with our message
@@ -91,8 +88,6 @@ class Handler(teams.Teams, BaseHandler):
         page_num = int(query_args.get('page', [page_num])[0])
         # rage against the finite state machine
         status = 'all'
-        # are we done yet?
-        done = False
         # init message on error
         message = {'error':True}
         # init status that match with our message
@@ -134,8 +129,7 @@ class Handler(teams.Teams, BaseHandler):
         # get account from new team struct
         account = struct.get('account', None)
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
