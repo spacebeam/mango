@@ -36,8 +36,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # Yo, get the current frontend username from token!
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -81,8 +80,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # Yo, get the current frontend username from token!
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -134,8 +132,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # get account from new account struct
         account = struct.get('account', None)
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new account struct
@@ -267,8 +264,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -365,8 +361,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # get account from new org struct
         account = struct.get('account', None)
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
@@ -498,8 +493,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -543,8 +537,7 @@ class MembersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -595,9 +588,8 @@ class MembersHandler(accounts.Account, BaseHandler):
         query_args = self.request.arguments
         # get account from new org struct
         account = struct.get('account', None)
-        # get the current frontend username from cookie
-        # username = self.get_username_cookie()
-        username = False
+        # get the current frontend username from token
+        username = self.get_username_token()
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct

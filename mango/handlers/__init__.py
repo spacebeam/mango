@@ -58,11 +58,12 @@ class BaseHandler(web.RequestHandler):
         '''
         self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
 
-    def get_username_cookie(self):
+    def get_username_token(self):
         '''
-            Return the username from a secure cookie (require cookie_secret)
+            Return the username from a token (require header)
         '''
-        return self.get_secure_cookie("username")
+        logging.warning('inside get username token returning false')
+        return False
 
     @gen.coroutine
     def check_account_type(self, account):

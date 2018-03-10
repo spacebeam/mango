@@ -570,7 +570,7 @@ class Account(object):
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?
         got_response = []
-        # yours truly
+        # your message truly
         message = {'update_complete':False}
         def handle_request(response):
             '''
