@@ -78,8 +78,7 @@ class Handler(teams.Teams, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # get the current frontend username from token
-        # username = self.get_username_token()
-        username = False
+        username = self.get_username_token()
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -134,9 +133,15 @@ class Handler(teams.Teams, BaseHandler):
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
         team_uuid = yield self.new_team(struct)
-        # add_team to (ORG) -> the struct['account'] here is the org_account
-        new_team = yield self.add_team(struct['created_by'], struct['account'], org_uuid, struct['name'], team_uuid)
-        # complete message with receive uuid.
+        # add_team to (ORG) -> struct['account']
+        new_team = yield self.add_team(struct['created_by'], 
+                                       struct['account'],
+                                       org_uuid,
+                                       struct['name'],
+                                       team_uuid)
+        # logging new_team
+        logging.warning(new_team)
+        # complete message with received uuid.
         message = {'uuid':team_uuid}
         if 'error' in message['uuid']:
             scheme = 'team'
