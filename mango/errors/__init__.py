@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system errors.
+    Mango system reflection on errors.
 '''
 
 # This file is part of mango.
@@ -16,7 +16,7 @@ from tornado import gen
 
 class Error(object):
     '''
-        Mango custom error class
+        Custom error class
     '''
 
     def __init__(self, error):
@@ -49,10 +49,9 @@ class Error(object):
         elif error and 'value' in str_error:
             message = error_handler.value()
         elif error is not None:
-            logging.warning(str_error)
             message = {
-                'error': u'nonsense',
-                'message': u'there is no error'
+                'error': u'there is no error'
+                'message': str_error
             }
         raise gen.Return(message)
 
