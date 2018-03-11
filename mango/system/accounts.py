@@ -86,7 +86,7 @@ class Account(object):
                 )
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             # get it from stuff
             stuff = got_response[0]
             # get it from things
@@ -145,7 +145,7 @@ class Account(object):
                 )
             while len(got_response) < 1:
                 # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
@@ -195,7 +195,7 @@ class Account(object):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             #logging.warning(got_response)
         except Exception as error:
             logging.error(error)
@@ -249,7 +249,7 @@ class Account(object):
                 )
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             # get it from stuff
             stuff = got_response[0]
             # get it from things
@@ -326,7 +326,7 @@ class Account(object):
                 )
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             # get stuff from response
             stuff = got_response[0]
             # get it from watchers list
@@ -404,7 +404,7 @@ class Account(object):
                 )
             while len(got_response) <= 1:
                 # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             # get stuff from response
             stuff = got_response[0]
             # get it from watchers list
@@ -588,7 +588,7 @@ class Account(object):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             response = got_response[0].get('response')['docs'][0]
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
@@ -660,7 +660,7 @@ class Account(object):
             )
             while len(got_response) == 0:
                 # Please, don't be careless with the time.
-                yield gen.sleep(0.0010)
+                yield gen.sleep(0.0021)
             response = got_response[0].get('response')['docs'][0]
             riak_key = str(response['_yz_rk'])
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))

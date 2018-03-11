@@ -29,7 +29,13 @@ class UsersHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, user_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self,
+             account=None,
+             user_uuid=None,
+             start=None,
+             end=None,
+             lapse='hours',
+             page_num=1):
         '''
             Get user accounts
         '''
@@ -37,7 +43,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         query_args = self.request.arguments
         # Yo, get the current frontend username from token!
         username = self.get_username_token()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -51,7 +57,12 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not user_uuid:
-            message = yield self.get_user_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_user_list(account,
+                                               start,
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single account received
         else:
@@ -71,7 +82,13 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, user_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self,
+            account=None,
+            user_uuid=None,
+            start=None,
+            end=None,
+            lapse='hours',
+            page_num=1):
         '''
             Get user accounts
         '''
@@ -93,7 +110,12 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not user_uuid:
-            message = yield self.get_user_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_user_list(account,
+                                               start, 
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single account received
         else:
@@ -253,7 +275,13 @@ class OrgsHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self,
+             account=None,
+             org_uuid=None,
+             start=None,
+             end=None,
+             lapse='hours',
+             page_num=1):
         '''
             Get (ORG)
         '''
@@ -275,7 +303,12 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account,
+                                                  start,
+                                                  end,
+                                                  lapse,
+                                                  status,
+                                                  page_num)
             self.set_status(200)
         # single org received
         else:
@@ -295,7 +328,13 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self,
+            account=None,
+            org_uuid=None,
+            start=None,
+            end=None,
+            lapse='hours',
+            page_num=1):
         '''
             Get (ORG)
         '''
@@ -317,7 +356,12 @@ class OrgsHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_org_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_org_list(account,
+                                              start,
+                                              end,
+                                              lapse,
+                                              status,
+                                              page_num)
             self.set_status(200)
         # single org received
         else:
@@ -477,7 +521,13 @@ class MembersHandler(accounts.Account, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self,
+             account=None,
+             org_uuid=None,
+             start=None,
+             end=None,
+             lapse='hours',
+             page_num=1):
         '''
             Head ORG
         '''
@@ -499,7 +549,12 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account,
+                                                  start,
+                                                  end,
+                                                  lapse,
+                                                  status,
+                                                  page_num)
             self.set_status(200)
         # single org received
         else:
@@ -519,7 +574,13 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self,
+            account=None,
+            org_uuid=None,
+            start=None,
+            end=None,
+            lapse='hours',
+            page_num=1):
         '''
             Get (ORG)
         '''
@@ -541,7 +602,12 @@ class MembersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not org_uuid:
-            message = yield self.get_account_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_account_list(account,
+                                                  start,
+                                                  end,
+                                                  lapse,
+                                                  status,
+                                                  page_num)
             self.set_status(200)
         # single org received
         else:

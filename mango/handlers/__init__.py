@@ -96,7 +96,7 @@ class BaseHandler(web.RequestHandler):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0020)
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -119,6 +119,7 @@ class BaseHandler(web.RequestHandler):
         query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # parse and build url
+        logging.error('lol')
         url.set()
         url.add(get_search_item(self.solr, search_index, query, filter_query))
         got_response = []
@@ -140,7 +141,7 @@ class BaseHandler(web.RequestHandler):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0020)
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -185,7 +186,7 @@ class BaseHandler(web.RequestHandler):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0020)
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]
@@ -230,7 +231,7 @@ class BaseHandler(web.RequestHandler):
             )
             while len(got_response) == 0:
                 # don't be careless with the time.
-                yield gen.sleep(0.0020)
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response_doc = stuff['response']['docs'][0]

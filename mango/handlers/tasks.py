@@ -29,7 +29,13 @@ class Handler(tasks.Tasks, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, task_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self,
+             account=None,
+             task_uuid=None,
+             start=None,
+             end=None,
+             lapse='hours',
+             page_num=1):
         '''
             Get tasks
         '''
@@ -37,7 +43,7 @@ class Handler(tasks.Tasks, BaseHandler):
         query_args = self.request.arguments
         # get the current frontend username from token
         username = self.get_username_token()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -51,7 +57,12 @@ class Handler(tasks.Tasks, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not task_uuid:
-            message = yield self.get_task_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_task_list(account,
+                                               start,
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single task received
         else:
@@ -71,7 +82,13 @@ class Handler(tasks.Tasks, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, task_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self,
+            account=None,
+            task_uuid=None,
+            start=None,
+            end=None,
+            lapse='hours',
+            page_num=1):
         '''
             Get tasks
         '''
@@ -79,7 +96,7 @@ class Handler(tasks.Tasks, BaseHandler):
         query_args = self.request.arguments
         # get the current frontend username from token
         username = self.get_username_token()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -93,7 +110,12 @@ class Handler(tasks.Tasks, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not task_uuid:
-            message = yield self.get_task_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_task_list(account,
+                                               start,
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single task received
         else:

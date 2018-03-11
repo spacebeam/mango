@@ -29,7 +29,14 @@ class Handler(teams.Teams, BaseHandler):
     '''
 
     @gen.coroutine
-    def head(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def head(self, 
+             account=None,
+             org_uuid=None,
+             team_uuid=None,
+             start=None,
+             end=None,
+             lapse='hours',
+             page_num=1):
         '''
             Get teams
         '''
@@ -37,7 +44,7 @@ class Handler(teams.Teams, BaseHandler):
         query_args = self.request.arguments
         # get the current frontend username from token
         username = self.get_username_token()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -51,7 +58,12 @@ class Handler(teams.Teams, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not team_uuid:
-            message = yield self.get_team_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_team_list(account,
+                                               start,
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single team received
         else:
@@ -71,7 +83,14 @@ class Handler(teams.Teams, BaseHandler):
         self.finish(message)
 
     @gen.coroutine
-    def get(self, account=None, org_uuid=None, team_uuid=None, start=None, end=None, lapse='hours', page_num=1):
+    def get(self,
+            account=None,
+            org_uuid=None,
+            team_uuid=None,
+            start=None,
+            end=None,
+            lapse='hours',
+            page_num=1):
         '''
             Get teams
         '''
@@ -79,7 +98,7 @@ class Handler(teams.Teams, BaseHandler):
         query_args = self.request.arguments
         # get the current frontend username from token
         username = self.get_username_token()
-        # if the user don't provide an account we use the frontend username as last resort
+        # if the user don't provide an account we use the username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
@@ -93,7 +112,12 @@ class Handler(teams.Teams, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not team_uuid:
-            message = yield self.get_team_list(account, start, end, lapse, status, page_num)
+            message = yield self.get_team_list(account,
+                                               start,
+                                               end,
+                                               lapse,
+                                               status,
+                                               page_num)
             self.set_status(200)
         # single team received
         else:
