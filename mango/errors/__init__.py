@@ -50,7 +50,7 @@ class Error(object):
             message = error_handler.value()
         elif error is not None:
             message = {
-                'error': u'there is no error'
+                'error': u'there is no error',
                 'message': str_error
             }
         raise gen.Return(message)
