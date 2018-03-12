@@ -110,6 +110,8 @@ def main():
     logging.info('Solr 4.7 https://{0}/search/ '.format(solr))
     # logging riak settings
     logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
+    # logging kong settings
+    logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
     # check for cache
     cache_enabled = opts.cache_enabled
     if cache_enabled:

@@ -68,6 +68,14 @@ def options():
     tornado.options.define('riak_port',
         default=8087, type=int,
         help=('Riak cluster port'))
+    # Kong Admin API gateway settings
+    tornado.options.define('kong_host',
+        default='127.0.0.1', type=str,
+        help=('Kong Admin API'))
+    # Kong Admin API port
+    tornado.options.define('kong_port',
+        default=8001, type=int,
+        help=('Kong Admin API port'))
     # PostgreSQL database settings
     tornado.options.define('sql_host',
         type=str, help=('PostgreSQL hostname or ip address'))
