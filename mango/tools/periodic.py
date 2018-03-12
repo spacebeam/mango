@@ -11,3 +11,5 @@
 __author__ = 'Team Machine'
 
 import logging
+
+# hi there, there is an open issue about some random kong integration after an account creation.

@@ -296,7 +296,6 @@ class Account(object):
         urls = set()
         urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
         urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
-        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
@@ -560,12 +559,10 @@ class Account(object):
             filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         except AttributeError:
             filter_query = 'account_register:{0}'.format(account)
-        logging.warning(filter_query)
         # search query url
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
-        logging.warning(url)
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?

@@ -119,9 +119,7 @@ class BaseHandler(web.RequestHandler):
         query = 'account_register:{0}'.format(account.decode('utf-8'))
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # parse and build url
-        logging.error('lol')
-        url.set()
-        url.add(get_search_item(self.solr, search_index, query, filter_query))
+        url = get_search_item(self.solr, search_index, query, filter_query)
         got_response = []
         # clean response message
         message = {}
