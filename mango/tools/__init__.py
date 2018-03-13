@@ -37,7 +37,6 @@ def validate_uuid4(uuid_string):
         return False
     return str(val) == uuid_string
 
-
 def clean_response(response, ignore):
     return dict(
         (key.split('_register')[0], value)
@@ -57,9 +56,10 @@ def get_search_list(solr, search_index, query, filter_query, start_num, page_siz
     '''
         Build and return the list query url
     '''
+    # lol wtf... by know we better learn to handle long fucking string like this madness!
     # note: the last replace smells a little funny...
     return "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc".format(solr, search_index, query, filter_query, start_num, page_size).replace(' ', '')
-
+    
 def get_average(total, marks):
     '''
         Get average from signals

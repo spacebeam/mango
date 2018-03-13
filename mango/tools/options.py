@@ -40,7 +40,7 @@ def options():
     tornado.options.define('domain',
         default='*', type=str,
         help='Application domain, e.g: "your_domain.com"')
-    # solr
+    # Solr
     tornado.options.define('solr',
         default='nonsense.ws', type=str,
         help='Application solr, e.g: "your_solr_server"')
@@ -64,7 +64,7 @@ def options():
     tornado.options.define('riak_host',
         default='127.0.0.1', type=str,
         help=('Riak cluster node'))
-    # riak port
+    # Riak port
     tornado.options.define('riak_port',
         default=8087, type=int,
         help=('Riak cluster port'))
@@ -79,17 +79,17 @@ def options():
     # PostgreSQL database settings
     tornado.options.define('sql_host',
         type=str, help=('PostgreSQL hostname or ip address'))
-    # sql port
+    # SQL port
     tornado.options.define('sql_port',
         default=5432, type=int,
         help=('PostgreSQL port'))
-    # sql database
+    # SQL database
     tornado.options.define('sql_database',
         type=str, help=('PostgreSQL database'))
-    # sql user
+    # SQL user
     tornado.options.define('sql_user',
         type=str, help=('PostgreSQL username'))
-    # sql password
+    # SQL password
     tornado.options.define('sql_password',
         type=str, help=('PostgreSQL username password'))
     # memcache host
