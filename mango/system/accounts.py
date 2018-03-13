@@ -98,6 +98,7 @@ class Account(object):
                 response = things['response']['docs'][0]
                 message = clean_response(response, IGNORE_ME)
             else:
+                logging.warning(got_response)
                 logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
