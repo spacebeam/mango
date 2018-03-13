@@ -164,7 +164,8 @@ class Account(object):
         '''
         user_uuid = yield self.uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
-        url = 'https://nonsense.ws/users/{0}'.format(user_uuid)
+        url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
+        logging.warning(url)
         # got callback response?
         got_response = []
         # yours trully
