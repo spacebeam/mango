@@ -108,7 +108,7 @@ def main():
     # logging system spawned
     logging.info('Mango system {0} spawned'.format(system_uuid))
     # logging solr
-    logging.info('Solr 4.7 https://{0}/search/ '.format(solr))
+    logging.info('Solr 4.7 https://{0}/search/'.format(solr))
     # logging riak settings
     logging.info('Riak server: {0}:{1}'.format(opts.riak_host, opts.riak_port))
     # check for cache
@@ -120,9 +120,9 @@ def main():
     # before application lets define some cast functions
     def check_new_accounts():
         '''
-            # Open issue about some Kong Admin API integration
+            Open issue about some Kong Admin API integration
         '''
-        #logging.warning('some issue about kong consumers')
+        # logging.warning('some issue about kong consumers')
         pass
     # application web daemon
     application = web.Application(
@@ -143,7 +143,7 @@ def main():
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            # Tasks for artificial and natural entities.
+            # Tasks for humans and non-humans alike!
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
