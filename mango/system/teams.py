@@ -235,7 +235,8 @@ class Teams(object):
         # and know for something completly different
         orgs = {
             'account': org_account,
-            'teams': [{'uuid':team_uuid, 'name':team_name}],
+            'teams': [{'uuid':team_uuid,
+                       'name':team_name}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
@@ -243,7 +244,7 @@ class Teams(object):
             'account': username,
             'teams': [{"uuid":team_uuid,
                        "name":team_name,
-                       "org":"{0}:{1}".format(org_account,org_uuid)}],
+                       "org":org_account}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
@@ -275,8 +276,7 @@ class Teams(object):
                 yield gen.sleep(0.0021)            
         except Exception as error:
             logging.error(error)
-            message = str(error)
-        return True
+        return got_response[0]
 
     @gen.coroutine
     def new_team(self, struct):

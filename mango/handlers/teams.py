@@ -163,7 +163,6 @@ class Handler(teams.Teams, BaseHandler):
                                        org_uuid,
                                        struct['name'],
                                        team_uuid)
-        # logging new_team
         logging.warning(new_team)
         # complete message with received uuid.
         message = {'uuid':team_uuid}
