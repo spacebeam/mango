@@ -39,11 +39,11 @@ def options():
     # domain
     tornado.options.define('domain',
         default='*', type=str,
-        help='Application domain, e.g: "example.com"')
+        help='Application domain, e.g: "your_domain.com"')
     # solr
     tornado.options.define('solr',
-        default='api.cloudforest.ws', type=str,
-        help='Application solr, e.g: "your_custom_solr_search"')
+        default='nonsense.ws', type=str,
+        help='Application solr, e.g: "your_solr_server"')
     # Server settings
     tornado.options.define('host',
         default='127.0.0.1', type=str,
