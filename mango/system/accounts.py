@@ -217,7 +217,7 @@ class Account(object):
         # and know for something completly different
         message = {
             'account': username,
-            'teams': [{"uuid":org_uuid,"account":org_account}],
+            'teams': [{"uuid":team_uuid,"name":team_name,"org":"{0}:{1}".format(org_account,org_uuid)}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
