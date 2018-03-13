@@ -201,51 +201,6 @@ class Account(object):
             logging.error(error)
             message = str(error)
         return message
-    
-    @gen.coroutine
-    def add_team(self, username, org_account, org_uuid, team_name, team_uuid):
-        '''
-            Update user profile with (team) *team_name, team_uuid*
-        '''
-        user_uuid = yield self.uuid_from_account(username)
-        # Please, don't hardcode your shitty domain in here.
-        url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
-        # got callback response?
-        got_response = []
-        # yours trully
-        headers = {'content-type':'application/json'}
-        # and know for something completly different
-        message = {
-            'account': username,
-            'teams': [{"uuid":team_uuid,"name":team_name,"org":"{0}:{1}".format(org_account,org_uuid)}],
-            'last_update_at': arrow.utcnow().timestamp,
-            'last_update_by': username,
-        }
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                method='PATCH',
-                headers=headers,
-                body=json.dumps(message),
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            #logging.warning(got_response)
-        except Exception as error:
-            logging.error(error)
-            message = str(error)
-        return message
 
     @gen.coroutine
     def get_org(self, account, org_uuid):

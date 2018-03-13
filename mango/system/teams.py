@@ -165,6 +165,60 @@ class Teams(object):
         except Exception as error:
             logging.warning(error)
         return message
+    
+    @gen.coroutine
+    def uuid_from_account(self, username):
+        '''
+            Get uuid from username account
+        '''
+        search_index = 'mango_account_index'
+        query = 'account_register:{0}'.format(username)
+        filter_query = 'account_register:{0}'.format(username)
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        # init got response list
+        got_response = []
+        # init crash message
+        message = {'message': 'not found'}
+        # ignore riak fields
+        IGNORE_ME = [
+            "_yz_id","_yz_rk","_yz_rt","_yz_rb",
+            # CUSTOM FIELDS
+            "name_register",
+            "description_register",
+            "teams_register",
+            "members_register"
+        ]
+        # hopefully asynchronous handle function request
+        def handle_request(response):
+            '''
+                Request Async Handler
+            '''
+            if response.error:
+                logging.error(response.error)
+                got_response.append({'error':True, 'message': response.error})
+            else:
+                got_response.append(json.loads(response.body))
+        try:
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) < 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0021)
+            # get it from stuff
+            stuff = got_response[0]
+            if stuff['response']['numFound']:
+                response = stuff['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
+        except Exception as error:
+            logging.warning(error)
+        return message['uuid']
 
     @gen.coroutine
     def add_team(self, username, org_account, org_uuid, team_name, team_uuid):
@@ -177,7 +231,7 @@ class Teams(object):
         # got callback response?
         got_response = []
         # yours truly
-        headers = {'content-type':'application/json'}
+        headers = {'content-type':'fapplication/json'}
         # and know for something completly different
         pay_org = {
             'account': org_account,
