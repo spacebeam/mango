@@ -74,6 +74,7 @@ import riak
 import logging
 import pylibmc as mc
 from tornado import ioloop
+from tornado.ioloop import PeriodicCallback as Cast
 from tornado import gen, web
 from mango.handlers import accounts, teams, tasks
 from mango.tools import options
@@ -116,6 +117,12 @@ def main():
     cache_enabled = opts.cache_enabled
     if cache_enabled:
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
+    # before application lets define some cast functions
+    def check_new_accounts():
+        '''
+            # Open issue about some Kong Admin API integration
+        '''
+        logging.warning('some issue about kong consumers')
     # application web daemon
     application = web.Application(
         [
@@ -148,6 +155,9 @@ def main():
         page_size = opts.page_size,
         solr = opts.solr,
     )
+    # Periodic Cast Functions
+    check_kong_consumers = Cast(check_new_accounts, 1000)
+    check_kong_consumers.start()
     # Setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))
