@@ -127,11 +127,7 @@ def main():
     # application web daemon
     application = web.Application(
         [
-            # (ORG) members
-            (r'/orgs/(?P<org_uuid>.+)/members/page/(?P<page_num>\d+)/?', accounts.MembersHandler),
-            (r'/orgs/(?P<org_uuid>.+)/members/(?P<user_uuid>.+)/?', accounts.MembersHandler),
-            (r'/orgs/(?P<org_uuid>.+)/members/?', accounts.MembersHandler),
-            # (ORG) teams
+            # ORGs teams handler
             (r'/orgs/(?P<org_uuid>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
             (r'/orgs/(?P<org_uuid>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
             (r'/orgs/(?P<org_uuid>.+)/teams/?', teams.Handler),
