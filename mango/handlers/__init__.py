@@ -51,6 +51,8 @@ class BaseHandler(web.RequestHandler):
         self.page_size = self.settings.get('page_size')
         # Solr riak
         self.solr = self.settings.get('solr')
+        # Application domain
+        self.domain = self.settings.get('domain')
 
     def set_default_headers(self):
         '''
