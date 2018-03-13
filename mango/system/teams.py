@@ -226,22 +226,24 @@ class Teams(object):
             add (ORG) team
         '''
         user_uuid = yield self.uuid_from_account(username)
-        org_url = 'https://{0}/orgs/{1}'.format(self.domain, org_uuid)
-        usr_url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
+        orgs_url = 'https://{0}/orgs/{1}'.format(self.domain, org_uuid)
+        user_url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
         # got callback response?
         got_response = []
         # yours truly
-        headers = {'content-type':'fapplication/json'}
+        headers = {'content-type':'application/json'}
         # and know for something completly different
-        pay_org = {
+        orgs = {
             'account': org_account,
             'teams': [{'uuid':team_uuid, 'name':team_name}],
             'last_update_at': arrow.utcnow().timestamp,
-            'last_update_by': (username if username else 'pebkac'),
+            'last_update_by': username,
         }
-        pay_usr = {
+        users = {
             'account': username,
-            'teams': [{"uuid":team_uuid,"name":team_name,"org":"{0}:{1}".format(org_account,org_uuid)}],
+            'teams': [{"uuid":team_uuid,
+                       "name":team_name,
+                       "org":"{0}:{1}".format(org_account,org_uuid)}],
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
@@ -255,28 +257,26 @@ class Teams(object):
                 got_response.append(json.loads(response.body))
         try:
             http_client.fetch(
-                org_url,
+                orgs_url,
                 method='PATCH',
                 headers=headers,
-                body=json.dumps(pay_org),
+                body=json.dumps(orgs),
                 callback=handle_request
             )
             http_client.fetch(
-                usr_url,
+                user_url,
                 method='PATCH',
                 headers=headers,
-                body=json.dumps(pay_usr),
+                body=json.dumps(users),
                 callback=handle_request
             )
             while len(got_response) <= 1:
                 # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            logging.warning(got_response)
-            message = got_response[0]
+                yield gen.sleep(0.0021)            
         except Exception as error:
             logging.error(error)
             message = str(error)
-        return message
+        return True
 
     @gen.coroutine
     def new_team(self, struct):

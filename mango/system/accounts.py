@@ -64,7 +64,6 @@ class Account(object):
             # CUSTOM FIELDS
             "name_register",
             "description_register",
-            "teams_register",
             "members_register"
         ]
         # hopefully asynchronous handle function request
@@ -123,7 +122,6 @@ class Account(object):
             # CUSTOM FIELDS
             "name_register",
             "description_register",
-            "teams_register",
             "members_register"
         ]
         # hopefully asynchronous handle function request
