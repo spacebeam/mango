@@ -54,6 +54,7 @@ class Account(object):
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
         urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
@@ -215,6 +216,7 @@ class Account(object):
         urls = set()
         urls.add(get_search_item(self.solr, search_index, query, filter_query))
         urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
