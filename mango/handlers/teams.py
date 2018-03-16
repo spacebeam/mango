@@ -198,7 +198,7 @@ class Handler(teams.Teams, BaseHandler):
         if remove:
             result = yield self.modify_remove(account, team_uuid, struct)
             logging.warning('modify remove')
-            logging.warning(result)
+            logging.warning(team_uuid,account,struct)
 
         elif not remove:
             result = yield self.modify_team(account, team_uuid, struct)
