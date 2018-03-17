@@ -17,6 +17,7 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
+from mango.system import update_struct, remove_struct
 from mango.messages import teams
 from mango.messages import BaseResult
 from mango.structures.teams import TeamMap
@@ -346,9 +347,9 @@ class Teams(object):
         )
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
-        # got callback response?
+        # got http callback response
         got_response = []
-        # yours truly
+        # default return message
         message = {'update_complete':False}
         def handle_request(response):
             '''
@@ -372,26 +373,8 @@ class Teams(object):
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
             team = Map(bucket, riak_key)
-            for key in struct:
-                if key not in IGNORE_ME:
-                    if type(struct.get(key)) == list:
-                        team.reload()
-                        old_value = team.registers['{0}'.format(key)].value
-                        if old_value:
-                            old_list = json.loads(old_value.replace("'",'"'))
-                            for thing in struct.get(key):
-                                old_list.append(thing)
-                            team.registers['{0}'.format(key)].assign(str(old_list))
-                        else:
-                            new_list = []
-                            for thing in struct.get(key):
-                                new_list.append(thing)
-                            team.registers['{0}'.format(key)].assign(str(new_list))
-                    else:
-                        team.registers['{0}'.format(key)].assign(str(struct.get(key)))
-                    team.update()
-            update_complete = True
-            message['update_complete'] = True
+            # TODO: measure if there is value on make update_struct a yielding coroutine!
+            message['update_complete'] = update_struct(team, struct, IGNORE_ME)
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
