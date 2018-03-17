@@ -195,10 +195,16 @@ class Handler(teams.Teams, BaseHandler):
             account = struct.get('account', None)
         # remove query string flag
         remove = self.request.arguments.get('remove', False)
-        if not remove :
-            result = yield self.modify_team(account, team_uuid, struct)
-        else:
+        if remove:
             result = yield self.modify_remove(account, team_uuid, struct)
+            logging.warning('modify remove')
+            logging.warning(team_uuid,account,struct)
+
+        elif not remove:
+            result = yield self.modify_team(account, team_uuid, struct)
+            logging.warning('no remove')
+            logging.warning(result)
+
         if not result:
             self.set_status(400)
             system_error = errors.Error('missing')

@@ -345,6 +345,8 @@ class Teams(object):
         url = "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}".format(
             self.solr, search_index, query, filter_query
         )
+        logging.warning(url)
+        
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got http callback response
