@@ -56,8 +56,7 @@ def get_search_list(solr, search_index, query, filter_query, start_num, page_siz
     '''
         Build and return the list query url
     '''
-    # lol wtf... by know we better learn to handle long fucking string like this madness!
-    # note: the last replace smells a little funny...
+    # LOL WTF CLEAN THIS, PUT STUFF ON TUPLES OR SOMETHING ...
     return "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc,uuid_register+desc".format(solr, search_index, query, filter_query, start_num, page_size).replace(' ', '')
     
 def get_average(total, marks):
@@ -81,7 +80,7 @@ def check_json(struct):
     try:
         message = json.loads(struct)
     except Exception as error:
-        # Yo, WTF this is so old and so wrong! please clean the shit out of this !!!
+        # Please clean the shit out of this!
         api_error = errors.Error(error)
         message = api_error.json()
         raise error
@@ -95,14 +94,10 @@ def check_times(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
-        # so... 2 lines more just for the fucking timestamp?
-        start = start.timestamp
-        end = end.timestamp
+        message = {'start':start.timestamp, 'end':end.timestamp}
     except Exception as error:
         logging.exception(error)
         raise error
-        return
-    message = {'start':start, 'end':end}
     return message
 
 @gen.coroutine
@@ -113,11 +108,10 @@ def check_times_get_timestamp(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
+        message = {'start':start.timestamp, 'end':end.timestamp}
     except Exception as error:
         logging.exception(error)
-        raise error
-        return
-    message = {'start':start.timestamp, 'end':end.timestamp}
+        raise error    
     return message
 
 @gen.coroutine
@@ -128,11 +122,10 @@ def check_times_get_datetime(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
+        message = {'start':start.naive, 'end':end.naive}
     except Exception as error:
         logging.exception(error)
         raise error
-        return
-    message = {'start':start.naive, 'end':end.naive}
     return message
 
 def clean_message(struct):
@@ -181,6 +174,10 @@ def str2bool(boo):
     return boo.lower() in ('yes', 'true', 't', '1')
 
 def export_to_csv(csv_file_path, dict_data):
+    '''
+        Tony's first attemp on general export_to_csv function
+        TODO: Clean/finish it?
+    '''
     csv_file = open(csv_file_path, 'w')
     writer = csv.writer(csv_file, dialect='excel')
     headers = dict_data[0].keys()
