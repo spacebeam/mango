@@ -54,7 +54,7 @@ class Account(object):
         start_num = page_size * (page_num - 1)
 
         if not fields:
-            fields = 'email_register,uuid_register,history_register'
+            fields = 'name_register,description_register,nickname_register,first_name_register,last_name_register,middle_name_register,email_register,phone_number_register,extension_register,country_code_register,company_register,location_register,phones_register,emails_register,created_by_register,last_update_by_register'
         else:
             fields = '{0}'.format(fields.decode('utf-8'))
 
