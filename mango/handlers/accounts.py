@@ -343,7 +343,8 @@ class OrgsHandler(accounts.Account, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1):
+            page_num=1,
+            search=None):
         '''
             Get (ORG)
         '''
