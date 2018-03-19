@@ -58,7 +58,7 @@ class Account(object):
         else:
             fields = '{0}'.format(fields.decode('utf-8'))
 
-        url = get_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
+        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
         
         logging.warning('check this url')
         logging.warning(url)
