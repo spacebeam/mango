@@ -23,7 +23,7 @@ from mango.messages import BaseResult
 from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, get_search_item
+from mango.tools import get_search_item, get_search_list, quick_search_item
 from tornado import httpclient as _http_client
 
 
@@ -55,7 +55,7 @@ class Teams(object):
         start_num = page_size * (page_num - 1)
 
         if not fields:
-            fields = 'email_register,last_name_register,phone_register,lead_type_register,uuid_register'
+            fields = 'name_register,description_register,assignees_register,source_register,destination_register,acknowledge_register,deadline_register,comments_register,created_by_register,last_update_by_register'
         else:
             fields = '{0}'.format(fields.decode('utf-8'))
 
@@ -94,7 +94,7 @@ class Teams(object):
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response_test(doc, IGNORE_ME))
+                    message['results'].append(clean_response(doc, IGNORE_ME))
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:

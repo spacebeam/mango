@@ -90,7 +90,8 @@ class Handler(teams.Teams, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1):
+            page_num=1,
+            fields=None):
         '''
             Get teams
         '''
@@ -104,6 +105,8 @@ class Handler(teams.Teams, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
+
+        fields = (query_args.get('fields', [fields])[0] if not fields else fields)
 
         search = (query_args.get('search', [search])[0] if not search else search)
 
