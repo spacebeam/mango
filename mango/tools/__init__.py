@@ -95,14 +95,10 @@ def check_times(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
-        # so... 2 lines more just for the fucking timestamp?
-        start = start.timestamp
-        end = end.timestamp
+        message = {'start':start.timestamp, 'end':end.timestamp}
     except Exception as error:
         logging.exception(error)
         raise error
-        return
-    message = {'start':start, 'end':end}
     return message
 
 @gen.coroutine
@@ -113,11 +109,10 @@ def check_times_get_timestamp(start, end):
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
+        message = {'start':start.timestamp, 'end':end.timestamp}
     except Exception as error:
         logging.exception(error)
-        raise error
-        return
-    message = {'start':start.timestamp, 'end':end.timestamp}
+        raise error    
     return message
 
 @gen.coroutine
@@ -125,14 +120,14 @@ def check_times_get_datetime(start, end):
     '''
         Check times get datetime
     '''
+
     try:
         start = (arrow.get(start) if start else arrow.get(arrow.utcnow().date()))
         end = (arrow.get(end) if end else start.replace(days=+1))
+        message = {'start':start.naive, 'end':end.naive}
     except Exception as error:
         logging.exception(error)
         raise error
-        return
-    message = {'start':start.naive, 'end':end.naive}
     return message
 
 def clean_message(struct):
