@@ -22,7 +22,7 @@ from mango.messages import BaseResult
 from mango.structures.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, get_search_item
+from mango.tools import get_search_item, get_search_list, quick_search_item
 from tornado import httpclient as _http_client
 
 
@@ -52,6 +52,11 @@ class Account(object):
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
+
+        if not fields:
+            fields = 'email_register,uuid_register,history_register'
+        else:
+            fields = '{0}'.format(fields.decode('utf-8'))
 
         url = get_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
         
