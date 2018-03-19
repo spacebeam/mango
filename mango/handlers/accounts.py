@@ -88,7 +88,8 @@ class UsersHandler(accounts.Account, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1):
+            page_num=1,
+            search):
         '''
             Get user accounts
         '''
