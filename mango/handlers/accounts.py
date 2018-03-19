@@ -89,7 +89,8 @@ class UsersHandler(accounts.Account, BaseHandler):
             end=None,
             lapse='hours',
             page_num=1,
-            search=None):
+            search=None,
+            fields=None):
         '''
             Get user accounts
         '''
@@ -104,6 +105,8 @@ class UsersHandler(accounts.Account, BaseHandler):
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
 
+        fields = (query_args.get('fields', [fields])[0] if not fields else fields)
+        
         search = (query_args.get('search', [search])[0] if not search else search)
         # rage against the finite state machine
         status = 'all'
@@ -113,7 +116,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not user_uuid and search:
-            message = yield self.quick_search(account, start, end, lapse, status, page_num, search)
+            message = yield self.quick_search(account, start, end, lapse, status, page_num, search, fields)
             self.set_status(200)
         elif not user_uuid:
             message = yield self.get_user_list(account,
