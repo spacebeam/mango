@@ -113,7 +113,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not user_uuid and search:
-            message = yield self.quick_search(account, start, end, lapse, status, page_num, fields, search)
+            message = yield self.quick_search(account, start, end, lapse, status, page_num, search)
             self.set_status(200)
         elif not user_uuid:
             message = yield self.get_user_list(account,

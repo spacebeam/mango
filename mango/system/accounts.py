@@ -42,7 +42,7 @@ class Account(object):
         Account
     '''
     @gen.coroutine
-    def quick_search(self, account, start, end, lapse, status, page_num, fields, search):
+    def quick_search(self, account, start, end, lapse, status, page_num, search):
         '''
             Quick Seach
         '''
@@ -53,12 +53,7 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        if not fields:
-            fields = 'email_register,last_name_register,phone_register,lead_type_register,uuid_register'
-        else:
-            fields = '{0}'.format(fields.decode('utf-8'))
-
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
+        url = quick_search_item(self.solr, search_index, query, start_num, page_size).replace(' ', '')
         
         logging.warning('check this url')
         logging.warning(url)
