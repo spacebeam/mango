@@ -91,7 +91,8 @@ class Handler(teams.Teams, BaseHandler):
             end=None,
             lapse='hours',
             page_num=1,
-            fields=None):
+            fields=None
+            search=None):
         '''
             Get teams
         '''
