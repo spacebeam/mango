@@ -93,7 +93,7 @@ class Account(object):
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response_test(doc, IGNORE_ME))
+                    message['results'].append(clean_response(doc, IGNORE_ME))
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:
