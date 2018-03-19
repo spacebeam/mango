@@ -53,7 +53,7 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        url = get_search_item(self.solr, search_index, query, start_num, page_size).replace(' ', '')
+        url = get_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
         
         logging.warning('check this url')
         logging.warning(url)
