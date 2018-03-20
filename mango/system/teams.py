@@ -428,19 +428,8 @@ class Teams(object):
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
             team = Map(bucket, riak_key)
-            for key in struct:
-                if key not in IGNORE_ME:
-                    if type(struct.get(key)) == list:
-                        team.reload()
-                        old_value = team.registers['{0}'.format(key)].value
-                        if old_value:
-                            old_list = json.loads(old_value.replace("'",'"'))
-                            new_list = [x for x in old_list if x not in struct.get(key)]
-                            team.registers['{0}'.format(key)].assign(str(new_list))
-                            team.update()
-                            message['update_complete'] = True
-                    else:
-                        message['update_complete'] = False
+            # TODO: measure if there is value on make remove_struct a yielding coroutine!
+            message['update_complete'] = remove_struct(team, struct, IGNORE_ME)
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
