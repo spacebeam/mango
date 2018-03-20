@@ -347,7 +347,6 @@ class Teams(object):
             self.solr, search_index, query, filter_query
         )
         logging.warning(url)
-        
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got http callback response
@@ -472,12 +471,10 @@ class Teams(object):
         else:
             fields = '{0}'.format(fields.decode('utf-8'))
 
-        # WTF is this new quick_search_iteam?
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
-        
+        # TODO: WTF is this check if quick_search_item clean .replace(' ', '') on response.
+        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields)
         logging.warning("check this url inside tony's quick_search")
         logging.warning(url)
-        
         IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         got_response = []
         # clean response message
@@ -486,7 +483,7 @@ class Teams(object):
             'page': page_num,
             'results': []
         }
-
+        # hopefully run this on async 
         def handle_request(response):
             '''
                 Request Async Handler
@@ -496,7 +493,7 @@ class Teams(object):
                 got_response.append({'error':True, 'message': response.error})
             else:
                 got_response.append(json.loads(response.body))
-
+        # ready to execute, compute and return the resulting message?
         try:
             http_client.fetch(
                 url,
