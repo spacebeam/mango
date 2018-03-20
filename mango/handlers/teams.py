@@ -90,7 +90,9 @@ class Handler(teams.Teams, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1):
+            page_num=1,
+            fields=None,
+            search=None):
         '''
             Get teams
         '''
@@ -104,6 +106,11 @@ class Handler(teams.Teams, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
+
+        fields = (query_args.get('fields', [fields])[0] if not fields else fields)
+
+        search = (query_args.get('search', [search])[0] if not search else search)
+
         # rage against the finite state machine
         status = 'all'
         # init message on error
@@ -111,6 +118,9 @@ class Handler(teams.Teams, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
+        if not team_uuid and search:
+            message = yield self.quick_search(account, start, end, lapse, status, page_num, fields, search)
+            self.set_status(200)
         if not team_uuid:
             message = yield self.get_team_list(account,
                                                start,
