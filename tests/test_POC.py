@@ -40,4 +40,4 @@ class MyTestCase(testing.AsyncTestCase):
         response = yield self.client.fetch(
             "http://localhost:8098/search/query/famous?wt=json&q=name_s:{}".format(self.name))
         print(response)
-        self.assertIn("name_s:{}".format(self.na), str(response.body))
+        self.assertIn("name_s:{}".format(self.name), str(response.body))
