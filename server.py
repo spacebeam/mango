@@ -86,7 +86,7 @@ def main():
     '''
     # mango daemon options
     opts = options.options()
-    # Set memcached backend
+    # set memcached client
     memcache = mc.Client(
         [opts.memcached_host],
         binary=opts.memcached_binary,
@@ -117,7 +117,7 @@ def main():
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
-    # before application lets define some cast functions
+    # lets define some cast functions
     def check_new_accounts():
         '''
             Open issue about some Kong Admin API integration
@@ -139,7 +139,7 @@ def main():
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            # More Task Than Task!
+            # More task than task!
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
@@ -152,10 +152,10 @@ def main():
         domain = opts.domain,
         page_size = opts.page_size,
     )
-    # Periodic Cast Functions
+    # periodic cast functions
     check_kong_consumers = Cast(check_new_accounts, 1000)
     check_kong_consumers.start()
-    # Setting up the application server process
+    # setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))
     ioloop.IOLoop.current().start()

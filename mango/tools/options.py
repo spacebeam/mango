@@ -24,7 +24,7 @@ def options():
     '''
         Mango configuration options
     '''
-    # Set config and stuff
+    # set config stuff
     tornado.options.define('config',
         type=str, help='path to config file',
         callback=lambda path: parse_config_file(path, final=False))
@@ -36,19 +36,19 @@ def options():
     tornado.options.define('logdir',
         type=str, default='log',
         help=('Location of logging (if debug mode is off)'))
-    # domain
+    # resource domain
     tornado.options.define('domain',
         default='*', type=str,
-        help='Application domain, e.g: "your_domain.com"')
-    # Solr
+        help='Application domain, e.g: "example.com"')
+    # Solr hotname
     tornado.options.define('solr',
         default='nonsense.ws', type=str,
-        help='Application solr, e.g: "your_solr_server"')
-    # Server settings
+        help='Application solr, e.g: "example.com"')
+    # server host
     tornado.options.define('host',
         default='127.0.0.1', type=str,
         help=('Server hostname'))
-    # port
+    # server port
     tornado.options.define('port',
         default=8888, type=int,
         help=('Server port'))
@@ -60,19 +60,19 @@ def options():
     tornado.options.define('treehouse_port',
         default=8899, type=int,
         help=('Treehouse port'))
-    # Riak kvalue datastorage settings
+    # Riak kvalue host
     tornado.options.define('riak_host',
         default='127.0.0.1', type=str,
         help=('Riak cluster node'))
-    # Riak port
+    # Riak kvalue port
     tornado.options.define('riak_port',
         default=8087, type=int,
         help=('Riak cluster port'))
-    # Kong Admin API gateway settings
+    # Kong admin host
     tornado.options.define('kong_host',
         default='127.0.0.1', type=str,
         help=('Kong Admin API'))
-    # Kong Admin API port
+    # Kong admin port
     tornado.options.define('kong_port',
         default=8001, type=int,
         help=('Kong Admin API port'))
