@@ -3,7 +3,7 @@ from tornado.testing import gen_test
 import tornado
 import tornado.ioloop
 import tornado.httpclient
-import simplejson
+import ujson as json
 
 
 class MyTestCase(testing.AsyncTestCase):
@@ -29,7 +29,7 @@ class MyTestCase(testing.AsyncTestCase):
         print("Putting")
         data = '{"name_s":' + self.name + ', "model_i":2018, "leader_b":true}'
         headers = {'Content-Type': 'application/json'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='PUT', headers=headers, body=simplejson.dumps(data))
+        request = tornado.httpclient.HTTPRequest(self.url, method='PUT', headers=headers, body=json.dumps(data))
         response = yield self.client.fetch(request)
         print("Response just after sending PUT {}".format(response))
         return response
