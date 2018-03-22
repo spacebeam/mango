@@ -82,7 +82,7 @@ from mango.tools import options
 
 def main():
     '''
-        mango main function
+        resource main function
     '''
     # mango daemon options
     opts = options.options()
@@ -122,24 +122,24 @@ def main():
         '''
             Open issue about some Kong Admin API integration
         '''
-        # logging.warning('some issue about kong consumers')
+        # logging.warning('kong integration missing')
         pass
     # application web daemon
     application = web.Application(
         [
-            # ORGs teams handler
-            (r'/orgs/(?P<org_uuid>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
-            (r'/orgs/(?P<org_uuid>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
-            (r'/orgs/(?P<org_uuid>.+)/teams/?', teams.Handler),
-            # (Organizations of Restricted Generality)
+            # Organizations of Restricted Generality
             (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
             (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
             (r'/orgs/?', accounts.OrgsHandler),
-            # Simple user accounts
+            # ORGs teams
+            (r'/orgs/(?P<org_uuid>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
+            (r'/orgs/(?P<org_uuid>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
+            (r'/orgs/(?P<org_uuid>.+)/teams/?', teams.Handler),
+            # User accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            # Tasks for humans and non-humans alike!
+            # More Task Than Task!
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
@@ -148,9 +148,9 @@ def main():
         cache = cache,
         kvalue = kvalue,
         debug = opts.debug,
+        solr = opts.solr,
         domain = opts.domain,
         page_size = opts.page_size,
-        solr = opts.solr,
     )
     # Periodic Cast Functions
     check_kong_consumers = Cast(check_new_accounts, 1000)
