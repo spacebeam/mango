@@ -51,17 +51,14 @@ class Teams(object):
         search_index = 'mango_team_index'
         query = 'uuid_register:{0}'.format(team_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        # note where the hack change ' to %27 for the url string!
-        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
-        urls = set()
-        urls.add(get_search_item(self.solr, search_index, query, filter_query))
-        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+
+        url = get_search_item(self.solr, search_index, query, filter_query)
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
@@ -73,27 +70,17 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) <= 1:
-                # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
-            # get stuff from response
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
-            # get it from watchers list
-            watchers = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
-            elif watchers['response']['numFound']:
-                response = watchers['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
-            else:
-                logging.error('there is probably something wrong!')
+                message = clean_response(response, __ignore)
         except Exception as error:
             logging.warning(error)
         return message
@@ -109,28 +96,18 @@ class Teams(object):
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
         filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
-        # note where the hack change ' to %27 for the url string!
-        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
-        # page number
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-        # set of urls
-        urls = set()
-        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
-        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
-        logging.warning(urls)
+
+        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
+
         # init got response list
         got_response = []
-        # init crash message
+        # clean response message
         message = {
             'count': 0,
             'page': page_num,
             'results': []
         }
-        # ignore riak fields
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        # hopefully asynchronous handle function request
+        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         def handle_request(response):
             '''
                 Request Async Handler
@@ -141,33 +118,24 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) <= 1:
-                # Yo, don't be careless with the time!
-                yield gen.sleep(0.0010)
-            # get stuff from response
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
+                yield gen.sleep(0.0021)
             stuff = got_response[0]
-            # get it from watchers list
-            watchers = got_response[1]
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
-            if watchers['response']['numFound']:
-                message['count'] += watchers['response']['numFound']
-                for doc in watchers['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
+                    message['results'].append(clean_response(doc, __ignore))
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
-    
+
     @gen.coroutine
     def uuid_from_account(self, username):
         '''
