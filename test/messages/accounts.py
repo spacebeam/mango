@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system models and messages.
+    Mango test accounts message models
 '''
 
 # This file is part of mango.
@@ -16,9 +16,7 @@ import uuid
 from schematics import models
 from schematics import types
 from schematics.types import compound
-
 from messages import RequiredBase
-
 
 
 class BaseAccount(RequiredBase):
