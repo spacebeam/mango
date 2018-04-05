@@ -3,6 +3,12 @@ from tornado.testing import gen_test
 import tornado
 import tornado.ioloop
 import tornado.httpclient
+import sys
+
+sys.path.insert(0, '../mango')
+
+from mango.messages import accounts 
+
 import ujson as json
 
 
