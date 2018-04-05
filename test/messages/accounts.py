@@ -17,6 +17,9 @@ from schematics import models
 from schematics import types
 from schematics.types import compound
 
+from messages import RequiredBase
+
+
 
 class BaseAccount(RequiredBase):
     '''
