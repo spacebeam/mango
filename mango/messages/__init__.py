@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango system models and messages.
+    Mango system message models.
 '''
 
 # This file is part of mango.

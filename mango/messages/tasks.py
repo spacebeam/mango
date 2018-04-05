@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-    Mango tasks models and messages.
+    Mango tasks message models.
 '''
 
 # This file is part of mango.
