@@ -74,11 +74,12 @@ from tornado.testing import gen_test
 import tornado
 import tornado.ioloop
 import tornado.httpclient
-
+import uuid
 import ujson as json
 
 
 class UsersTestCase(testing.AsyncTestCase):
+    headers = {'Content-Type': 'application/json'}
     url = "https://api.nonsense.ws/users/"
     client = testing.AsyncHTTPClient()
     result = []
@@ -98,24 +99,22 @@ class UsersTestCase(testing.AsyncTestCase):
 
     @gen.coroutine
     def post(self):
-        print("Posting")
+        user = str(uuid.uuid4())
         data = {'created_by':'https://monteverde.io',
-                'account':'',
-                'email':'',
-                'password':'',
+                'account':user,
+                'email':'{0}@example.com'.format(user),
+                'password':'Letitcrash',
                 'status':'testing'}
-        headers = {'Content-Type': 'application/json'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='POST', headers=headers, body=json.dumps(data))
+        request = tornado.httpclient.HTTPRequest(self.url, method='POST', headers=self.headers, body=json.dumps(data))
         response = yield self.client.fetch(request)
-        print("Response just after sending POST {}".format(response))
-        result.append(response.body)
-        self.assertIn("201", str(response.code))
+        self.result.append(response.body)
 
     @gen_test
     def test_options(self):
-        print('Testing OPTIONS method, getting init information.')
-        headers = {'Content-Type': 'application/json'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='OPTIONS', headers=headers)
+        request = tornado.httpclient.HTTPRequest(self.url, method='OPTIONS', headers=self.headers)
         response = yield self.client.fetch(request)
-        print("Response just after sending OPTIONS {0}".format(response.code))
         self.assertIn("200", str(response.code))
+
+    @gen_test
+    def test_new_account(self):
+        self.assertIn("uuid", str(self.result[0]))
