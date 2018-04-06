@@ -85,33 +85,36 @@ class UsersTestCase(testing.AsyncTestCase):
     result = []
 
     def setUp(self):
-        print("Setting up")
         super().setUp()
         tornado.ioloop.IOLoop.current().run_sync(self.post)
 
     def tearDown(self):
-        print("Tearing down")
         super().tearDown()
-        request = tornado.httpclient.HTTPRequest(self.url, method='DELETE')
-        response = yield self.client.fetch(request)
-        print("Response just after sending DELETE {}".format(response))
         tornado.ioloop.IOLoop.current().stop()
 
     @gen.coroutine
     def post(self):
         user = str(uuid.uuid4())
+        #
+        # TODO: md5/sha2 your stuff
+        #
         data = {'created_by':'https://monteverde.io',
                 'account':user,
                 'email':'{0}@example.com'.format(user),
                 'password':'Letitcrash',
                 'status':'testing'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='POST', headers=self.headers, body=json.dumps(data))
+        request = tornado.httpclient.HTTPRequest(self.url, 
+                                                 method='POST',
+                                                 headers=self.headers,
+                                                 body=json.dumps(data))
         response = yield self.client.fetch(request)
         self.result.append(response.body)
 
     @gen_test
     def test_options(self):
-        request = tornado.httpclient.HTTPRequest(self.url, method='OPTIONS', headers=self.headers)
+        request = tornado.httpclient.HTTPRequest(self.url,
+                                                 method='OPTIONS',
+                                                 headers=self.headers)
         response = yield self.client.fetch(request)
         self.assertIn("200", str(response.code))
 
