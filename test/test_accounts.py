@@ -4,20 +4,18 @@ import tornado
 import tornado.ioloop
 import tornado.httpclient
 
-from messages import accounts
-
 import ujson as json
 
 
-class MyTestCase(testing.AsyncTestCase):
+class UsersTestCase(testing.AsyncTestCase):
     client = testing.AsyncHTTPClient()
-    name = 'mercedes15'
-    url = "http://localhost:8098/types/cars/buckets/sport/keys/{}".format(name)
+    url = "https://api.nonsense.ws/users/"
+    mock = '?'
 
     def setUp(self):
         print("Setting up")
         super().setUp()
-        tornado.ioloop.IOLoop.current().run_sync(self.put)
+        tornado.ioloop.IOLoop.current().run_sync(self.post)
 
     def tearDown(self):
         print("Tearing down")
@@ -28,19 +26,21 @@ class MyTestCase(testing.AsyncTestCase):
         tornado.ioloop.IOLoop.current().stop()
 
     @gen.coroutine
-    def put(self):
-        print("Putting")
-        data = '{"name_s":' + self.name + ', "model_i":2018, "leader_b":true}'
+    def post(self):
+        print('POST method, creating new test account.')
         headers = {'Content-Type': 'application/json'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='PUT', headers=headers, body=json.dumps(data))
+        request = tornado.httpclient.HTTPRequest(self.url, method='POST', headers=headers, body=json.dumps(data))
         response = yield self.client.fetch(request)
-        print("Response just after sending PUT {}".format(response))
-        return response
+        print("Response just after sending OPTIONS {0}".format(response.code))
+        self.assertIn("200", str(response.code))
 
     @gen_test
-    def test_find_one(self):
-        print("Finding")
-        response = yield self.client.fetch(
-            "http://localhost:8098/search/query/famous?wt=json&q=name_s:{}".format(self.name))
+    def test_post(self):
+        print("Resource options")
+        data = {}
+        headers = {'Content-Type': 'application/json'}
+        request = tornado.httpclient.HTTPRequest(self.url, method='OPTIONS', headers=headers)
+        response = yield self.client.fetch(request)
+        print("Response just after sending POST {}".format(response))
         print(response)
-        self.assertIn("name_s:{}".format(self.name), str(response.body))
+        self.assertIn("400", str(response.code))
