@@ -116,7 +116,14 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.set_status(400)
         # check if we're list processing
         if not user_uuid and search:
-            message = yield self.quick_search(account, start, end, lapse, status, page_num, search, fields)
+            message = yield self.quick_search(account,
+                                              start,
+                                              end, 
+                                              lapse,
+                                              status,
+                                              page_num,
+                                              search,
+                                              fields)
             self.set_status(200)
         elif not user_uuid:
             message = yield self.get_user_list(account,
@@ -127,7 +134,7 @@ class UsersHandler(accounts.Account, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single account received
-        else:
+        elif user_uuid:
             # first try to get stuff from cache
             user_uuid = user_uuid.rstrip('/')
             # get cache data

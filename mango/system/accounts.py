@@ -49,13 +49,12 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(user_uuid)
         filter_query = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        # note where the hack change ' to %27 for the url string!
         url = get_search_item(self.solr, search_index, query, filter_query)
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
@@ -104,7 +103,7 @@ class Account(object):
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
@@ -135,7 +134,7 @@ class Account(object):
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
+                message = clean_response(response, __ignore)
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:
@@ -204,7 +203,7 @@ class Account(object):
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "nickname_register",
@@ -508,7 +507,7 @@ class Account(object):
         )
         logging.warning(url)
         # pretty please, ignore this list of fields from database.
-        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        __ignore = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?
         got_response = []
         # your message truly
@@ -536,7 +535,7 @@ class Account(object):
             bucket.set_properties({'search_index': search_index})
             user = Map(bucket, riak_key)
             for key in struct:
-                if key not in IGNORE_ME:
+                if key not in __ignore:
                     if type(struct.get(key)) == list:
                         user.reload()
                         old_value = user.registers['{0}'.format(key)].value
@@ -580,7 +579,7 @@ class Account(object):
             self.solr, search_index, query, filter_query
         )
         # pretty please, ignore this list of fields from database.
-        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        __ignore = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?
         got_response = []
         # yours truly
@@ -608,7 +607,7 @@ class Account(object):
             bucket.set_properties({'search_index': search_index})
             account = Map(bucket, riak_key)
             for key in struct:
-                if key not in IGNORE_ME:
+                if key not in __ignore:
                     if type(struct.get(key)) == list:
                         account.reload()
                         old_value = account.registers['{0}'.format(key)].value
@@ -657,7 +656,7 @@ class Account(object):
         logging.warning('check this url')
         logging.warning(url)
         
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         got_response = []
         # clean response message
         message = {
@@ -687,7 +686,7 @@ class Account(object):
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
+                    message['results'].append(clean_response(doc, __ignore))
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:
