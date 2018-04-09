@@ -121,7 +121,7 @@ class Handler(teams.Teams, BaseHandler):
         if not team_uuid and search:
             message = yield self.quick_search(account, start, end, lapse, status, page_num, fields, search)
             self.set_status(200)
-        if not team_uuid:
+        elif not team_uuid:
             message = yield self.get_team_list(account,
                                                start,
                                                end,
@@ -130,15 +130,13 @@ class Handler(teams.Teams, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single team received
-        else:
-            # first try to get stuff from cache
+        elif org_uuid:
             team_uuid = team_uuid.rstrip('/')
-            # get cache data
             message = self.cache.get('teams:{0}'.format(team_uuid))
             if message is not None:
                 logging.info('teams:{0} done retrieving!'.format(team_uuid))
                 self.set_status(200)
-            else:
+            if message is None:
                 message = yield self.get_team(account, team_uuid)
                 if self.cache.add('teams:{0}'.format(team_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(team_uuid)))
