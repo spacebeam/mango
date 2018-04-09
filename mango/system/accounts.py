@@ -253,14 +253,9 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        # and so he left!
-        if account is False:
-            filter_query = filter_status
-            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
-            fq_watchers = "watchers_register:*'null'*"
-        elif account is not False:
-            filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
-            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+ 
+        filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
+        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
 
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
 
@@ -315,16 +310,12 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        # yo, tony was here!
-        if account is False:
-            filter_query = filter_status
-            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
-            fq_watchers = "watchers_register:*'null'*"
-        elif account is not False:
-            filter_account = 'created_by:{0}'.format(account.decode('utf-8'))
-            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+
+        filter_account = 'created_by:{0}'.format(account.decode('utf-8'))
+        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
             
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
+        logging.warning(url)
         # init got response list
         got_response = []
         # clean response message
