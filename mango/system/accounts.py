@@ -95,9 +95,8 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-        urls = set()
-        urls.add(get_search_item(self.solr, search_index, query, filter_query))
-        logging.warning(urls)
+        url = get_search_item(self.solr, search_index, query, filter_query)
+        logging.warning(url)
         # init got response list
         got_response = []
         # init crash message
@@ -121,22 +120,17 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) < 1:
-                # Yo, don't be careless with the time!
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
                 yield gen.sleep(0.0021)
-            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
                 message = clean_response(response, __ignore)
-            else:
-                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message['uuid']
@@ -196,7 +190,6 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        # note where the hack change ' to %27 for the url string!
         url = get_search_item(self.solr, search_index, query, filter_query)
         logging.warning(url)
         # init got response list
@@ -254,7 +247,6 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
- 
         filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
         filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
 
@@ -549,7 +541,6 @@ class Account(object):
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
-
 
     @gen.coroutine
     def modify_remove(self, account, user_uuid, struct):

@@ -96,9 +96,7 @@ class Teams(object):
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
         filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
-
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
-
         # init got response list
         got_response = []
         # clean response message
@@ -144,8 +142,9 @@ class Teams(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-        urls = set()
-        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+
+        url = get_search_item(self.solr, search_index, query, filter_query)
+        logging.warning(url)
         # init got response list
         got_response = []
         # init crash message
@@ -170,22 +169,17 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) < 1:
-                # Yo, don't be careless with the time!
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
                 yield gen.sleep(0.0021)
-            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
-            else:
-                logging.error('there is probably something wrong!')
+                message = clean_response(response, __ignore)
         except Exception as error:
             logging.warning(error)
         return message['uuid']
