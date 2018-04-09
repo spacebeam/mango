@@ -394,7 +394,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
             if message is not None:
                 logging.info('cache orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
-            if messageis is None:
+            if message is None:
                 message = yield self.get_org(account, org_uuid)
                 if self.cache.add('orgs:{0}'.format(org_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(org_uuid)))
