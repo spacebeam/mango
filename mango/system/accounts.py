@@ -198,6 +198,7 @@ class Account(object):
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
         # note where the hack change ' to %27 for the url string!
         url = get_search_item(self.solr, search_index, query, filter_query)
+        logging.warning(url)
         # init got response list
         got_response = []
         # init crash message
