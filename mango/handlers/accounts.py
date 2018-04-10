@@ -422,6 +422,9 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
+        logging.warning('que pasa???????')
+        #logging.warning(org_uuid)
+
         org_uuid = yield self.new_org(struct)
         # add_org to user -> the struct['account'] here is the org_account
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
