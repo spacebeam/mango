@@ -59,6 +59,7 @@ class AccountMap(object):
         self.map.registers['orgs'].assign(struct.get('orgs', ''))
         self.map.registers['teams'].assign(struct.get('teams', ''))
         self.map.registers['members'].assign(struct.get('members', ''))
+        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
         self.map.registers['checked_by'].assign(struct.get('checked_by', ''))
         self.map.registers['checked_at'].assign(struct.get('checked_at', ''))
@@ -105,6 +106,7 @@ class AccountMap(object):
             "orgs": event.registers['orgs'].value,
             "teams": event.registers['teams'].value,
             "members": event.registers['members'].value,
+            "watchers": event.registers['watchers'].value,
             "checked": event.registers['checked'].value,
             "checked_at": event.registers['checked_at'].value,
             "checked_by": event.registers['checked_by'].value,
@@ -143,6 +145,7 @@ class AccountMap(object):
             "orgs": event.registers['orgs'].value,
             "teams": event.registers['teams'].value,
             "members": event.registers['members'].value,
+            "watchers": event.registers['watchers'].value,
             "checked": event.registers['checked'].value,
             "checked_at": event.registers['checked_at'].value,
             "checked_by": event.registers['checked_by'].value,
