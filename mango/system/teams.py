@@ -189,6 +189,8 @@ class Teams(object):
         '''
             add (ORG) team
         '''
+        logging.warning('try add_team Handler')
+        logging.warning(org_uuid)
         user_uuid = yield self.uuid_from_account(username)
         orgs_url = 'https://{0}/orgs/{1}'.format(self.domain, org_uuid)
         user_url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
