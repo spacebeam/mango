@@ -22,7 +22,7 @@ from mango.messages import BaseResult
 from mango.structures.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, quick_search_item
+from mango.tools import get_search_item, get_search_list
 from tornado import httpclient as _http_client
 
 
@@ -49,12 +49,18 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(user_uuid)
         filter_query = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        url = get_search_item(self.solr, search_index, query, filter_query)
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        logging.warning(urls)
+        # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        __ignore = [
+        IGNORE_ME = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
@@ -72,17 +78,27 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get it from stuff
             stuff = got_response[0]
+            # get it from things
+            things = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
+                message = clean_response(response, IGNORE_ME)
+            elif things['response']['numFound']:
+                response = things['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
@@ -95,14 +111,15 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-        url = get_search_item(self.solr, search_index, query, filter_query)
-        logging.warning(url)
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        __ignore = [
+        IGNORE_ME = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
@@ -120,17 +137,22 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) < 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message['uuid']
@@ -155,7 +177,6 @@ class Account(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
-        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -190,14 +211,18 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        url = get_search_item(self.solr, search_index, query, filter_query)
-        logging.warning(url)
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
+        logging.warning(urls)
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        __ignore = [
+        IGNORE_ME = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "nickname_register",
@@ -218,17 +243,27 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get it from stuff
             stuff = got_response[0]
+            # get it from things
+            things = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
+                message = clean_response(response, IGNORE_ME)
+            elif things['response']['numFound']:
+                response = things['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
@@ -247,20 +282,33 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+        # and so he left!
+        if account is False:
+            filter_query = filter_status
+            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
+            fq_watchers = "watchers_register:*'null'*"
+        elif account is not False:
+            filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
+            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+            # note where the hack change ' to %27 for the url string!
+            fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # yo, tony was here
 
-        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
-
+        # set of urls
+        urls = set()
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
         # init got response list
         got_response = []
-        # clean response message
+        # init crash message
         message = {
             'count': 0,
             'page': page_num,
             'results': []
         }
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
         def handle_request(response):
             '''
                 Request Async Handler
@@ -271,20 +319,29 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get stuff from response
             stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            if watchers['response']['numFound']:
+                message['count'] += watchers['response']['numFound']
+                for doc in watchers['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
             else:
-                logging.error('there is probably something wrong')
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
@@ -303,21 +360,33 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
+        # yo, tony was here!
+        if account is False:
+            filter_query = filter_status
+            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
+            fq_watchers = "watchers_register:*'null'*"
+        elif account is not False:
+            filter_account = 'created_by:{0}'.format(account.decode('utf-8'))
+            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+            # note where the hack change ' to %27 for the url string!
+            fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # and so he left!
 
-        filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
-            
-        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
-        logging.warning(url)
+        # set of urls
+        urls = set()
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
         # init got response list
         got_response = []
-        # clean response message
+        # init crash message
         message = {
             'count': 0,
             'page': page_num,
             'results': []
         }
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
         def handle_request(response):
             '''
                 Request Async Handler
@@ -328,20 +397,29 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get stuff from response
             stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            if watchers['response']['numFound']:
+                message['count'] += watchers['response']['numFound']
+                for doc in watchers['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
             else:
-                logging.error('there is probably something wrong')
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
@@ -491,7 +569,7 @@ class Account(object):
         )
         logging.warning(url)
         # pretty please, ignore this list of fields from database.
-        __ignore = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?
         got_response = []
         # your message truly
@@ -519,7 +597,7 @@ class Account(object):
             bucket.set_properties({'search_index': search_index})
             user = Map(bucket, riak_key)
             for key in struct:
-                if key not in __ignore:
+                if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
                         user.reload()
                         old_value = user.registers['{0}'.format(key)].value
@@ -542,6 +620,7 @@ class Account(object):
             logging.exception(error)
         return message.get('update_complete', False)
 
+
     @gen.coroutine
     def modify_remove(self, account, user_uuid, struct):
         '''
@@ -562,7 +641,7 @@ class Account(object):
             self.solr, search_index, query, filter_query
         )
         # pretty please, ignore this list of fields from database.
-        __ignore = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
+        IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got callback response?
         got_response = []
         # yours truly
@@ -590,7 +669,7 @@ class Account(object):
             bucket.set_properties({'search_index': search_index})
             account = Map(bucket, riak_key)
             for key in struct:
-                if key not in __ignore:
+                if key not in IGNORE_ME:
                     if type(struct.get(key)) == list:
                         account.reload()
                         old_value = account.registers['{0}'.format(key)].value
