@@ -118,10 +118,7 @@ class Handler(teams.Teams, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not team_uuid and search:
-            message = yield self.quick_search(account, start, end, lapse, status, page_num, fields, search)
-            self.set_status(200)
-        elif not team_uuid:
+        if not team_uuid:
             message = yield self.get_team_list(account,
                                                start,
                                                end,
@@ -130,7 +127,7 @@ class Handler(teams.Teams, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single team received
-        elif org_uuid:
+        elif team_uuid:
             team_uuid = team_uuid.rstrip('/')
             message = self.cache.get('teams:{0}'.format(team_uuid))
             if message is not None:

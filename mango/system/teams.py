@@ -192,6 +192,7 @@ class Teams(object):
         user_uuid = yield self.uuid_from_account(username)
         orgs_url = 'https://{0}/orgs/{1}'.format(self.domain, org_uuid)
         user_url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
+
         # got callback response?
         got_response = []
         # yours truly
@@ -405,72 +406,4 @@ class Teams(object):
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_team(account, team_uuid, struct)
-        return message
-
-    # We really need this on all handlers?
-    @gen.coroutine
-    def quick_search(self, account, start, end, lapse, status, page_num, fields, search):
-        '''
-            Quick Seach
-        '''
-        search_index = 'mango_team_index'
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-        query = 'allfields_register:{0}'.format(search.decode('utf-8'))
-        if not fields:
-            __fields = ('name_register',
-                        'description_register',
-                        'assignees_register',
-                        'source_register',
-                        'destination_register',
-                        'acknowledge_register',
-                        'deadline_register',
-                        'comments_register',
-                        'created_by_register',
-                        'last_update_by_register')
-            fields = ','.join(__fields)
-        else:
-            fields = '{0}'.format(fields.decode('utf-8'))
-
-        # TODO: WTF is this check if quick_search_item clean .replace(' ', '') on response.
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields)
-        logging.warning("check this url inside tony's quick_search")
-        logging.warning(url)
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        got_response = []
-        # clean response message
-        message = {
-            'count': 0,
-            'page': page_num,
-            'results': []
-        }
-        # hopefully run this on async 
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        # ready to execute, compute and return the resulting message?
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
-            else:
-                logging.error('there is probably something wrong!')
-        except Exception as error:
-            logging.warning(error)
         return message
