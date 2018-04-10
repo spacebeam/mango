@@ -423,6 +423,7 @@ class Account(object):
             raise error
         try:
             message = event.get('uuid')
+            logging.warning(message)
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "status": str(event.get('status', '')),
@@ -460,6 +461,7 @@ class Account(object):
                 structure
             )
             message = structure.get('uuid')
+            logging.warning(message)
         except Exception as error:
             logging.error(error)
             message = str(error)
