@@ -23,7 +23,7 @@ from mango.messages import BaseResult
 from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, quick_search_item
+from mango.tools import get_search_item, get_search_list
 from tornado import httpclient as _http_client
 
 
@@ -42,7 +42,6 @@ class Teams(object):
     '''
         Teams
     '''
-
     @gen.coroutine
     def get_team(self, account, team_uuid):
         '''
@@ -51,14 +50,17 @@ class Teams(object):
         search_index = 'mango_team_index'
         query = 'uuid_register:{0}'.format(team_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-
-        url = get_search_item(self.solr, search_index, query, filter_query)
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+        urls.add(get_search_item(self.solr, search_index, query, fq_watchers))
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
@@ -70,17 +72,27 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
             stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
+                message = clean_response(response, IGNORE_ME)
+            elif watchers['response']['numFound']:
+                response = watchers['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
@@ -96,16 +108,28 @@ class Teams(object):
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
         filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
-        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
+        # note where the hack change ' to %27 for the url string!
+        fq_watchers = "watchers_register:*'{0}'*".format(account.decode('utf8')).replace("'",'%27')
+        # page number
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        start_num = page_size * (page_num - 1)
+        # set of urls
+        urls = set()
+        urls.add(get_search_list(self.solr, search_index, query, filter_query, start_num, page_size))
+        urls.add(get_search_list(self.solr, search_index, query, fq_watchers, start_num, page_size))
+        logging.warning(urls)
         # init got response list
         got_response = []
-        # clean response message
+        # init crash message
         message = {
             'count': 0,
             'page': page_num,
             'results': []
         }
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # ignore riak fields
+        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+        # hopefully asynchronous handle function request
         def handle_request(response):
             '''
                 Request Async Handler
@@ -116,24 +140,33 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) <= 1:
+                # Yo, don't be careless with the time!
+                yield gen.sleep(0.0010)
+            # get stuff from response
             stuff = got_response[0]
+            # get it from watchers list
+            watchers = got_response[1]
             if stuff['response']['numFound']:
                 message['count'] += stuff['response']['numFound']
                 for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
+                    message['results'].append(clean_response(doc, IGNORE_ME))
+            if watchers['response']['numFound']:
+                message['count'] += watchers['response']['numFound']
+                for doc in watchers['response']['docs']:
+                    message['results'].append(clean_response(doc, IGNORE_ME))
             else:
                 logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message
-
+    
     @gen.coroutine
     def uuid_from_account(self, username):
         '''
@@ -142,9 +175,8 @@ class Teams(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-
-        url = get_search_item(self.solr, search_index, query, filter_query)
-        logging.warning(url)
+        urls = set()
+        urls.add(get_search_item(self.solr, search_index, query, filter_query))
         # init got response list
         got_response = []
         # init crash message
@@ -169,17 +201,22 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) < 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
+                message = clean_response(response, IGNORE_ME)
+            else:
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message['uuid']
@@ -189,12 +226,9 @@ class Teams(object):
         '''
             add (ORG) team
         '''
-        logging.warning('try add_team Handler')
-        logging.warning(org_uuid)
         user_uuid = yield self.uuid_from_account(username)
         orgs_url = 'https://{0}/orgs/{1}'.format(self.domain, org_uuid)
         user_url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
-
         # got callback response?
         got_response = []
         # yours truly
@@ -312,6 +346,7 @@ class Teams(object):
             self.solr, search_index, query, filter_query
         )
         logging.warning(url)
+        
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got http callback response
@@ -393,8 +428,19 @@ class Teams(object):
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
             team = Map(bucket, riak_key)
-            # TODO: measure if there is value on make remove_struct a yielding coroutine!
-            message['update_complete'] = remove_struct(team, struct, IGNORE_ME)
+            for key in struct:
+                if key not in IGNORE_ME:
+                    if type(struct.get(key)) == list:
+                        team.reload()
+                        old_value = team.registers['{0}'.format(key)].value
+                        if old_value:
+                            old_list = json.loads(old_value.replace("'",'"'))
+                            new_list = [x for x in old_list if x not in struct.get(key)]
+                            team.registers['{0}'.format(key)].assign(str(new_list))
+                            team.update()
+                            message['update_complete'] = True
+                    else:
+                        message['update_complete'] = False
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
@@ -404,7 +450,7 @@ class Teams(object):
         '''
             Remove team
         '''
-        # So, still missing history ?
+        # Yo, missing history ?
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_team(account, team_uuid, struct)
