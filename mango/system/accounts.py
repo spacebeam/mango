@@ -140,7 +140,6 @@ class Account(object):
         '''
             Update user profile with (ORG)
         '''
-        logging.warning('add org ?????')
         user_uuid = yield self.uuid_from_account(username)
         # Please, don't hardcode your shitty domain in here.
         url = 'https://{0}/users/{1}'.format(self.domain, user_uuid)
@@ -616,63 +615,4 @@ class Account(object):
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_account(account, user_uuid, struct)
-        return message
-
-    @gen.coroutine
-    def quick_search(self, account, start, end, lapse, status, page_num, search, fields):
-        '''
-            Quick Seach
-        '''
-        search_index = 'mango_account_index'
-        query = 'allfields_register:{0}'.format(search.decode('utf-8'))
-
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-
-        if not fields:
-            fields = 'name_register,description_register,nickname_register,first_name_register,last_name_register,middle_name_register,email_register,phone_number_register,extension_register,country_code_register,company_register,location_register,phones_register,emails_register,created_by_register,last_update_by_register'
-        else:
-            fields = '{0}'.format(fields.decode('utf-8'))
-
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
-        
-        logging.warning('check this url')
-        logging.warning(url)
-        
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        got_response = []
-        # clean response message
-        message = {
-            'count': 0,
-            'page': page_num,
-            'results': []
-        }
-
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
-            else:
-                logging.error('there is probably something wrong!')
-        except Exception as error:
-            logging.warning(error)
         return message

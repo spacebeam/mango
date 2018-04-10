@@ -91,7 +91,6 @@ class Handler(teams.Teams, BaseHandler):
             end=None,
             lapse='hours',
             page_num=1,
-            fields=None,
             search=None):
         '''
             Get teams
@@ -106,8 +105,6 @@ class Handler(teams.Teams, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-
-        fields = (query_args.get('fields', [fields])[0] if not fields else fields)
 
         search = (query_args.get('search', [search])[0] if not search else search)
 
@@ -162,9 +159,6 @@ class Handler(teams.Teams, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
-        #logging.warning('que pasa???????')
-        #logging.warning(org_uuid)
-
         team_uuid = yield self.new_team(struct)
         # add_team to (ORG) -> struct['account']
         new_team = yield self.add_team(struct['created_by'], 
@@ -172,7 +166,7 @@ class Handler(teams.Teams, BaseHandler):
                                        org_uuid,
                                        struct['name'],
                                        team_uuid)
-        #logging.warning(new_team)
+        logging.warning(new_team)
         # complete message with received uuid.
         message = {'uuid':team_uuid}
         if 'error' in message['uuid']:

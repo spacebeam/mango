@@ -88,9 +88,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1,
-            search=None,
-            fields=None):
+            page_num=1):
         '''
             Get user accounts
         '''
@@ -104,10 +102,6 @@ class UsersHandler(accounts.Account, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-
-        fields = (query_args.get('fields', [fields])[0] if not fields else fields)
-        
-        search = (query_args.get('search', [search])[0] if not search else search)
         # rage against the finite state machine
         status = 'all'
         # init message on error
@@ -115,17 +109,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not user_uuid and search:
-            message = yield self.quick_search(account,
-                                              start,
-                                              end, 
-                                              lapse,
-                                              status,
-                                              page_num,
-                                              search,
-                                              fields)
-            self.set_status(200)
-        elif not user_uuid:
+        if not user_uuid:
             message = yield self.get_user_list(account,
                                                start, 
                                                end,
@@ -134,7 +118,7 @@ class UsersHandler(accounts.Account, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single account received
-        elif user_uuid:
+        else:
             # first try to get stuff from cache
             user_uuid = user_uuid.rstrip('/')
             # get cache data
@@ -350,8 +334,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1,
-            search=None):
+            page_num=1):
         '''
             Get (ORG)
         '''
@@ -365,8 +348,6 @@ class OrgsHandler(accounts.Account, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-
-        search = (query_args.get('search', [search])[0] if not search else search)
         # rage against the finite state machine
         status = 'all'
         # init message on error
@@ -374,10 +355,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
-        if not org_uuid and search:
-            message = yield self.quick_search(account, start, end, lapse, status, page_num, fields, search)
-            self.set_status(200)
-        elif not org_uuid:
+        if not org_uuid:
             message = yield self.get_org_list(account,
                                               start,
                                               end,
@@ -386,7 +364,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
                                               page_num)
             self.set_status(200)
         # single org received
-        elif org_uuid:
+        else:
             # first try to get stuff from cache
             org_uuid = org_uuid.rstrip('/')
             # get cache data
@@ -394,7 +372,7 @@ class OrgsHandler(accounts.Account, BaseHandler):
             if message is not None:
                 logging.info('cache orgs:{0} done retrieving!'.format(org_uuid))
                 self.set_status(200)
-            if message is None:
+            else:
                 message = yield self.get_org(account, org_uuid)
                 if self.cache.add('orgs:{0}'.format(org_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(org_uuid)))
@@ -422,9 +400,6 @@ class OrgsHandler(accounts.Account, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new org struct
-        logging.warning('que pasa???????')
-        #logging.warning(org_uuid)
-
         org_uuid = yield self.new_org(struct)
         # add_org to user -> the struct['account'] here is the org_account
         new_org = yield self.add_org(struct['created_by'], struct['account'], org_uuid)
