@@ -161,6 +161,9 @@ class Handler(teams.Teams, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
+        logging.warning('que pasa???????')
+        logging.warning(org_uuid)
+
         team_uuid = yield self.new_team(struct)
         # add_team to (ORG) -> struct['account']
         new_team = yield self.add_team(struct['created_by'], 
