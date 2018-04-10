@@ -82,11 +82,11 @@ from mango.tools import options
 
 def main():
     '''
-        resource main function
+        mango main function
     '''
     # mango daemon options
     opts = options.options()
-    # set memcached client
+    # Set memcached backend
     memcache = mc.Client(
         [opts.memcached_host],
         binary=opts.memcached_binary,
@@ -117,29 +117,29 @@ def main():
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
-    # lets define some cast functions
+    # before application lets define some cast functions
     def check_new_accounts():
         '''
             Open issue about some Kong Admin API integration
         '''
-        # logging.warning('kong integration missing')
+        # logging.warning('some issue about kong consumers')
         pass
     # application web daemon
     application = web.Application(
         [
-            # Organizations of Restricted Generality
-            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
-            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
-            (r'/orgs/?', accounts.OrgsHandler),
-            # ORGs teams
+            # ORGs teams handler
             (r'/orgs/(?P<org_uuid>.+)/teams/page/(?P<page_num>\d+)/?', teams.Handler),
             (r'/orgs/(?P<org_uuid>.+)/teams/(?P<team_uuid>.+)/?', teams.Handler),
             (r'/orgs/(?P<org_uuid>.+)/teams/?', teams.Handler),
-            # User accounts
+            # (Organizations of Restricted Generality)
+            (r'/orgs/page/(?P<page_num>\d+)/?', accounts.OrgsHandler),
+            (r'/orgs/(?P<org_uuid>.+)/?', accounts.OrgsHandler),
+            (r'/orgs/?', accounts.OrgsHandler),
+            # Simple user accounts
             (r'/users/page/(?P<page_num>\d+)/?', accounts.UsersHandler),
             (r'/users/(?P<user_uuid>.+)/?', accounts.UsersHandler),
             (r'/users/?', accounts.UsersHandler),
-            # More task than task!
+            # Tasks for humans and non-humans alike!
             (r'/tasks/page/(?P<page_num>\d+)/?', tasks.Handler),
             (r'/tasks/(?P<task_uuid>.+)/?', tasks.Handler),
             (r'/tasks/?', tasks.Handler),
@@ -148,14 +148,14 @@ def main():
         cache = cache,
         kvalue = kvalue,
         debug = opts.debug,
-        solr = opts.solr,
         domain = opts.domain,
         page_size = opts.page_size,
+        solr = opts.solr,
     )
-    # periodic cast functions
+    # Periodic Cast Functions
     check_kong_consumers = Cast(check_new_accounts, 1000)
     check_kong_consumers.start()
-    # setting up the application server process
+    # Setting up the application server process
     application.listen(opts.port)
     logging.info('Listening on http://{0}:{1}'.format(opts.host, opts.port))
     ioloop.IOLoop.current().start()
