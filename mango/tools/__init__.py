@@ -44,14 +44,6 @@ def clean_response(response, ignore):
         if key not in ignore
     )
 
-def quick_search_item(solr, search_index, query, start_num, page_size, fields):
-    '''
-        Build and return the item query url
-    '''
-    return "https://{0}/search/query/{1}?wt=json&q={2}&start={3}&rows={4}&fl={5}".format(
-        solr, search_index, query, start_num, page_size, fields).replace(' ', '') 
-
-
 def get_search_item(solr, search_index, query, filter_query):
     '''
         Build and return the item query url
@@ -65,7 +57,6 @@ def get_search_list(solr, search_index, query, filter_query, start_num, page_siz
         Build and return the list query url
     '''
     # LOL WTF CLEAN THIS, PUT STUFF ON TUPLES OR SOMETHING ...
-
     return "https://{0}/search/query/{1}?wt=json&q={2}&fq={3}&start={4}&rows={5}&sort=created_at_register+desc,uuid_register+desc".format(solr, search_index, query, filter_query, start_num, page_size).replace(' ', '')
     
 def get_average(total, marks):
