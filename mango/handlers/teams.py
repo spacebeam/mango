@@ -90,8 +90,7 @@ class Handler(teams.Teams, BaseHandler):
             start=None,
             end=None,
             lapse='hours',
-            page_num=1,
-            search=None):
+            page_num=1):
         '''
             Get teams
         '''
@@ -105,9 +104,6 @@ class Handler(teams.Teams, BaseHandler):
         checked = str2bool(str(query_args.get('checked', [False])[0]))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-
-        search = (query_args.get('search', [search])[0] if not search else search)
-
         # rage against the finite state machine
         status = 'all'
         # init message on error
@@ -124,13 +120,15 @@ class Handler(teams.Teams, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single team received
-        elif team_uuid:
+        else:
+            # first try to get stuff from cache
             team_uuid = team_uuid.rstrip('/')
+            # get cache data
             message = self.cache.get('teams:{0}'.format(team_uuid))
             if message is not None:
                 logging.info('teams:{0} done retrieving!'.format(team_uuid))
                 self.set_status(200)
-            if message is None:
+            else:
                 message = yield self.get_team(account, team_uuid)
                 if self.cache.add('teams:{0}'.format(team_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(team_uuid)))
@@ -143,7 +141,6 @@ class Handler(teams.Teams, BaseHandler):
         '''
             Create team
         '''
-        logging.warning('que pasa???????')
         struct = yield check_json(self.request.body)
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
