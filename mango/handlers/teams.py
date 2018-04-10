@@ -146,6 +146,7 @@ class Handler(teams.Teams, BaseHandler):
         '''
             Create team
         '''
+       logging.warning('que pasa???????')
         struct = yield check_json(self.request.body)
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
@@ -161,8 +162,8 @@ class Handler(teams.Teams, BaseHandler):
         # if the user don't provide an account we use the username
         account = (query_args.get('account', [username])[0] if not account else account)
         # execute new team struct
-        logging.warning('que pasa???????')
-        logging.warning(org_uuid)
+        #logging.warning('que pasa???????')
+        #logging.warning(org_uuid)
 
         team_uuid = yield self.new_team(struct)
         # add_team to (ORG) -> struct['account']
@@ -171,7 +172,7 @@ class Handler(teams.Teams, BaseHandler):
                                        org_uuid,
                                        struct['name'],
                                        team_uuid)
-        logging.warning(new_team)
+        #logging.warning(new_team)
         # complete message with received uuid.
         message = {'uuid':team_uuid}
         if 'error' in message['uuid']:
