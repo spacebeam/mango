@@ -93,8 +93,12 @@ class Teams(object):
         filter_status = 'status_register:active'
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
+        # page number
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        start_num = page_size * (page_num - 1)
+
         filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
-        # note where the hack change ' to %27 for the url string!
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
 
         # init got response list
