@@ -258,7 +258,7 @@ class Account(object):
             filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
         # set of urls
-        urls = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
+        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
         # init got response list
         got_response = []
         # init crash message
@@ -328,7 +328,7 @@ class Account(object):
             'results': []
         }
         __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        
+
         def handle_request(response):
             '''
                 Request Async Handler
