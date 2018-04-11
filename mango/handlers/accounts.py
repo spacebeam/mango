@@ -118,7 +118,7 @@ class UsersHandler(accounts.Account, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single account received
-        else:
+        elif user_uuid:
             # first try to get stuff from cache
             user_uuid = user_uuid.rstrip('/')
             # get cache data

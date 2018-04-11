@@ -120,7 +120,7 @@ class Handler(teams.Teams, BaseHandler):
                                                page_num)
             self.set_status(200)
         # single team received
-        else:
+        elif team_uuid:
             # first try to get stuff from cache
             team_uuid = team_uuid.rstrip('/')
             # get cache data
