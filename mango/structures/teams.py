@@ -50,6 +50,7 @@ class TeamMap(object):
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
+        self.map.registers['description'].assign(struct.get('description', ''))
         # end of the map stuff
         self.map.store()
 
@@ -80,6 +81,7 @@ class TeamMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
+            "description": event.registers['description'].value,
         }
         return json.dumps(struct)
 
@@ -102,5 +104,6 @@ class TeamMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
+            "description": event.registers['description'].value,
         }
         return struct

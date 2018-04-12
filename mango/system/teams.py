@@ -278,6 +278,7 @@ class Teams(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_update_by": str(event.get('last_update_by', '')),
                 "last_update_at": str(event.get('last_update_at', '')),
+                "description": str(event.get('description', '')),
             }
             result = TeamMap(
                 self.kvalue,

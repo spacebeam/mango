@@ -42,6 +42,7 @@ class Team(models.Model):
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
+    description = types.StringType()
 
 
 class ModifyTeam(models.Model):
@@ -66,3 +67,4 @@ class ModifyTeam(models.Model):
     created_at = types.TimestampType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
+    description = types.StringType()
