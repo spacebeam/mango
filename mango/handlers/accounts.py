@@ -95,7 +95,8 @@ class UsersHandler(accounts.Account, BaseHandler):
         # request query arguments
         query_args = self.request.arguments
         # Yo, get the current frontend username from token!
-        username = self.get_username_token()
+        #username = self.get_username_token()
+        username = False
         # if the user don't provide an account we use the frontend username as last resort
         account = (query_args.get('account', [username])[0] if not account else account)
         # query string checked from string to boolean
@@ -126,7 +127,7 @@ class UsersHandler(accounts.Account, BaseHandler):
             if message is not None:
                 logging.info('cache accounts:{0} done retrieving!'.format(user_uuid))
                 self.set_status(200)
-            else:
+            if message is None:
                 message = yield self.get_user(account, user_uuid)
                 if self.cache.add('accounts:{0}'.format(user_uuid), message, 1):
                     logging.info('new cache entry {0}'.format(str(user_uuid)))
