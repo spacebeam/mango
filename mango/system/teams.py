@@ -172,20 +172,22 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
+            # and know for something completly different!
+            for url in urls:
+                http_client.fetch(
+                    url,
+                    callback=handle_request
+                )
+            while len(got_response) < 1:
+                # Yo, don't be careless with the time!
                 yield gen.sleep(0.0021)
+            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
+                response = stuff['response']['docs'][0]
+                message = clean_response(response, IGNORE_ME)
             else:
-                logging.error('there is probably something wrong! get uuid_from_account')
+                logging.error('there is probably something wrong!')
         except Exception as error:
             logging.warning(error)
         return message['uuid']
