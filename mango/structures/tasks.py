@@ -40,7 +40,6 @@ class TaskMap(object):
         self.map.registers['description'].assign(struct.get('description', ''))
         self.map.registers['payload'].assign(struct.get('payload', ''))
         self.map.registers['assign'].assign(struct.get('assign', ''))
-        self.map.registers['watchers'].assign(struct.get('watchers', ''))
         self.map.registers['public'].assign(struct.get('public', ''))
         self.map.registers['source '].assign(struct.get('source', ''))
         self.map.registers['destination'].assign(struct.get('destination', ''))
@@ -91,7 +90,6 @@ class TaskMap(object):
             "duration": event.registers['duration'].value,
             "comments": event.registers['comments'].value,
             "history": event.registers['history'].value,
-            "watchers": event.registers['watchers'].value,
             "status": event.registers['status'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
@@ -123,7 +121,6 @@ class TaskMap(object):
             "duration": event.registers['duration'].value,
             "comments": event.registers['comments'].value,
             "history": event.registers['history'].value,
-            "watchers": event.registers['watchers'].value,
             "status": event.registers['status'].value,
             "checked": event.registers['checked'].value,
             "checked_by": event.registers['checked_by'].value,
