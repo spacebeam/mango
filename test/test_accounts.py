@@ -79,7 +79,7 @@ class UsersTestCase(testing.AsyncTestCase):
         request = HTTPRequest(self.url,
                               method='OPTIONS')
         response = yield self.client.fetch(request)
-        self.assertIn("200", str(response.code))
+        self.assertEqual(response.code, 200)
 
     #@gen_test
     #def test_find_one(self):
