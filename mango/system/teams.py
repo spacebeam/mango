@@ -23,7 +23,7 @@ from mango.messages import BaseResult
 from mango.structures.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, quick_search_item
+from mango.tools import get_search_item, get_search_list
 from tornado import httpclient as _http_client
 
 
@@ -42,7 +42,6 @@ class Teams(object):
     '''
         Teams
     '''
-
     @gen.coroutine
     def get_team(self, account, team_uuid):
         '''
@@ -51,7 +50,6 @@ class Teams(object):
         search_index = 'mango_team_index'
         query = 'uuid_register:{0}'.format(team_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-
         url = get_search_item(self.solr, search_index, query, filter_query)
         # init got response list
         got_response = []
@@ -95,8 +93,12 @@ class Teams(object):
         filter_status = 'status_register:active'
         filter_account = 'account_register:{0}'.format(account.decode('utf-8'))
 
-        filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
+        # page number
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        start_num = page_size * (page_num - 1)
 
+        filter_query = '(({0})AND({1}))'.format(filter_status, filter_account)
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
 
         # init got response list
@@ -131,11 +133,11 @@ class Teams(object):
                 for doc in stuff['response']['docs']:
                     message['results'].append(clean_response(doc, __ignore))
             else:
-                logging.error('there is probably something wrong!')
+                logging.error('there is probably something wrong! get list campaign')
         except Exception as error:
             logging.warning(error)
         return message
-
+    
     @gen.coroutine
     def uuid_from_account(self, username):
         '''
@@ -144,14 +146,14 @@ class Teams(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-        urls = set()
-        urls.add(get_search_item(self.solr, search_index, query, filter_query))
+
+        url = get_search_item(self.solr, search_index, query, filter_query)
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
@@ -170,24 +172,19 @@ class Teams(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) < 1:
-                # Yo, don't be careless with the time!
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
                 yield gen.sleep(0.0021)
-            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
-            else:
-                logging.error('there is probably something wrong!')
+                message = clean_response(response, __ignore)
         except Exception as error:
-            logging.warning(error)
+            logging.warning(error)        
         return message['uuid']
 
     @gen.coroutine
@@ -281,6 +278,7 @@ class Teams(object):
                 "created_at": str(event.get('created_at', '')),
                 "last_update_by": str(event.get('last_update_by', '')),
                 "last_update_at": str(event.get('last_update_at', '')),
+                "description": str(event.get('description', '')),
             }
             result = TeamMap(
                 self.kvalue,
@@ -315,6 +313,7 @@ class Teams(object):
             self.solr, search_index, query, filter_query
         )
         logging.warning(url)
+        
         # pretty please, ignore this list of fields from database.
         IGNORE_ME = ("_yz_id","_yz_rk","_yz_rt","_yz_rb","checked","keywords")
         # got http callback response
@@ -396,8 +395,19 @@ class Teams(object):
             bucket = self.kvalue.bucket_type(bucket_type).bucket('{0}'.format(bucket_name))
             bucket.set_properties({'search_index': search_index})
             team = Map(bucket, riak_key)
-            # TODO: measure if there is value on make remove_struct a yielding coroutine!
-            message['update_complete'] = remove_struct(team, struct, IGNORE_ME)
+            for key in struct:
+                if key not in IGNORE_ME:
+                    if type(struct.get(key)) == list:
+                        team.reload()
+                        old_value = team.registers['{0}'.format(key)].value
+                        if old_value:
+                            old_list = json.loads(old_value.replace("'",'"'))
+                            new_list = [x for x in old_list if x not in struct.get(key)]
+                            team.registers['{0}'.format(key)].assign(str(new_list))
+                            team.update()
+                            message['update_complete'] = True
+                    else:
+                        message['update_complete'] = False
         except Exception as error:
             logging.exception(error)
         return message.get('update_complete', False)
@@ -407,76 +417,8 @@ class Teams(object):
         '''
             Remove team
         '''
-        # So, still missing history ?
+        # Yo, missing history ?
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_team(account, team_uuid, struct)
-        return message
-
-    # We really need this on all handlers?
-    @gen.coroutine
-    def quick_search(self, account, start, end, lapse, status, page_num, fields, search):
-        '''
-            Quick Seach
-        '''
-        search_index = 'mango_team_index'
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-        query = 'allfields_register:{0}'.format(search.decode('utf-8'))
-        if not fields:
-            __fields = ('name_register',
-                        'description_register',
-                        'assignees_register',
-                        'source_register',
-                        'destination_register',
-                        'acknowledge_register',
-                        'deadline_register',
-                        'comments_register',
-                        'created_by_register',
-                        'last_update_by_register')
-            fields = ','.join(__fields)
-        else:
-            fields = '{0}'.format(fields.decode('utf-8'))
-
-        # TODO: WTF is this check if quick_search_item clean .replace(' ', '') on response.
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields)
-        logging.warning("check this url inside tony's quick_search")
-        logging.warning(url)
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        got_response = []
-        # clean response message
-        message = {
-            'count': 0,
-            'page': page_num,
-            'results': []
-        }
-        # hopefully run this on async 
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        # ready to execute, compute and return the resulting message?
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
-            else:
-                logging.error('there is probably something wrong!')
-        except Exception as error:
-            logging.warning(error)
         return message

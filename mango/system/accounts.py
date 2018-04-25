@@ -22,7 +22,7 @@ from mango.messages import BaseResult
 from mango.structures.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list, quick_search_item
+from mango.tools import get_search_item, get_search_list
 from tornado import httpclient as _http_client
 
 
@@ -49,19 +49,14 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(user_uuid)
         filter_query = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        # note where the hack change ' to %27 for the url string!
         url = get_search_item(self.solr, search_index, query, filter_query)
+        logging.warning(url)
+        # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
-            "_yz_id","_yz_rk","_yz_rt","_yz_rb",
-            # CUSTOM FIELDS
-            "name_register",
-            "description_register",
-            "members_register"
-        ]
+        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
@@ -87,6 +82,7 @@ class Account(object):
         except Exception as error:
             logging.warning(error)
         return message
+        
 
     @gen.coroutine
     def uuid_from_account(self, username):
@@ -96,21 +92,27 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'account_register:{0}'.format(username)
         filter_query = 'account_register:{0}'.format(username)
-        urls = set()
-        urls.add(get_search_item(self.solr, search_index, query, filter_query))
-        logging.warning(urls)
+
+        url = get_search_item(self.solr, search_index, query, filter_query)
+
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "name_register",
             "description_register",
             "members_register"
         ]
+        # init got response list
+        got_response = []
+        # init crash message
+        message = {'message': 'not found'}
+        # ignore riak fields
+        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
         # hopefully asynchronous handle function request
         def handle_request(response):
             '''
@@ -122,22 +124,17 @@ class Account(object):
             else:
                 got_response.append(json.loads(response.body))
         try:
-            # and know for something completly different!
-            for url in urls:
-                http_client.fetch(
-                    url,
-                    callback=handle_request
-                )
-            while len(got_response) < 1:
-                # Yo, don't be careless with the time!
+            http_client.fetch(
+                url,
+                callback=handle_request
+            )
+            while len(got_response) == 0:
+                # don't be careless with the time.
                 yield gen.sleep(0.0021)
-            # get it from stuff
             stuff = got_response[0]
             if stuff['response']['numFound']:
                 response = stuff['response']['docs'][0]
-                message = clean_response(response, IGNORE_ME)
-            else:
-                logging.error('there is probably something wrong!')
+                message = clean_response(response, __ignore)
         except Exception as error:
             logging.warning(error)
         return message['uuid']
@@ -162,7 +159,6 @@ class Account(object):
             'last_update_at': arrow.utcnow().timestamp,
             'last_update_by': username,
         }
-        logging.warning(message)
         def handle_request(response):
             '''
                 Request Async Handler
@@ -197,14 +193,14 @@ class Account(object):
         search_index = 'mango_account_index'
         query = 'uuid_register:{0}'.format(org_uuid)
         filter_query = 'account_register:{0}'.format(account.decode('utf-8'))
-        # note where the hack change ' to %27 for the url string!
         url = get_search_item(self.solr, search_index, query, filter_query)
+        logging.warning(url)
         # init got response list
         got_response = []
         # init crash message
         message = {'message': 'not found'}
         # ignore riak fields
-        IGNORE_ME = [
+        __ignore = [
             "_yz_id","_yz_rk","_yz_rt","_yz_rb",
             # CUSTOM FIELDS
             "nickname_register",
@@ -254,20 +250,14 @@ class Account(object):
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
 
-        # and so he left!
-        if account is False:
-            filter_query = filter_status
-            filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
-            fq_watchers = "watchers_register:*'null'*"
-        elif account is not False:
-            filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
-            filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
-
+        filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
+        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+        # set of urls
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
-
+        logging.warning(url)
         # init got response list
         got_response = []
-        # clean response message
+        # init crash message
         message = {
             'count': 0,
             'page': page_num,
@@ -297,7 +287,7 @@ class Account(object):
                 for doc in stuff['response']['docs']:
                     message['results'].append(clean_response(doc, __ignore))
             else:
-                logging.error('there is probably something wrong')
+                logging.error('there is probably something wrong! get list users')
         except Exception as error:
             logging.warning(error)
         return message
@@ -320,21 +310,21 @@ class Account(object):
         if account is False:
             filter_query = filter_status
             filter_query = '(({0})AND({1}))'.format(filter_status, filter_account_type)
-            fq_watchers = "watchers_register:*'null'*"
         elif account is not False:
-            filter_account = 'created_by:{0}'.format(account.decode('utf-8'))
+            filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
             filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
-            
+
         url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
         # init got response list
         got_response = []
-        # clean response message
+        # init crash message
         message = {
             'count': 0,
             'page': page_num,
             'results': []
         }
         __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
+
         def handle_request(response):
             '''
                 Request Async Handler
@@ -358,7 +348,7 @@ class Account(object):
                 for doc in stuff['response']['docs']:
                     message['results'].append(clean_response(doc, __ignore))
             else:
-                logging.error('there is probably something wrong')
+                logging.error('there is probably something wrong! get list orgs')
         except Exception as error:
             logging.warning(error)
         return message
@@ -398,7 +388,7 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # still missing
+                "history": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),
                 "orgs": str(event.get('orgs', '')),
                 "teams": str(event.get('teams', '')),
@@ -456,7 +446,7 @@ class Account(object):
                 "location": str(event.get('location', '')),
                 "phones": str(event.get('phones', '')),
                 "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),           # still missing
+                "history": str(event.get('history', '')),
                 "labels": str(event.get('labels', '')),
                 "members": str(event.get('members', '')),
                 "teams": str(event.get('teams', '')),
@@ -633,63 +623,4 @@ class Account(object):
         struct = {}
         struct['status'] = 'deleted'
         message = yield self.modify_account(account, user_uuid, struct)
-        return message
-
-    @gen.coroutine
-    def quick_search(self, account, start, end, lapse, status, page_num, search, fields):
-        '''
-            Quick Seach
-        '''
-        search_index = 'mango_account_index'
-        query = 'allfields_register:{0}'.format(search.decode('utf-8'))
-
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-
-        if not fields:
-            fields = 'name_register,description_register,nickname_register,first_name_register,last_name_register,middle_name_register,email_register,phone_number_register,extension_register,country_code_register,company_register,location_register,phones_register,emails_register,created_by_register,last_update_by_register'
-        else:
-            fields = '{0}'.format(fields.decode('utf-8'))
-
-        url = quick_search_item(self.solr, search_index, query, start_num, page_size, fields).replace(' ', '')
-        
-        logging.warning('check this url')
-        logging.warning(url)
-        
-        IGNORE_ME = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        got_response = []
-        # clean response message
-        message = {
-            'count': 0,
-            'page': page_num,
-            'results': []
-        }
-
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, IGNORE_ME))
-            else:
-                logging.error('there is probably something wrong!')
-        except Exception as error:
-            logging.warning(error)
         return message
