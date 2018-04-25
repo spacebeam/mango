@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+'''
+    Finally we're starting to see some tests
+'''
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
@@ -75,7 +77,6 @@ class UsersTestCase(testing.AsyncTestCase):
             Find one
         '''
         url = '{0}{1}'.format(self.url, self.mock.get('uuid'))
-        print(url)
         request = HTTPRequest(url,
                               method='GET',
                               headers=self.headers)
