@@ -10,14 +10,9 @@
 
 from tornado import gen, testing
 from tornado.testing import gen_test
-
-import tornado
-import tornado.ioloop
-
+from tornado.ioloop import IOLoop
 from tornado.httpclient import HTTPRequest
-
 from messages import accounts
-
 import ujson as json
 
 
@@ -36,7 +31,7 @@ class UsersTestCase(testing.AsyncTestCase):
             Setting things up
         '''
         super().setUp()
-        tornado.ioloop.IOLoop.current().run_sync(self.post)
+        IOLoop.current().run_sync(self.post)
 
     def tearDown(self):
         '''
@@ -46,7 +41,7 @@ class UsersTestCase(testing.AsyncTestCase):
         request = HTTPRequest(self.url, method='DELETE')
         response = yield self.client.fetch(request)
         print("Response just after sending DELETE {0}".format(response.code))
-        tornado.ioloop.IOLoop.current().stop()
+        IOLoop.current().stop()
 
     @gen.coroutine
     def post(self):
