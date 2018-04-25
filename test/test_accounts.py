@@ -70,22 +70,7 @@ class UsersTestCase(testing.AsyncTestCase):
             Check uuid
         '''
         self.assertIn(self.mock.get('uuid'), str(self.response.body))
-
-    @gen_test
-    def test_find_one(self):
-        '''
-            Find one
-        '''
-        url = '{0}{1}'.format(self.url, self.mock.get('uuid'))
-        request = HTTPRequest(url,
-                              method='GET',
-                              headers=self.headers)
-        response = yield self.client.fetch(request)
-        print(response)
-        print(response.body)
-        print(response.code)
-        self.assertIn(self.mock.get('uuid'), str(response.body))
-
+    
     @gen_test
     def test_options(self):
         '''
@@ -94,7 +79,19 @@ class UsersTestCase(testing.AsyncTestCase):
         request = HTTPRequest(self.url,
                               method='OPTIONS')
         response = yield self.client.fetch(request)
-        print(response)
-        print(response.body)
-        print(response.code)
         self.assertIn("200", str(response.code))
+
+    #@gen_test
+    #def test_find_one(self):
+    #    '''
+    #        Find one
+    #    '''
+    #    url = '{0}{1}'.format(self.url, self.mock.get('uuid'))
+    #    request = HTTPRequest(url,
+    #                          method='GET',
+    #                          headers=self.headers)
+    #    response = yield self.client.fetch(request)
+    #    print(response)
+    #    print(response.body)
+    #    print(response.code)
+    #    self.assertIn(self.mock.get('uuid'), str(response.body))
