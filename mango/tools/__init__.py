@@ -18,7 +18,6 @@ import ujson as json
 import logging
 import uuid
 from tornado import gen
-from mango import errors
 
 
 def validate_uuid4(uuid_string):
@@ -80,9 +79,7 @@ def check_json(struct):
     try:
         message = json.loads(struct)
     except Exception as error:
-        # Please clean the shit out of this!
-        api_error = errors.Error(error)
-        message = api_error.json()
+        message = json.dumps({'error':400})
         raise error
     return message
 

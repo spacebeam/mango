@@ -19,7 +19,6 @@ from tornado import web
 from mango.messages import accounts as models
 from mango.tools import clean_structure, validate_uuid4
 from mango.tools import get_search_item, get_search_list
-from mango import errors
 from tornado import httpclient as _http_client
 
 
