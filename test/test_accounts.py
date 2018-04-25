@@ -81,17 +81,25 @@ class UsersTestCase(testing.AsyncTestCase):
         response = yield self.client.fetch(request)
         self.assertEqual(response.code, 200)
 
-    #@gen_test
-    #def test_find_one(self):
-    #    '''
-    #        Find one
-    #    '''
-    #    url = '{0}{1}'.format(self.url, self.mock.get('uuid'))
-    #    request = HTTPRequest(url,
-    #                          method='GET',
-    #                          headers=self.headers)
-    #    response = yield self.client.fetch(request)
-    #    print(response)
-    #    print(response.body)
-    #    print(response.code)
-    #    self.assertIn(self.mock.get('uuid'), str(response.body))
+    @gen_test
+    def test_find_one(self):
+        '''
+            Find one
+        '''
+        url='{0}{1}'.format(self.url, self.mock.get('uuid')),
+        request = HTTPRequest(url,
+                              method='GET',
+                              headers=self.headers)
+        response = yield self.client.fetch(request)
+        self.assertIn(self.mock.get('uuid'), str(response.body))
+
+    @gen_test
+    def test_find_all(self):
+        '''
+            Find all
+        '''
+        request = HTTPRequest(self.url,
+                              method='GET',
+                              headers=self.headers)
+        response = yield self.client.fetch(request)
+        self.assertEqual(response.code, 200)
