@@ -162,6 +162,6 @@ def main():
 
 if __name__ == '__main__':
     '''
-        Mangos of Restricted Generality
+        Mangoes of Restricted Generality
     '''
     main()
