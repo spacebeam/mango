@@ -13,3 +13,4 @@ arrow
 pycurl
 ujson
 pylibmc
+pytest

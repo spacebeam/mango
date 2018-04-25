@@ -1,46 +1,69 @@
 from tornado import gen, testing
 from tornado.testing import gen_test
+
 import tornado
 import tornado.ioloop
-import tornado.httpclient
+from tornado.httpclient import HTTPRequest
 
 from messages import accounts
 
 import ujson as json
 
 
-class MyTestCase(testing.AsyncTestCase):
+class UsersTestCase(testing.AsyncTestCase):
     client = testing.AsyncHTTPClient()
-    name = 'mercedes15'
-    url = "http://localhost:8098/types/cars/buckets/sport/keys/{}".format(name)
+    url = "https://api.nonsense.ws/users/"
+    headers = {'Content-Type': 'application/json'}
+    mock = False
+    response = None
 
     def setUp(self):
-        print("Setting up")
+        '''
+            Setting things up
+        '''
         super().setUp()
-        tornado.ioloop.IOLoop.current().run_sync(self.put)
+        tornado.ioloop.IOLoop.current().run_sync(self.post)
 
     def tearDown(self):
-        print("Tearing down")
+        '''
+            Cleaning up
+        '''
         super().tearDown()
-        request = tornado.httpclient.HTTPRequest(self.url, method='DELETE')
+        request = HTTPRequest(self.url, method='DELETE')
         response = yield self.client.fetch(request)
         print("Response just after sending DELETE {}".format(response))
         tornado.ioloop.IOLoop.current().stop()
 
     @gen.coroutine
-    def put(self):
-        print("Putting")
-        data = '{"name_s":' + self.name + ', "model_i":2018, "leader_b":true}'
-        headers = {'Content-Type': 'application/json'}
-        request = tornado.httpclient.HTTPRequest(self.url, method='PUT', headers=headers, body=json.dumps(data))
-        response = yield self.client.fetch(request)
-        print("Response just after sending PUT {}".format(response))
-        return response
+    def post(self):
+        '''
+           Create init request
+        '''
+        while not self.mock:
+            try:
+                self.mock = accounts.User.get_mock_object().to_primitive()
+            except Exception as error:
+                pass
+        request = HTTPRequest(self.url, method='POST', headers=self.headers, body=json.dumps(self.mock))
+        self.response = yield self.client.fetch(request)
+
+    @gen_test
+    def test_check_uuid(self):
+        '''
+            Check uuid
+        '''
+        self.assertIn(self.mock.get('uuid'), self.response.body)
 
     @gen_test
     def test_find_one(self):
-        print("Finding")
-        response = yield self.client.fetch(
-            "http://localhost:8098/search/query/famous?wt=json&q=name_s:{}".format(self.name))
+        '''
+            Find one
+        '''
+        test = '{0}{1}'.format(self.url, self.mock.get('uuid'))
+
+        print(test)
+        response = yield self.client.fetch(test)
         print(response)
-        self.assertIn("name_s:{}".format(self.name), str(response.body))
+        print(response.body)
+        print(response.status)
+        self.assertIn("{0}".format(self.mock.get('uuid')), str(response.body))
