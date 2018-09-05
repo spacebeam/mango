@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-'''
-    Mango system message models.
-'''
 
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+
+__author__ = 'Space Beam'
 
 
 import arrow
@@ -56,7 +54,6 @@ class RequiredBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     labels = types.DictType(types.StringType)
     history = compound.ListType(types.StringType())
-    watchers = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType()
@@ -83,7 +80,6 @@ class CleanBase(models.Model):
     emails = compound.ListType(compound.ModelType(Email))
     labels = types.DictType(types.StringType)
     history = compound.ListType(types.StringType())
-    watchers = compound.ListType(types.StringType())
     checked = types.BooleanType()
     checked_by = types.StringType()
     checked_at = types.TimestampType()
