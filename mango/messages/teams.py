@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-'''
-    Mango teams models and messages.
-'''
 
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+
+__author__ = 'Space Beam'
 
 
 import arrow
@@ -23,7 +21,7 @@ class Team(models.Model):
        (ORG) Team
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
-    # Yo, this MUST be an organization account!
+    # MUST be an organization account!
     account = types.StringType(required=True)
     status = types.StringType(required=True)
     name = types.StringType(required=True)
@@ -50,7 +48,7 @@ class ModifyTeam(models.Model):
         Modify (ORG) Team
     '''
     uuid = types.UUIDType()
-    # Yo, this MUST be an organization account!
+    # MUST be an organization account!
     account = types.StringType()
     status = types.StringType()
     name = types.StringType()
