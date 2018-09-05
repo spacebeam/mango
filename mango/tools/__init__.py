@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-'''
-    Mango tools system logic functions.
-'''
 
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Team Machine'
+
+__author__ = 'Space Beam'
 
 
 import time
@@ -37,6 +35,9 @@ def validate_uuid4(uuid_string):
     return str(val) == uuid_string
 
 def clean_response(response, ignore):
+    '''
+        clean response
+    '''
     return dict(
         (key.split('_register')[0], value)
         for (key, value) in response.items()
