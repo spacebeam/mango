@@ -24,25 +24,24 @@ class Task(models.Model):
     account = types.StringType(required=True)
     name = types.StringType()
     description = types.StringType()
-    payload = types.StringType()
+    data = types.StringType()
     assign = compound.ListType(types.StringType())
     public = types.BooleanType(default=False)
     source = types.StringType()
     destination = types.StringType()
     labels = types.DictType(types.StringType)
-    start = types.TimestampType()
-    acknowledge = types.TimestampType()
-    stop = types.TimestampType()
+    start_time = types.TimestampType()
+    ack_time = types.TimestampType()
+    stop_time = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
-    comments = compound.ListType(types.StringType())
-    history = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
                                        'done'],
                               default='new',
                               required=True)
+    history = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
@@ -69,26 +68,24 @@ class ModifyTask(models.Model):
     account = types.StringType()
     name = types.StringType()
     description = types.StringType()
-    payload = types.StringType()
+    data = types.StringType()
     assign = compound.ListType(types.StringType())
-    watchers = compound.ListType(types.StringType())
     public = types.BooleanType(default=False)
     source = types.StringType()
     destination = types.StringType()
     labels = types.DictType(types.StringType)
-    start = types.TimestampType()
-    acknowledge = types.TimestampType()
-    stop = types.TimestampType()
+    start_time = types.TimestampType()
+    ack_time = types.TimestampType()
+    stop_time = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
-    comments = compound.ListType(types.StringType())
-    history = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
                                        'done'],
                               default='new',
                               required=True)
+    history = compound.ListType(types.StringType())
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType(default=arrow.utcnow().timestamp)
