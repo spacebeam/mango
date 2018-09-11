@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-'''
-    Mango teams CRDT's.
-'''
 
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
+
 
 __author__ = 'Team Machine'
 
@@ -38,9 +36,10 @@ class TeamMap(object):
         self.map.registers['account'].assign(struct.get('account', ''))
         self.map.registers['status'].assign(struct.get('status', ''))
         self.map.registers['name'].assign(struct.get('name', ''))
-        self.map.registers['permission'].assign(struct.get('permission', ''))
-        self.map.registers['members'].assign(struct.get('members', ''))
+        self.map.registers['description'].assign(struct.get('description', ''))
         self.map.registers['resources'].assign(struct.get('resources', ''))
+        self.map.registers['permissions'].assign(struct.get('permissions', ''))
+        self.map.registers['members'].assign(struct.get('members', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
         self.map.registers['history'].assign(struct.get('history', ''))
         self.map.registers['checked'].assign(struct.get('checked', ''))
@@ -50,7 +49,6 @@ class TeamMap(object):
         self.map.registers['created_at'].assign(struct.get('created_at', ''))
         self.map.registers['last_update_by'].assign(struct.get('last_update_by', ''))
         self.map.registers['last_update_at'].assign(struct.get('last_update_at', ''))
-        self.map.registers['description'].assign(struct.get('description', ''))
         # end of the map stuff
         self.map.store()
 
@@ -69,9 +67,10 @@ class TeamMap(object):
             "account": event.registers['account'].value,
             "status": event.registers['status'].value,
             "name": event.registers['name'].value,
-            "permission": event.registers['permission'].value,
-            "members": event.registers['members'].value,
+            "description": event.registers['description'].value,
             "resources": event.registers['resources'].value,
+            "permissions": event.registers['permissions'].value,
+            "members": event.registers['members'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
             "checked": event.registers['checked'].value,
@@ -81,7 +80,6 @@ class TeamMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "description": event.registers['description'].value,
         }
         return json.dumps(struct)
 
@@ -92,9 +90,10 @@ class TeamMap(object):
             "account": event.registers['account'].value,
             "status": event.registers['status'].value,
             "name": event.registers['name'].value,
-            "permission": event.registers['permission'].value,
-            "members": event.registers['members'].value,
+            "description": event.registers['description'].value,
             "resources": event.registers['resources'].value,
+            "permissions": event.registers['permissions'].value,
+            "members": event.registers['members'].value,
             "labels": event.registers['labels'].value,
             "history": event.registers['history'].value,
             "checked": event.registers['checked'].value,
@@ -104,6 +103,5 @@ class TeamMap(object):
             "created_at": event.registers['created_at'].value,
             "last_update_by": event.registers['last_update_by'].value,
             "last_update_at": event.registers['last_update_at'].value,
-            "description": event.registers['description'].value,
         }
         return struct
