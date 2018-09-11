@@ -26,7 +26,7 @@ class Team(models.Model):
     status = types.StringType(required=True)
     name = types.StringType(required=True)
     description = types.StringType()
-    permission = types.StringType(choices=['read',
+    permissions = types.StringType(choices=['read',
                                            'write',
                                            'owner'], required=True)
     members = compound.ListType(types.StringType(), required=True)
@@ -40,7 +40,6 @@ class Team(models.Model):
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
-    description = types.StringType()
 
 
 class ModifyTeam(models.Model):
@@ -53,7 +52,7 @@ class ModifyTeam(models.Model):
     status = types.StringType()
     name = types.StringType()
     description = types.StringType()
-    permission = types.StringType()
+    permissions = types.StringType()
     members = compound.ListType(types.StringType())
     resources = compound.ListType(types.StringType())
     labels = compound.ListType(types.StringType())
@@ -65,4 +64,3 @@ class ModifyTeam(models.Model):
     created_at = types.TimestampType()
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
-    description = types.StringType()
