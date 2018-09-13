@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-    Mango accounts system logic.
-'''
 
 # This file is part of mango.
 
@@ -9,7 +6,7 @@
 # The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Space Beam LLC LLC'
+__author__ = 'Space Beam LLC'
 
 
 import ujson as json

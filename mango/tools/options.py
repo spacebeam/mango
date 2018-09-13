@@ -6,7 +6,7 @@
 # The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Space Beam LLC LLC'
+__author__ = 'Space Beam LLC'
 
 
 import os
