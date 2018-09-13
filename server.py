@@ -5,7 +5,8 @@
 # Distributed under the terms of the last AGPL License.
 # The full license is in the file LICENCE, distributed as part of this software.
 
-__author__ = 'Space Beam'
+
+__author__ = 'Space Beam LLC'
 
 
 import uuid
@@ -34,7 +35,7 @@ def main():
             "ketama": opts.memcached_ketama
         }
     )
-    # riak key-value
+    # Riak key-value storage
     kvalue = riak.RiakClient(host=opts.riak_host, pb_port=8087)
     # memcached
     cache = memcache
@@ -42,7 +43,7 @@ def main():
     db = kvalue
     # system uuid
     system_uuid = uuid.uuid4()
-    # yokozuna solr
+    # Solr 4.7 Full-text search 
     solr = opts.solr
     # logging system spawned
     logging.info('Mango system {0} spawned'.format(system_uuid))
