@@ -34,6 +34,7 @@ class AccountMap(object):
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
         self.map.registers['status'].assign(struct.get('status', ''))
+        self.map.registers['role'].assign(struct.get('role', ''))
         self.map.registers['account'].assign(struct.get('account', ''))
         self.map.registers['account_type'].assign(struct.get('account_type', ''))
         self.map.registers['name'].assign(struct.get('name', ''))
@@ -80,6 +81,7 @@ class AccountMap(object):
         struct = {
             "uuid": event.registers['uuid'].value,
             "status": event.registers['status'].value,
+            "role": event.registers['role'].value,
             "account": event.registers['account'].value,
             "account_type": event.registers['account_type'].value,
             "name": event.registers['name'].value,
@@ -119,6 +121,7 @@ class AccountMap(object):
             "uuid": event.registers['uuid'].value,
             "status": event.registers['status'].value,
             "account": event.registers['account'].value,
+            "role": event.registers['role'].value,
             "account_type": event.registers['account_type'].value,
             "name": event.registers['name'].value,
             "description": event.registers['description'].value,

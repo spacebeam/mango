@@ -43,6 +43,7 @@ class RequiredBase(models.Model):
     '''
     status = types.StringType(required=False)
     account = types.StringType(required=True)
+    role = types.StringType(required=False)
     email = types.EmailType(required=True)
     phone_number = types.StringType()
     extension = types.StringType()
@@ -69,6 +70,7 @@ class CleanBase(models.Model):
     '''
     status = types.StringType()
     account = types.StringType()
+    role = types.StringType()
     email = types.EmailType()
     phone_number = types.StringType()
     extension = types.StringType()

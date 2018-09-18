@@ -34,17 +34,17 @@ class TaskMap(object):
         # start of map structure
         self.map.registers['uuid'].assign(struct.get('uuid', ''))
         self.map.registers['account'].assign(struct.get('account', ''))
-        self.map.registers['name'].assign(struct.get('name', ''))
+        self.map.registers['subject'].assign(struct.get('subject', ''))
         self.map.registers['description'].assign(struct.get('description', ''))
-        self.map.registers['payload'].assign(struct.get('payload', ''))
+        self.map.registers['data'].assign(struct.get('data', ''))
         self.map.registers['assign'].assign(struct.get('assign', ''))
         self.map.registers['public'].assign(struct.get('public', ''))
         self.map.registers['source '].assign(struct.get('source', ''))
         self.map.registers['destination'].assign(struct.get('destination', ''))
         self.map.registers['labels'].assign(struct.get('labels'))
-        self.map.registers['start'].assign(struct.get('start', ''))
-        self.map.registers['acknowledge'].assign(struct.get('acknowledge', ''))
-        self.map.registers['stop'].assign(struct.get('stop', ''))
+        self.map.registers['start_time'].assign(struct.get('start_time', ''))
+        self.map.registers['ack_time'].assign(struct.get('ack_time', ''))
+        self.map.registers['stop_time'].assign(struct.get('stop_time', ''))
         self.map.registers['deadline'].assign(struct.get('deadline', ''))
         self.map.registers['duration'].assign(struct.get('duration', ''))
         self.map.registers['comments'].assign(struct.get('comments', ''))
@@ -73,17 +73,17 @@ class TaskMap(object):
         struct = {
             "uuid": event.registers['uuid'].value,
             "account": event.registers['account'].value,
-            "name": event.registers['name'].value,
+            "subject": event.registers['subject'].value,
             "description": event.registers['description'].value,
-            "payload": event.registers['payload'].value,
+            "data": event.registers['data'].value,
             "assign": event.registers['assign'].value,
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
             "labels": event.registers['labels'].value,
-            "start": event.registers['start'].value,
-            "acknowledge": event.registers['acknowledge'].value,
-            "stop": event.registers['stop'].value,
+            "start_time": event.registers['start_time'].value,
+            "ack_time": event.registers['ack_time'].value,
+            "stop_time": event.registers['stop_time'].value,
             "deadline": event.registers['deadline'].value,
             "duration": event.registers['duration'].value,
             "comments": event.registers['comments'].value,
@@ -104,17 +104,17 @@ class TaskMap(object):
         struct = {
             "uuid": event.registers['uuid'].value,
             "account": event.registers['account'].value,
-            "name": event.registers['name'].value,
+            "subject": event.registers['subject'].value,
             "description": event.registers['description'].value,
-            "payload": event.registers['payload'].value,
+            "data": event.registers['data'].value,
             "assign": event.registers['assign'].value,
             "public": event.registers['public'].value,
             "source ": event.registers['source'].value,
             "destination": event.registers['destination'].value,
             "labels": event.registers['labels'].value,
-            "start": event.registers['start'].value,
-            "acknowledge": event.registers['acknowledge'].value,
-            "stop": event.registers['stop'].value,
+            "start_time": event.registers['start_time'].value,
+            "ack_time": event.registers['ack_time'].value,
+            "stop_time": event.registers['stop_time'].value,
             "deadline": event.registers['deadline'].value,
             "duration": event.registers['duration'].value,
             "comments": event.registers['comments'].value,
