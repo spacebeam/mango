@@ -35,6 +35,11 @@ class User(BaseAccount):
     '''
         User account
     '''
+    role = types.StringType(
+        choices=['admin', 'user'],
+        default='user',
+        required=True
+    )
     account_type = types.StringType(
         choices=['user',],
         default='user',
@@ -54,6 +59,10 @@ class ModifyUser(CleanBaseAccount):
         Modify account
     '''
     account_type = types.StringType(
+        choices=['user',],
+        default='user'
+    )
+    role = types.StringType(
         choices=['user',],
         default='user'
     )

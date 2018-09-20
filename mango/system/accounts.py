@@ -370,6 +370,7 @@ class Account(object):
             structure = {
                 "uuid": str(event.get('uuid', str(uuid.uuid4()))),
                 "status": str(event.get('status', '')),
+                "role": str(event.get('role', '')),
                 "account": str(event.get('account', 'pebkac')),
                 "account_type": str(event.get('account_type', 'user')),
                 "nickname": str(event.get('nickname', '')),
