@@ -50,14 +50,14 @@ def options():
     tornado.options.define('port',
         default=8888, type=int,
         help=('Server port'))
-    # treehouse hostname
-    tornado.options.define('treehouse_host',
+    # daemonic hostname
+    tornado.options.define('daemons_host',
         default='127.0.0.1', type=str,
-        help=('Treehouse hostname or ip address'))
-    # treehouse port
-    tornado.options.define('treehouse_port',
+        help=('Daemonic service hostname or ip address'))
+    # daemonic port
+    tornado.options.define('daemons_port',
         default=8899, type=int,
-        help=('Treehouse port'))
+        help=('Daemons port'))
     # Riak kvalue host
     tornado.options.define('riak_host',
         default='127.0.0.1', type=str,
