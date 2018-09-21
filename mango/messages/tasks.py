@@ -22,7 +22,7 @@ class Task(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType(required=True)
-    name = types.StringType()
+    subject = types.StringType()
     description = types.StringType()
     data = types.StringType()
     assign = compound.ListType(types.StringType())
@@ -35,6 +35,7 @@ class Task(models.Model):
     stop_time = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
+    comments = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
@@ -66,7 +67,7 @@ class ModifyTask(models.Model):
     '''
     uuid = types.UUIDType(default=uuid.uuid4)
     account = types.StringType()
-    name = types.StringType()
+    subject = types.StringType()
     description = types.StringType()
     data = types.StringType()
     assign = compound.ListType(types.StringType())
@@ -79,6 +80,7 @@ class ModifyTask(models.Model):
     stop_time = types.TimestampType()
     deadline = types.TimestampType()
     duration = types.StringType()
+    comments = compound.ListType(types.StringType())
     status = types.StringType(choices=['new',
                                        'now',
                                        'later',
