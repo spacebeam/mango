@@ -18,6 +18,12 @@ import uuid
 from tornado import gen
 
 
+def check_new_accounts():
+    '''
+        Open issue about some Kong Admin API integration?
+    '''
+    pass
+
 def validate_uuid4(uuid_string):
     '''
         Validate that a UUID string is in

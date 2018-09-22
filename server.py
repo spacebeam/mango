@@ -17,7 +17,7 @@ from tornado import ioloop
 from tornado.ioloop import PeriodicCallback as Cast
 from tornado import gen, web
 from mango.handlers import accounts, teams, tasks
-from mango.tools import options
+from mango.tools import check_new_accounts, options
 
 
 def main():
@@ -57,13 +57,8 @@ def main():
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
-    # before application lets define some cast functions
-    def check_new_accounts():
-        '''
-            Open issue about some Kong Admin API integration
-        '''
-        # logging.warning('some issue about kong consumers')
-        pass
+    # logging current daemonic setup
+    logging.ingo('Daemonic setup: {0}:{1}'.format(opts.daemons_host, opts.daemons_port))
     # application web daemon
     application = web.Application(
         [
