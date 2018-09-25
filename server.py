@@ -37,11 +37,11 @@ def main():
     )
     # Riak key-value storage
     kvalue = riak.RiakClient(host=opts.riak_host, pb_port=8087)
-    # memcached
+    # Cache memcached service
     cache = memcache
-    # current db
+    # Our current db
     db = kvalue
-    # system uuid
+    # Our system uuid
     system_uuid = uuid.uuid4()
     # Solr 4.7 Full-text search 
     solr = opts.solr
@@ -58,7 +58,7 @@ def main():
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
     # logging current daemonic setup
-    logging.ingo('Daemonic setup: {0}:{1}'.format(opts.daemons_host, opts.daemons_port))
+    logging.ingo('Daemons spawn at: {0}:{1}'.format(opts.daemons_host, opts.daemons_port))
     # application web daemon
     application = web.Application(
         [
