@@ -57,8 +57,8 @@ def main():
         logging.info('Memcached server: {0}:{1}'.format(opts.memcached_host, opts.memcached_port))
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
-    # logging current daemonic setup
-    logging.ingo('Daemons spawn at: {0}:{1}'.format(opts.daemons_host, opts.daemons_port))
+    # streaming daemonic setup
+    logging.ingo('Streams spawn at: {0}:{1}'.format(opts.streams_host, opts.streams_port))
     # application web daemon
     application = web.Application(
         [

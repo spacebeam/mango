@@ -10,7 +10,6 @@ __author__ = 'Space Beam LLC'
 
 
 import os
-import uuid
 import tornado.options
 from tornado.options import parse_config_file
 
@@ -42,22 +41,22 @@ def options():
     tornado.options.define('solr',
         default='nonsense.ws', type=str,
         help='Application solr, e.g: "example.com"')
-    # server host
+    # Server host
     tornado.options.define('host',
         default='127.0.0.1', type=str,
         help=('Server hostname'))
-    # server port
+    # Server port
     tornado.options.define('port',
         default=8888, type=int,
         help=('Server port'))
-    # daemonic hostname
-    tornado.options.define('daemons_host',
+    # Streaming hostname
+    tornado.options.define('streams_host',
         default='127.0.0.1', type=str,
-        help=('Daemonic service hostname or ip address'))
-    # daemonic port
-    tornado.options.define('daemons_port',
+        help=('Streaming service hostname or ip address'))
+    # Streaming port
+    tornado.options.define('streams_port',
         default=8899, type=int,
-        help=('Daemons port'))
+        help=('Streaming port'))
     # Riak kvalue host
     tornado.options.define('riak_host',
         default='127.0.0.1', type=str,
