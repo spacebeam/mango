@@ -58,7 +58,7 @@ def main():
     # logging kong settings
     logging.info('Kong Admin API: {0}:{1}'.format(opts.kong_host, opts.kong_port))
     # streaming daemonic setup
-    logging.ingo('Streams spawn at: {0}:{1}'.format(opts.streams_host, opts.streams_port))
+    logging.info('Streams spawn at: {0}:{1}'.format(opts.streams_host, opts.streams_port))
     # application web daemon
     application = web.Application(
         [
