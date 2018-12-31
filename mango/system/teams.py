@@ -18,7 +18,7 @@ from schematics.types import compound
 from mango.system import update_struct, remove_struct
 from mango.messages import teams
 from mango.messages import BaseResult
-from mango.structures.teams import TeamMap
+from mango.schemas.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
 from mango.tools import get_search_item, get_search_list

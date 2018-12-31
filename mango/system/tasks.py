@@ -16,7 +16,7 @@ from tornado import gen
 from schematics.types import compound
 from mango.messages import tasks
 from mango.messages import BaseResult
-from mango.structures.tasks import TaskMap
+from mango.schemas.tasks import TaskMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results, get_search_item
 from tornado import httpclient as _http_client

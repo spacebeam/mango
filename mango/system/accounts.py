@@ -17,7 +17,7 @@ from tornado import gen
 from schematics.types import compound
 from mango.messages import accounts
 from mango.messages import BaseResult
-from mango.structures.accounts import AccountMap
+from mango.schemas.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure
 from mango.tools import get_search_item, get_search_list
