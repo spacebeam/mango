@@ -16,8 +16,8 @@ import ujson as json
 from tornado import gen
 from schematics.types import compound
 from mango.system import update_struct, remove_struct
-from mango.schemas.import teams
-from mango.schemas.import BaseResult
+from mango.schemas import teams
+from mango.schemas import BaseResult
 from mango.schemas.teams import TeamMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure

@@ -15,8 +15,8 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.schemas.import accounts
-from mango.schemas.import BaseResult
+from mango.schemas import accounts
+from mango.schemas import BaseResult
 from mango.schemas.accounts import AccountMap
 from riak.datatypes import Map
 from mango.tools import clean_response, clean_structure

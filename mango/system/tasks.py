@@ -14,8 +14,8 @@ import logging
 import ujson as json
 from tornado import gen
 from schematics.types import compound
-from mango.schemas.import tasks
-from mango.schemas.import BaseResult
+from mango.schemas import tasks
+from mango.schemas import BaseResult
 from mango.schemas.tasks import TaskMap
 from riak.datatypes import Map
 from mango.tools import clean_structure, clean_results, get_search_item
