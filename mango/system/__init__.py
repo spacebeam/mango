@@ -6,7 +6,7 @@
 # The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Space Beam LLC'
+__author__ = 'Team Machine'
 
 
 import ujson as json
