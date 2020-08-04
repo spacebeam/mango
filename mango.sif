@@ -1,0 +1,28 @@
+BootStrap: debootstrap
+OSVersion: buster
+MirrorURL: http://ftp.us.debian.org/debian/
+
+%environmnet
+    LANG=C.UTF8
+    LC_ALL=C.UTF-8
+
+%labels
+    name mango
+    maintainer jchassoul
+    version 0.1.0
+
+%post
+    apt update
+    apt -y install --install-recommends vim git apt-transport-https\
+    gnupg2 software-properties-common sudo curl wget build-essential\
+    gfortrain pkg-config make cmake libyaml-dev libzmq3-dev
+    apt-add-repository contrib
+    apt-add-repository non-free
+    apt -y install --install-recommends python3-pip
+    git clone https://github.com/spacebeam/mango.git /opt/mango/
+    pip3 install -r /opt/mango/requirements.txt
+    apt-get clean
+    echo 'Go ahead HQ.'
+
+%runscript
+    echo 'HQ?'
