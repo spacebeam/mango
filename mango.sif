@@ -30,4 +30,4 @@ MirrorURL: http://ftp.us.debian.org/debian/
     echo 'Go ahead HQ.'
 
 %files
-    mango.conf /etc
+    /var/spool/luna/mango/mango.conf /etc
