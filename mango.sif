@@ -9,7 +9,7 @@ MirrorURL: http://ftp.us.debian.org/debian/
 %labels
     name mango
     maintainer jchassoul
-    version 0.1.0
+    version 0.2.0
 
 %post
     apt update
@@ -23,11 +23,11 @@ MirrorURL: http://ftp.us.debian.org/debian/
     apt -y install --install-recommends python3-pip
     git clone https://github.com/spacebeam/mango.git /opt/mango/
     pip3 install -r /opt/mango/requirements.txt
+    rm /usr/local/lib/python3.7/dist-packages/riak/codecs/__init__.py
+    cp /opt/mango/include/riak_codecs__init__.py\
+    /usr/local/lib/python3.7/dist-packages/riak/codecs/__init__.py
     apt-get clean
     echo 'Go ahead HQ.'
 
-%runscript
-    echo 'HQ?'
-
-%startscript
-    echo 'HQ?!'
+%files
+    mango.conf /etc
