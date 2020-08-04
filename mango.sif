@@ -15,8 +15,9 @@ MirrorURL: http://ftp.us.debian.org/debian/
     apt update
     apt -y install --install-recommends vim git apt-transport-https\
     gnupg2 software-properties-common sudo curl wget build-essential\
-    libmemcached-dev make cmake libmemcached-tools\
-    uuid uuid-dev runit-systemd libpq-dev\
+    libmemcached-dev make cmake libmemcached-tools libatlas-dev\
+    uuid uuid-dev runit libpq-dev liblapack-dev libcurl4-openssl-dev\
+    libatlas3-base libatlas-base-dev libffi-dev libssl1.0-dev\
     gfortran pkg-config libyaml-dev libzmq3-dev
     apt-add-repository contrib
     apt-add-repository non-free
