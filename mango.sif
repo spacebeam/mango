@@ -16,8 +16,8 @@ MirrorURL: http://ftp.us.debian.org/debian/
     apt -y install --install-recommends vim git apt-transport-https\
     gnupg2 software-properties-common sudo curl wget build-essential\
     libmemcached-dev make cmake libmemcached-tools uuid uuid-dev\
-    runit libpq-dev liblapack-dev libcurl4-openssl-dev libatlas-base-dev\
-    libffi-dev gfortran pkg-config libyaml-dev libzmq3-dev
+    runit runit-systemd libpq-dev liblapack-dev libcurl4-openssl-dev\
+    libatlas-base-dev libffi-dev gfortran pkg-config libyaml-dev libzmq3-dev
     apt-add-repository contrib
     apt-add-repository non-free
     apt -y install --install-recommends python3-pip
