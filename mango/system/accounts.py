@@ -24,12 +24,12 @@ class UserResult(BaseResult):
     '''
         List result
     '''
-    results = compound.ListType(compound.ModelType(accounts.User))
+    results = compound.ListType(compound.ModelType(accounts.Users))
 
 
-class Account(object):
+class Accounts(object):
     '''
-        Account
+        Very self explanatory 
     '''
 
     @gen.coroutine
@@ -90,6 +90,33 @@ class Account(object):
         else:
             message = {'message': 'not found'}
         return message['uuid']
+
+    @gen.coroutine
+    def get_user_list(self, account, start, end, lapse, status, page_num):
+        '''
+            Get user account list
+        '''
+        # TODO: cool and all but WTF with account, start, end, lapse and status?
+        results = []
+        message = {
+            'count': 0,
+            'page': page_num,
+            'results': results}
+        upper_limit = 480000 * 3
+        page_num = int(page_num)
+        page_size = self.settings['page_size']
+        start_num = page_size * (page_num - 1)
+        end_num = start_num + page_size
+        bucket_name = 'accounts'
+        bucket = self.db.bucket(bucket_name)
+        query = bucket.stream_index("account_type_bin", 'user')
+        for x in query:
+            for y in x:
+                resoults.append(y)
+        message['count'] = len(results)
+        message['results'] = [
+            y.data for y in (bucket.get(x) for x in results[start_num:end_num])]
+        return message
 
     @gen.coroutine
     def get_user_list(self, account, start, end, lapse, status, page_num):
