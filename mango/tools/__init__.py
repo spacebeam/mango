@@ -143,6 +143,10 @@ def clean_results(results):
     return {'results': results}
 
 
+def clean_response():
+    pass
+
+
 def str2bool(boo):
     '''
         String to boolean
