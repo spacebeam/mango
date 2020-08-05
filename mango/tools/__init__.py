@@ -16,6 +16,9 @@ from tornado import gen
 def get_search_item():
     pass
 
+def get_search_list():
+    pass
+
 
 def validate_uuid4(uuid_string):
     '''
