@@ -1,39 +1,31 @@
-# -*- coding: utf-8 -*-
-
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
-# The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Team Machine'
+__author__ = 'Jean Chassoul'
 
 
-import uuid
 import logging
 import ujson as json
 from tornado import gen
 from tornado import web
-from mango.schemas import accounts as models
-from mango.tools import clean_structure, validate_uuid4
-from mango.tools import get_search_item, get_search_list
 from tornado import httpclient as _http_client
 
 
-_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+_curl_client = 'tornado.curl_httpclient.CurlAsyncHTTPClient'
+_http_client.AsyncHTTPClient.configure(_curl_client)
 http_client = _http_client.AsyncHTTPClient()
+
+
+# This is mango's base handler all mango's other handlers are childs of this dude
+# So... explain carefully, what the actual fuck are acccout-related functions here? KTHXBYE
 
 
 class BaseHandler(web.RequestHandler):
     '''
         Process d'armi e ganti
     '''
-    @property
-    def kvalue(self):
-        '''
-            Key-value database
-        '''
-        return self.settings['kvalue']
 
     def initialize(self, **kwargs):
         '''
@@ -42,27 +34,17 @@ class BaseHandler(web.RequestHandler):
         super(BaseHandler, self).initialize(**kwargs)
         # System database
         self.db = self.settings.get('db')
-        # System cache
-        self.cache = self.settings.get('cache')
         # Page settings
         self.page_size = self.settings.get('page_size')
-        # Solr riak
-        self.solr = self.settings.get('solr')
         # Application domain
         self.domain = self.settings.get('domain')
 
     def set_default_headers(self):
         '''
-            mango default headers
+            default headers
         '''
-        self.set_header("Access-Control-Allow-Origin", self.settings.get('domain', '*'))
-
-    def get_username_token(self):
-        '''
-            Return the username from a token (require header)
-        '''
-        logging.warning('inside get username token returning false')
-        return False
+        self.set_header("Access-Control-Allow-Origin",
+                        self.settings.get('domain', '*'))
 
     @gen.coroutine
     def check_account_type(self, account):
