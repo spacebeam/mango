@@ -13,6 +13,10 @@ import uuid
 from tornado import gen
 
 
+def get_search_item():
+    pass
+
+
 def validate_uuid4(uuid_string):
     '''
         Validate that a UUID string is in fact a valid uuid4.
