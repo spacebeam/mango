@@ -33,22 +33,24 @@ class UsersHandler(accounts.Account, BaseHandler):
         '''
         # request query arguments
         query_args = self.request.arguments
-        # Yo, get the current frontend username from token!
-        username = self.get_username_token()
-        # if the user don't provide an account we use the username as last resort
-        account = (query_args.get('account', [username])[0] if not account else account)
+        username = False  # TODO: get the username from a front-end token!
+        # if the user don't provide an account use the username as last resort
+        account = (query_args.get('account', [username])[0]
+                   if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
+        logging.info('Why? what are u checking? {0}'.format(checked))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-        # rage against the finite state machine
-        status = 'all'
+        # rage against the state machine
+        status = 'all'  #TODO: Why 'all' ?
         # init message on error
         message = {'error':True}
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
         if not user_uuid:
+            # TODO: missing account, start, end, lapse and status support!
             message = yield self.get_user_list(account,
                                                start,
                                                end,
@@ -56,20 +58,10 @@ class UsersHandler(accounts.Account, BaseHandler):
                                                status,
                                                page_num)
             self.set_status(200)
-        # single account received
         else:
-            # first try to get stuff from cache
             user_uuid = user_uuid.rstrip('/')
-            # get cache data
-            message = self.cache.get('accounts:{0}'.format(user_uuid))
-            if message is not None:
-                logging.info('cache accounts:{0} done retrieving!'.format(user_uuid))
-                self.set_status(200)
-            else:
-                message = yield self.get_user(account, user_uuid)
-                if self.cache.add('accounts:{0}'.format(user_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(user_uuid)))
-                    self.set_status(200)
+            message = yield self.get_user(account, user_uuid)
+            self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
 
@@ -86,44 +78,35 @@ class UsersHandler(accounts.Account, BaseHandler):
         '''
         # request query arguments
         query_args = self.request.arguments
-        # Yo, get the current frontend username from token!
-        #username = self.get_username_token()
-        username = False
-        # if the user don't provide an account we use the frontend username as last resort
-        account = (query_args.get('account', [username])[0] if not account else account)
+        username = False  # TODO: get the username from a front-end token!
+        # if the user don't provide an account use the username as last resort
+        account = (query_args.get('account', [username])[0]
+                   if not account else account)
         # query string checked from string to boolean
         checked = str2bool(str(query_args.get('checked', [False])[0]))
+        logging.info('Why? what are u checking? {0}'.format(checked))
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
-        # rage against the finite state machine
-        status = 'all'
+        # rage against the state machine
+        status = 'all'  #TODO: Why 'all' ?
         # init message on error
         message = {'error':True}
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
         if not user_uuid:
+            # TODO: missing account, start, end, lapse and status support!
             message = yield self.get_user_list(account,
-                                               start, 
+                                               start,
                                                end,
                                                lapse,
                                                status,
                                                page_num)
             self.set_status(200)
-        # single account received
-        elif user_uuid:
-            # first try to get stuff from cache
+        else:
             user_uuid = user_uuid.rstrip('/')
-            # get cache data
-            message = self.cache.get('accounts:{0}'.format(user_uuid))
-            if message is not None:
-                logging.info('cache accounts:{0} done retrieving!'.format(user_uuid))
-                self.set_status(200)
-            if message is None:
-                message = yield self.get_user(account, user_uuid)
-                if self.cache.add('accounts:{0}'.format(user_uuid), message, 1):
-                    logging.info('new cache entry {0}'.format(str(user_uuid)))
-                    self.set_status(200)
+            message = yield self.get_user(account, user_uuid)
+            self.set_status(200)
         # so long and thanks for all the fish
         self.finish(message)
 
