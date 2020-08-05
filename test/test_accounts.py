@@ -21,7 +21,7 @@ class UsersTestCase(testing.AsyncTestCase):
         Users Test Case
     '''
     client = testing.AsyncHTTPClient()
-    url = "https://api.nonsense.ws/users/"
+    url = "http://127.0.0.1/users/"
     headers = {'Content-Type': 'application/json'}
     mock = False
     response = None
