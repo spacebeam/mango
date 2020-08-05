@@ -1,30 +1,22 @@
-# -*- coding: utf-8 -*-
-
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
-# The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Team Machine'
+__author__ = 'Jean Chassoul'
 
 
-import arrow
-import uuid
+import riak
 import logging
-import ujson as json
 from tornado import gen
 from schematics.types import compound
 from mango.schemas import accounts
 from mango.schemas import BaseResult
-from mango.schemas.accounts import AccountMap
-from riak.datatypes import Map
-from mango.tools import clean_response, clean_structure
-from mango.tools import get_search_item, get_search_list
+from mango.tools import clean_structure
 from tornado import httpclient as _http_client
 
-
-_http_client.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+curl_client = 'tornado.curl_httpclient.CurlAsyncHTTPClient'
+_http_client.AsyncHTTPClient.configure(curl_client)
 http_client = _http_client.AsyncHTTPClient()
 
 
@@ -39,48 +31,50 @@ class Account(object):
     '''
         Account
     '''
+
+    @gen.coroutine
+    def new_user(self, struct):
+        '''
+            New user event
+        '''
+        bucket_name = 'accounts'
+        bucket = self.db.bucket(bucket_name)
+        try:
+            event = accounts.User(struct)
+            event.validate()
+            event = clean_structure(event)
+        except Exception as error:
+            raise error
+        try:
+            message = event.get('uuid')
+            user = bucket.new(message, data=event)
+            user.add_index("uuid_bin", message)
+            user.add_index("status_bin", event["status"])
+            user.add_index("role_bin", event["role"])
+            user.add_index("account_bin", event["account"])
+            user.add_index("account_type_bin", event["account_type"])
+            user.add_index("nickname_bin", event["nickname"])
+            user.add_index("email_bin", event["email"])
+            user.store()
+        except Exception as error:
+            logging.error(error)
+            message = str(error)
+        return message
+
     @gen.coroutine
     def get_user(self, account, user_uuid):
         '''
             Get user
         '''
-        search_index = 'mango_account_index'
-        query = 'uuid_register:{0}'.format(user_uuid)
-        filter_query = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        url = get_search_item(self.solr, search_index, query, filter_query)
-        logging.warning(url)
-        # init got response list
-        got_response = []
-        # init crash message
-        message = {'message': 'not found'}
-        # ignore riak fields
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        # hopefully asynchronous handle function request
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                response = stuff['response']['docs'][0]
-                message = clean_response(response, __ignore)
-        except Exception as error:
-            logging.warning(error)
+        bucket_name = 'accounts'
+        bucket = self.db.bucket(bucket_name)
+        results = bucket.get_index("uuid_bin", user_uuid)
+        message = [y.data for y in (bucket.get(x) for x in results)]
+        if message:
+            message = message[0]
+        else:
+            message = {'message': 'not found'}
         return message
-        
 
     @gen.coroutine
     def uuid_from_account(self, username):
@@ -349,67 +343,6 @@ class Account(object):
                 logging.error('there is probably something wrong! get list orgs')
         except Exception as error:
             logging.warning(error)
-        return message
-
-    @gen.coroutine
-    def new_user(self, struct):
-        '''
-            New user event
-        '''
-        search_index = 'mango_account_index'
-        bucket_type = 'mango_account'
-        bucket_name = 'accounts'
-        try:
-            event = accounts.User(struct)
-            event.validate()
-            event = clean_structure(event)
-        except Exception as error:
-            raise error
-        try:
-            message = event.get('uuid')
-            structure = {
-                "uuid": str(event.get('uuid', str(uuid.uuid4()))),
-                "status": str(event.get('status', '')),
-                "role": str(event.get('role', '')),
-                "account": str(event.get('account', 'pebkac')),
-                "account_type": str(event.get('account_type', 'user')),
-                "nickname": str(event.get('nickname', '')),
-                "first_name": str(event.get('first_name', '')),
-                "last_name": str(event.get('last_name', '')),
-                "middle_name": str(event.get('middle_name', '')),
-                "password": str(event.get('password', '')),
-                "email": str(event.get('email', '')),
-                "phone_number": str(event.get('phone_number', '')),
-                "extension": str(event.get('extension', '')),
-                "country_code": str(event.get('country_code', '')),
-                "timezone": str(event.get('timezone', '')),
-                "company": str(event.get('company', '')),
-                "location": str(event.get('location', '')),
-                "phones": str(event.get('phones', '')),
-                "emails": str(event.get('emails', '')),
-                "history": str(event.get('history', '')),
-                "labels": str(event.get('labels', '')),
-                "orgs": str(event.get('orgs', '')),
-                "teams": str(event.get('teams', '')),
-                "checked": str(event.get('checked', '')),
-                "checked_by": str(event.get('checked_by', '')),
-                "checked_at": str(event.get('checked_at', '')),
-                "created_by": str(event.get('created_by', '')),
-                "created_at": str(event.get('created_at', '')),
-                "last_update_at": str(event.get('last_update_at', '')),
-                "last_update_by": str(event.get('last_update_by', '')),
-            }
-            result = AccountMap(
-                self.kvalue,
-                bucket_name,
-                bucket_type,
-                search_index,
-                structure
-            )
-            message = structure.get('uuid')
-        except Exception as error:
-            logging.error(error)
-            message = str(error)
         return message
 
     @gen.coroutine
