@@ -1,19 +1,13 @@
-# -*- coding: utf-8 -*-
-
 # This file is part of mango.
 
 # Distributed under the terms of the last AGPL License.
-# The full license is in the file LICENCE, distributed as part of this software.
 
 
-__author__ = 'Team Machine'
+__author__ = 'Jean Chassoul'
 
 
-import uuid
 import logging
-import ujson as json
 from tornado import gen
-from tornado import web
 from mango.schemas import accounts as models
 from mango.system import accounts
 from mango.tools import str2bool, check_json

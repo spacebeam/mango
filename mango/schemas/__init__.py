@@ -35,7 +35,7 @@ class Phone(models.Model):
 
 class RequiredBase(models.Model):
     '''
-        Required base class
+        Very self explanatory
     '''
     status = types.StringType(required=False)
     account = types.StringType(required=True)
