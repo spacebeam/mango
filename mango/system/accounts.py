@@ -96,13 +96,25 @@ class Accounts(object):
         '''
             Get user account list
         '''
-        # TODO: cool and all but WTF with account, start, end, lapse and status?
-        results = []
+
+        # search_index = 'mango_account_index'
+        # query = 'uuid_register:*'
+        # filter_status = 'status_register:active'
+        # filter_account_type = 'account_type_register:user'
+        # page_num = int(page_num)
+        # page_size = self.settings['page_size']
+        # start_num = page_size * (page_num - 1)
+        # filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
+        # filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
+        # TODO: cool but WTF with account, start, end, lapse and status?
+
+        result = []
         message = {
             'count': 0,
             'page': page_num,
-            'results': results}
+            'results': result}
         upper_limit = 480000 * 3
+        logging.info("upper_limit not being used! {} why?".format(upper_limit))
         page_num = int(page_num)
         page_size = self.settings['page_size']
         start_num = page_size * (page_num - 1)
@@ -112,68 +124,12 @@ class Accounts(object):
         query = bucket.stream_index("account_type_bin", 'user')
         for x in query:
             for y in x:
-                resoults.append(y)
-        message['count'] = len(results)
+                result.append(y)
+        message['count'] = len(result)
         message['results'] = [
-            y.data for y in (bucket.get(x) for x in results[start_num:end_num])]
+            y.data for y in (bucket.get(x) for x in result[start_num:end_num])]
         return message
 
-    @gen.coroutine
-    def get_user_list(self, account, start, end, lapse, status, page_num):
-        '''
-            Get account list
-        '''
-        search_index = 'mango_account_index'
-        query = 'uuid_register:*'
-        filter_status = 'status_register:active'
-        filter_account_type = 'account_type_register:user'
-        # page number
-        page_num = int(page_num)
-        page_size = self.settings['page_size']
-        start_num = page_size * (page_num - 1)
-
-        filter_account = 'created_by_register:{0}'.format(account.decode('utf-8'))
-        filter_query = '(({0})AND({1})AND({2}))'.format(filter_account, filter_status, filter_account_type)
-        # set of urls
-        url = get_search_list(self.solr, search_index, query, filter_query, start_num, page_size)
-        logging.warning(url)
-        # init got response list
-        got_response = []
-        # init crash message
-        message = {
-            'count': 0,
-            'page': page_num,
-            'results': []
-        }
-        __ignore = ["_yz_id","_yz_rk","_yz_rt","_yz_rb"]
-        def handle_request(response):
-            '''
-                Request Async Handler
-            '''
-            if response.error:
-                logging.error(response.error)
-                got_response.append({'error':True, 'message': response.error})
-            else:
-                got_response.append(json.loads(response.body))
-        try:
-            http_client.fetch(
-                url,
-                callback=handle_request
-            )
-            while len(got_response) == 0:
-                # don't be careless with the time.
-                yield gen.sleep(0.0021)
-            stuff = got_response[0]
-            if stuff['response']['numFound']:
-                message['count'] += stuff['response']['numFound']
-                for doc in stuff['response']['docs']:
-                    message['results'].append(clean_response(doc, __ignore))
-            else:
-                logging.error('there is probably something wrong! get list users')
-        except Exception as error:
-            logging.warning(error)
-        return message
-    
     @gen.coroutine
     def modify_account(self, account, user_uuid, struct):
         '''
