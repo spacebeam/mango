@@ -68,6 +68,11 @@ def options():
         'riak_port',
         default=8087, type=int,
         help=('Riak cluster port'))
+    # Page size
+    tornado.options.define(
+        'page_size',
+        default=100, type=int,
+        help=('Set a custom page size'))
     # Parse config file, then command line...
     # so command line switches take precedence
     if os.path.exists(config_path):
