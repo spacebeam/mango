@@ -15,7 +15,7 @@ from mango.handlers import BaseHandler
 from collections import OrderedDict
 
 
-class UsersHandler(accounts.Account, BaseHandler):
+class UsersHandler(accounts.Accounts, BaseHandler):
     '''
         HTTP request handlers
     '''
@@ -245,7 +245,7 @@ class UsersHandler(accounts.Account, BaseHandler):
         self.finish(message)
 
 
-class OrgsHandler(accounts.Account, BaseHandler):
+class OrgsHandler(accounts.Accounts, BaseHandler):
     '''
         HTTP request handlers
     '''
