@@ -122,7 +122,7 @@ class UsersHandler(accounts.Accounts, BaseHandler):
             self.finish({'JSON': format_pass})
             return
         # create new user struct
-        user_uuid = yield self.new_game(struct)
+        user_uuid = yield self.new_user(struct)
         # complete message with receive uuid.
         message = {'uuid': user_uuid}
         self.set_status(201)
