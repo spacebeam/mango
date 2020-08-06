@@ -54,9 +54,7 @@ class RequiredBase(models.Model):
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType()
-    # created_by is a required field.. why?
-    # please set by defult at least this daemon domain then?
-    created_by = types.StringType(default=self.settings['domain'],required=True)
+    created_by = types.StringType(required=True)
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
