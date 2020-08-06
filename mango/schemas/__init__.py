@@ -45,7 +45,7 @@ class RequiredBase(models.Model):
     extension = types.StringType()
     country_code = types.StringType()
     timezone = types.StringType()
-    company = types.StringType()
+    affiliation = types.StringType()
     location = types.StringType()
     phones = compound.ListType(compound.ModelType(Phone))
     emails = compound.ListType(compound.ModelType(Email))
@@ -54,7 +54,9 @@ class RequiredBase(models.Model):
     checked = types.BooleanType(default=False)
     checked_by = types.StringType()
     checked_at = types.TimestampType()
-    created_by = types.StringType(required=True)
+    # created_by is a required field.. why?
+    # please set by defult at least this daemon domain then?
+    created_by = types.StringType(default=self.settings['domain'],required=True)
     created_at = types.TimestampType(default=arrow.utcnow().timestamp)
     last_update_by = types.StringType()
     last_update_at = types.TimestampType()
