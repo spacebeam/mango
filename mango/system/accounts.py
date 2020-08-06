@@ -40,7 +40,7 @@ class Accounts(object):
         bucket_name = 'accounts'
         bucket = self.db.bucket(bucket_name)
         try:
-            event = accounts.User(struct)
+            event = accounts.Users(struct)
             event.validate()
             event = clean_structure(event)
         except Exception as error:
@@ -50,10 +50,8 @@ class Accounts(object):
             user = bucket.new(message, data=event)
             user.add_index("uuid_bin", message)
             user.add_index("status_bin", event["status"])
-            user.add_index("role_bin", event["role"])
             user.add_index("account_bin", event["account"])
             user.add_index("account_type_bin", event["account_type"])
-            user.add_index("nickname_bin", event["nickname"])
             user.add_index("email_bin", event["email"])
             user.store()
         except Exception as error:
