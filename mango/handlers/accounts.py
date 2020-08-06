@@ -193,7 +193,7 @@ class UsersHandler(accounts.Accounts, BaseHandler):
         stuff = False
         while not stuff:
             try:
-                stuff = models.User.get_mock_object().to_primitive()
+                stuff = models.Users.get_mock_object().to_primitive()
             except Exception as error:
                 logging.warning(error)
                 pass
