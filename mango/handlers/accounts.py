@@ -43,9 +43,9 @@ class UsersHandler(accounts.Accounts, BaseHandler):
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
         # rage against the state machine
-        status = 'all'  #TODO: Why 'all' ?
+        status = 'all'  # TODO: Why 'all' ?
         # init message on error
-        message = {'error':True}
+        message = {'error': True}
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
@@ -88,9 +88,9 @@ class UsersHandler(accounts.Accounts, BaseHandler):
         # getting pagination ready
         page_num = int(query_args.get('page', [page_num])[0])
         # rage against the state machine
-        status = 'all'  #TODO: Why 'all' ?
+        status = 'all'  # TODO: Why 'all' ?
         # init message on error
-        message = {'error':True}
+        message = {'error': True}
         # init status that match with our message
         self.set_status(400)
         # check if we're list processing
@@ -119,30 +119,13 @@ class UsersHandler(accounts.Accounts, BaseHandler):
         format_pass = (True if struct and not struct.get('errors') else False)
         if not format_pass:
             self.set_status(400)
-            self.finish({'JSON':format_pass})
+            self.finish({'JSON': format_pass})
             return
-        # request query arguments
-        query_args = self.request.arguments
-        # get account from new account struct
-        account = struct.get('account', None)
-        # get the current frontend username from token
-        username = self.get_username_token()
-        # if the user don't provide an account we use the username
-        account = (query_args.get('account', [username])[0] if not account else account)
-        # execute new account struct
-        user_uuid = yield self.new_user(struct)
+        # create new user struct
+        user_uuid = yield self.new_game(struct)
         # complete message with receive uuid.
-        message = {'uuid':user_uuid}
-        if 'error' in message['uuid']:
-            scheme = 'account'
-            reason = {'duplicates': [
-                (scheme, 'account'),
-                (scheme, 'uuid')
-            ]}
-            message = yield self.let_it_crash(struct, scheme, message['uuid'], reason)
-            self.set_status(400)
-        else:
-            self.set_status(201)
+        message = {'uuid': user_uuid}
+        self.set_status(201)
         self.finish(message)
 
     @gen.coroutine
@@ -151,31 +134,24 @@ class UsersHandler(accounts.Accounts, BaseHandler):
             Modify user
         '''
         struct = yield check_json(self.request.body)
-        format_pass = (True if not dict(struct).get('errors', False) else False)
+        format_pass = (True if struct and not struct.get('errors') else False)
+        message = {'message': 'not found'}
         if not format_pass:
             self.set_status(400)
-            self.finish({'JSON':format_pass})
+            self.finish({'JSON': format_pass})
             return
         account = self.request.arguments.get('account', [None])[0]
         if not account:
             # if not account we try to get the account from struct
             account = struct.get('account', None)
-        # remove query string flag
-        remove = self.request.arguments.get('remove', False)
-        if not remove :
-            result = self.cache.delete('user:{0}'.format(user_uuid))
-            result = yield self.modify_account(account, user_uuid, struct)
-        else:
-            result = self.cache.delete('user:{0}'.format(user_uuid))
-            result = yield self.modify_remove(account, user_uuid, struct)
+        result = yield self.modify_user(account, user_uuid, struct)
         if not result:
             self.set_status(400)
-            system_error = errors.Error('missing')
-            error = system_error.missing('user', user_uuid)
-            self.finish(error)
+            self.finish(message)
             return
-        self.set_status(200)
-        self.finish({'message': 'update completed successfully'})
+        self.set_status(400)
+        message = {'message': 'update completed successfully'}
+        self.finish(message)
 
     @gen.coroutine
     def delete(self, user_uuid):
@@ -187,9 +163,8 @@ class UsersHandler(accounts.Accounts, BaseHandler):
         result = yield self.remove_account(account, user_uuid)
         if not result:
             self.set_status(400)
-            system_error = errors.Error('missing')
-            error = system_error.missing('account', user_uuid)
-            self.finish(error)
+            message = {'message': 'Error something was wrong!'}
+            self.finish(message)
             return
         self.set_status(204)
         self.finish()
@@ -200,11 +175,14 @@ class UsersHandler(accounts.Accounts, BaseHandler):
             Resource options
         '''
         self.set_header('Access-Control-Allow-Origin', '*')
-        self.set_header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
-        self.set_header('Access-Control-Allow-Headers', ''.join(('Accept-Language,',
-                        'DNT,Keep-Alive,User-Agent,X-Requested-With,',
-                        'If-Modified-Since,Cache-Control,Content-Type,',
-                        'Content-Range,Range,Date,Etag')))
+        self.set_header('Access-Control-Allow-Methods',
+                        'HEAD, GET, POST, PATCH, DELETE, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers',
+                        ''.join(
+                            ('Accept-Language,',
+                             'DNT,Keep-Alive,User-Agent,X-Requested-With,',
+                             'If-Modified-Since,Cache-Control,Content-Type,',
+                             'Content-Range,Range,Date,Etag')))
         # allowed http methods
         message = {
             'Allow': ['HEAD', 'GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
@@ -217,22 +195,22 @@ class UsersHandler(accounts.Accounts, BaseHandler):
             try:
                 stuff = models.User.get_mock_object().to_primitive()
             except Exception as error:
+                logging.warning(error)
                 pass
         for k, v in stuff.items():
             if v is None:
-                parameters[k] = str(type('none'))
+                parameters[k] = str(type('none'))[1:-1].split(' ')[1][1:-1]
             else:
-                parameters[k] = str(type(v))
+                parameters[k] = str(type(v))[1:-1].split(' ')[1][1:-1]
         # after automatic madness return description and parameters
-        parameters['labels'] = 'array/string'
-        # what the fuck is array/kv/string?
-        parameters['orgs'] = 'array/kv/string'
-        # seriously, what is it?
-        parameters['teams'] = 'array/kv/string'
+        parameters['labels'] = 'list/object'
+        parameters['orgs'] = 'list/object'
+        parameters['teams'] = 'list/object'
         # end of manual cleaning
         POST = {
-            "description": "Create account",
-            "parameters": OrderedDict(sorted(parameters.items(), key=lambda t: t[0]))
+            "description": "Create a new user account",
+            "parameters": OrderedDict(
+                sorted(parameters.items(), key=lambda t: t[0]))
         }
         # filter single resource
         if not user_uuid:
