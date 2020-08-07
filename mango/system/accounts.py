@@ -41,6 +41,7 @@ class Accounts(object):
         bucket = self.db.bucket(bucket_name)
         try:
             struct['created_by'] = self.settings['domain']
+            struct['status'] = 'new'
             event = accounts.Users(struct)
             event.validate()
             event = clean_structure(event)
